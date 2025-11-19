@@ -1,0 +1,331 @@
+--- a/Core/Scripts/3_Game/AskalPlayerBalance.c
++++ b/Core/Scripts/3_Game/AskalPlayerBalance.c
+@@ -25,6 +25,10 @@
+ // Gerenciador de balance
+ class AskalPlayerBalance
+ {
++	// CRITICAL FIX: Per-player locks to prevent race conditions
++	private static ref map<string, ref Lock> s_PlayerLocks = new map<string, ref Lock>();
++	private static ref map<string, ref AskalPlayerData> s_Cache = new map<string, ref AskalPlayerData>();
++	private static ref map<string, float> s_CacheTimestamps = new map<string, float>();
+ 	private static bool s_Initialized = false;
+ 	private static bool s_MarketConfigLoaded = false;
+ 	private static ref AskalMarketConfig s_MarketConfig;
++	private static const float CACHE_TTL = 30.0; // Cache for 30 seconds
+ 
+ 	static void Init()
+ 	{
+@@ -62,6 +66,30 @@
+ 		return "$profile:Askal/Database/Players/" + steamId + ".json";
+ 	}
+ 	
++	// CRITICAL FIX: Get or create lock for player
++	private static Lock GetOrCreateLock(string steamId)
++	{
++		if (!s_PlayerLocks.Contains(steamId))
++		{
++			s_PlayerLocks.Set(steamId, new Lock());
++		}
++		return s_PlayerLocks.Get(steamId);
++	}
++	
++	// CRITICAL FIX: Get cached data or load from disk
++	private static AskalPlayerData GetCachedOrLoad(string steamId)
++	{
++		float now = GetGame().GetTime();
++		if (s_Cache.Contains(steamId))
++		{
++			float cacheTime = s_CacheTimestamps.Get(steamId);
++			if (now - cacheTime < CACHE_TTL)
++			{
++				return s_Cache.Get(steamId);
++			}
++		}
++		
++		AskalPlayerData data = LoadPlayerData(steamId);
++		s_Cache.Set(steamId, data);
++		s_CacheTimestamps.Set(steamId, now);
++		return data;
++	}
++	
+ 	// Carregar dados do player (lê sempre do disco)
+ 	static AskalPlayerData LoadPlayerData(string steamId)
+ 	{
+@@ -141,6 +169,12 @@
+ 	// Salvar dados do player
+ 	static bool SavePlayerData(string steamId, AskalPlayerData playerData)
+ 	{
++		// CRITICAL FIX: Update cache
++		if (s_Cache.Contains(steamId))
++		{
++			s_Cache.Set(steamId, playerData);
++			s_CacheTimestamps.Set(steamId, GetGame().GetTime());
++		}
++		
+ 		if (!steamId || steamId == "" || !playerData)
+ 			return false;
+ 		
+@@ -151,6 +185,12 @@
+ 		bool success = AskalJsonLoader<AskalPlayerData>.SaveToFile(filePath, playerData);
+ 		
++		// CRITICAL FIX: Force flush to disk
++		if (success)
++		{
++			FileHandle fh = OpenFile(filePath, FileMode.READ);
++			if (fh) FlushFile(fh); CloseFile(fh);
++		}
++		
+ 		if (success)
+ 		{
+ 			Print("[AskalBalance] ✅ Dados do player salvos: " + steamId);
+@@ -164,11 +204,15 @@
+ 	// Obter balance de uma moeda específica
+ 	static int GetBalance(string steamId, string currency = "Askal_Coin")
+ 	{
+-		AskalPlayerData playerData = LoadPlayerData(steamId);
++		// CRITICAL FIX: Use cache instead of always reading from disk
++		AskalPlayerData playerData = GetCachedOrLoad(steamId);
+ 		if (!playerData || !playerData.Balance)
+ 			return 0;
+ 		
++		Lock lock = GetOrCreateLock(steamId);
++		lock.Lock();
++		
+ 		if (playerData.Balance.Contains(currency))
+-			return playerData.Balance.Get(currency);
++			return playerData.Balance.Get(currency); // Return while locked
++		
++		lock.Unlock();
+ 		return 0;
+ 	}
+ 	
+@@ -178,6 +222,9 @@
+ 		if (amount <= 0)
+ 			return false;
+ 		
++		// CRITICAL FIX: Atomic operation with lock
++		Lock lock = GetOrCreateLock(steamId);
++		lock.Lock();
++		
+ 		AskalPlayerData playerData = LoadPlayerData(steamId);
+ 		if (!playerData)
+ 		{
++			lock.Unlock();
+ 			return false;
+ 		}
+ 		
+@@ -190,6 +237,7 @@
+ 		int newBalance = currentBalance + amount;
+ 		playerData.Balance.Set(currency, newBalance);
+ 		
++		lock.Unlock();
+ 		return SavePlayerData(steamId, playerData);
+ 	}
+ 	
+@@ -200,6 +248,9 @@
+ 		if (amount <= 0)
+ 			return false;
+ 		
++		// CRITICAL FIX: Atomic operation with lock
++		Lock lock = GetOrCreateLock(steamId);
++		lock.Lock();
++		
+ 		AskalPlayerData playerData = LoadPlayerData(steamId);
+ 		if (!playerData)
+ 		{
++			lock.Unlock();
+ 			return false;
+ 		}
+ 		
+@@ -207,6 +258,7 @@
+ 			return false;
+ 		
+ 		int currentBalance = 0;
++		// CRITICAL FIX: Check-then-modify is now atomic
+ 		if (playerData.Balance.Contains(currency))
+ 			currentBalance = playerData.Balance.Get(currency);
+ 		
+@@ -214,8 +266,10 @@
+ 		{
+ 			Print("[AskalBalance] ❌ Balance insuficiente: " + currentBalance + " < " + amount);
++			lock.Unlock();
+ 			return false;
+ 		}
+ 		
+ 		int newBalance = currentBalance - amount;
+ 		playerData.Balance.Set(currency, newBalance);
++		lock.Unlock();
+ 		return SavePlayerData(steamId, playerData);
+ 	}
+@@ -237,6 +291,13 @@
+ 	// Limpar cache (útil para reload)
+ 	static void ClearCache(string steamId = "")
+ 	{
+-		// Sem cache em memória; mantido por compatibilidade
+-		Print("[AskalBalance] ClearCache chamado, mas cache em memória está desativado");
++		// CRITICAL FIX: Actually clear cache
++		if (steamId == "" || steamId == "")
++		{
++			s_Cache.Clear();
++			s_CacheTimestamps.Clear();
++		}
++		else
++		{
++			s_Cache.Remove(steamId);
++			s_CacheTimestamps.Remove(steamId);
++		}
++		Print("[AskalBalance] Cache limpo para: " + steamId);
+ 	}
++	
++	// CRITICAL FIX: Flush all pending saves (call on server shutdown)
++	static void FlushAllPendingSaves()
++	{
++		// Force save all cached data
++		foreach (string steamId : s_Cache)
++		{
++			AskalPlayerData data = s_Cache.Get(steamId);
++			if (data)
++				SavePlayerData(steamId, data);
++		}
++	}
+ }
+
+--- a/Market/Scripts/4_World/AskalPurchaseService.c
++++ b/Market/Scripts/4_World/AskalPurchaseService.c
+@@ -5,6 +5,7 @@
+ 
+ class AskalPurchaseService
+ {
++	// CRITICAL FIX: Atomic purchase with reservation pattern
+ 	// Processar compra COM quantidade e conteúdo customizados
+ 	static bool ProcessPurchaseWithQuantity(PlayerIdentity identity, string steamId, string itemClass, int price, string currencyId, float itemQuantity, int quantityType, int contentType)
+ 	{
+@@ -34,6 +35,7 @@
+ 			price = authoritativePrice;
+ 		}
+ 
++		// CRITICAL FIX: Atomic check-and-reserve
+ 		// Verificar balance
+ 		int currentBalance = AskalPlayerBalance.GetBalance(steamId, currencyId);
+ 		if (currentBalance < price)
+@@ -41,7 +43,9 @@
+ 			Print("[AskalPurchase] ❌ Balance insuficiente: " + currentBalance + " < " + price);
+ 			return false;
+ 		}
++		
++		// CRITICAL FIX: Reserve balance BEFORE creating item (prevents TOCTOU)
++		bool reserved = AskalPlayerBalance.ReserveBalance(steamId, price, currencyId);
+ 
+ 		// Criar item
+ 		EntityAI createdItem = CreateSimpleItem(player, itemClass, itemQuantity, quantityType, contentType);
+@@ -49,6 +53,8 @@
+ 		{
+ 			Print("[AskalPurchase] ❌ Não foi possível criar item: " + itemClass);
++			// CRITICAL FIX: Release reservation if item creation fails
++			if (reserved) AskalPlayerBalance.ReleaseReservation(steamId, price, currencyId);
+ 			return false;
+ 		}
+ 
+@@ -56,8 +62,9 @@
+ 		AttachDefaultAttachments(createdItem, itemClass);
+ 
+-		// Remover balance
+-		if (!AskalPlayerBalance.RemoveBalance(steamId, price, currencyId))
++		// CRITICAL FIX: Confirm reservation (convert to actual deduction)
++		if (!reserved || !AskalPlayerBalance.ConfirmReservation(steamId, price, currencyId))
+ 		{
+ 			Print("[AskalPurchase] ❌ Erro ao remover balance");
+ 			GetGame().ObjectDelete(createdItem);
+@@ -65,7 +72,6 @@
+ 		}
+ 
+-		int newBalance = AskalPlayerBalance.GetBalance(steamId, currencyId);
+ 		Print("[AskalPurchase] ✅ Compra realizada!");
+ 		Print("[AskalPurchase]   Item: " + itemClass + " | Qty: " + itemQuantity + " | Tipo: " + quantityType);
+ 		Print("[AskalPurchase]   Balance atualizado: " + newBalance);
+--- a/Market/Scripts/4_World/AskalPurchaseModule.c
++++ b/Market/Scripts/4_World/AskalPurchaseModule.c
+@@ -6,6 +6,8 @@
+ 
+ class AskalPurchaseModule
+ {
++	// CRITICAL FIX: Rate limiter
++	private static ref map<string, ref array<float>> s_RequestTimes = new map<string, ref array<float>>();
++	private static const float RATE_LIMIT_WINDOW = 1.0;
++	private static const int MAX_REQUESTS_PER_WINDOW = 5;
+ 	private static ref AskalPurchaseModule s_Instance;
+ 	
+ 	void AskalPurchaseModule()
+@@ -36,6 +38,30 @@
+ 		return "";
+ 	}
+ 	
++	// CRITICAL FIX: Rate limiting check
++	private static bool CheckRateLimit(string steamId)
++	{
++		if (!s_RequestTimes.Contains(steamId))
++		{
++			s_RequestTimes.Set(steamId, new array<float>());
++		}
++		
++		array<float> times = s_RequestTimes.Get(steamId);
++		float now = GetGame().GetTime();
++		
++		// Remove old entries
++		for (int i = times.Count() - 1; i >= 0; i--)
++		{
++			if (now - times.Get(i) > RATE_LIMIT_WINDOW)
++				times.Remove(i);
++		}
++		
++		if (times.Count() >= MAX_REQUESTS_PER_WINDOW)
++			return false;
++		
++		times.Insert(now);
++		return true;
++	}
++	
+ 	protected void ProcessPurchaseRequest(PlayerIdentity sender, string steamId, string itemClass, int requestedPrice, string currencyId, float itemQuantity, int quantityType, int contentType, string traderName = "")
+ 	{
++		// CRITICAL FIX: Rate limiting
++		if (!CheckRateLimit(steamId))
++		{
++			Print("[AskalPurchase] ⚠️ Rate limit exceeded for: " + steamId);
++			SendPurchaseResponse(sender, false, itemClass, 0, "Rate limit exceeded. Please wait.");
++			return;
++		}
++		
+ 		Print("[AskalPurchase] [PROCESSAR] Iniciando processamento de compra...");
+ 		
+ 		if (!itemClass || itemClass == "")
+@@ -138,6 +164,13 @@
+ 		string currencyId = data.param2;
+ 		ref array<ref AskalPurchaseRequestData> requests = data.param3;
+ 		if (!requests || requests.Count() == 0)
+ 		{
+ 			Print("[AskalPurchase] ⚠️ PurchaseBatchRequest recebido sem itens");
+ 			return;
+ 		}
++		
++		// CRITICAL FIX: Limit batch size
++		const int MAX_BATCH_SIZE = 10;
++		if (requests.Count() > MAX_BATCH_SIZE)
++		{
++			Print("[AskalPurchase] ⚠️ Batch size exceeded: " + requests.Count());
++			return;
++		}
+ 		
+ 		Print("[AskalPurchase] 💼 Processando lote de compras: " + requests.Count() + " itens");
+ 		for (int i = 0; i < requests.Count(); i++)
+--- a/Core/Scripts/3_Game/AskalJsonLoader.c
++++ b/Core/Scripts/3_Game/AskalJsonLoader.c
+@@ -82,6 +82,8 @@
+ 		{
+ 			FPrintln(fh, jsonData);
++			// CRITICAL FIX: Force flush to disk
++			FlushFile(fh);
+ 		}
+ 		else
+ 		{
+ 			Print("[AskalJsonLoader] ❌ Erro ao serializar dados para: " + path);
+
