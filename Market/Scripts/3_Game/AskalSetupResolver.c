@@ -1,9 +1,6 @@
 // AskalSetupResolver - Resolve configurações de Setup com prioridade correta
 // Prioridade: Item > Categoria > Dataset
 
-// Forward declaration
-class JsonFileLoader<Class T>;
-
 class AskalSetupResolver
 {
     ref map<string, ref AskalSetupConfig> m_LoadedSetups;

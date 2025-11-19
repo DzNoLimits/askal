@@ -3,9 +3,6 @@
 //	Leitura de MarketConfig.json (moedas, líquidos, etc)
 // ==========================================================
 
-// Forward declaration
-class JsonFileLoader<Class T>;
-
 class AskalCurrencyValueConfig
 {
 	string Name;

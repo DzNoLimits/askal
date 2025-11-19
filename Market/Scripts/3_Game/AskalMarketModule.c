@@ -3,12 +3,6 @@
 // Registra RPCs de compra/venda, health e trader menu
 // ==========================================
 
-// Forward declarations
-class Param1<Class T1>;
-class Param2<Class T1, Class T2>;
-class Param3<Class T1, Class T2, Class T3>;
-class Param4<Class T1, Class T2, Class T3, Class T4>;
-
 [CF_RegisterModule(AskalMarketModule)]
 class AskalMarketModule : CF_ModuleGame
 {

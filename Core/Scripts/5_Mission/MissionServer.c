@@ -40,10 +40,10 @@ modded class MissionServer extends MissionBase
     // Isso evita sobrecarga e permite controle melhor do timing
     
     // ITER-1: Flush pending saves on shutdown
-    override void OnMissionFinish(Class sender, CF_EventArgs args)
+    override void OnMissionFinish()
     {
         AskalPlayerBalance.FlushAllPendingSaves();
-        super.OnMissionFinish(sender, args);
+        super.OnMissionFinish();
     }
 }
 

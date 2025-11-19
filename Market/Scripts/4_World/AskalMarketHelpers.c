@@ -20,15 +20,7 @@ class AskalMarketHelpers
 			return NULL;
 		}
 		
-		// ESTRATÉGIA 1: Tentar usar GetPlayerObjectByIdentity (método nativo do DayZ)
-		PlayerBase player = game.GetPlayerObjectByIdentity(identity);
-		if (player)
-		{
-			Print("[AskalMarketHelpers] ✅ Player encontrado via GetPlayerObjectByIdentity");
-			return player;
-		}
-		
-		// ESTRATÉGIA 2: Buscar na lista de players conectados
+		// Buscar na lista de players conectados
 		array<Man> players = new array<Man>();
 		World world = game.GetWorld();
 		if (world)
