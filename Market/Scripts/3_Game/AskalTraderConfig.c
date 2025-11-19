@@ -3,6 +3,9 @@
 // Lê e parseia arquivos Trader_Description.jsonc
 // ==========================================
 
+// Forward declaration
+class AskalJsonLoader<Class T>;
+
 class AskalTraderConfig
 {
 	string Version; // Versão como string (ex: "1.0.0") - campo do JSON

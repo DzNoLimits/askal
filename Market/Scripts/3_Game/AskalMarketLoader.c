@@ -1,3 +1,6 @@
+// Forward declaration
+class JsonFileLoader<Class T>;
+
 class AskalMarketLoader
 {
     protected static ref AskalMarketLoader s_Instance;

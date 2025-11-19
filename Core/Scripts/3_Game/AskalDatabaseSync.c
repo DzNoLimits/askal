@@ -4,6 +4,9 @@
 // DisplayName é obtido no cliente via ConfigGetText
 // ==========================================
 
+// Forward declarations
+class AskalJsonLoader<Class T>;
+
 class AskalDatabaseSync
 {
 	private static bool s_ClientSynced = false;
@@ -128,7 +131,7 @@ class AskalDatabaseSync
 		Print("[AskalSync] ✅ Encontrados " + datasetIDs.Count() + " datasets");
 		
 		// Preparar dados de sincronização
-		array<ref AskalDatasetSyncData> allDatasets = new array<ref AskalDatasetSyncData>();
+		ref array<ref AskalDatasetSyncData> allDatasets = new array<ref AskalDatasetSyncData>();
 		int totalCategories = 0;
 		
 		foreach (string datasetID : datasetIDs)

@@ -246,9 +246,10 @@ class AskalPlayerBalance
 	static void FlushOutbox()
 	{
 		int count = 0;
-		foreach (string steamId : s_OutboxQueue)
+		for (int i = 0; i < s_OutboxQueue.Count(); i++)
 		{
-			AskalPlayerData data = s_OutboxQueue.Get(steamId);
+			string steamId = s_OutboxQueue.GetKey(i);
+			AskalPlayerData data = s_OutboxQueue.GetElement(i);
 			if (data)
 			{
 				SavePlayerData(steamId, data);
