@@ -1,5 +1,5 @@
 ---------------------------------------------
-Log C:\Users\Rocha\AppData\Local\DayZ\script_2025-11-19_16-22-04.log started at 19.11. 16:22:09
+Log C:\Users\Rocha\AppData\Local\DayZ\script_2025-11-19_17-19-02.log started at 19.11. 17:19:07
 
 SCRIPT       : Registered 331 temporary action enum(s), UAN==331
 SCRIPT       : ... Backlit Effects Enabled
@@ -11,8 +11,9 @@ SCRIPT       : [AskalCore] ========================================
 SCRIPT       : [AskalCore] Cliente inicializado (dados recebidos via RPC)
 SCRIPT       : [AskalCore] ✅ RPCs do Core registrados
 SCRIPT       : [AskalCore] ========================================
+SCRIPT    (W): @"Askal/Core/Scripts/5_Mission/askaldevtestrunner.c,137": FIX-ME: Method argument can't be strong reference
 SCRIPT       : Creating Mission: dz\Worlds\ChernarusPlus\data\scenes\intro.ChernarusPlus\mission.c
-SCRIPT       : 16:22:23.923 [WARNING]	No server config file set, using default serverdz.cfg
+SCRIPT       : 17:19:22.889 [WARNING]	No server config file set, using default serverdz.cfg
 SCRIPT       : AnimSoundObjectBuilderBank: Invalid sound set "scuffErc_sakhal_snow_forest_Char_Soundset".
 SCRIPT       : AnimSoundObjectBuilderBank: Invalid sound set "walkCro_sakhal_snow_forest_Char_Soundset".
 SCRIPT       : AnimSoundObjectBuilderBank: Invalid sound set "runCro_sakhal_snow_forest_Char_Soundset".
@@ -27,6 +28,7 @@ SCRIPT       : AnimSoundObjectBuilderBank: Invalid sound set "runRasErc_en_defor
 SCRIPT       : AnimSoundObjectBuilderBank: Invalid sound set "landFeetErc_sakhal_snow_forest_Char_Soundset".
 SCRIPT       : ---- PlayerBase OnStoreLoad SUCCESS ----
 SCRIPT       : ---- PlayerBase OnStoreLoad SUCCESS ----
+SCRIPT    (W): @"Askal/Core/Scripts/5_Mission/askaldevtestrunner.c,137": FIX-ME: Method argument can't be strong reference
 SCRIPT       : Creating Mission: mpmissions\__cur_mp.chernarusplus\mission.c
 SCRIPT       : SyncEvents -> RegisterEvents
 SCRIPT       : [AskalMarket] ========================================
@@ -1470,492 +1472,68 @@ SCRIPT       : [AskalNotification] 💚 Health armazenado para 48 itens
 SCRIPT       : [AskalStore] 📥 Processando health de 48 itens do helper
 SCRIPT       : [AskalStore] ✅ Health processado e armazenado para 48 itens
 SCRIPT       : [AskalStore] 🔘 Botões atualizados | Mode: 3 | Buy: true | Sell: false | HasItem: false
-SCRIPT       : [AskalStore] UpdateRightPanel() - Item: powderedmilk
+SCRIPT       : [AskalStore] UpdateRightPanel() - Item: marmalade
 SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: powderedmilk
-SCRIPT       : [AskalStore]    basePrice: 408
+SCRIPT       : [AskalStore]    Classe: marmalade
+SCRIPT       : [AskalStore]    basePrice: 208
 SCRIPT       : [AskalStore]    Tipo: 0
-SCRIPT       : [AskalStore]    ✅ Preço final: 408 (NONE - sem multiplicação)
+SCRIPT       : [AskalStore]    ✅ Preço final: 208 (NONE - sem multiplicação)
 SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: powderedmilk
-SCRIPT       : [AskalStore]    basePrice: 449
+SCRIPT       : [AskalStore]    Classe: marmalade
+SCRIPT       : [AskalStore]    basePrice: 229
 SCRIPT       : [AskalStore]    Tipo: 0
-SCRIPT       : [AskalStore]    ✅ Preço final: 449 (NONE - sem multiplicação)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: powderedmilk
+SCRIPT       : [AskalStore]    ✅ Preço final: 229 (NONE - sem multiplicação)
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: marmalade
 SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
 SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: powderedmilk
-SCRIPT       : [AskalStore]    basePrice: 408
+SCRIPT       : [AskalStore]    Classe: marmalade
+SCRIPT       : [AskalStore]    basePrice: 208
 SCRIPT       : [AskalStore]    Tipo: 0
-SCRIPT       : [AskalStore]    ✅ Preço final: 408 (NONE - sem multiplicação)
+SCRIPT       : [AskalStore]    ✅ Preço final: 208 (NONE - sem multiplicação)
 SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: powderedmilk
-SCRIPT       : [AskalStore]    basePrice: 449
+SCRIPT       : [AskalStore]    Classe: marmalade
+SCRIPT       : [AskalStore]    basePrice: 229
 SCRIPT       : [AskalStore]    Tipo: 0
-SCRIPT       : [AskalStore]    ✅ Preço final: 449 (NONE - sem multiplicação)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: powderedmilk
+SCRIPT       : [AskalStore]    ✅ Preço final: 229 (NONE - sem multiplicação)
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: marmalade
 SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
 SCRIPT       : [AskalStore] ✅ Painel direito atualizado!
-SCRIPT       : [AskalStore] 🎚️ ConfigureQuantitySliderForItem chamado para: powderedmilk
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: powderedmilk
+SCRIPT       : [AskalStore] 🎚️ ConfigureQuantitySliderForItem chamado para: marmalade
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: marmalade
 SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] 🎚️ Tipo detectado: 3 para powderedmilk
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: powderedmilk
+SCRIPT       : [AskalStore] 🎚️ Tipo detectado: 3 para marmalade
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: marmalade
 SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
 SCRIPT       : [AskalStore] 🎚️ Configurando slider - minVal: 0 | maxVal: 100 | stepVal: 0.1 | qtyType: 3
 SCRIPT       : [AskalStore] ✅ Slider configurado - minVal: 0 | maxVal: 100 | qtyType: 3 | IsVisible: true
 SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: powderedmilk
-SCRIPT       : [AskalStore]    basePrice: 408
+SCRIPT       : [AskalStore]    Classe: marmalade
+SCRIPT       : [AskalStore]    basePrice: 208
 SCRIPT       : [AskalStore]    Tipo: 3
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 408
+SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 208
 SCRIPT       : [AskalStore]    [QUANTIFIABLE] Percentual: 100
-SCRIPT       : [AskalStore]    ✅ Preço final: 408 (base × percentual)
+SCRIPT       : [AskalStore]    ✅ Preço final: 208 (base × percentual)
 SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: powderedmilk
-SCRIPT       : [AskalStore]    basePrice: 449
+SCRIPT       : [AskalStore]    Classe: marmalade
+SCRIPT       : [AskalStore]    basePrice: 229
 SCRIPT       : [AskalStore]    Tipo: 3
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 449
+SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 229
 SCRIPT       : [AskalStore]    [QUANTIFIABLE] Percentual: 100
-SCRIPT       : [AskalStore]    ✅ Preço final: 449 (base × percentual)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: powderedmilk
+SCRIPT       : [AskalStore]    ✅ Preço final: 229 (base × percentual)
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: marmalade
 SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
 SCRIPT       : [AskalStore] 🎚️ Slider configurado - Tipo: 3 | Range: 0-100
-SCRIPT       : [AskalStore] ✅ Item selecionado: powderedmilk
+SCRIPT       : [AskalStore] ✅ Item selecionado: marmalade
 SCRIPT       : [AskalStore] ✅ Preview principal atualizado!
-SCRIPT       : [AskalStore] 🛒 buy_button_solo (painel single) clicado
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: powderedmilk
-SCRIPT       : [AskalStore]    basePrice: 449
-SCRIPT       : [AskalStore]    Tipo: 3
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 449
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Percentual: 100
-SCRIPT       : [AskalStore]    ✅ Preço final: 449 (base × percentual)
-SCRIPT       : [AskalStore] 💰 Tentando comprar: powderedmilk | TransactionQty: 1 | Total: 449 Askal_Money
-SCRIPT       : [AskalStore] 📤 RPC de compra enviado | ItemQty: 100 | QtyType: 3 | Content: 0 | Trader: 
-SCRIPT       : [AskalStore] ⏱️ Cooldown iniciado: 0.5s
-SCRIPT       : [AskalMarket] ✅ Compra realizada com sucesso
-SCRIPT       : [AskalNotification] 📢 Notificação de compra adicionada: powderedmilk ($449)
-SCRIPT       : [AskalStore] Fechando menu...
-SCRIPT       : [AskalStore] ✅ HUD restaurada
 SCRIPT       : [AskalMarket] ========================================
 SCRIPT       : [AskalMarket] Tecla O pressionada
 SCRIPT       : [AskalMarket] Estado:
 SCRIPT       : [AskalMarket]   Sincronizado: SIM
 SCRIPT       : [AskalMarket]   Datasets: 15
 SCRIPT       : [AskalMarket] ToggleToolsMenu()
-SCRIPT       : [AskalMarket] Abrindo menu
-SCRIPT       : [AskalStore] =============================================
-SCRIPT       : [AskalStore] AskalStoreMenu() CONSTRUTOR - VERSÃO DINÂMICA
-SCRIPT       : [AskalStore] =============================================
-SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] Init() - VERSÃO DINÂMICA (lê do Core Database)
-SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] ✅ RootWidget criado!
-SCRIPT       : [AskalStore] ✅ market_header_title_text encontrado!
-SCRIPT       : [AskalStore] 🔍 Buscando datasets_scroll_container...
-SCRIPT       : [AskalStore] ✅ datasets_scroll_container encontrado!
-SCRIPT       : [AskalStore] ✅ datasets_cards_holder encontrado!
-SCRIPT       : [AskalStore] ✅ Item details layout carregado!
-SCRIPT       : [AskalStore] ✅ details_section_title_text encontrado!
-SCRIPT       : [AskalStore] 🔍 Buscando actions_panel no m_RootWidget...
-SCRIPT       : [AskalStore] ✅ actions_panel encontrado!
-SCRIPT       : [AskalStore] ✅ buy_and_sell_button encontrado (novo layout)!
-SCRIPT       : [AskalStore] ✅ Painel dual de compra/venda identificado
-SCRIPT       : [AskalStore] ✅ buy_button encontrado!
-SCRIPT       : [AskalStore] ✅ sell_button encontrado!
-SCRIPT       : [AskalStore] ⚠️ Contêiner single não identificado no layout (usando botões diretos)
-SCRIPT       : [AskalStore] ✅ Botão individual de compra localizado!
-SCRIPT       : [AskalStore] ✅ Botão individual de venda localizado!
-SCRIPT       : [AskalStore] ✅ search_input encontrado!
-SCRIPT       : [AskalStore] ✅ search_button encontrado!
-SCRIPT       : [AskalStore] ✅ options_panel encontrado!
-SCRIPT       : [AskalStore] ✅ toggle_batch_buy encontrado!
-SCRIPT       : [AskalStore] ✅ toggle_batch_sell encontrado!
-SCRIPT       : [AskalStore] ✅ player_Inventory_card encontrado!
-SCRIPT       : [AskalStore] ⏱️ Tempo de atraso configurado: 500ms (0.5s)
-SCRIPT       : [AskalStore] ✅ buy cooldown progress inicializado
-SCRIPT       : [AskalStore] ✅ sell cooldown progress inicializado
-SCRIPT       : [AskalStore] ✅ buy solo cooldown progress inicializado
-SCRIPT       : [AskalStore] ✅ sell solo cooldown progress inicializado
-SCRIPT       : [AskalStore] ✅ market_notification_card_holder encontrado!
-SCRIPT       : [AskalStore] ✅ Slider de quantidade inicializado
-SCRIPT       : [AskalStore] ✅ Seletor de conteúdo inicializado
-SCRIPT       : [AskalStore] Widgets inicializados
-SCRIPT       : [AskalStore] 🔄 Carregando datasets do Core Database...
-SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] LoadDatasetsFromCore() - CACHE SIMPLIFICADO
-SCRIPT       : [AskalStore] ✅ Cache tem 15 datasets
-SCRIPT       : [AskalStore]   ✅ 1_Food (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 2_Drinks (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 3_Medical (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 4_Clothing (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 5_Outfits (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 6_Firearms (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 7_Ammunition (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 8_Attachments (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 9_Explosives (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 10_Base (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 11_Cultivation (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 12_Seasonal (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 13_Collectibles (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 14_Vehicles (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 15_Improvised (modo: 3)
-SCRIPT       : [AskalStore] CreateDatasetCards() - Total: 15
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(0) - Total: 4
-SCRIPT       : [AskalStore] ✅ Category card criado: Industrializados
-SCRIPT       : [AskalStore] ✅ Category card criado: Vegetais
-SCRIPT       : [AskalStore] ✅ Category card criado: Cogumelos
-SCRIPT       : [AskalStore] ✅ Category card criado: Animal
-SCRIPT       : [AskalStore] ✅ Dataset card criado: ALIMENTOS
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(1) - Total: 2
-SCRIPT       : [AskalStore] ✅ Category card criado: Latas
-SCRIPT       : [AskalStore] ✅ Category card criado: Garrafas
-SCRIPT       : [AskalStore] ✅ Dataset card criado: BEBIDAS
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(2) - Total: 3
-SCRIPT       : [AskalStore] ✅ Category card criado: Consumíveis
-SCRIPT       : [AskalStore] ✅ Category card criado: Insumos
-SCRIPT       : [AskalStore] ✅ Category card criado: Auxiliares
-SCRIPT       : [AskalStore] ✅ Dataset card criado: MEDICINA
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(3) - Total: 14
-SCRIPT       : [AskalStore] ✅ Category card criado: Máscaras
-SCRIPT       : [AskalStore] ✅ Category card criado: Calças
-SCRIPT       : [AskalStore] ✅ Category card criado: Luvas
-SCRIPT       : [AskalStore] ✅ Category card criado: Casmisas
-SCRIPT       : [AskalStore] ✅ Category card criado: Calçados
-SCRIPT       : [AskalStore] ✅ Category card criado: Chapéus e Bonés
-SCRIPT       : [AskalStore] ✅ Category card criado: MultiSlot
-SCRIPT       : [AskalStore] ✅ Category card criado: Protetores de Cabeça
-SCRIPT       : [AskalStore] ✅ Category card criado: Coletes
-SCRIPT       : [AskalStore] ✅ Category card criado: Capacetes
-SCRIPT       : [AskalStore] ✅ Category card criado: Cintos
-SCRIPT       : [AskalStore] ✅ Category card criado: Óculos
-SCRIPT       : [AskalStore] ✅ Category card criado: Variedades
-SCRIPT       : [AskalStore] ✅ Category card criado: Mochilas
-SCRIPT       : [AskalStore] ✅ Dataset card criado: ROUPAS, TRAJES E EQUIPAMENTOS
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(4) - Total: 5
-SCRIPT       : [AskalStore] ✅ Category card criado: TEMPLÁRIO
-SCRIPT       : [AskalStore] ✅ Category card criado: TRAPO
-SCRIPT       : [AskalStore] ✅ Category card criado: CORTUME
-SCRIPT       : [AskalStore] ✅ Category card criado: NBQ
-SCRIPT       : [AskalStore] ✅ Category card criado: Ghillie
-SCRIPT       : [AskalStore] ✅ Dataset card criado: OUTFITS
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(5) - Total: 8
-SCRIPT       : [AskalStore] ✅ Category card criado: Rifles Sniper
-SCRIPT       : [AskalStore] ✅ Category card criado: Escopetas
-SCRIPT       : [AskalStore] ✅ Category card criado: Metralhadora
-SCRIPT       : [AskalStore] ✅ Category card criado: Rifles de Assalto
-SCRIPT       : [AskalStore] ✅ Category card criado: Outros
-SCRIPT       : [AskalStore] ✅ Category card criado: Pistolas
-SCRIPT       : [AskalStore] ✅ Category card criado: Submetralhadoras
-SCRIPT       : [AskalStore] ✅ Category card criado: Atirador Designado
-SCRIPT       : [AskalStore] ✅ Dataset card criado: ARMAS
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(6) - Total: 3
-SCRIPT       : [AskalStore] ✅ Category card criado: Caixas
-SCRIPT       : [AskalStore] ✅ Category card criado: Outros
-SCRIPT       : [AskalStore] ✅ Category card criado: Avulsas
-SCRIPT       : [AskalStore] ✅ Dataset card criado: MUNIÇÕES
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(7) - Total: 6
-SCRIPT       : [AskalStore] ✅ Category card criado: Carregadores
-SCRIPT       : [AskalStore] ✅ Category card criado: Suportes
-SCRIPT       : [AskalStore] ✅ Category card criado: Lanternas
-SCRIPT       : [AskalStore] ✅ Category card criado: Miras
-SCRIPT       : [AskalStore] ✅ Category card criado: Ponteiras
-SCRIPT       : [AskalStore] ✅ Category card criado: Trilhos
-SCRIPT       : [AskalStore] ✅ Dataset card criado: ACESSÓRIOS
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(8) - Total: 2
-SCRIPT       : [AskalStore] ✅ Category card criado: Granadas
-SCRIPT       : [AskalStore] ✅ Category card criado: Minas
-SCRIPT       : [AskalStore] ✅ Dataset card criado: EXPLOSIVOS
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(9) - Total: 11
-SCRIPT       : [AskalStore] ✅ Category card criado: Bandeiras
-SCRIPT       : [AskalStore] ✅ Category card criado: Cozinha
-SCRIPT       : [AskalStore] ✅ Category card criado: Comunicação
-SCRIPT       : [AskalStore] ✅ Category card criado: Armadilhas
-SCRIPT       : [AskalStore] ✅ Category card criado: Consumíveis
-SCRIPT       : [AskalStore] ✅ Category card criado: Ferramentas
-SCRIPT       : [AskalStore] ✅ Category card criado: Visão
-SCRIPT       : [AskalStore] ✅ Category card criado: Equipamentos
-SCRIPT       : [AskalStore] ✅ Category card criado: Navegação
-SCRIPT       : [AskalStore] ✅ Category card criado: Contêiners
-SCRIPT       : [AskalStore] ✅ Category card criado: Tendas
-SCRIPT       : [AskalStore] ✅ Dataset card criado: BASE E CONSTRUÇÃO
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(10) - Total: 3
-SCRIPT       : [AskalStore] ✅ Category card criado: Sementes Avulsas
-SCRIPT       : [AskalStore] ✅ Category card criado: Pacotes
-SCRIPT       : [AskalStore] ✅ Category card criado: Cultivo
-SCRIPT       : [AskalStore] ✅ Dataset card criado: PLANTIO
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(11) - Total: 4
-SCRIPT       : [AskalStore] ✅ Category card criado: Aniversário
-SCRIPT       : [AskalStore] ✅ Category card criado: Outros
-SCRIPT       : [AskalStore] ✅ Category card criado: Natal
-SCRIPT       : [AskalStore] ✅ Category card criado: Halloween
-SCRIPT       : [AskalStore] ✅ Dataset card criado: TEMPORADA
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(12) - Total: 1
-SCRIPT       : [AskalStore] ✅ Category card criado: Livros
-SCRIPT       : [AskalStore] ✅ Dataset card criado: COLECIONÁVEIS
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(13) - Total: 5
-SCRIPT       : [AskalStore] ✅ Category card criado: Ferramentas
-SCRIPT       : [AskalStore] ✅ Category card criado: Aquáticos
-SCRIPT       : [AskalStore] ✅ Category card criado: Portas e Capôs
-SCRIPT       : [AskalStore] ✅ Category card criado: Terrestres
-SCRIPT       : [AskalStore] ✅ Category card criado: Pneus
-SCRIPT       : [AskalStore] ✅ Dataset card criado: VEÍCULOS
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(14) - Total: 2
-SCRIPT       : [AskalStore] ✅ Category card criado: Insumos Coletáveis
-SCRIPT       : [AskalStore] ✅ Category card criado: Confeccionáveis
-SCRIPT       : [AskalStore] ✅ Dataset card criado: IMPROVISADOS
-SCRIPT       : [AskalStore] ✅ 15 datasets carregados
-SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] LoadDataset(0) → 1_Food
-SCRIPT       : [AskalStore] ✅ Dataset: ALIMENTOS
-SCRIPT       : [AskalStore]    Categorias: 4
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(0) - Total: 4
-SCRIPT       : [AskalStore] ✅ Category card criado: Industrializados
-SCRIPT       : [AskalStore] ✅ Category card criado: Vegetais
-SCRIPT       : [AskalStore] ✅ Category card criado: Cogumelos
-SCRIPT       : [AskalStore] ✅ Category card criado: Animal
-SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] LoadCategory(0) → CAT_1_Industrializados
-SCRIPT       : [AskalStore] ✅ Categoria: Industrializados
-SCRIPT       : [AskalStore]    Items: 29
-SCRIPT       : [AskalStore] RenderItems() - Total: 29
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: zagorkypeanuts
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: zagorkypeanuts
-SCRIPT       : [AskalStore] ✅ Card criado: zagorkypeanuts
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: porkcan
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: porkcan
-SCRIPT       : [AskalStore] ✅ Card criado: porkcan
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: brisketspread
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: brisketspread
-SCRIPT       : [AskalStore] ✅ Card criado: brisketspread
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: honey
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: honey
-SCRIPT       : [AskalStore] ✅ Card criado: honey
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: marmalade
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: marmalade
-SCRIPT       : [AskalStore] ✅ Card criado: marmalade
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: candycane_redgreen
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: candycane_redgreen
-SCRIPT       : [AskalStore] ✅ Card criado: candycane_redgreen
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: powderedmilk
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: powderedmilk
-SCRIPT       : [AskalStore] ✅ Card criado: powderedmilk
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: candycane_yellow
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: candycane_yellow
-SCRIPT       : [AskalStore] ✅ Card criado: candycane_yellow
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: pate
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: pate
-SCRIPT       : [AskalStore] ✅ Card criado: pate
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: spaghettican
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: spaghettican
-SCRIPT       : [AskalStore] ✅ Card criado: spaghettican
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: tacticalbaconcan
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: tacticalbaconcan
-SCRIPT       : [AskalStore] ✅ Card criado: tacticalbaconcan
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: pajka
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: pajka
-SCRIPT       : [AskalStore] ✅ Card criado: pajka
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: crackers
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: crackers
-SCRIPT       : [AskalStore] ✅ Card criado: crackers
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: zagorky
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: zagorky
-SCRIPT       : [AskalStore] ✅ Card criado: zagorky
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: rice
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: rice
-SCRIPT       : [AskalStore] ✅ Card criado: rice
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: peachescan
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: peachescan
-SCRIPT       : [AskalStore] ✅ Card criado: peachescan
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: crabcan
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: crabcan
-SCRIPT       : [AskalStore] ✅ Card criado: crabcan
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: chips
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: chips
-SCRIPT       : [AskalStore] ✅ Card criado: chips
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: dogfoodcan
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: dogfoodcan
-SCRIPT       : [AskalStore] ✅ Card criado: dogfoodcan
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: candycane_green
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: candycane_green
-SCRIPT       : [AskalStore] ✅ Card criado: candycane_green
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: candycane_red
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: candycane_red
-SCRIPT       : [AskalStore] ✅ Card criado: candycane_red
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: saltysticks
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: saltysticks
-SCRIPT       : [AskalStore] ✅ Card criado: saltysticks
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: tunacan
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: tunacan
-SCRIPT       : [AskalStore] ✅ Card criado: tunacan
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: lunchmeat
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: lunchmeat
-SCRIPT       : [AskalStore] ✅ Card criado: lunchmeat
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: boxcerealcrunchin
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: boxcerealcrunchin
-SCRIPT       : [AskalStore] ✅ Card criado: boxcerealcrunchin
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: zagorkychocolate
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: zagorkychocolate
-SCRIPT       : [AskalStore] ✅ Card criado: zagorkychocolate
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: catfoodcan
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: catfoodcan
-SCRIPT       : [AskalStore] ✅ Card criado: catfoodcan
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: sardinescan
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: sardinescan
-SCRIPT       : [AskalStore] ✅ Card criado: sardinescan
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: bakedbeanscan
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: bakedbeanscan
-SCRIPT       : [AskalStore] ✅ Card criado: bakedbeanscan
-SCRIPT       : [AskalStore] ✅ ItensCardWrap atualizado
-SCRIPT       : [AskalStore] ✅ ItensCardScroll atualizado
-SCRIPT       : [AskalStore] ✅ Renderização concluída!
-SCRIPT       : [AskalStore] ✅ 29 items carregados
-SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] 🔍 Escaneando inventário do player...
-SCRIPT       : [AskalStore] 📦 Total de itens no inventário: 57
-SCRIPT       : [AskalStore] ✅ Inventário escaneado: 49 tipos de itens únicos
-SCRIPT       : [AskalStore] 📤 Solicitando health dos itens do inventário ao servidor...
-SCRIPT       : [AskalStore] ================ Init() CONCLUÍDO ================
-SCRIPT       : [AskalStore] ✅ HUD ocultada
-SCRIPT       : [AskalMarket] ✅ Menu aberto
-SCRIPT       : [AskalMarket] ========================================
-SCRIPT       : [AskalMarket] 📥 InventoryHealthResponse recebido com 49 itens
-SCRIPT       : [AskalNotification] 💚 Health armazenado para 49 itens
-SCRIPT       : [AskalStore] 📥 Processando health de 49 itens do helper
-SCRIPT       : [AskalStore] ✅ Health processado e armazenado para 49 itens
-SCRIPT       : [AskalStore] 🔘 Botões atualizados | Mode: 3 | Buy: true | Sell: true | HasItem: true
-SCRIPT       : [AskalStore] UpdateRightPanel() - Item: powderedmilk
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: powderedmilk
-SCRIPT       : [AskalStore]    basePrice: 449
-SCRIPT       : [AskalStore]    Tipo: 0
-SCRIPT       : [AskalStore]    ✅ Preço final: 449 (NONE - sem multiplicação)
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: powderedmilk
-SCRIPT       : [AskalStore]    basePrice: 449
-SCRIPT       : [AskalStore]    Tipo: 0
-SCRIPT       : [AskalStore]    ✅ Preço final: 449 (NONE - sem multiplicação)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: powderedmilk
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: powderedmilk
-SCRIPT       : [AskalStore]    basePrice: 449
-SCRIPT       : [AskalStore]    Tipo: 0
-SCRIPT       : [AskalStore]    ✅ Preço final: 449 (NONE - sem multiplicação)
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: powderedmilk
-SCRIPT       : [AskalStore]    basePrice: 449
-SCRIPT       : [AskalStore]    Tipo: 0
-SCRIPT       : [AskalStore]    ✅ Preço final: 449 (NONE - sem multiplicação)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: powderedmilk
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Painel direito atualizado!
-SCRIPT       : [AskalStore] 🎚️ ConfigureQuantitySliderForItem chamado para: powderedmilk
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: powderedmilk
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] 🎚️ Tipo detectado: 3 para powderedmilk
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: powderedmilk
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] 🎚️ Configurando slider - minVal: 0 | maxVal: 100 | stepVal: 0.1 | qtyType: 3
-SCRIPT       : [AskalStore] ✅ Slider configurado - minVal: 0 | maxVal: 100 | qtyType: 3 | IsVisible: true
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: powderedmilk
-SCRIPT       : [AskalStore]    basePrice: 449
-SCRIPT       : [AskalStore]    Tipo: 3
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 449
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Percentual: 100
-SCRIPT       : [AskalStore]    ✅ Preço final: 449 (base × percentual)
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: powderedmilk
-SCRIPT       : [AskalStore]    basePrice: 449
-SCRIPT       : [AskalStore]    Tipo: 3
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 449
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Percentual: 100
-SCRIPT       : [AskalStore]    ✅ Preço final: 449 (base × percentual)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: powderedmilk
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] 🎚️ Slider configurado - Tipo: 3 | Range: 0-100
-SCRIPT       : [AskalStore] ✅ Item selecionado: powderedmilk
-SCRIPT       : [AskalStore] ✅ Preview principal atualizado!
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: powderedmilk
-SCRIPT       : [AskalStore]    basePrice: 449
-SCRIPT       : [AskalStore]    Tipo: 3
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 449
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Percentual: 6
-SCRIPT       : [AskalStore]    ✅ Preço final: 27 (base × percentual)
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: powderedmilk
-SCRIPT       : [AskalStore]    basePrice: 449
-SCRIPT       : [AskalStore]    Tipo: 3
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 449
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Percentual: 6
-SCRIPT       : [AskalStore]    ✅ Preço final: 27 (base × percentual)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: powderedmilk
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: powderedmilk
-SCRIPT       : [AskalStore]    basePrice: 449
-SCRIPT       : [AskalStore]    Tipo: 3
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 449
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Percentual: 25
-SCRIPT       : [AskalStore]    ✅ Preço final: 112 (base × percentual)
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: powderedmilk
-SCRIPT       : [AskalStore]    basePrice: 449
-SCRIPT       : [AskalStore]    Tipo: 3
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 449
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Percentual: 25
-SCRIPT       : [AskalStore]    ✅ Preço final: 112 (base × percentual)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: powderedmilk
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] 🛒 buy_button (painel direito) clicado
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: powderedmilk
-SCRIPT       : [AskalStore]    basePrice: 449
-SCRIPT       : [AskalStore]    Tipo: 3
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 449
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Percentual: 25
-SCRIPT       : [AskalStore]    ✅ Preço final: 112 (base × percentual)
-SCRIPT       : [AskalStore] 💰 Tentando comprar: powderedmilk | TransactionQty: 1 | Total: 112 Askal_Money
-SCRIPT       : [AskalStore] 📤 RPC de compra enviado | ItemQty: 25 | QtyType: 3 | Content: 0 | Trader: 
-SCRIPT       : [AskalStore] ⏱️ Cooldown iniciado: 0.5s
-SCRIPT       : [AskalMarket] ✅ Compra realizada com sucesso
-SCRIPT       : [AskalNotification] 📢 Notificação de compra adicionada: powderedmilk ($112)
-SCRIPT       : [AskalStore] Fechando menu...
+SCRIPT       : [AskalMarket] Fechando menu
 SCRIPT       : [AskalStore] ✅ HUD restaurada
+SCRIPT       : [AskalMarket] ========================================
 SCRIPT       : [AskalMarket] ========================================
 SCRIPT       : [AskalMarket] Tecla O pressionada
 SCRIPT       : [AskalMarket] Estado:
@@ -2273,123 +1851,15 @@ SCRIPT       : [AskalMarket] 📥 InventoryHealthResponse recebido com 48 itens
 SCRIPT       : [AskalNotification] 💚 Health armazenado para 48 itens
 SCRIPT       : [AskalStore] 📥 Processando health de 48 itens do helper
 SCRIPT       : [AskalStore] ✅ Health processado e armazenado para 48 itens
-SCRIPT       : [AskalStore] 🔘 Botões atualizados | Mode: 3 | Buy: true | Sell: false | HasItem: false
-SCRIPT       : [AskalStore] UpdateRightPanel() - Item: candycane_redgreen
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: candycane_redgreen
-SCRIPT       : [AskalStore]    basePrice: 5098
-SCRIPT       : [AskalStore]    Tipo: 0
-SCRIPT       : [AskalStore]    ✅ Preço final: 5098 (NONE - sem multiplicação)
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: candycane_redgreen
-SCRIPT       : [AskalStore]    basePrice: 5098
-SCRIPT       : [AskalStore]    Tipo: 0
-SCRIPT       : [AskalStore]    ✅ Preço final: 5098 (NONE - sem multiplicação)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: candycane_redgreen
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: candycane_redgreen
-SCRIPT       : [AskalStore]    basePrice: 5098
-SCRIPT       : [AskalStore]    Tipo: 0
-SCRIPT       : [AskalStore]    ✅ Preço final: 5098 (NONE - sem multiplicação)
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: candycane_redgreen
-SCRIPT       : [AskalStore]    basePrice: 5098
-SCRIPT       : [AskalStore]    Tipo: 0
-SCRIPT       : [AskalStore]    ✅ Preço final: 5098 (NONE - sem multiplicação)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: candycane_redgreen
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Painel direito atualizado!
-SCRIPT       : [AskalStore] 🎚️ ConfigureQuantitySliderForItem chamado para: candycane_redgreen
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: candycane_redgreen
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] 🎚️ Tipo detectado: 3 para candycane_redgreen
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: candycane_redgreen
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] 🎚️ Configurando slider - minVal: 0 | maxVal: 100 | stepVal: 0.1 | qtyType: 3
-SCRIPT       : [AskalStore] ✅ Slider configurado - minVal: 0 | maxVal: 100 | qtyType: 3 | IsVisible: true
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: candycane_redgreen
-SCRIPT       : [AskalStore]    basePrice: 5098
-SCRIPT       : [AskalStore]    Tipo: 3
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 5098
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Percentual: 100
-SCRIPT       : [AskalStore]    ✅ Preço final: 5098 (base × percentual)
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: candycane_redgreen
-SCRIPT       : [AskalStore]    basePrice: 5098
-SCRIPT       : [AskalStore]    Tipo: 3
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 5098
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Percentual: 100
-SCRIPT       : [AskalStore]    ✅ Preço final: 5098 (base × percentual)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: candycane_redgreen
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] 🎚️ Slider configurado - Tipo: 3 | Range: 0-100
-SCRIPT       : [AskalStore] ✅ Item selecionado: candycane_redgreen
-SCRIPT       : [AskalStore] ✅ Preview principal atualizado!
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: candycane_redgreen
-SCRIPT       : [AskalStore]    basePrice: 5098
-SCRIPT       : [AskalStore]    Tipo: 3
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 5098
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Percentual: 20
-SCRIPT       : [AskalStore]    ✅ Preço final: 1020 (base × percentual)
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: candycane_redgreen
-SCRIPT       : [AskalStore]    basePrice: 5098
-SCRIPT       : [AskalStore]    Tipo: 3
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 5098
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Percentual: 20
-SCRIPT       : [AskalStore]    ✅ Preço final: 1020 (base × percentual)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: candycane_redgreen
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: candycane_redgreen
-SCRIPT       : [AskalStore]    basePrice: 5098
-SCRIPT       : [AskalStore]    Tipo: 3
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 5098
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Percentual: 3
-SCRIPT       : [AskalStore]    ✅ Preço final: 153 (base × percentual)
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: candycane_redgreen
-SCRIPT       : [AskalStore]    basePrice: 5098
-SCRIPT       : [AskalStore]    Tipo: 3
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 5098
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Percentual: 3
-SCRIPT       : [AskalStore]    ✅ Preço final: 153 (base × percentual)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: candycane_redgreen
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: candycane_redgreen
-SCRIPT       : [AskalStore]    basePrice: 5098
-SCRIPT       : [AskalStore]    Tipo: 3
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 5098
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Percentual: 100
-SCRIPT       : [AskalStore]    ✅ Preço final: 5098 (base × percentual)
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: candycane_redgreen
-SCRIPT       : [AskalStore]    basePrice: 5098
-SCRIPT       : [AskalStore]    Tipo: 3
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 5098
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Percentual: 100
-SCRIPT       : [AskalStore]    ✅ Preço final: 5098 (base × percentual)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: candycane_redgreen
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] 🛒 buy_button_solo (painel single) clicado
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: candycane_redgreen
-SCRIPT       : [AskalStore]    basePrice: 5098
-SCRIPT       : [AskalStore]    Tipo: 3
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Preço base: 5098
-SCRIPT       : [AskalStore]    [QUANTIFIABLE] Percentual: 100
-SCRIPT       : [AskalStore]    ✅ Preço final: 5098 (base × percentual)
-SCRIPT       : [AskalStore] 💰 Tentando comprar: candycane_redgreen | TransactionQty: 1 | Total: 5098 Askal_Money
-SCRIPT       : [AskalStore] 📤 RPC de compra enviado | ItemQty: 100 | QtyType: 3 | Content: 0 | Trader: 
-SCRIPT       : [AskalStore] ⏱️ Cooldown iniciado: 0.5s
-SCRIPT       : [AskalMarket] ✅ Compra realizada com sucesso
-SCRIPT       : [AskalNotification] 📢 Notificação de compra adicionada: candycane_redgreen ($5098)
-SCRIPT       : [AskalStore] Fechando menu...
+SCRIPT       : [AskalMarket] ========================================
+SCRIPT       : [AskalMarket] Tecla O pressionada
+SCRIPT       : [AskalMarket] Estado:
+SCRIPT       : [AskalMarket]   Sincronizado: SIM
+SCRIPT       : [AskalMarket]   Datasets: 15
+SCRIPT       : [AskalMarket] ToggleToolsMenu()
+SCRIPT       : [AskalMarket] Fechando menu
 SCRIPT       : [AskalStore] ✅ HUD restaurada
+SCRIPT       : [AskalMarket] ========================================
 SCRIPT       : [AskalMarket] ========================================
 SCRIPT       : [AskalMarket] Tecla O pressionada
 SCRIPT       : [AskalMarket] Estado:
@@ -2707,410 +2177,11 @@ SCRIPT       : [AskalMarket] 📥 InventoryHealthResponse recebido com 48 itens
 SCRIPT       : [AskalNotification] 💚 Health armazenado para 48 itens
 SCRIPT       : [AskalStore] 📥 Processando health de 48 itens do helper
 SCRIPT       : [AskalStore] ✅ Health processado e armazenado para 48 itens
-SCRIPT       : [AskalStore] 📑 Category card clicado → Dataset 9 | Categoria 4
+SCRIPT       : [AskalStore] 📑 Category card clicado → Dataset 3 | Categoria 3
 SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] LoadDataset(9) → 10_Base
-SCRIPT       : [AskalStore] ✅ Dataset: BASE E CONSTRUÇÃO
-SCRIPT       : [AskalStore]    Categorias: 11
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(9) - Total: 11
-SCRIPT       : [AskalStore] ✅ Category card criado: Bandeiras
-SCRIPT       : [AskalStore] ✅ Category card criado: Cozinha
-SCRIPT       : [AskalStore] ✅ Category card criado: Comunicação
-SCRIPT       : [AskalStore] ✅ Category card criado: Armadilhas
-SCRIPT       : [AskalStore] ✅ Category card criado: Consumíveis
-SCRIPT       : [AskalStore] ✅ Category card criado: Ferramentas
-SCRIPT       : [AskalStore] ✅ Category card criado: Visão
-SCRIPT       : [AskalStore] ✅ Category card criado: Equipamentos
-SCRIPT       : [AskalStore] ✅ Category card criado: Navegação
-SCRIPT       : [AskalStore] ✅ Category card criado: Contêiners
-SCRIPT       : [AskalStore] ✅ Category card criado: Tendas
-SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] LoadCategory(4) → CAT_3_Consumiveis
-SCRIPT       : [AskalStore] ✅ Categoria: Consumíveis
-SCRIPT       : [AskalStore]    Items: 57
-SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: chemlight_green
-SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: chemlight_red
-SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: spraycan_green
-SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: chemlight_yellow
-SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: chemlight_farbubble
-SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: chemlight_white
-SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: chemlight_nearbubble
-SCRIPT       : [AskalStore] RenderItems() - Total: 50
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: rabbitpelt
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: rabbitpelt
-SCRIPT       : [AskalStore] ✅ Card criado: rabbitpelt
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: bearpelt
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: bearpelt
-SCRIPT       : [AskalStore] ✅ Card criado: bearpelt
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: smallgascanister
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: smallgascanister
-SCRIPT       : [AskalStore] ✅ Card criado: smallgascanister
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: mediumgascanister
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: mediumgascanister
-SCRIPT       : [AskalStore] 🎨 Indicador de inventário: mediumgascanister | Health: 100
-SCRIPT       : [AskalStore] 📦 Card mapeado ao item do inventário: mediumgascanister
-SCRIPT       : [AskalStore] ✅ Card criado: mediumgascanister
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: roadflare
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: roadflare
-SCRIPT       : [AskalStore] ✅ Card criado: roadflare
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: netting
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: netting
-SCRIPT       : [AskalStore] ✅ Card criado: netting
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: mouflonpelt
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: mouflonpelt
-SCRIPT       : [AskalStore] ✅ Card criado: mouflonpelt
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: bonehook
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: bonehook
-SCRIPT       : [AskalStore] ✅ Card criado: bonehook
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: rope
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: rope
-SCRIPT       : [AskalStore] ✅ Card criado: rope
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: punchedcard
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: punchedcard
-SCRIPT       : [AskalStore] ✅ Card criado: punchedcard
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: deerpelt
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: deerpelt
-SCRIPT       : [AskalStore] ✅ Card criado: deerpelt
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: woodenlog
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: woodenlog
-SCRIPT       : [AskalStore] ✅ Card criado: woodenlog
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: pigpelt
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: pigpelt
-SCRIPT       : [AskalStore] ✅ Card criado: pigpelt
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: paper
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: paper
-SCRIPT       : [AskalStore] ✅ Card criado: paper
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: spraycan_black
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: spraycan_black
-SCRIPT       : [AskalStore] ✅ Card criado: spraycan_black
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: camonet
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: camonet
-SCRIPT       : [AskalStore] ✅ Card criado: camonet
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: butanecanister
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: butanecanister
-SCRIPT       : [AskalStore] ✅ Card criado: butanecanister
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: barbedwire
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: barbedwire
-SCRIPT       : [AskalStore] ✅ Card criado: barbedwire
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: bonebait
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: bonebait
-SCRIPT       : [AskalStore] ✅ Card criado: bonebait
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: burlapsack
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: burlapsack
-SCRIPT       : [AskalStore] ✅ Card criado: burlapsack
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: nailbox
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: nailbox
-SCRIPT       : [AskalStore] ✅ Card criado: nailbox
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: wildboarpelt
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: wildboarpelt
-SCRIPT       : [AskalStore] ✅ Card criado: wildboarpelt
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: bark_oak
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: bark_oak
-SCRIPT       : [AskalStore] ✅ Card criado: bark_oak
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: bark_birch
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: bark_birch
-SCRIPT       : [AskalStore] ✅ Card criado: bark_birch
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: matchbox
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: matchbox
-SCRIPT       : [AskalStore] ✅ Card criado: matchbox
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: nail
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: nail
-SCRIPT       : [AskalStore] ✅ Card criado: nail
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: tannedleather
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: tannedleather
-SCRIPT       : [AskalStore] ✅ Card criado: tannedleather
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: firewood
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: firewood
-SCRIPT       : [AskalStore] ✅ Card criado: firewood
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: foxpelt
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: foxpelt
-SCRIPT       : [AskalStore] ✅ Card criado: foxpelt
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: hook
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: hook
-SCRIPT       : [AskalStore] ✅ Card criado: hook
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: woodenplank
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: woodenplank
-SCRIPT       : [AskalStore] ✅ Card criado: woodenplank
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: stone
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: stone
-SCRIPT       : [AskalStore] ✅ Card criado: stone
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: metalplate
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: metalplate
-SCRIPT       : [AskalStore] ✅ Card criado: metalplate
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: largegascanister
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: largegascanister
-SCRIPT       : [AskalStore] ✅ Card criado: largegascanister
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: easteregg
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: easteregg
-SCRIPT       : [AskalStore] ✅ Card criado: easteregg
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: battery9v
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: battery9v
-SCRIPT       : [AskalStore] 🎨 Indicador de inventário: battery9v | Health: 100
-SCRIPT       : [AskalStore] 📦 Card mapeado ao item do inventário: battery9v
-SCRIPT       : [AskalStore] ✅ Card criado: battery9v
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: chemlight_blue
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: chemlight_blue
-SCRIPT       : [AskalStore] ✅ Card criado: chemlight_blue
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: jig
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: jig
-SCRIPT       : [AskalStore] ✅ Card criado: jig
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: sheeppelt
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: sheeppelt
-SCRIPT       : [AskalStore] ✅ Card criado: sheeppelt
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: wolfpelt
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: wolfpelt
-SCRIPT       : [AskalStore] ✅ Card criado: wolfpelt
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: reindeerpelt
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: reindeerpelt
-SCRIPT       : [AskalStore] ✅ Card criado: reindeerpelt
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: bait
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: bait
-SCRIPT       : [AskalStore] ✅ Card criado: bait
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: woodenhook
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: woodenhook
-SCRIPT       : [AskalStore] ✅ Card criado: woodenhook
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ducttape
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: ducttape
-SCRIPT       : [AskalStore] ✅ Card criado: ducttape
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: giftwrappaper
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: giftwrappaper
-SCRIPT       : [AskalStore] ✅ Card criado: giftwrappaper
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: goatpelt
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: goatpelt
-SCRIPT       : [AskalStore] ✅ Card criado: goatpelt
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: cowpelt
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: cowpelt
-SCRIPT       : [AskalStore] ✅ Card criado: cowpelt
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: fabric
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: fabric
-SCRIPT       : [AskalStore] ✅ Card criado: fabric
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: bone
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: bone
-SCRIPT       : [AskalStore] ✅ Card criado: bone
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: metalwire
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: metalwire
-SCRIPT       : [AskalStore] ✅ Card criado: metalwire
-SCRIPT       : [AskalStore] ✅ ItensCardWrap atualizado
-SCRIPT       : [AskalStore] ✅ ItensCardScroll atualizado
-SCRIPT       : [AskalStore] ✅ Renderização concluída!
-SCRIPT       : [AskalStore] ✅ 50 items carregados
-SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] 🔘 Botões atualizados | Mode: 3 | Buy: true | Sell: false | HasItem: false
-SCRIPT       : [AskalStore] UpdateRightPanel() - Item: nail
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: nail
-SCRIPT       : [AskalStore]    basePrice: 1100
-SCRIPT       : [AskalStore]    Tipo: 0
-SCRIPT       : [AskalStore]    ✅ Preço final: 1100 (NONE - sem multiplicação)
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: nail
-SCRIPT       : [AskalStore]    basePrice: 1100
-SCRIPT       : [AskalStore]    Tipo: 0
-SCRIPT       : [AskalStore]    ✅ Preço final: 1100 (NONE - sem multiplicação)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: nail
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: nail
-SCRIPT       : [AskalStore]    basePrice: 1100
-SCRIPT       : [AskalStore]    Tipo: 0
-SCRIPT       : [AskalStore]    ✅ Preço final: 1100 (NONE - sem multiplicação)
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: nail
-SCRIPT       : [AskalStore]    basePrice: 1100
-SCRIPT       : [AskalStore]    Tipo: 0
-SCRIPT       : [AskalStore]    ✅ Preço final: 1100 (NONE - sem multiplicação)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: nail
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Painel direito atualizado!
-SCRIPT       : [AskalStore] 🎚️ ConfigureQuantitySliderForItem chamado para: nail
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: nail
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] 🎚️ Tipo detectado: 2 para nail
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: nail
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] 🎚️ Configurando slider - minVal: 0 | maxVal: 99 | stepVal: 1 | qtyType: 2
-SCRIPT       : [AskalStore] ✅ Slider configurado - minVal: 0 | maxVal: 99 | qtyType: 2 | IsVisible: true
-SCRIPT       : [AskalStore] 📦 STACKABLE configurado - Range: 0-99 | Inicial: 99
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: nail
-SCRIPT       : [AskalStore]    basePrice: 1100
-SCRIPT       : [AskalStore]    Tipo: 2
-SCRIPT       : [AskalStore]    [STACKABLE] Preço unitário: 1100
-SCRIPT       : [AskalStore]    [STACKABLE] Quantidade: 99
-SCRIPT       : [AskalStore]    ✅ Preço final: 108900 (unitário × quantidade)
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: nail
-SCRIPT       : [AskalStore]    basePrice: 1100
-SCRIPT       : [AskalStore]    Tipo: 2
-SCRIPT       : [AskalStore]    [STACKABLE] Preço unitário: 1100
-SCRIPT       : [AskalStore]    [STACKABLE] Quantidade: 99
-SCRIPT       : [AskalStore]    ✅ Preço final: 108900 (unitário × quantidade)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: nail
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] 🎚️ Slider configurado - Tipo: 2 | Range: 0-99
-SCRIPT       : [AskalStore] ✅ Item selecionado: nail
-SCRIPT       : [AskalStore] ✅ Preview principal atualizado!
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: nail
-SCRIPT       : [AskalStore]    basePrice: 1100
-SCRIPT       : [AskalStore]    Tipo: 2
-SCRIPT       : [AskalStore]    [STACKABLE] Preço unitário: 1100
-SCRIPT       : [AskalStore]    [STACKABLE] Quantidade: 2
-SCRIPT       : [AskalStore]    ✅ Preço final: 2200 (unitário × quantidade)
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: nail
-SCRIPT       : [AskalStore]    basePrice: 1100
-SCRIPT       : [AskalStore]    Tipo: 2
-SCRIPT       : [AskalStore]    [STACKABLE] Preço unitário: 1100
-SCRIPT       : [AskalStore]    [STACKABLE] Quantidade: 2
-SCRIPT       : [AskalStore]    ✅ Preço final: 2200 (unitário × quantidade)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: nail
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] 🛒 buy_button_solo (painel single) clicado
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: nail
-SCRIPT       : [AskalStore]    basePrice: 1100
-SCRIPT       : [AskalStore]    Tipo: 2
-SCRIPT       : [AskalStore]    [STACKABLE] Preço unitário: 1100
-SCRIPT       : [AskalStore]    [STACKABLE] Quantidade: 2
-SCRIPT       : [AskalStore]    ✅ Preço final: 2200 (unitário × quantidade)
-SCRIPT       : [AskalStore] 💰 Tentando comprar: nail | TransactionQty: 1 | Total: 2200 Askal_Money
-SCRIPT       : [AskalStore] 📤 RPC de compra enviado | ItemQty: 2 | QtyType: 2 | Content: 0 | Trader: 
-SCRIPT       : [AskalStore] ⏱️ Cooldown iniciado: 0.5s
-SCRIPT       : [AskalMarket] ✅ Compra realizada com sucesso
-SCRIPT       : [AskalNotification] 📢 Notificação de compra adicionada: nail ($2200)
-SCRIPT       : [AskalStore] Fechando menu...
-SCRIPT       : [AskalStore] ✅ HUD restaurada
-SCRIPT       : [AskalMarket] ========================================
-SCRIPT       : [AskalMarket] Tecla O pressionada
-SCRIPT       : [AskalMarket] Estado:
-SCRIPT       : [AskalMarket]   Sincronizado: SIM
-SCRIPT       : [AskalMarket]   Datasets: 15
-SCRIPT       : [AskalMarket] ToggleToolsMenu()
-SCRIPT       : [AskalMarket] Abrindo menu
-SCRIPT       : [AskalStore] =============================================
-SCRIPT       : [AskalStore] AskalStoreMenu() CONSTRUTOR - VERSÃO DINÂMICA
-SCRIPT       : [AskalStore] =============================================
-SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] Init() - VERSÃO DINÂMICA (lê do Core Database)
-SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] ✅ RootWidget criado!
-SCRIPT       : [AskalStore] ✅ market_header_title_text encontrado!
-SCRIPT       : [AskalStore] 🔍 Buscando datasets_scroll_container...
-SCRIPT       : [AskalStore] ✅ datasets_scroll_container encontrado!
-SCRIPT       : [AskalStore] ✅ datasets_cards_holder encontrado!
-SCRIPT       : [AskalStore] ✅ Item details layout carregado!
-SCRIPT       : [AskalStore] ✅ details_section_title_text encontrado!
-SCRIPT       : [AskalStore] 🔍 Buscando actions_panel no m_RootWidget...
-SCRIPT       : [AskalStore] ✅ actions_panel encontrado!
-SCRIPT       : [AskalStore] ✅ buy_and_sell_button encontrado (novo layout)!
-SCRIPT       : [AskalStore] ✅ Painel dual de compra/venda identificado
-SCRIPT       : [AskalStore] ✅ buy_button encontrado!
-SCRIPT       : [AskalStore] ✅ sell_button encontrado!
-SCRIPT       : [AskalStore] ⚠️ Contêiner single não identificado no layout (usando botões diretos)
-SCRIPT       : [AskalStore] ✅ Botão individual de compra localizado!
-SCRIPT       : [AskalStore] ✅ Botão individual de venda localizado!
-SCRIPT       : [AskalStore] ✅ search_input encontrado!
-SCRIPT       : [AskalStore] ✅ search_button encontrado!
-SCRIPT       : [AskalStore] ✅ options_panel encontrado!
-SCRIPT       : [AskalStore] ✅ toggle_batch_buy encontrado!
-SCRIPT       : [AskalStore] ✅ toggle_batch_sell encontrado!
-SCRIPT       : [AskalStore] ✅ player_Inventory_card encontrado!
-SCRIPT       : [AskalStore] ⏱️ Tempo de atraso configurado: 500ms (0.5s)
-SCRIPT       : [AskalStore] ✅ buy cooldown progress inicializado
-SCRIPT       : [AskalStore] ✅ sell cooldown progress inicializado
-SCRIPT       : [AskalStore] ✅ buy solo cooldown progress inicializado
-SCRIPT       : [AskalStore] ✅ sell solo cooldown progress inicializado
-SCRIPT       : [AskalStore] ✅ market_notification_card_holder encontrado!
-SCRIPT       : [AskalStore] ✅ Slider de quantidade inicializado
-SCRIPT       : [AskalStore] ✅ Seletor de conteúdo inicializado
-SCRIPT       : [AskalStore] Widgets inicializados
-SCRIPT       : [AskalStore] 🔄 Carregando datasets do Core Database...
-SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] LoadDatasetsFromCore() - CACHE SIMPLIFICADO
-SCRIPT       : [AskalStore] ✅ Cache tem 15 datasets
-SCRIPT       : [AskalStore]   ✅ 1_Food (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 2_Drinks (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 3_Medical (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 4_Clothing (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 5_Outfits (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 6_Firearms (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 7_Ammunition (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 8_Attachments (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 9_Explosives (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 10_Base (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 11_Cultivation (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 12_Seasonal (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 13_Collectibles (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 14_Vehicles (modo: 3)
-SCRIPT       : [AskalStore]   ✅ 15_Improvised (modo: 3)
-SCRIPT       : [AskalStore] CreateDatasetCards() - Total: 15
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(0) - Total: 4
-SCRIPT       : [AskalStore] ✅ Category card criado: Industrializados
-SCRIPT       : [AskalStore] ✅ Category card criado: Vegetais
-SCRIPT       : [AskalStore] ✅ Category card criado: Cogumelos
-SCRIPT       : [AskalStore] ✅ Category card criado: Animal
-SCRIPT       : [AskalStore] ✅ Dataset card criado: ALIMENTOS
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(1) - Total: 2
-SCRIPT       : [AskalStore] ✅ Category card criado: Latas
-SCRIPT       : [AskalStore] ✅ Category card criado: Garrafas
-SCRIPT       : [AskalStore] ✅ Dataset card criado: BEBIDAS
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(2) - Total: 3
-SCRIPT       : [AskalStore] ✅ Category card criado: Consumíveis
-SCRIPT       : [AskalStore] ✅ Category card criado: Insumos
-SCRIPT       : [AskalStore] ✅ Category card criado: Auxiliares
-SCRIPT       : [AskalStore] ✅ Dataset card criado: MEDICINA
+SCRIPT       : [AskalStore] LoadDataset(3) → 4_Clothing
+SCRIPT       : [AskalStore] ✅ Dataset: ROUPAS, TRAJES E EQUIPAMENTOS
+SCRIPT       : [AskalStore]    Categorias: 14
 SCRIPT       : [AskalStore] BuildCategoriesForDataset(3) - Total: 14
 SCRIPT       : [AskalStore] ✅ Category card criado: Máscaras
 SCRIPT       : [AskalStore] ✅ Category card criado: Calças
@@ -3126,14 +2197,305 @@ SCRIPT       : [AskalStore] ✅ Category card criado: Cintos
 SCRIPT       : [AskalStore] ✅ Category card criado: Óculos
 SCRIPT       : [AskalStore] ✅ Category card criado: Variedades
 SCRIPT       : [AskalStore] ✅ Category card criado: Mochilas
-SCRIPT       : [AskalStore] ✅ Dataset card criado: ROUPAS, TRAJES E EQUIPAMENTOS
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(4) - Total: 5
-SCRIPT       : [AskalStore] ✅ Category card criado: TEMPLÁRIO
-SCRIPT       : [AskalStore] ✅ Category card criado: TRAPO
-SCRIPT       : [AskalStore] ✅ Category card criado: CORTUME
-SCRIPT       : [AskalStore] ✅ Category card criado: NBQ
-SCRIPT       : [AskalStore] ✅ Category card criado: Ghillie
-SCRIPT       : [AskalStore] ✅ Dataset card criado: OUTFITS
+SCRIPT       : [AskalStore] ========================================
+SCRIPT       : [AskalStore] ========================================
+SCRIPT       : [AskalStore] LoadCategory(3) → CAT_1_Casmisas
+SCRIPT       : [AskalStore] ✅ Categoria: Casmisas
+SCRIPT       : [AskalStore]    Items: 149
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: sweater_christmasblue
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: womansuit_lightgrey
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: hikingjacket_green
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: gorkaejacket_pautrev
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: womansuit_brown
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: bomberjacket_skyblue
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: minidress_pinkchecker
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: mansuit_white
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: mansuit_lightgrey
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: jumpsuitjacket_gray
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: bomberjacket_blue
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: woolcoat_black
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: woolcoat_greycheck
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: tshirt_blue
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: woolcoat_blackcheck
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: minidress_greenchecker
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: m65jacket_khaki
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: woolcoat_green
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: quiltedjacket_orange
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: gorkaejacket_flat
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: tacticalshirt_tan
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: firefighterjacket_black
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: woolcoat_red
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: woolcoat_browncheck
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: huntingjacket_winter
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: downjacket_orange
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: blouse_violet
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: gorkaejacket_winter
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: nursedress_white
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: tracksuitjacket_green
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: mansuit_black
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: mansuit_blue
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: hoodie_brown
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: tracksuitjacket_red
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: woolcoat_blue
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: bomberjacket_olive
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: mansuit_khaki
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: tshirt_red
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: raincoat_yellow
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: jumpsuitjacket_red
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: hoodie_red
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: hoodie_blue
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: quiltedjacket_violet
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: hikingjacket_red
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: quiltedjacket_grey
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: tacticalshirt_grey
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: paramedicjacket_crimson
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: tshirt_white
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: quiltedjacket_red
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: raincoat_pink
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: medicalscrubsshirt_white
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: tshirt_green
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: m65jacket_tan
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: bomberjacket_maroon
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: minidress_brownchecker
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: minidress_pink
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: medicalscrubsshirt_green
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: huntingjacket_summer
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: jumpsuitjacket_green
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: sweater_gray
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: tshirt_dyed
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: sweater_red
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: gorkaejacket_summer
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: quiltedjacket_green
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: tshirt_redblackstripes
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: hoodie_green
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: womansuit_khaki
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: sweater_green
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: womansuit_black
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: bomberjacket_grey
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: sweater_christmasgreen
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: woolcoat_redcheck
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: tacticalshirt_olive
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: tshirt_grey
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: downjacket_green
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: downjacket_red
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: tshirt_black
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: quiltedjacket_yellow
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: minidress_bluewithdots
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: woolcoat_bluecheck
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: mansuit_brown
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: blouse_white
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: huntingjacket_spring
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: blouse_green
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: minidress_whitechecker
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: raincoat_orange
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: tracksuitjacket_lightblue
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: m65jacket_olive
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: paramedicjacket_green
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: womansuit_darkgrey
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: mansuit_darkgrey
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: raincoat_red
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: quiltedjacket_blue
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: huntingjacket_brown
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: womansuit_blue
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: raincoat_green
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: tracksuitjacket_blue
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: tshirt_orangewhitestripes
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: bomberjacket_brown
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: womansuit_white
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: raincoat_blue
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: sweater_christmasred
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: minidress_redchecker
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: hikingjacket_blue
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: hoodie_grey
+SCRIPT       : [AskalStore] RenderItems() - Total: 44
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: bushlatpolicejacket_blue
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: bushlatpolicejacket_blue
+SCRIPT       : [AskalStore] ✅ Card criado: bushlatpolicejacket_blue
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: usmcjacket_woodland
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: usmcjacket_woodland
+SCRIPT       : [AskalStore] ✅ Card criado: usmcjacket_woodland
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: womansuit_beige
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: womansuit_beige
+SCRIPT       : [AskalStore] ✅ Card criado: womansuit_beige
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: raincoat_black
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: raincoat_black
+SCRIPT       : [AskalStore] ✅ Card criado: raincoat_black
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: labcoat
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: labcoat
+SCRIPT       : [AskalStore] ✅ Card criado: labcoat
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: bdujacket
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: bdujacket
+SCRIPT       : [AskalStore] ✅ Card criado: bdujacket
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: minidress_bluechecker
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: minidress_bluechecker
+SCRIPT       : [AskalStore] ✅ Card criado: minidress_bluechecker
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: omkjacket_navy
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: omkjacket_navy
+SCRIPT       : [AskalStore] ✅ Card criado: omkjacket_navy
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ridersjacket_black
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: ridersjacket_black
+SCRIPT       : [AskalStore] ✅ Card criado: ridersjacket_black
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: navyuniformjacket
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: navyuniformjacket
+SCRIPT       : [AskalStore] ✅ Card criado: navyuniformjacket
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: hikingjacket_black
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: hikingjacket_black
+SCRIPT       : [AskalStore] ✅ Card criado: hikingjacket_black
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: downjacket_blue
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: downjacket_blue
+SCRIPT       : [AskalStore] ✅ Card criado: downjacket_blue
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: paramedicjacket_blue
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: paramedicjacket_blue
+SCRIPT       : [AskalStore] ✅ Card criado: paramedicjacket_blue
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: sweater_blue
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: sweater_blue
+SCRIPT       : [AskalStore] ✅ Card criado: sweater_blue
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: denimjacket
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: denimjacket
+SCRIPT       : [AskalStore] ✅ Card criado: denimjacket
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ttskojacket_camo
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: ttskojacket_camo
+SCRIPT       : [AskalStore] ✅ Card criado: ttskojacket_camo
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: firefighterjacket_beige
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: firefighterjacket_beige
+SCRIPT       : [AskalStore] ✅ Card criado: firefighterjacket_beige
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: shirt_bluecheckbright
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: shirt_bluecheckbright
+SCRIPT       : [AskalStore] ✅ Card criado: shirt_bluecheckbright
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: telnyashkashirt
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: telnyashkashirt
+SCRIPT       : [AskalStore] ✅ Card criado: telnyashkashirt
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: shirt_planeblack
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: shirt_planeblack
+SCRIPT       : [AskalStore] ✅ Card criado: shirt_planeblack
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: mansuit_beige
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: mansuit_beige
+SCRIPT       : [AskalStore] ✅ Card criado: mansuit_beige
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: bomberjacket_black
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: bomberjacket_black
+SCRIPT       : [AskalStore] ✅ Card criado: bomberjacket_black
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: tacticalshirt_black
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: tacticalshirt_black
+SCRIPT       : [AskalStore] ✅ Card criado: tacticalshirt_black
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: chernarussportshirt
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: chernarussportshirt
+SCRIPT       : [AskalStore] ✅ Card criado: chernarussportshirt
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: shirt_redcheck
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: shirt_redcheck
+SCRIPT       : [AskalStore] ✅ Card criado: shirt_redcheck
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: tracksuitjacket_black
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: tracksuitjacket_black
+SCRIPT       : [AskalStore] ✅ Card criado: tracksuitjacket_black
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: hoodie_black
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: hoodie_black
+SCRIPT       : [AskalStore] ✅ Card criado: hoodie_black
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: woolcoat_beige
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: woolcoat_beige
+SCRIPT       : [AskalStore] ✅ Card criado: woolcoat_beige
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: huntingjacket_autumn
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: huntingjacket_autumn
+SCRIPT       : [AskalStore] ✅ Card criado: huntingjacket_autumn
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: shirt_greencheck
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: shirt_greencheck
+SCRIPT       : [AskalStore] ✅ Card criado: shirt_greencheck
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: gorkaejacket_autumn
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: gorkaejacket_autumn
+SCRIPT       : [AskalStore] ✅ Card criado: gorkaejacket_autumn
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: policejacketorel
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: policejacketorel
+SCRIPT       : [AskalStore] ✅ Card criado: policejacketorel
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: medicalscrubsshirt_blue
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: medicalscrubsshirt_blue
+SCRIPT       : [AskalStore] ✅ Card criado: medicalscrubsshirt_blue
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: policejacket
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: policejacket
+SCRIPT       : [AskalStore] ✅ Card criado: policejacket
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: quiltedjacket_black
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: quiltedjacket_black
+SCRIPT       : [AskalStore] 🎨 Indicador de inventário: quiltedjacket_black | Health: 100
+SCRIPT       : [AskalStore] 📦 Card mapeado ao item do inventário: quiltedjacket_black
+SCRIPT       : [AskalStore] ✅ Card criado: quiltedjacket_black
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: jumpsuitjacket_blue
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: jumpsuitjacket_blue
+SCRIPT       : [AskalStore] ✅ Card criado: jumpsuitjacket_blue
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: blouse_blue
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: blouse_blue
+SCRIPT       : [AskalStore] ✅ Card criado: blouse_blue
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: tshirt_beige
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: tshirt_beige
+SCRIPT       : [AskalStore] ✅ Card criado: tshirt_beige
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: shirt_whitecheck
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: shirt_whitecheck
+SCRIPT       : [AskalStore] ✅ Card criado: shirt_whitecheck
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: prisonuniformjacket
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: prisonuniformjacket
+SCRIPT       : [AskalStore] ✅ Card criado: prisonuniformjacket
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: usmcjacket_desert
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: usmcjacket_desert
+SCRIPT       : [AskalStore] ✅ Card criado: usmcjacket_desert
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: shirt_bluecheck
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: shirt_bluecheck
+SCRIPT       : [AskalStore] ✅ Card criado: shirt_bluecheck
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: m65jacket_black
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: m65jacket_black
+SCRIPT       : [AskalStore] ✅ Card criado: m65jacket_black
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: nursedress_blue
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: nursedress_blue
+SCRIPT       : [AskalStore] ✅ Card criado: nursedress_blue
+SCRIPT       : [AskalStore] ✅ ItensCardWrap atualizado
+SCRIPT       : [AskalStore] ✅ ItensCardScroll atualizado
+SCRIPT       : [AskalStore] ✅ Renderização concluída!
+SCRIPT       : [AskalStore] ✅ 44 items carregados
+SCRIPT       : [AskalStore] ========================================
+SCRIPT       : [AskalStore] 📑 Category card clicado → Dataset 5 | Categoria 5
+SCRIPT       : [AskalStore] ========================================
+SCRIPT       : [AskalStore] LoadDataset(5) → 6_Firearms
+SCRIPT       : [AskalStore] ✅ Dataset: ARMAS
+SCRIPT       : [AskalStore]    Categorias: 8
 SCRIPT       : [AskalStore] BuildCategoriesForDataset(5) - Total: 8
 SCRIPT       : [AskalStore] ✅ Category card criado: Rifles Sniper
 SCRIPT       : [AskalStore] ✅ Category card criado: Escopetas
@@ -3143,411 +2505,135 @@ SCRIPT       : [AskalStore] ✅ Category card criado: Outros
 SCRIPT       : [AskalStore] ✅ Category card criado: Pistolas
 SCRIPT       : [AskalStore] ✅ Category card criado: Submetralhadoras
 SCRIPT       : [AskalStore] ✅ Category card criado: Atirador Designado
-SCRIPT       : [AskalStore] ✅ Dataset card criado: ARMAS
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(6) - Total: 3
-SCRIPT       : [AskalStore] ✅ Category card criado: Caixas
-SCRIPT       : [AskalStore] ✅ Category card criado: Outros
-SCRIPT       : [AskalStore] ✅ Category card criado: Avulsas
-SCRIPT       : [AskalStore] ✅ Dataset card criado: MUNIÇÕES
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(7) - Total: 6
-SCRIPT       : [AskalStore] ✅ Category card criado: Carregadores
-SCRIPT       : [AskalStore] ✅ Category card criado: Suportes
-SCRIPT       : [AskalStore] ✅ Category card criado: Lanternas
-SCRIPT       : [AskalStore] ✅ Category card criado: Miras
-SCRIPT       : [AskalStore] ✅ Category card criado: Ponteiras
-SCRIPT       : [AskalStore] ✅ Category card criado: Trilhos
-SCRIPT       : [AskalStore] ✅ Dataset card criado: ACESSÓRIOS
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(8) - Total: 2
-SCRIPT       : [AskalStore] ✅ Category card criado: Granadas
-SCRIPT       : [AskalStore] ✅ Category card criado: Minas
-SCRIPT       : [AskalStore] ✅ Dataset card criado: EXPLOSIVOS
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(9) - Total: 11
-SCRIPT       : [AskalStore] ✅ Category card criado: Bandeiras
-SCRIPT       : [AskalStore] ✅ Category card criado: Cozinha
-SCRIPT       : [AskalStore] ✅ Category card criado: Comunicação
-SCRIPT       : [AskalStore] ✅ Category card criado: Armadilhas
-SCRIPT       : [AskalStore] ✅ Category card criado: Consumíveis
-SCRIPT       : [AskalStore] ✅ Category card criado: Ferramentas
-SCRIPT       : [AskalStore] ✅ Category card criado: Visão
-SCRIPT       : [AskalStore] ✅ Category card criado: Equipamentos
-SCRIPT       : [AskalStore] ✅ Category card criado: Navegação
-SCRIPT       : [AskalStore] ✅ Category card criado: Contêiners
-SCRIPT       : [AskalStore] ✅ Category card criado: Tendas
-SCRIPT       : [AskalStore] ✅ Dataset card criado: BASE E CONSTRUÇÃO
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(10) - Total: 3
-SCRIPT       : [AskalStore] ✅ Category card criado: Sementes Avulsas
-SCRIPT       : [AskalStore] ✅ Category card criado: Pacotes
-SCRIPT       : [AskalStore] ✅ Category card criado: Cultivo
-SCRIPT       : [AskalStore] ✅ Dataset card criado: PLANTIO
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(11) - Total: 4
-SCRIPT       : [AskalStore] ✅ Category card criado: Aniversário
-SCRIPT       : [AskalStore] ✅ Category card criado: Outros
-SCRIPT       : [AskalStore] ✅ Category card criado: Natal
-SCRIPT       : [AskalStore] ✅ Category card criado: Halloween
-SCRIPT       : [AskalStore] ✅ Dataset card criado: TEMPORADA
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(12) - Total: 1
-SCRIPT       : [AskalStore] ✅ Category card criado: Livros
-SCRIPT       : [AskalStore] ✅ Dataset card criado: COLECIONÁVEIS
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(13) - Total: 5
-SCRIPT       : [AskalStore] ✅ Category card criado: Ferramentas
-SCRIPT       : [AskalStore] ✅ Category card criado: Aquáticos
-SCRIPT       : [AskalStore] ✅ Category card criado: Portas e Capôs
-SCRIPT       : [AskalStore] ✅ Category card criado: Terrestres
-SCRIPT       : [AskalStore] ✅ Category card criado: Pneus
-SCRIPT       : [AskalStore] ✅ Dataset card criado: VEÍCULOS
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(14) - Total: 2
-SCRIPT       : [AskalStore] ✅ Category card criado: Insumos Coletáveis
-SCRIPT       : [AskalStore] ✅ Category card criado: Confeccionáveis
-SCRIPT       : [AskalStore] ✅ Dataset card criado: IMPROVISADOS
-SCRIPT       : [AskalStore] ✅ 15 datasets carregados
 SCRIPT       : [AskalStore] ========================================
 SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] LoadDataset(0) → 1_Food
-SCRIPT       : [AskalStore] ✅ Dataset: ALIMENTOS
-SCRIPT       : [AskalStore]    Categorias: 4
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(0) - Total: 4
-SCRIPT       : [AskalStore] ✅ Category card criado: Industrializados
-SCRIPT       : [AskalStore] ✅ Category card criado: Vegetais
-SCRIPT       : [AskalStore] ✅ Category card criado: Cogumelos
-SCRIPT       : [AskalStore] ✅ Category card criado: Animal
-SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] LoadCategory(0) → CAT_1_Industrializados
-SCRIPT       : [AskalStore] ✅ Categoria: Industrializados
-SCRIPT       : [AskalStore]    Items: 29
-SCRIPT       : [AskalStore] RenderItems() - Total: 29
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: zagorkypeanuts
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: zagorkypeanuts
-SCRIPT       : [AskalStore] ✅ Card criado: zagorkypeanuts
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: porkcan
+SCRIPT       : [AskalStore] LoadCategory(5) → CAT_1_Pistolas
+SCRIPT       : [AskalStore] ✅ Categoria: Pistolas
+SCRIPT       : [AskalStore]    Items: 16
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: derringer_grey
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: derringer_pink
+SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: deagle_gold
+SCRIPT       : [AskalStore] RenderItems() - Total: 13
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: p1
 SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: porkcan
-SCRIPT       : [AskalStore] ✅ Card criado: porkcan
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: brisketspread
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: p1
+SCRIPT       : [AskalStore] ✅ Card criado: p1
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: mkii
 SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: brisketspread
-SCRIPT       : [AskalStore] ✅ Card criado: brisketspread
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: honey
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: honey
-SCRIPT       : [AskalStore] ✅ Card criado: honey
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: marmalade
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: marmalade
-SCRIPT       : [AskalStore] ✅ Card criado: marmalade
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: candycane_redgreen
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: candycane_redgreen
-SCRIPT       : [AskalStore] ✅ Card criado: candycane_redgreen
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: powderedmilk
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: powderedmilk
-SCRIPT       : [AskalStore] ✅ Card criado: powderedmilk
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: candycane_yellow
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: candycane_yellow
-SCRIPT       : [AskalStore] ✅ Card criado: candycane_yellow
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: pate
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: mkii
+SCRIPT       : [AskalStore] ✅ Card criado: mkii
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: magnum
 SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: pate
-SCRIPT       : [AskalStore] ✅ Card criado: pate
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: spaghettican
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: magnum
+SCRIPT       : [AskalStore] ✅ Card criado: magnum
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: jd_tec9
 SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: spaghettican
-SCRIPT       : [AskalStore] ✅ Card criado: spaghettican
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: tacticalbaconcan
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: jd_tec9
+SCRIPT       : [AskalStore] ✅ Card criado: jd_tec9
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: longhorn
 SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: tacticalbaconcan
-SCRIPT       : [AskalStore] ✅ Card criado: tacticalbaconcan
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: pajka
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: longhorn
+SCRIPT       : [AskalStore] ✅ Card criado: longhorn
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: engraved1911
 SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: pajka
-SCRIPT       : [AskalStore] ✅ Card criado: pajka
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: crackers
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: crackers
-SCRIPT       : [AskalStore] ✅ Card criado: crackers
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: zagorky
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: zagorky
-SCRIPT       : [AskalStore] ✅ Card criado: zagorky
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: rice
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: rice
-SCRIPT       : [AskalStore] ✅ Card criado: rice
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: peachescan
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: engraved1911
+SCRIPT       : [AskalStore] ✅ Card criado: engraved1911
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: cz75
 SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: peachescan
-SCRIPT       : [AskalStore] ✅ Card criado: peachescan
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: crabcan
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: cz75
+SCRIPT       : [AskalStore] ✅ Card criado: cz75
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: colt1911
 SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: crabcan
-SCRIPT       : [AskalStore] ✅ Card criado: crabcan
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: chips
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: chips
-SCRIPT       : [AskalStore] ✅ Card criado: chips
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: dogfoodcan
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: colt1911
+SCRIPT       : [AskalStore] ✅ Card criado: colt1911
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: fnx45
 SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: dogfoodcan
-SCRIPT       : [AskalStore] ✅ Card criado: dogfoodcan
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: candycane_green
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: candycane_green
-SCRIPT       : [AskalStore] ✅ Card criado: candycane_green
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: candycane_red
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: candycane_red
-SCRIPT       : [AskalStore] ✅ Card criado: candycane_red
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: saltysticks
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: saltysticks
-SCRIPT       : [AskalStore] ✅ Card criado: saltysticks
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: tunacan
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: fnx45
+SCRIPT       : [AskalStore] ✅ Card criado: fnx45
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: derringer_black
 SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: tunacan
-SCRIPT       : [AskalStore] ✅ Card criado: tunacan
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: lunchmeat
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: derringer_black
+SCRIPT       : [AskalStore] ✅ Card criado: derringer_black
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: glock19
 SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: lunchmeat
-SCRIPT       : [AskalStore] ✅ Card criado: lunchmeat
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: boxcerealcrunchin
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: boxcerealcrunchin
-SCRIPT       : [AskalStore] ✅ Card criado: boxcerealcrunchin
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: zagorkychocolate
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 3
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: zagorkychocolate
-SCRIPT       : [AskalStore] ✅ Card criado: zagorkychocolate
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: catfoodcan
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: glock19
+SCRIPT       : [AskalStore] 🎨 Indicador de inventário: glock19 | Health: 100
+SCRIPT       : [AskalStore] 📦 Card mapeado ao item do inventário: glock19
+SCRIPT       : [AskalStore] ✅ Card criado: glock19
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: deagle
 SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: catfoodcan
-SCRIPT       : [AskalStore] ✅ Card criado: catfoodcan
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: sardinescan
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: deagle
+SCRIPT       : [AskalStore] ✅ Card criado: deagle
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: makarovij70
 SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: sardinescan
-SCRIPT       : [AskalStore] ✅ Card criado: sardinescan
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: bakedbeanscan
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: bakedbeanscan
-SCRIPT       : [AskalStore] ✅ Card criado: bakedbeanscan
+SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: makarovij70
+SCRIPT       : [AskalStore] ✅ Card criado: makarovij70
 SCRIPT       : [AskalStore] ✅ ItensCardWrap atualizado
 SCRIPT       : [AskalStore] ✅ ItensCardScroll atualizado
 SCRIPT       : [AskalStore] ✅ Renderização concluída!
-SCRIPT       : [AskalStore] ✅ 29 items carregados
-SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] 🔍 Escaneando inventário do player...
-SCRIPT       : [AskalStore] 📦 Total de itens no inventário: 57
-SCRIPT       : [AskalStore] ✅ Inventário escaneado: 49 tipos de itens únicos
-SCRIPT       : [AskalStore] 📤 Solicitando health dos itens do inventário ao servidor...
-SCRIPT       : [AskalStore] ================ Init() CONCLUÍDO ================
-SCRIPT       : [AskalStore] ✅ HUD ocultada
-SCRIPT       : [AskalMarket] ✅ Menu aberto
-SCRIPT       : [AskalMarket] ========================================
-SCRIPT       : [AskalMarket] 📥 InventoryHealthResponse recebido com 49 itens
-SCRIPT       : [AskalNotification] 💚 Health armazenado para 49 itens
-SCRIPT       : [AskalStore] 📥 Processando health de 49 itens do helper
-SCRIPT       : [AskalStore] ✅ Health processado e armazenado para 49 itens
-SCRIPT       : [AskalStore] 📑 Category card clicado → Dataset 6 | Categoria 2
-SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] LoadDataset(6) → 7_Ammunition
-SCRIPT       : [AskalStore] ✅ Dataset: MUNIÇÕES
-SCRIPT       : [AskalStore]    Categorias: 3
-SCRIPT       : [AskalStore] BuildCategoriesForDataset(6) - Total: 3
-SCRIPT       : [AskalStore] ✅ Category card criado: Caixas
-SCRIPT       : [AskalStore] ✅ Category card criado: Outros
-SCRIPT       : [AskalStore] ✅ Category card criado: Avulsas
-SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] ========================================
-SCRIPT       : [AskalStore] LoadCategory(2) → CAT_1_AVULSAS
-SCRIPT       : [AskalStore] ✅ Categoria: Avulsas
-SCRIPT       : [AskalStore]    Items: 23
-SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: ammo_556x45tracer
-SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: ammo_308wintracer
-SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: ammo_545x39tracer
-SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: ammo_762x39tracer
-SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: ammo_762x54tracer
-SCRIPT       : [AskalStore] 🔁 Ignorando variante na lista principal: ammo_9x39ap
-SCRIPT       : [AskalStore] RenderItems() - Total: 17
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_hk_46x30
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: ammo_hk_46x30
-SCRIPT       : [AskalStore] ✅ Card criado: ammo_hk_46x30
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_556x45
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: ammo_556x45
-SCRIPT       : [AskalStore] ✅ Card criado: ammo_556x45
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_357
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: ammo_357
-SCRIPT       : [AskalStore] ✅ Card criado: ammo_357
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_762x39
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: ammo_762x39
-SCRIPT       : [AskalStore] ✅ Card criado: ammo_762x39
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_762x54
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: ammo_762x54
-SCRIPT       : [AskalStore] ✅ Card criado: ammo_762x54
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_45acp
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: ammo_45acp
-SCRIPT       : [AskalStore] ✅ Card criado: ammo_45acp
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_545x39
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: ammo_545x39
-SCRIPT       : [AskalStore] ✅ Card criado: ammo_545x39
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_12gapellets
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: ammo_12gapellets
-SCRIPT       : [AskalStore] ✅ Card criado: ammo_12gapellets
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_fn57x28
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: ammo_fn57x28
-SCRIPT       : [AskalStore] 🎨 Indicador de inventário: ammo_fn57x28 | Health: 100
-SCRIPT       : [AskalStore] 📦 Card mapeado ao item do inventário: ammo_fn57x28
-SCRIPT       : [AskalStore] ✅ Card criado: ammo_fn57x28
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_9x19
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: ammo_9x19
-SCRIPT       : [AskalStore] ✅ Card criado: ammo_9x19
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_12gabeanbag
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: ammo_12gabeanbag
-SCRIPT       : [AskalStore] ✅ Card criado: ammo_12gabeanbag
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_9x39
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: ammo_9x39
-SCRIPT       : [AskalStore] ✅ Card criado: ammo_9x39
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_308win
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: ammo_308win
-SCRIPT       : [AskalStore] ✅ Card criado: ammo_308win
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_12garubberslug
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: ammo_12garubberslug
-SCRIPT       : [AskalStore] ✅ Card criado: ammo_12garubberslug
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_380
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: ammo_380
-SCRIPT       : [AskalStore] ✅ Card criado: ammo_380
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_22
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: ammo_22
-SCRIPT       : [AskalStore] ✅ Card criado: ammo_22
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_12gaslug
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ✅ Preview 3D criado no card: ammo_12gaslug
-SCRIPT       : [AskalStore] ✅ Card criado: ammo_12gaslug
-SCRIPT       : [AskalStore] ✅ ItensCardWrap atualizado
-SCRIPT       : [AskalStore] ✅ ItensCardScroll atualizado
-SCRIPT       : [AskalStore] ✅ Renderização concluída!
-SCRIPT       : [AskalStore] ✅ 17 items carregados
+SCRIPT       : [AskalStore] ✅ 13 items carregados
 SCRIPT       : [AskalStore] ========================================
 SCRIPT       : [AskalStore] 🔘 Botões atualizados | Mode: 3 | Buy: true | Sell: false | HasItem: false
-SCRIPT       : [AskalStore] UpdateRightPanel() - Item: ammo_9x39
+SCRIPT       : [AskalStore] UpdateRightPanel() - Item: deagle
 SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: ammo_9x39
-SCRIPT       : [AskalStore]    basePrice: 13
+SCRIPT       : [AskalStore]    Classe: deagle
+SCRIPT       : [AskalStore]    basePrice: 1760
 SCRIPT       : [AskalStore]    Tipo: 0
-SCRIPT       : [AskalStore]    ✅ Preço final: 13 (NONE - sem multiplicação)
+SCRIPT       : [AskalStore]    ✅ Preço final: 1760 (NONE - sem multiplicação)
 SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: ammo_9x39
-SCRIPT       : [AskalStore]    basePrice: 13
+SCRIPT       : [AskalStore]    Classe: deagle
+SCRIPT       : [AskalStore]    basePrice: 1760
 SCRIPT       : [AskalStore]    Tipo: 0
-SCRIPT       : [AskalStore]    ✅ Preço final: 13 (NONE - sem multiplicação)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_9x39
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] RenderItemVariants() - Base: ammo_9x39 | Variantes: 1
+SCRIPT       : [AskalStore]    ✅ Preço final: 1760 (NONE - sem multiplicação)
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: deagle
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] RenderItemVariants() - Base: deagle | Variantes: 1
 SCRIPT       : [AskalStore] ✅ Variantes renderizadas: 2
+SCRIPT       : [AskalStore] ✅ Attachment preview criado: mag_deagle_9rnd
 SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: ammo_9x39
-SCRIPT       : [AskalStore]    basePrice: 13
+SCRIPT       : [AskalStore]    Classe: deagle
+SCRIPT       : [AskalStore]    basePrice: 1760
 SCRIPT       : [AskalStore]    Tipo: 0
-SCRIPT       : [AskalStore]    ✅ Preço final: 13 (NONE - sem multiplicação)
+SCRIPT       : [AskalStore]    ✅ Preço final: 1760 (NONE - sem multiplicação)
 SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: ammo_9x39
-SCRIPT       : [AskalStore]    basePrice: 13
+SCRIPT       : [AskalStore]    Classe: deagle
+SCRIPT       : [AskalStore]    basePrice: 1760
 SCRIPT       : [AskalStore]    Tipo: 0
-SCRIPT       : [AskalStore]    ✅ Preço final: 13 (NONE - sem multiplicação)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_9x39
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
+SCRIPT       : [AskalStore]    ✅ Preço final: 1760 (NONE - sem multiplicação)
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: deagle
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
 SCRIPT       : [AskalStore] ✅ Painel direito atualizado!
-SCRIPT       : [AskalStore] 🎚️ ConfigureQuantitySliderForItem chamado para: ammo_9x39
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_9x39
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] 🎚️ Tipo detectado: 2 para ammo_9x39
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_9x39
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] ⚠️ maxVal <= 1 para ammo_9x39, tentando ler do config...
-SCRIPT       : [AskalStore] 📦 maxVal ajustado do config: 20
-SCRIPT       : [AskalStore] 🎚️ Configurando slider - minVal: 1 | maxVal: 20 | stepVal: 1 | qtyType: 2
-SCRIPT       : [AskalStore] ✅ Slider configurado - minVal: 1 | maxVal: 20 | qtyType: 2 | IsVisible: true
-SCRIPT       : [AskalStore] 📦 STACKABLE configurado - Range: 1-20 | Inicial: 20
+SCRIPT       : [AskalStore] 🎚️ ConfigureQuantitySliderForItem chamado para: deagle
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: deagle
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] 🎚️ Tipo detectado: 0 para deagle
+SCRIPT       : [AskalStore] ⚠️ Tipo NONE, ocultando slider para: deagle
 SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: ammo_9x39
-SCRIPT       : [AskalStore]    basePrice: 13
-SCRIPT       : [AskalStore]    Tipo: 2
-SCRIPT       : [AskalStore]    [STACKABLE] Preço unitário: 13
-SCRIPT       : [AskalStore]    [STACKABLE] Quantidade: 20
-SCRIPT       : [AskalStore]    ✅ Preço final: 260 (unitário × quantidade)
+SCRIPT       : [AskalStore]    Classe: deagle
+SCRIPT       : [AskalStore]    basePrice: 1760
+SCRIPT       : [AskalStore]    Tipo: 0
+SCRIPT       : [AskalStore]    ✅ Preço final: 1760 (NONE - sem multiplicação)
 SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: ammo_9x39
-SCRIPT       : [AskalStore]    basePrice: 13
-SCRIPT       : [AskalStore]    Tipo: 2
-SCRIPT       : [AskalStore]    [STACKABLE] Preço unitário: 13
-SCRIPT       : [AskalStore]    [STACKABLE] Quantidade: 20
-SCRIPT       : [AskalStore]    ✅ Preço final: 260 (unitário × quantidade)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_9x39
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] 🎚️ Slider configurado - Tipo: 2 | Range: 1-20
-SCRIPT       : [AskalStore] ✅ Item selecionado: ammo_9x39
+SCRIPT       : [AskalStore]    Classe: deagle
+SCRIPT       : [AskalStore]    basePrice: 1760
+SCRIPT       : [AskalStore]    Tipo: 0
+SCRIPT       : [AskalStore]    ✅ Preço final: 1760 (NONE - sem multiplicação)
+SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: deagle
+SCRIPT       : [AskalStore] ✅ Tipo detectado: 0
+SCRIPT       : [AskalStore] ✅ Item selecionado: deagle
 SCRIPT       : [AskalStore] ✅ Preview principal atualizado!
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: ammo_9x39
-SCRIPT       : [AskalStore]    basePrice: 13
-SCRIPT       : [AskalStore]    Tipo: 2
-SCRIPT       : [AskalStore]    [STACKABLE] Preço unitário: 13
-SCRIPT       : [AskalStore]    [STACKABLE] Quantidade: 3
-SCRIPT       : [AskalStore]    ✅ Preço final: 39 (unitário × quantidade)
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: ammo_9x39
-SCRIPT       : [AskalStore]    basePrice: 13
-SCRIPT       : [AskalStore]    Tipo: 2
-SCRIPT       : [AskalStore]    [STACKABLE] Preço unitário: 13
-SCRIPT       : [AskalStore]    [STACKABLE] Quantidade: 3
-SCRIPT       : [AskalStore]    ✅ Preço final: 39 (unitário × quantidade)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_9x39
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: ammo_9x39
-SCRIPT       : [AskalStore]    basePrice: 13
-SCRIPT       : [AskalStore]    Tipo: 2
-SCRIPT       : [AskalStore]    [STACKABLE] Preço unitário: 13
-SCRIPT       : [AskalStore]    [STACKABLE] Quantidade: 8
-SCRIPT       : [AskalStore]    ✅ Preço final: 104 (unitário × quantidade)
-SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: ammo_9x39
-SCRIPT       : [AskalStore]    basePrice: 13
-SCRIPT       : [AskalStore]    Tipo: 2
-SCRIPT       : [AskalStore]    [STACKABLE] Preço unitário: 13
-SCRIPT       : [AskalStore]    [STACKABLE] Quantidade: 8
-SCRIPT       : [AskalStore]    ✅ Preço final: 104 (unitário × quantidade)
-SCRIPT       : [AskalStore] 🔍 DetectItemQuantityType para: ammo_9x39
-SCRIPT       : [AskalStore] ✅ Tipo detectado: 2
 SCRIPT       : [AskalStore] 🛒 buy_button_solo (painel single) clicado
 SCRIPT       : [AskalStore] 💰 CalculateAdjustedPrice chamado
-SCRIPT       : [AskalStore]    Classe: ammo_9x39
-SCRIPT       : [AskalStore]    basePrice: 13
-SCRIPT       : [AskalStore]    Tipo: 2
-SCRIPT       : [AskalStore]    [STACKABLE] Preço unitário: 13
-SCRIPT       : [AskalStore]    [STACKABLE] Quantidade: 8
-SCRIPT       : [AskalStore]    ✅ Preço final: 104 (unitário × quantidade)
-SCRIPT       : [AskalStore] 💰 Tentando comprar: ammo_9x39 | TransactionQty: 1 | Total: 104 Askal_Money
-SCRIPT       : [AskalStore] 📤 RPC de compra enviado | ItemQty: 8 | QtyType: 2 | Content: 0 | Trader: 
+SCRIPT       : [AskalStore]    Classe: deagle
+SCRIPT       : [AskalStore]    basePrice: 1760
+SCRIPT       : [AskalStore]    Tipo: 0
+SCRIPT       : [AskalStore]    ✅ Preço final: 1760 (NONE - sem multiplicação)
+SCRIPT       : [AskalStore] 💰 Tentando comprar: deagle | TransactionQty: 1 | Total: 1760 Askal_Money
+SCRIPT       : [AskalStore] 📤 RPC de compra enviado | ItemQty: -1 | QtyType: 0 | Content: 0 | Trader: 
 SCRIPT       : [AskalStore] ⏱️ Cooldown iniciado: 0.5s
 SCRIPT       : [AskalMarket] ✅ Compra realizada com sucesso
-SCRIPT       : [AskalNotification] 📢 Notificação de compra adicionada: ammo_9x39 ($104)
+SCRIPT       : [AskalNotification] 📢 Notificação de compra adicionada: deagle ($1760)
 SCRIPT       : [AskalStore] Fechando menu...
 SCRIPT       : [AskalStore] ✅ HUD restaurada
+SCRIPT       : [WeaponFSM::ValidateAndRepairHelper] :: [INFO] :: [wpnfsm] ValidateAndRepair Attempting to repair: Deagle:8336 - MagazineRepair - Pistol_CLO_DIS_BU0_MA0<d3897fa0> - state: 0 != weapon: 1
+SCRIPT       : [WeaponFSM::ValidateAndRepairHelper] :: [INFO] :: [wpnfsm] ValidateAndRepair Attempting to repair: Deagle:8336 - ChamberRepair - Pistol_CLO_DIS_BU0_MA1<d38976a0> - state: 0 != weapon: 1

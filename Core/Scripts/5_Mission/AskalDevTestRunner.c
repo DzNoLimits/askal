@@ -209,7 +209,7 @@ class AskalDevTestRunner
 		float duration = endTime - startTime;
 		
 		// Cleanup: release all reservations
-		for (int i = 0; i < reserveOk; i++)
+		for (int j = 0; j < reserveOk; j++)
 		{
 			AskalPlayerBalance.ReleaseReservation(testPlayerId, testAmount, currency);
 		}
@@ -228,7 +228,10 @@ class AskalDevTestRunner
 		result.Set("reserve_fail", reserveFail.ToString());
 		result.Set("expected_ok", "1");
 		result.Set("expected_fail", (concurrentCount - 1).ToString());
-		result.Set("passed", (reserveOk == 1 && reserveFail == concurrentCount - 1) ? "true" : "false");
+		string passedStr = "false";
+		if (reserveOk == 1 && reserveFail == concurrentCount - 1)
+			passedStr = "true";
+		result.Set("passed", passedStr);
 		
 		WriteResultFile("concurrent_purchase", result);
 		
@@ -274,7 +277,7 @@ class AskalDevTestRunner
 		float duration = endTime - startTime;
 		
 		// Cleanup: release all reservations
-		for (int i = 0; i < accepted; i++)
+		for (int j = 0; j < accepted; j++)
 		{
 			AskalPlayerBalance.ReleaseReservation(testPlayerId, 100, "Askal_Coin");
 		}
@@ -352,8 +355,11 @@ class AskalDevTestRunner
 		result.Set("reserved_amount", testAmount.ToString());
 		result.Set("balance_after_flush", balanceAfter.ToString());
 		result.Set("initial_balance", initialBalance.ToString());
-		result.Set("recovery_ok", recoveryOk ? "true" : "false");
-		result.Set("passed", recoveryOk ? "true" : "false");
+		string recoveryOkStr = "false";
+		if (recoveryOk)
+			recoveryOkStr = "true";
+		result.Set("recovery_ok", recoveryOkStr);
+		result.Set("passed", recoveryOkStr);
 		
 		WriteResultFile("crash_recovery", result);
 		
