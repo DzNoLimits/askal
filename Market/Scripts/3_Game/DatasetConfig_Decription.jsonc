@@ -1,0 +1,51 @@
+{
+	"Version": "1.0.0", // Version of the config file - Used to check if the config file is compatible with the script
+	"DatasetName": "DS_Firearms", // Dataset ID - Used to identify the dataset in the game
+	"DisplayName": "ARMAS", // Display name of the dataset - Used to identify the dataset in HUD
+	"Icon": "set:dayz_inventory image:pistol", // Icon of the dataset - Used to identify the dataset in HUD - We're using Imageset for now
+	"Categories": { // Categories listed in this dataset
+		"CAT_Pistols": { // Category ID
+			"BasePrice": 3500, //Base Price for all items in this category.
+			"SellPercent": 50, // Integer -  Sell percentage for all items in this category.
+			"DisplayName": "Explosives", // Display name of the category - Used to identify the category in HUD
+			"Items": { // Items listed in this category
+				"makarovij70": { // this item will use de category baseprice
+					"Attachments": [ // Attachments listed in this item
+						"mag_ij70_8rnd" // Attachment Classname - Used to identify the attachment in the game
+					]
+				},
+				"colt1911": {
+					"BasePrice": 1123, // base price set for this item and variants
+					"Attachments": [
+						"mag_1911_7rnd"
+					],
+					"Variants": [
+						"engraved1911" //String of variants for this item, when decalared: the item will be displayed as a variant of the main item.
+					]
+				},
+				"engraved1911": { // As a variant, this sintax is used to set the parameters for the variant inside the main
+					"BasePrice": 1132, // base price set for this item and variants
+					"SellPercent": 80, // Sell percentage for this item (0-100)
+					"Attachments": [
+						"mag_1911_7rnd"
+					]
+				}
+			}
+		},
+		"CAT_Rifles": { // Category ID
+			"BasePrice": 5500, //Base Price for all items in this category.
+			"DisplayName": "Rifles", // Display name of the category - Used to identify the category in HUD
+			"Items": { // Items listed in this category
+				"rgd5grenade": { // Item Classname - OBRIGATOTRY TO BE ONLY ONE IN ALL DATASET, WHITHOUT DUPLICATIONS IN OTHER CATEGORY EVEN OTHER DATASET.
+					"BasePrice": 4637 //Base price for item, if empty will use the BasePrice of the category
+				},
+				"makarovij70": { //
+					"BasePrice": 164,
+					"Attachments": [
+						"mag_ij70_8rnd"
+					]
+				}
+			}
+		}
+	}
+}

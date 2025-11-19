@@ -1,0 +1,66 @@
+FrameWidgetClass attachment_card_root {
+ visible 1
+ size 60 60
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ {
+  ButtonWidgetClass attachment_card_button {
+   visible 1
+   position 0 0
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   priority 20
+   style Empty
+   {
+    ImageWidgetClass attachment_slot_icon {
+     visible 1
+     ignorepointer 1
+     color 1 1 1 0.7843
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     image0 "set:dayz_inventory image:magazine"
+     mode additive
+     "src alpha" 1
+     nocache 1
+    }
+    ItemPreviewWidgetClass attachment_preview {
+     visible 1
+     ignorepointer 1
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+    }
+   }
+  }
+  PanelWidgetClass attachment_card_bg {
+   visible 1
+   ignorepointer 1
+   color 0 0 0 0.7843
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   priority 10
+   style UIDefaultPanel
+  }
+ }
+}

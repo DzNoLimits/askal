@@ -1,0 +1,39 @@
+{
+	"Version": "1.0.0", // Version of the config file - Used to check if the config file is compatible with the script
+	"LogsLevel": 1, // Level of the logs - 0: Disable All Logs, 1: Basic Log, 2: Debug Log, 3: Detailed Log
+	"DelayTimeMS": 500, //Delay in milliseconds applied to hold-to-action and cooldown between transactions
+	"MarketMode": 1, // Mode of the market - 0: Disabled, 1: Enabled
+	"Fluids": {
+		"512": { // Classname of the fluid (Check constants.c [https://woozymasta.github.io/dayz-docs/d3/d0c/3___game_2constants_8c.html])
+			"Name": "Água Potável", //Display name of the fluid (Used in the HUD)
+			"PricePerLiter": 10 // Price per liter of the fluid
+		}
+	},
+	"Currencies": { //Currencies of the market - Used to buy and sell items (Physical money or Volatile money)
+		"Askal_Money": { //Currency ID - Used to identify the currency in the market
+			"ShortName": "AKC", //Short name of the currency - Used to identify the currency in the market (HUD)
+			"Values": [ //Values of the currency (If this kinda of money have more than one value, like coins and bills)
+				{
+					"Askal_Coin": 1,
+					"Askal_Coin_2": 2,
+					"Askal_Coin_5": 5,
+					"Askal_Coin_10": 10,
+					"Askal_Coin_25": 25,
+					"Askal_Coin_50": 50,
+					"Askal_Coin_100": 100,
+					"Askal_Coin_200": 200
+				}
+			],
+			"StartCurrency": 10000 //Quantidade dada ao player iniciante
+		},
+		"Crypto_Money": {
+			"ShortName": "BTC",
+			"Values": [
+				{
+					"Askal_Bitcoin": 551033
+				}
+			],
+			"StartCurrency": 1
+		}
+	}
+}

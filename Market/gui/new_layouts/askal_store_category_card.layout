@@ -1,0 +1,77 @@
+FrameWidgetClass category_card_root {
+ visible 1
+ clipchildren 0
+ size 1 25
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 1
+ {
+  PanelWidgetClass category_card_bg {
+   clipchildren 0
+   ignorepointer 1
+   color 0 0 0 0.6039
+   position 15 0
+   size 0.9 1
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   priority 10
+   style UIDefaultPanel
+   {
+    ButtonWidgetClass category_card_button {
+     color 0 0 0 0
+     position 0 0
+     size 1 1
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     priority 30
+     style Empty
+     font "gui/fonts/Metron-BoldItalic48"
+     "text color" 0.9412 0.9412 0.9412 1
+     {
+      MultilineTextWidgetClass category_card_name_text {
+       ignorepointer 1
+       color 1 1 1 0.7843
+       position 5 0
+       size 0.97 1
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "CATEGORY"
+       font "gui/fonts/MetronBook"
+       "text offset" 5 0
+       "exact text" 1
+       "size to text h" 0
+       "size to text v" 0
+       "text valign" center
+       wrap 1
+       "condense whitespace" 1
+       "strip newlines" 1
+      }
+     }
+    }
+   }
+  }
+  ImageWidgetClass category_card_frame {
+   ignorepointer 1
+   color 0 0 0 0.7843
+   position 9 0
+   size 4 29
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   priority 20
+   mode blend
+  }
+ }
+}

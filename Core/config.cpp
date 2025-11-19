@@ -1,0 +1,45 @@
+class CfgPatches
+{
+	class Askal_Core
+	{
+		units[] = {};
+		weapons[] = {};
+		requiredVersion = 0.1;
+		requiredAddons[] = {"DZ_Data","DZ_Scripts","JM_CF_Scripts"};
+	};
+};
+class CfgMods
+{
+	class Askal_Core
+	{
+		dir = "Askal/Core";
+		hideName = 1;
+		hidePicture = 1;
+		name = "Askal Core";
+		credits = "Dayz Modders Community, Jacob Mango, Arkensor";
+		author = "Askal";
+		authorID = "0";
+		version = "1.0.0";
+		extra = 0;
+		type = "mod";
+		dependencies[] = {"Game","World","Mission"};
+		class defs
+		{
+			class gameScriptModule
+			{
+				value = "";
+				files[] = {"Askal/Core/Scripts/3_Game"};
+			};
+			class worldScriptModule
+			{
+				value = "";
+				files[] = {"Askal/Core/Scripts/4_World"};
+			};
+			class missionScriptModule
+			{
+				value = "";
+				files[] = {"Askal/Core/Scripts/5_Mission"};
+			};
+		};
+	};
+};

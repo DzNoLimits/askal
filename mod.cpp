@@ -1,0 +1,11 @@
+name = "Askal's Bundle";
+picture = "JM/COT/gui/textures/cot_icon.edds";
+logo = "JM/COT/gui/textures/cot_icon.edds";
+logoSmall = "JM/COT/gui/textures/cot_icon.edds";
+logoOver = "JM/COT/gui/textures/cot_icon.edds";
+tooltip = "Askal's Mod";
+overview = "Pacote de modificações e implementos de gameplay.";
+action = "https://github.com/Jacob-Mango/DayZ-CommunityOnlineTools";
+author = "Askal";
+authorID = "08F2D2B5E3C4A6B9";
+version = "0.1.0";

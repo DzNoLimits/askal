@@ -1,0 +1,29 @@
+{
+	"Version": "1.0.0", // Version of the config file - Used to check if the config file is compatible with the script
+	"TraderName": "FAROLEIRO", // Name of the trader - Used to identify the trader in the game - Display in the interaction and HUD - "market_header_title_text"
+	"TraderObject": "SurvivorM_Indar", //Trader Classname - Object that will be used to create the trader in the game (Survivor Base or Stactic base - For stactic itens use the vannilla ones that starts with prefix "StacticObj_" - THE SCRIPT NEED THIS!!)
+	"TraderAttachments": [ //Trader Attachments - Used to add attachments to the trader
+		"JeansPants_Blue",
+		"Atletic_Shoes",
+		"FingerlessGloves_Brown"
+	],
+	"TraderPosition": [ // Trader Object Position relative to world
+		8321.86, //X
+		6.39385, //Y
+		2473.73 //Z
+	],
+	"TraderOrientation": [ // Trader Object Orientation relative to world
+		125.755, //Yaw
+		0, //Pitch
+		0 //Roll
+	],
+	"AcceptedCurrency": { //Currencies accepted in the trader - Used to buy and sell items (Physical money or Volatile money)
+		"Askal_Money": 1 //Currency ID : Transaction Mode (1: Use currency In inventory, 2: Use currency In wallet)
+	},
+	"SetupItems": {
+		"DS_Firearms": 3, //Dataset ID, Category ID Or Item Classname: ItemMode (-1: Disable Item, 0: Everyone can see only, 1: Everyone can buy only, 2: Everyone can sell only, 3: Everyone can buy and sell, (Future) 4: Only premium active status can buy, 5: Only premium active status can sell, 6: Only premium active status can buy and sell)
+		"DS_Ammunition": 3, //Set to Everyone Buy and Sell
+		"DS_Attachments": 3, //Set to Everyone Sell Only
+		"CAT_Ghillies": 1 //Set to Everyone See Only - Overrides the Dataset ItemMode for this Category - If the Category is not set, the Dataset ItemMode will be used
+	}
+}

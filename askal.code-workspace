@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../JM/CF"
+		},
+		{
+			"path": "../JM/COT"
+		}
+	],
+	"settings": {
+		"markdown.validate.enabled": true
+	}
+}

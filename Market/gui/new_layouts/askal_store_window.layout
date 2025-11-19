@@ -1,0 +1,1696 @@
+FrameWidgetClass market_root_frame {
+ clipchildren 1
+ ignorepointer 0
+ color 0.8824 0.8824 0.8824 0.8824
+ size 1 1
+ hexactpos 0
+ vexactpos 0
+ hexactsize 0
+ vexactsize 0
+ priority 2
+ {
+  FrameWidgetClass market_window_container {
+   visible 1
+   ignorepointer 0
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   priority 1
+   {
+    FrameWidgetClass market_main_panel {
+     visible 1
+     ignorepointer 1
+     position 0 0
+     size 1.6 0.9
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     fixaspect inside
+     priority 1
+     {
+      ImageWidgetClass market_header_bg {
+       visible 1
+       clipchildren 0
+       ignorepointer 1
+       keepsafezone 0
+       color 0 0 0 0.9412
+       position 0 0.05
+       size 0.92046 0.04091
+       halign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       priority 1
+       draggable 0
+       image0 "set:dayz_gui image:inv_header_3"
+       mode blend
+       "src alpha" 1
+       "clamp mode" clamp
+       "stretch mode" stretch_w_h
+       {
+        TextWidgetClass market_header_title_text {
+         ignorepointer 1
+         position 0 0
+         size 1 1
+         halign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         priority 1
+         style Normal
+         text "TRADER NAME"
+         font "gui/fonts/sdf_MetronBook24"
+         "text offset" 10 0
+         "exact text" 0
+         text_proportion 0.55
+         "text halign" center
+         "text valign" center
+         {
+          ButtonWidgetClass market_close_button {
+           visible 1
+           disabled 0
+           clipchildren 1
+           inheritalpha 0
+           ignorepointer 0
+           keepsafezone 0
+           color 0.8824 0.8824 0.8824 0
+           position 0.01 0
+           size 0.5 0.5
+           halign right_ref
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           fixaspect fixwidth
+           priority 1
+           userID 2
+           style Default
+           "no focus" 1
+           text_offset 1 1
+           text_halign center
+           "text color" 1 1 1 1
+           switch normal
+           {
+            ImageWidgetClass market_close_icon {
+             visible 1
+             ignorepointer 1
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+             priority 1
+             image0 "set:dayz_gui image:icon_x"
+             mode additive
+             "src alpha" 1
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass market_panel {
+       visible 1
+       clipchildren 0
+       inheritalpha 1
+       color 0.098 0.098 0.098 0.8824
+       position 0 0.09349
+       size 0.92 0.86772
+       halign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       style rover_sim_colorable
+       {
+        ScrollWidgetClass datasets_scroll_container {
+         ignorepointer 0
+         color 0 0 0 0.1961
+         position 0 39.8361
+         size 0.1475 0.91736
+         valign bottom_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         "Scrollbar V" 1
+         "Scrollbar V Left" 1
+         {
+          GridSpacerWidgetClass datasets_cards_holder {
+           ignorepointer 1
+           size 0.275 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           fixaspect fixwidth
+           priority 20
+           Padding 5
+           Margin 0
+           "Size To Content H" 1
+           "Size To Content V" 1
+           Columns 1
+           {
+            WrapSpacerWidgetClass player_Inventory_card {
+             visible 0
+             ignorepointer 1
+             color 0 0 0 0.6039
+             position 0 0
+             size 1 32
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 1
+             style Empty
+             Padding 0
+             Margin 0
+             "Size To Content V" 1
+             content_halign right
+             {
+              ButtonWidgetClass player_Inventory_header {
+               visible 1
+               ignorepointer 0
+               color 0 0 0 0.3922
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               style Empty
+               {
+                PanelWidgetClass player_Inventory_panel {
+                 visible 1
+                 clipchildren 0
+                 ignorepointer 1
+                 color 0 0 0 0.7843
+                 position 0 0
+                 size 1 32
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 0
+                 vexactsize 1
+                 style UIDefaultPanel
+                 {
+                  ImageWidgetClass player_Inventory_icon {
+                   ignorepointer 1
+                   color 1 1 1 0.7843
+                   position 6 0
+                   size 32 32
+                   valign center_ref
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 1
+                   vexactsize 1
+                   priority 10
+                   image0 "set:dayz_gui image:icon_player"
+                   mode additive
+                   "src alpha" 1
+                   "clamp mode" invalid
+                   "flip u" 0
+                   "flip v" 0
+                   filter 1
+                  }
+                  MultilineTextWidgetClass player_Inventory_label {
+                   visible 1
+                   ignorepointer 1
+                   color 1 1 1 0.7843
+                   position 38 0
+                   size 0.7726 32
+                   valign center_ref
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 0
+                   vexactsize 1
+                   scriptclass ""
+                   style DayZNormal
+                   text "#STR_USRACT_GEAR"
+                   font "gui/fonts/MetronBook"
+                   "text color" 1 1 1 0.7843
+                   "exact text" 1
+                   "exact text size" 22
+                   "size to text h" 0
+                   "size to text v" 0
+                   "text valign" center
+                   wrap 1
+                  }
+                 }
+                }
+               }
+              }
+              GridSpacerWidgetClass player_inventory_category_cards_holder {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 1 25
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 1
+               Padding 4
+               "Size To Content H" 1
+               "Size To Content V" 1
+               content_halign right
+               content_valign center
+               Columns 1
+               Rows 1
+               {
+                PanelWidgetClass player_inventory_all_itens_panel {
+                 clipchildren 0
+                 ignorepointer 1
+                 color 0.3176 0.3176 0.3176 0.5882
+                 position 15 0
+                 size 0.9 1
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 0
+                 vexactsize 0
+                 style UIDefaultPanel
+                 {
+                  ButtonWidgetClass show_all_Items_in_inventory_in_this_category {
+                   visible 1
+                   disabled 0
+                   inheritalpha 0
+                   ignorepointer 0
+                   ignoregloballv 0
+                   keepsafezone 0
+                   color 0 0.5216 0.1412 0.8275
+                   position 0 0
+                   size 1 1
+                   valign center_ref
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 0
+                   vexactsize 0
+                   scaled 1
+                   priority 30
+                   style Default
+                   font "gui/fonts/Metron-BoldItalic48"
+                   "text color" 0.9412 0.9412 0.9412 1
+                   {
+                    MultilineTextWidgetClass show_all_Items_in_this_category_text {
+                     ignorepointer 1
+                     color 1 1 1 0.7843
+                     position 5 0
+                     size 0.97 1
+                     valign center_ref
+                     hexactpos 1
+                     vexactpos 1
+                     hexactsize 0
+                     vexactsize 0
+                     text "TUDO"
+                     font "gui/fonts/MetronBook"
+                     "text offset" 5 0
+                     "exact text" 1
+                     "size to text h" 0
+                     "size to text v" 0
+                     "text valign" center
+                     wrap 1
+                     "condense whitespace" 1
+                     "strip newlines" 1
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+          PanelWidgetClass datasets_cards_bg {
+           visible 0
+           ignorepointer 1
+           color 0.9569 0.9294 0.9294 1
+           position 10 10
+           size 48 48
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           priority 10
+           style rover_sim_colorable
+          }
+         }
+        }
+        ScrollWidgetClass items_list_scroll_container {
+         ignorepointer 0
+         color 0 0 0 0.3922
+         position -68.864 0
+         size 0.61855 0.96251
+         halign center_ref
+         valign bottom_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         "Scrollbar V" 1
+         {
+          WrapSpacerWidgetClass items_cards_holder {
+           ignorepointer 1
+           color 0 0 0 0
+           size 1.01 1
+           halign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           Padding 6
+           Margin 3
+           "Size To Content H" 1
+           "Size To Content V" 1
+           content_valign top
+          }
+         }
+        }
+        PanelWidgetClass categories_section_header {
+         ignorepointer 1
+         color 0 0 0 0.7843
+         position 0 0
+         size 0.1495 0.03596
+         hexactpos 0
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         style editor_quad_dark
+         {
+          FrameWidgetClass search_bar {
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           {
+            EditBoxWidgetClass search_input {
+             color 1 1 1 0.7843
+             size 0.94 0.78
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             style Editor
+             text "Procurar"
+             "limit visible" 0
+             "exact text" 1
+             font "gui/fonts/MetronBook-Italic"
+             "text halign" center
+             "text valign" center
+            }
+            ButtonWidgetClass search_button {
+             visible 0
+             disabled 1
+             color 0 0 0 0.7843
+             size 0.13 1
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             style OldStyle
+             {
+              ImageWidgetClass search_icon {
+               visible 1
+               ignorepointer 1
+               color 1 1 1 0.7843
+               size 25 25
+               halign center_ref
+               valign center_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 1
+               vexactsize 1
+               priority 1
+               image0 "set:ccgui_enforce image:Icon40Move"
+               mode additive
+               "src alpha" 1
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+        PanelWidgetClass items_section_header {
+         ignorepointer 1
+         color 0 0 0 0.7843
+         position 0.14879 0
+         size 0.62365 0.03596
+         hexactpos 0
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         style editor_quad_dark
+         {
+          TextWidgetClass items_section_breadcrumb_text {
+           ignorepointer 1
+           position 11.38 0
+           size 0.98 0.94
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           text " DATASET > CATEGORY > ITEM"
+           font "gui/fonts/Metron-Italic22"
+           "exact text" 1
+           "size to text h" 1
+           "size to text v" 1
+           "text halign" center
+          }
+         }
+        }
+        PanelWidgetClass details_section_header {
+         ignorepointer 1
+         color 0 0 0 0.7843
+         position 0 0
+         size 0.22772 0.03596
+         halign right_ref
+         hexactpos 0
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         style editor_quad_dark
+         {
+          TextWidgetClass details_section_title_text {
+           ignorepointer 1
+           size 0.98 0.94
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           text "ITEM"
+           font "gui/fonts/Metron-Italic22"
+           "exact text" 1
+           "size to text h" 1
+           "size to text v" 1
+           "text halign" center
+          }
+          ButtonWidgetClass details_section_expand_button {
+           visible 0
+           color 0 0 0 0.6235
+           position 4 0
+           size 25 25
+           halign right_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style ServerBrowserCollapse
+           {
+            ImageWidgetClass details_section_expand_icon {
+             visible 1
+             clipchildren 0
+             inheritalpha 1
+             ignorepointer 1
+             position 0 0
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             image0 "set:dayz_gui image:icon_collapse"
+             mode additive
+             "src alpha" 1
+             "clamp mode" invalid
+             "stretch mode" invalid
+             "flip u" 0
+             "flip v" 0
+             filter 1
+            }
+            ImageWidgetClass details_section_collapse_icon {
+             visible 0
+             clipchildren 0
+             inheritalpha 1
+             ignorepointer 1
+             position 0 0
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             image0 "set:dayz_gui image:icon_collapse"
+             mode additive
+             "src alpha" 1
+             "clamp mode" clamp
+             "stretch mode" none
+             filter 1
+             rotation 0 0 180
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass item_details_panel {
+         visible 1
+         ignorepointer 1
+         color 0 0 0 0
+         position 8.04784 33.7877
+         size 0.21836 0.63785
+         halign right_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         priority 10
+         {
+          FrameWidgetClass item_details_container {
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           priority 10
+           {
+            ScrollWidgetClass presets_dropdown_scroll {
+             visible 0
+             clipchildren 1
+             ignorepointer 0
+             color 0 0 0 0.8
+             position 0.00931 0.0033
+             size 0.9349 99.632
+             halign center_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 1
+             priority 20
+             style blank
+             "Scrollbar V" 1
+             {
+              WrapSpacerWidgetClass presets_cards_holder {
+               visible 1
+               clipchildren 1
+               inheritalpha 0
+               ignorepointer 1
+               color 0 0 0 0.6902
+               position -1.092 0
+               size 0.99399 1
+               halign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               style Empty
+               Padding 3
+               Margin 0
+               "Size To Content V" 1
+               content_halign center
+              }
+             }
+            }
+            ScrollWidgetClass variants_scroll_container {
+             visible 1
+             ignorepointer 0
+             keepsafezone 1
+             color 0.7725 0 0 1
+             position 0 0
+             size 1 110
+             halign center_ref
+             valign bottom_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 1
+             priority 30
+             style blank
+             "Scrollbar H" 1
+             {
+              GridSpacerWidgetClass variants_cards_holder {
+               visible 1
+               ignorepointer 1
+               ignoregloballv 0
+               color 0 0 0 0
+               size 1 1
+               valign bottom_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
+               style Empty
+               "Ignore invisible" 0
+               Padding 3
+               Margin 4
+               "Size To Content H" 1
+               Columns 10
+               Rows 1
+              }
+             }
+            }
+            ItemPreviewWidgetClass item_preview_widget {
+             ignorepointer 1
+             position 0 0
+             size 1 1
+             halign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             priority 10
+            }
+            WrapSpacerWidgetClass attachments_cards_holder {
+             visible 1
+             ignorepointer 1
+             position 0 0
+             size 60 517.28802
+             halign right_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             priority 10
+             Margin 0
+             "Size To Content H" 1
+             content_halign center
+             content_valign center
+            }
+            PlayerPreviewWidgetClass player_preview_widget {
+             ignorepointer 1
+             position 0 0
+             size 1 1
+             halign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             priority 10
+            }
+           }
+          }
+          ButtonWidgetClass toggle_player_preview {
+           visible 0
+           disabled 0
+           clipchildren 1
+           inheritalpha 0
+           ignorepointer 0
+           keepsafezone 0
+           color 0.8824 0.8824 0.8824 0
+           position 0 0.01
+           size 26 26
+           halign right_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 1
+           vexactsize 1
+           priority 50
+           userID 2
+           style OldStyle
+           "no focus" 1
+           text "a"
+           text_offset 1 1
+           text_halign center
+           font "gui/fonts/Metron-BoldItalic48"
+           "text color" 1 1 1 1
+           switch normal
+           {
+            ImageWidgetClass player_preview_icon {
+             visible 1
+             ignorepointer 1
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+             priority 1
+             image0 "set:dayz_gui image:notification_friend"
+             mode additive
+             "src alpha" 1
+            }
+           }
+          }
+         }
+        }
+        WrapSpacerWidgetClass transaction_panel {
+         ignorepointer 1
+         color 0 0 0 0.5843
+         position 0.00002 0.00002
+         size 0.22614 276.58798
+         halign right_ref
+         valign bottom_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         style Colorable
+         Padding 5
+         Margin 5
+         content_halign center
+         {
+          PanelWidgetClass transaction_content_panel {
+           ignorepointer 1
+           color 0 0 0 0.5451
+           position 0 -7
+           size 0.95 22
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 1
+           priority 20
+           style rover_sim_black_2
+           {
+            TextWidgetClass transaction_content_label {
+             ignorepointer 1
+             size 0.82 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             text "Gasoline"
+             font "gui/fonts/Metron-Italic22"
+             "text halign" center
+             "text valign" center
+            }
+            ButtonWidgetClass next_content_button {
+             ignorepointer 0
+             color 0.7647 0.098 0.098 0.1961
+             position 6 0
+             size 17 0.74
+             halign right_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 0
+             style OldStyle
+             {
+              ImageWidgetClass next_content_icon {
+               ignorepointer 1
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               image0 "set:ccgui_enforce image:EquipMarkerIn"
+               mode additive
+               "src alpha" 1
+              }
+             }
+            }
+            ButtonWidgetClass prev_content_button {
+             ignorepointer 0
+             color 0.7647 0.098 0.098 0.1961
+             position 6 0
+             size 17 0.74
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 0
+             style OldStyle
+             {
+              ImageWidgetClass prev_content_icon {
+               ignorepointer 1
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               image0 "set:ccgui_enforce image:EquipMarkerOut"
+               mode additive
+               "src alpha" 1
+              }
+             }
+            }
+           }
+          }
+          SliderWidgetClass transaction_quantity_slider {
+           visible 1
+           clipchildren 0
+           color 1 1 1 0.1961
+           position 0 12.556
+           size 0.95 12
+           halign center_ref
+           valign center_ref
+           hexactpos 0
+           vexactpos 1
+           hexactsize 0
+           vexactsize 1
+           priority 30
+           style Default
+           current 35
+           "marker thickness" 0.01
+           vertical 0
+           flipped 0
+           "fill in" 1
+           "draw marker" 0
+           "listen to input" 1
+           {
+            TextWidgetClass transaction_quantity_slider_text {
+             ignorepointer 1
+             color 1 1 1 0.7843
+             size 35 15
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             text "10"
+             font "gui/fonts/MetronBlack-Italic12"
+             "exact text" 1
+             "size to text h" 1
+             "size to text v" 1
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+          MultilineTextWidgetClass transaction_description {
+           ignorepointer 1
+           color 1 1 1 0.7843
+           position 0 61.52
+           size 0.9497 0.23096
+           halign center_ref
+           valign bottom_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           priority 40
+           text "TRANSACTION DESCRIPTION TEXT: Lorem Ipsum dolor Sit amet 1234567890-="
+           font "gui/fonts/Metron28"
+           "exact text" 0
+           "size to text h" 1
+           "size to text v" 0
+           "text halign" center
+           "text valign" center
+           wrap 1
+          }
+          WrapSpacerWidgetClass transaction_units_panel {
+           ignorepointer 0
+           color 0 0 0 0.5725
+           position 0 0
+           size 0.4 1.0661
+           halign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           priority 10
+           style Colorable
+           "Size To Content H" 1
+           "Size To Content V" 1
+           content_halign center
+           content_valign center
+           {
+            EditBoxWidgetClass transaction_units_input {
+             ignorepointer 0
+             size 0.29 32
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 1
+             priority 20
+             style Default
+             text "1"
+             "limit visible" 0
+             "exact text" 1
+             font "gui/fonts/Metron28"
+             "text halign" center
+             "text valign" center
+             {
+              PanelWidgetClass quantity_input_overlay {
+               ignorepointer 1
+               color 0.6118 0.6118 0.6118 0.5098
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               style Outline
+              }
+             }
+            }
+            ButtonWidgetClass transaction_units_plus_button {
+             color 0.6118 0.6118 0.6118 0.5098
+             size 35 32
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             priority 30
+             style Editor
+             text "+"
+             text_offset 1 0
+             font "gui/fonts/MetronLight48"
+            }
+            ButtonWidgetClass transaction_units_minus_button {
+             color 0.6118 0.6118 0.6118 0.5098
+             size 35 32
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             priority 10
+             style Editor
+             text "-"
+             text_offset 1 -1
+             font "gui/fonts/MetronLight48"
+            }
+           }
+          }
+          FrameWidgetClass actions_panel {
+           visible 1
+           clipchildren 0
+           ignorepointer 1
+           color 1 0 0 1
+           size 1 100
+           halign center_ref
+           valign bottom_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 1
+           priority 50
+           {
+            FrameWidgetClass buy_and_sell_button {
+             visible 1
+             ignorepointer 1
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             {
+              ButtonWidgetClass buy_button {
+               visible 1
+               ignorepointer 0
+               color 0 0.5216 0.1412 0.8275
+               position 0.02 0.04
+               size 0.47 1
+               valign center_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
+               priority 200
+               style Default
+               {
+                TextWidgetClass buy_button_text {
+                 visible 1
+                 ignorepointer 1
+                 color 1 1 1 0.7843
+                 position 0 22
+                 size 1 0.4
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 0
+                 vexactsize 0
+                 priority 30
+                 text "COMPRAR (C)"
+                 font "gui/fonts/etelkatextpro28"
+                 "exact text" 1
+                 "size to text h" 1
+                 "size to text v" 0
+                 "text halign" center
+                 "text valign" center
+                }
+                PanelWidgetClass buy_button_bg {
+                 visible 1
+                 ignorepointer 1
+                 color 0 0 0 0.5882
+                 position 0 0
+                 size 1 1
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 0
+                 vexactsize 0
+                 priority 20
+                 style editor_quad_dark
+                }
+                ProgressBarWidgetClass buy_hold_pb {
+                 visible 1
+                 ignorepointer 1
+                 color 0.3569 1 0 0.1961
+                 size 1 1
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 0
+                 vexactsize 0
+                 priority 10
+                 style Quantity
+                 current 0
+                 vertical 0
+                 flipped 0
+                }
+                MultilineTextWidgetClass buy_button_total_text {
+                 visible 1
+                 clipchildren 0
+                 ignorepointer 1
+                 size 0.9878 0.4445
+                 halign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 0
+                 vexactsize 0
+                 priority 30
+                 text "123.456,00"
+                 font "gui/fonts/7segment"
+                 "text color" 1 1 1 0.7843
+                 "exact text" 0
+                 "size to text h" 0
+                 "size to text v" 1
+                 "text halign" center
+                 "text valign" center
+                 wrap 1
+                 {
+                  TextWidgetClass currency_shortname_0 {
+                   visible 1
+                   ignorepointer 1
+                   color 1 1 1 0.7843
+                   position 0 -3
+                   size 1 0.25
+                   halign center_ref
+                   valign bottom_ref
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 0
+                   vexactsize 0
+                   scriptclass ""
+                   style Normal
+                   text "AKC"
+                   font "gui/fonts/etelkatextpro12"
+                   "text color" 1 1 1 0.7843
+                   "exact text" 0
+                   "exact text size" 22
+                   "size to text h" 1
+                   "size to text v" 1
+                   "text halign" center
+                   "text valign" center
+                  }
+                 }
+                }
+               }
+              }
+              ButtonWidgetClass sell_button {
+               visible 1
+               ignorepointer 0
+               color 1 0.6118 0 0.7843
+               position 0.02 0.04
+               size 0.47 1
+               halign right_ref
+               valign center_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
+               priority 200
+               style Default
+               {
+                TextWidgetClass sell_button_text {
+                 visible 1
+                 ignorepointer 1
+                 color 1 1 1 0.7843
+                 position 0 22
+                 size 1 0.4
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 0
+                 vexactsize 0
+                 priority 30
+                 text "VENDER (V)"
+                 font "gui/fonts/etelkatextpro28"
+                 "exact text" 1
+                 "size to text h" 1
+                 "size to text v" 0
+                 "text halign" center
+                 "text valign" center
+                }
+                PanelWidgetClass sell_button_bg {
+                 visible 1
+                 ignorepointer 1
+                 color 0 0 0 0.5882
+                 position 0 0
+                 size 1 1
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 0
+                 vexactsize 0
+                 priority 20
+                 style editor_quad_dark
+                }
+                ProgressBarWidgetClass sell_hold_pb {
+                 visible 1
+                 ignorepointer 1
+                 color 1 0.6118 0 0.1961
+                 size 1 1
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 0
+                 vexactsize 0
+                 priority 10
+                 style Quantity
+                 current 0
+                 vertical 0
+                 flipped 0
+                }
+                MultilineTextWidgetClass sell_button_total_text {
+                 visible 1
+                 clipchildren 0
+                 ignorepointer 1
+                 size 0.9878 0.4445
+                 halign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 0
+                 vexactsize 0
+                 priority 30
+                 text "123.456,00"
+                 font "gui/fonts/7segment"
+                 "text color" 1 1 1 0.7843
+                 "exact text" 0
+                 "size to text h" 0
+                 "size to text v" 0
+                 "text halign" center
+                 "text valign" center
+                 wrap 1
+                 {
+                  TextWidgetClass currency_shortname_1 {
+                   visible 1
+                   ignorepointer 1
+                   color 1 1 1 0.7843
+                   position 0 -3
+                   size 1 0.25
+                   halign center_ref
+                   valign bottom_ref
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 0
+                   vexactsize 0
+                   scriptclass ""
+                   style Normal
+                   text "AKC"
+                   font "gui/fonts/etelkatextpro12"
+                   "text color" 1 1 1 0.7843
+                   "exact text" 0
+                   "exact text size" 22
+                   "size to text h" 1
+                   "size to text v" 1
+                   "text halign" center
+                   "text valign" center
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+            ButtonWidgetClass buy_only_button_wide {
+             visible 0
+             ignorepointer 0
+             color 0 0.5216 0.1412 0.8275
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+             priority 200
+             style Default
+             {
+              TextWidgetClass buy_button_text_wide {
+               visible 1
+               ignorepointer 1
+               color 1 1 1 0.7843
+               position 0 22
+               size 1 0.4
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               priority 30
+               text "COMPRAR (C)"
+               font "gui/fonts/etelkatextpro28"
+               "exact text" 1
+               "size to text h" 1
+               "size to text v" 0
+               "text halign" center
+               "text valign" center
+              }
+              PanelWidgetClass buy_button_bg_wide {
+               visible 1
+               ignorepointer 1
+               color 0 0 0 0.5882
+               position 0 0
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               priority 20
+               style editor_quad_dark
+              }
+              ProgressBarWidgetClass buy_hold_pb_wide {
+               visible 1
+               ignorepointer 1
+               color 0 0.5216 0.1412 0.1961
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               priority 10
+               style Quantity
+               current 0
+               vertical 0
+               flipped 0
+              }
+              MultilineTextWidgetClass buy_button_total_text_wide {
+               visible 1
+               clipchildren 0
+               ignorepointer 1
+               size 0.9878 0.4445
+               halign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               priority 30
+               text "123.456,00"
+               font "gui/fonts/7segment"
+               "text color" 1 1 1 0.7843
+               "exact text" 0
+               "size to text h" 0
+               "size to text v" 0
+               "text halign" center
+               "text valign" center
+               wrap 1
+               {
+                TextWidgetClass currency_shortname_2 {
+                 visible 1
+                 ignorepointer 1
+                 color 1 1 1 0.7843
+                 position 0 -3
+                 size 1 0.25
+                 halign center_ref
+                 valign bottom_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 0
+                 vexactsize 0
+                 scriptclass ""
+                 style Normal
+                 text "AKC"
+                 font "gui/fonts/etelkatextpro12"
+                 "text color" 1 1 1 0.7843
+                 "exact text" 0
+                 "exact text size" 22
+                 "size to text h" 1
+                 "size to text v" 1
+                 "text halign" center
+                 "text valign" center
+                }
+               }
+              }
+             }
+            }
+            ButtonWidgetClass sell_only_button_wide {
+             visible 0
+             ignorepointer 0
+             color 1 0.6118 0 0.7843
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+             priority 200
+             style Default
+             {
+              TextWidgetClass sell_button_text_wide {
+               visible 1
+               ignorepointer 1
+               color 1 1 1 0.7843
+               position 0 22
+               size 1 0.4
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               priority 30
+               text "VENDER (V)"
+               font "gui/fonts/etelkatextpro28"
+               "exact text" 1
+               "size to text h" 1
+               "size to text v" 0
+               "text halign" center
+               "text valign" center
+              }
+              PanelWidgetClass sell_button_bg_wide {
+               visible 1
+               ignorepointer 1
+               color 0 0 0 0.5882
+               position 0 0
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               priority 20
+               style editor_quad_dark
+              }
+              ProgressBarWidgetClass sell_hold_pb_wide {
+               visible 1
+               ignorepointer 1
+               color 1 0.6118 0 0.1961
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               priority 10
+               style Quantity
+               current 0
+               vertical 0
+               flipped 0
+              }
+              MultilineTextWidgetClass sell_button_total_text_wide {
+               visible 1
+               clipchildren 0
+               ignorepointer 1
+               size 0.9878 0.4445
+               halign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               priority 30
+               text "123.456,00"
+               font "gui/fonts/7segment"
+               "text color" 1 1 1 0.7843
+               "exact text" 0
+               "size to text h" 0
+               "size to text v" 0
+               "text halign" center
+               "text valign" center
+               wrap 1
+               {
+                TextWidgetClass currency_shortname_3 {
+                 visible 1
+                 ignorepointer 1
+                 color 1 1 1 0.7843
+                 position 0 -3
+                 size 1 0.25
+                 halign center_ref
+                 valign bottom_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 0
+                 vexactsize 0
+                 scriptclass ""
+                 style Normal
+                 text "AKC"
+                 font "gui/fonts/etelkatextpro12"
+                 "text color" 1 1 1 0.7843
+                 "exact text" 0
+                 "exact text size" 22
+                 "size to text h" 1
+                 "size to text v" 1
+                 "text halign" center
+                 "text valign" center
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+        PanelWidgetClass options_panel {
+         ignorepointer 1
+         color 0 0 0 0.3922
+         position 0 0
+         size 0.15 40
+         valign bottom_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         style editor_quad_dark
+         {
+          ButtonWidgetClass toggle_batch_buy {
+           ignorepointer 0
+           color 0 0 0 0.5882
+           position 8 0
+           size 0.46 34
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 1
+           style Editor
+           {
+            MultilineTextWidgetClass batch_buy_label {
+             ignorepointer 1
+             color 1 1 1 0.7843
+             size 0.81 0.9
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             text "Comprar em Lote"
+             font "gui/fonts/Metron-Italic"
+             "text color" 1 1 1 0.7843
+             "exact text" 0
+             "text halign" center
+             "text valign" center
+             wrap 1
+            }
+           }
+          }
+          ButtonWidgetClass toggle_batch_sell {
+           ignorepointer 0
+           color 0 0 0 0.5882
+           position 8 0
+           size 0.46 34
+           halign right_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 1
+           style Editor
+           {
+            MultilineTextWidgetClass batch_sell_label {
+             ignorepointer 1
+             color 1 1 1 0.7843
+             size 0.81 0.9
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             text "Vender em Lote"
+             font "gui/fonts/Metron-Italic"
+             "text color" 1 1 1 0.7843
+             "exact text" 0
+             "text halign" center
+             "text valign" center
+             wrap 1
+            }
+           }
+          }
+         }
+        }
+        PanelWidgetClass transaction_warn_bg {
+         visible 0
+         ignorepointer 1
+         color 0 0 0 0.7843
+         position -0.56808 -37.784
+         size 0.23 33.24
+         halign right_ref
+         valign bottom_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         style UIDefaultPanel
+         {
+          MultilineTextWidgetClass transaction_warn_text {
+           ignorepointer 1
+           color 1 0 0 0.7843
+           size 0.95 0.9
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           text "MENSAGEM DE ERRO $Classname$"
+           font "gui/fonts/Metron"
+           "text color" 1 0 0 0.7843
+           "size to text h" 1
+           "size to text v" 0
+           "text halign" center
+           "text valign" center
+           wrap 1
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass header_separator_line {
+       ignorepointer 1
+       color 0.7843 0 0 1
+       position -0.32 98.428
+       size 0.92 3
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       priority 30
+       style rover_sim_colorable
+      }
+      PanelWidgetClass left_separator_line {
+       ignorepointer 1
+       color 0 0 0 0.7843
+       position 338.85999 29.356
+       size 4 0.86613
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 0
+       priority 30
+       style rover_sim_colorable
+      }
+      PanelWidgetClass right_separator_line {
+       ignorepointer 1
+       color 0 0 0 0.7843
+       position 476.98798 29.722
+       size 4 0.8668
+       halign right_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 0
+       priority 30
+       style rover_sim_colorable
+      }
+     }
+    }
+   }
+  }
+  ImageWidgetClass market_vignette_overlay {
+   visible 1
+   ignorepointer 0
+   color 0 0 0 0.8627
+   position 0 0
+   size 1.6 0.9
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   fixaspect outside
+   imageTexture "{E6B3EF816E067499}Gui/textures/inventory_bgvignette.edds"
+   mode blend
+   "src alpha" 1
+   "clamp mode" clamp
+   "stretch mode" stretch_w_h
+   filter 0
+   nocache 1
+  }
+  WrapSpacerWidgetClass market_notification_card_holder {
+   ignorepointer 1
+   position 4.968 45.828
+   size 70.0002 902.63995
+   halign right_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   Margin 0
+  }
+ }
+}

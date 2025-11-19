@@ -1,0 +1,109 @@
+WrapSpacerWidgetClass dataset_card_root {
+ ignorepointer 0
+ color 0 0 0 0.6039
+ position 0 0
+ size 1 32
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 1
+ style Empty
+ Padding 0
+ Margin 0
+ "Size To Content V" 1
+ content_halign right
+ {
+  ButtonWidgetClass dataset_card_header {
+   visible 1
+   ignorepointer 0
+   color 0 0 0 0.3922
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   style Empty
+   {
+    PanelWidgetClass dataset_card_panel {
+     visible 1
+     clipchildren 0
+     ignorepointer 1
+     color 0 0 0 0.7843
+     position 0 0
+     size 1 32
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     style UIDefaultPanel
+     {
+      ImageWidgetClass dataset_card_icon {
+       ignorepointer 1
+       color 1 1 1 0.7843
+       position 6 0
+       size 32 32
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       priority 10
+       image0 "set:dayz_inventory image:shoulderright"
+       mode additive
+       "src alpha" 1
+       "clamp mode" invalid
+       "flip u" 0
+       "flip v" 0
+       filter 1
+      }
+      MultilineTextWidgetClass dataset_card_name_text {
+       visible 1
+       ignorepointer 1
+       color 1 1 1 0.7843
+       position 38 0
+       size 0.7726 32
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scriptclass ""
+       style DayZNormal
+       text " Territory WaterBottle "
+       font "gui/fonts/MetronBook"
+       "text color" 1 1 1 0.7843
+       "exact text" 1
+       "exact text size" 22
+       "size to text h" 0
+       "size to text v" 0
+       "text valign" center
+       wrap 1
+      }
+     }
+    }
+   }
+  }
+  GridSpacerWidgetClass category_cards_holder {
+   ignorepointer 1
+   position 0 0
+   size 1 25
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   Padding 4
+   "Size To Content H" 1
+   "Size To Content V" 1
+   content_halign right
+   content_valign center
+   Columns 1
+   Rows 1
+  }
+ }
+}
