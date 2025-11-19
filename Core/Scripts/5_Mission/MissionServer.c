@@ -38,5 +38,12 @@ modded class MissionServer extends MissionBase
     // NOTA: Seguindo padrão TraderX - não enviamos dados automaticamente
     // O cliente solicita quando abre o menu via RequestDatasets RPC
     // Isso evita sobrecarga e permite controle melhor do timing
+    
+    // ITER-1: Flush pending saves on shutdown
+    override void OnMissionFinish(Class sender, CF_EventArgs args)
+    {
+        AskalPlayerBalance.FlushAllPendingSaves();
+        super.OnMissionFinish(sender, args);
+    }
 }
 

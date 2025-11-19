@@ -44,37 +44,38 @@ class AskalPurchaseService
 			price = authoritativePrice;
 		}
 
-		// Verificar balance
-		int currentBalance = AskalPlayerBalance.GetBalance(steamId, currencyId);
-		if (currentBalance < price)
+		// ITER-1: Reserve funds atomically BEFORE creating item (prevents TOCTOU)
+		if (!AskalPlayerBalance.ReserveFunds(steamId, price, currencyId))
 		{
-			Print("[AskalPurchase] ❌ Balance insuficiente: " + currentBalance + " < " + price);
+			Print("[AskalPurchase] ❌ Falha ao reservar funds: " + steamId + " | Amount: " + price);
 			return false;
 		}
-
+		
 		// Criar item
 		EntityAI createdItem = CreateSimpleItem(player, itemClass, itemQuantity, quantityType, contentType);
 		if (!createdItem)
 		{
 			Print("[AskalPurchase] ❌ Não foi possível criar item: " + itemClass);
+			// ITER-1: Release reservation if item creation fails
+			AskalPlayerBalance.ReleaseReservation(steamId, price, currencyId);
 			return false;
 		}
 
 		// Attachments padrão (apenas se item foi criado com sucesso)
 		AttachDefaultAttachments(createdItem, itemClass);
 
-		// Remover balance
-		if (!AskalPlayerBalance.RemoveBalance(steamId, price, currencyId))
+		// ITER-1: Confirm reservation (convert to actual deduction)
+		if (!AskalPlayerBalance.ConfirmReservation(steamId, price, currencyId))
 		{
-			Print("[AskalPurchase] ❌ Erro ao remover balance");
+			Print("[AskalPurchase] ❌ Erro ao confirmar reserva");
 			GetGame().ObjectDelete(createdItem);
+			AskalPlayerBalance.ReleaseReservation(steamId, price, currencyId);
 			return false;
 		}
 
-		int newBalance = AskalPlayerBalance.GetBalance(steamId, currencyId);
+		Print("[AskalPurchase] ORDER_PLACED steamId=" + steamId + " item=" + itemClass + " price=" + price);
 		Print("[AskalPurchase] ✅ Compra realizada!");
 		Print("[AskalPurchase]   Item: " + itemClass + " | Qty: " + itemQuantity + " | Tipo: " + quantityType);
-		Print("[AskalPurchase]   Balance atualizado: " + newBalance);
 
 		return true;
 	}
