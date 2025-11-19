@@ -33,6 +33,15 @@ modded class MissionServer extends MissionBase
         Print("[AskalCore] Core inicializado - Database pronto para uso");
         Print("[AskalCore] Market deve inicializar seus próprios módulos");
         Print("[AskalCore] ========================================");
+        
+        // ITER-1: Run dev tests if enabled
+        GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(StartDevTests, 3000, false);
+    }
+    
+    // ITER-1: Start dev test runner if enabled
+    void StartDevTests()
+    {
+        AskalDevTestRunner.RunAllTests();
     }
     
     // NOTA: Seguindo padrão TraderX - não enviamos dados automaticamente
