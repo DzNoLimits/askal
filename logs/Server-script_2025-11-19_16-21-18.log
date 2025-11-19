@@ -1,0 +1,1335 @@
+---------------------------------------------
+Log C:\Program Files (x86)\Steam\steamapps\common\DayZServer\Config\script_2025-11-19_16-21-18.log started at 19.11. 16:21:18
+
+SCRIPT       : Registered 331 temporary action enum(s), UAN==331
+SCRIPT       : ... Backlit Effects Enabled
+SCRIPT       : [AskalMarket] ========================================
+SCRIPT       : [AskalMarket] Inicializando módulo Market
+SCRIPT       : [AskalMarket] ✅ RPCs do Market registrados
+SCRIPT       : [AskalMarket] ========================================
+SCRIPT       : [AskalCore] ========================================
+SCRIPT       : [AskalCore] Cliente inicializado (dados recebidos via RPC)
+SCRIPT       : [AskalCore] ✅ RPCs do Core registrados
+SCRIPT       : [AskalCore] ========================================
+SCRIPT       : [AskalCore] ========================================
+SCRIPT       : [AskalCore] MissionServer do Core inicializado
+SCRIPT       : [AskalCore] ========================================
+SCRIPT       : [AskalCore] ========================================
+SCRIPT       : [AskalCore] INICIANDO CARREGAMENTO DE DATASETS JSON
+SCRIPT       : [AskalCore] ========================================
+SCRIPT       : [AskalCore] Caminho do database: $profile:Askal/Database/Datasets/
+SCRIPT       : [AskalCore] ANTES de chamar AskalDatabaseLoader.LoadAllDatasets()
+SCRIPT       : string message = '[AskalDBLoader] =========================================='
+SCRIPT       : string message = '[AskalDBLoader] LoadAllDatasets() - SERVIDOR APENAS'
+SCRIPT       : string message = '[AskalDBLoader] =========================================='
+SCRIPT       : string message = '[AskalDBLoader] 🔄 Carregando datasets de: $profile:Askal/Database/Datasets/'
+SCRIPT       : string message = '[AskalDBLoader] ✅ Diretório encontrado, iniciando busca...'
+SCRIPT       : string message = '[AskalDBLoader] Buscando arquivos .json recursivamente...'
+SCRIPT       : string message = '[AskalDBLoader] 📋 Arquivos encontrados: 15'
+SCRIPT       : string message = '[AskalDBLoader] ✅ Loaded Dataset: 1_Food -> ALIMENTOS v1 (4 categories, 80 items)'
+SCRIPT       : string message = '[AskalDBLoader] ✅ Loaded Dataset: 2_Drinks -> BEBIDAS v1 (2 categories, 9 items)'
+SCRIPT       : string message = '[AskalDBLoader] ✅ Loaded Dataset: 3_Medical -> MEDICINA v1 (3 categories, 24 items)'
+SCRIPT       : string message = '[AskalDBLoader] ✅ Loaded Dataset: 4_Clothing -> ROUPAS, TRAJES E EQUIPAMENTOS v1 (14 categories, 607 items)'
+SCRIPT       : string message = '[AskalDBLoader] ✅ Loaded Dataset: 5_Outfits -> OUTFITS v1 (5 categories, 83 items)'
+SCRIPT       : string message = '[AskalDBLoader] ✅ Loaded Dataset: 6_Firearms -> ARMAS v1 (8 categories, 90 items)'
+SCRIPT       : string message = '[AskalDBLoader] ✅ Loaded Dataset: 7_Ammunition -> MUNIÇÕES v1 (3 categories, 58 items)'
+SCRIPT       : string message = '[AskalDBLoader] ✅ Loaded Dataset: 8_Attachments -> ACESSÓRIOS v1 (6 categories, 172 items)'
+SCRIPT       : string message = '[AskalDBLoader] ✅ Loaded Dataset: 9_Explosives -> EXPLOSIVOS v1 (2 categories, 17 items)'
+SCRIPT       : string message = '[AskalDBLoader] ✅ Loaded Dataset: 10_Base -> BASE E CONSTRUÇÃO v1 (11 categories, 234 items)'
+SCRIPT       : string message = '[AskalDBLoader] ✅ Loaded Dataset: 11_Cultivation -> PLANTIO v1 (3 categories, 13 items)'
+SCRIPT       : string message = '[AskalDBLoader] ✅ Loaded Dataset: 12_Seasonal -> TEMPORADA v1 (4 categories, 19 items)'
+SCRIPT       : string message = '[AskalDBLoader] ✅ Loaded Dataset: 13_Collectibles -> COLECIONÁVEIS v1 (1 categories, 145 items)'
+SCRIPT       : string message = '[AskalDBLoader] ✅ Loaded Dataset: 14_Vehicles -> VEÍCULOS v1 (5 categories, 206 items)'
+SCRIPT       : string message = '[AskalDBLoader] ✅ Loaded Dataset: 15_Improvised -> IMPROVISADOS v1 (2 categories, 84 items)'
+SCRIPT       : string message = '[AskalDBLoader] =========================================='
+SCRIPT       : string message = '[AskalDBLoader] ✅ Carregamento concluído:'
+SCRIPT       : string message = '[AskalDBLoader]    - Datasets carregados: 15'
+SCRIPT       : string message = '[AskalDBLoader] =========================================='
+SCRIPT       : [AskalCore] DEPOIS de chamar AskalDatabaseLoader.LoadAllDatasets()
+SCRIPT       : [AskalCore] ========================================
+SCRIPT       : [AskalCore] CARREGAMENTO DE DATASETS CONCLUÍDO
+SCRIPT       : [AskalCore] ========================================
+SCRIPT       : [AskalCore] Total de datasets carregados: 15
+SCRIPT       : [AskalCore] ========================================
+SCRIPT       : [AskalCore] Core inicializado - Database pronto para uso
+SCRIPT       : [AskalCore] Market deve inicializar seus próprios módulos
+SCRIPT       : [AskalCore] ========================================
+SCRIPT       : [AskalMarket] ========================================
+SCRIPT       : [AskalMarket] MissionServer do Market inicializado
+SCRIPT       : [AskalMarket] ========================================
+SCRIPT       : [AskalMarket] ========================================
+SCRIPT       : [AskalMarket] OnMissionStart() → Market inicializado
+SCRIPT       : [AskalMarket] ========================================
+SCRIPT       : [AskalCore] ========================================
+SCRIPT       : [AskalCore] OnMissionStart() → Inicializando
+SCRIPT       : [ASKAL_CORE] ==========================================
+SCRIPT       : [ASKAL_CORE] LoadDatabase() CHAMADO!
+SCRIPT       : [ASKAL_CORE] ==========================================
+SCRIPT       : [ASKAL_CORE] Caminho do database já configurado: $profile:Askal/Database/Datasets/
+SCRIPT       : [ASKAL_CORE] Database marked as loaded
+SCRIPT       : [ASKAL_CORE] ==========================================
+SCRIPT       : [AskalCore] ✅ Datasets carregados: 15
+SCRIPT       : [AskalCore] ========================================
+SCRIPT       : [AskalMarket] ========================================
+SCRIPT       : [AskalMarket] INICIANDO MÓDULOS DO MARKET
+SCRIPT       : [AskalMarket] ========================================
+SCRIPT       : [AskalMarket] ✅ Database carregado (15 datasets)
+SCRIPT       : [AskalMarket] Inicializando módulos de compra/venda...
+SCRIPT       : [AskalPurchase] ========================================
+SCRIPT       : [AskalPurchase] Módulo de compras inicializado
+SCRIPT       : [AskalPurchase] Registrando RPC handler de compra
+SCRIPT       : [AskalPurchase] ✅ RPC handler registrado
+SCRIPT       : [AskalPurchase] ========================================
+SCRIPT       : [AskalMarket] ========================================
+SCRIPT       : [AskalMarket] SPAWNANDO TRADERS ESTÁTICOS
+SCRIPT       : [AskalMarket] ========================================
+SCRIPT       : [AskalTrader] ========================================
+SCRIPT       : [AskalTrader] INICIANDO SPAWN DE TRADERS
+SCRIPT       : [AskalTrader] ========================================
+SCRIPT       : [AskalTrader] Caminho dos traders: $mission:Askal/Traders/
+SCRIPT       : [AskalTrader] 📄 Arquivo encontrado: Faroleiro
+SCRIPT       : [AskalTrader] Encontrados 1 arquivos de trader
+SCRIPT       : [AskalJsonLoader] ✅ Arquivo carregado: $mission:Askal/Traders/Faroleiro.json
+SCRIPT       : [AskalTrader] ✅ Trader carregado: FAROLEIRO (Faroleiro)
+SCRIPT       : [AskalTrader] ✅ Trader estático spawnado: FAROLEIRO (AskalTraderVendingMachine) em <8321.860352, 7.200000, 2473.729980>
+SCRIPT       : [AskalTrader] ========================================
+SCRIPT       : [AskalTrader] SPAWN DE TRADERS CONCLUÍDO
+SCRIPT       : [AskalTrader] Traders iniciados: 1
+SCRIPT       : [AskalTrader] (Configuração será concluída em ~50ms)
+SCRIPT       : [AskalTrader] ========================================
+SCRIPT       : [AskalMarket] ========================================
+SCRIPT       : [AskalMarket] MARKET INICIALIZADO COM SUCESSO
+SCRIPT       : [AskalMarket] ========================================
+SCRIPT       : [AskalJsonLoader] ✅ Arquivo carregado: $mission:Askal/Traders/Faroleiro.json
+SCRIPT       : [AskalTrader] ✅ Trader carregado: FAROLEIRO (Faroleiro)
+SCRIPT       : [AskalTraderVendingMachine] ✅ Trader estático configurado: FAROLEIRO
+SCRIPT       : [AskalCore] ========================================
+SCRIPT       : [AskalCore] 📥 Cliente solicitou sync: Survivor
+SCRIPT       : [AskalCore] Datasets disponíveis: 15
+SCRIPT       : [AskalSync] ========================================
+SCRIPT       : [AskalSync] 🚀 Iniciando sincronização para: Survivor
+SCRIPT       : [AskalSync] ✅ Encontrados 15 datasets
+SCRIPT       : [AskalSync] 📦 Dataset preparado: 1_Food (4 categorias)
+SCRIPT       : [AskalSync] 📦 Dataset preparado: 2_Drinks (2 categorias)
+SCRIPT       : [AskalSync] 📦 Dataset preparado: 3_Medical (3 categorias)
+SCRIPT       : [AskalSync] 📦 Dataset preparado: 4_Clothing (14 categorias)
+SCRIPT       : [AskalSync] 📦 Dataset preparado: 5_Outfits (5 categorias)
+SCRIPT       : [AskalSync] 📦 Dataset preparado: 6_Firearms (8 categorias)
+SCRIPT       : [AskalSync] 📦 Dataset preparado: 7_Ammunition (3 categorias)
+SCRIPT       : [AskalSync] 📦 Dataset preparado: 8_Attachments (6 categorias)
+SCRIPT       : [AskalSync] 📦 Dataset preparado: 9_Explosives (2 categorias)
+SCRIPT       : [AskalSync] 📦 Dataset preparado: 10_Base (11 categorias)
+SCRIPT       : [AskalSync] 📦 Dataset preparado: 11_Cultivation (3 categorias)
+SCRIPT       : [AskalSync] 📦 Dataset preparado: 12_Seasonal (4 categorias)
+SCRIPT       : [AskalSync] 📦 Dataset preparado: 13_Collectibles (1 categorias)
+SCRIPT       : [AskalSync] 📦 Dataset preparado: 14_Vehicles (5 categorias)
+SCRIPT       : [AskalSync] 📦 Dataset preparado: 15_Improvised (2 categorias)
+SCRIPT       : [AskalSync] 📤 Enviando 15 datasets (73 categorias)...
+SCRIPT       : [AskalSync] 📤 Header enviado: 1_Food (4 categorias)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Industrializados [1/29] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Industrializados [2/29] (2 items, 497 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Industrializados [3/29] (2 items, 507 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Industrializados [4/29] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Industrializados [5/29] (2 items, 495 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Industrializados [6/29] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Industrializados [7/29] (2 items, 494 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Industrializados [8/29] (2 items, 494 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Industrializados [9/29] (2 items, 488 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Industrializados [10/29] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Industrializados [11/29] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Industrializados [12/29] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Industrializados [13/29] (2 items, 513 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Industrializados [14/29] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Industrializados [15/15] (1 items, 432 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_1_Industrializados (15 batches, 29 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Vegetais [1/15] (2 items, 470 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Vegetais [2/15] (2 items, 488 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Vegetais [3/15] (2 items, 477 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Vegetais [4/15] (2 items, 472 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Vegetais [5/15] (2 items, 475 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Vegetais [6/15] (2 items, 472 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Vegetais [7/15] (2 items, 478 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Vegetais [8/8] (1 items, 405 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_2_Vegetais (8 batches, 15 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Cogumelos [1/9] (2 items, 497 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Cogumelos [2/9] (2 items, 497 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Cogumelos [3/9] (2 items, 497 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Cogumelos [4/9] (2 items, 494 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Cogumelos [5/5] (1 items, 418 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_4_Cogumelos (5 batches, 9 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Animais [1/27] (2 items, 488 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Animais [2/27] (2 items, 483 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Animais [3/27] (2 items, 487 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Animais [4/27] (2 items, 486 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Animais [5/27] (2 items, 482 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Animais [6/27] (2 items, 478 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Animais [7/27] (2 items, 481 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Animais [8/27] (2 items, 490 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Animais [9/27] (2 items, 482 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Animais [10/27] (2 items, 481 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Animais [11/27] (2 items, 491 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Animais [12/27] (2 items, 497 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Animais [13/27] (2 items, 479 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Animais [14/14] (1 items, 418 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_3_Animais (14 batches, 27 items)
+SCRIPT       : [AskalSync] 📤 Header enviado: 2_Drinks (2 categorias)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Latas [1/5] (2 items, 480 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Latas [2/5] (2 items, 481 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Latas [3/3] (1 items, 409 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_1_Latas (3 batches, 5 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Garrafas [1/4] (2 items, 490 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Garrafas [2/2] (2 items, 482 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_2_Garrafas (2 batches, 4 items)
+SCRIPT       : [AskalSync] 📤 Header enviado: 3_Medical (3 categorias)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [1/10] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [2/10] (2 items, 507 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [3/10] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [4/10] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [5/5] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_3_Consumiveis (5 batches, 10 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Insumos [1/6] (2 items, 489 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Insumos [2/6] (2 items, 479 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Insumos [3/3] (2 items, 485 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_4_Insumos (3 batches, 6 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Auxiliares [1/8] (2 items, 518 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Auxiliares [2/8] (2 items, 507 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Auxiliares [3/8] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Auxiliares [4/4] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_5_Auxiliares (4 batches, 8 items)
+SCRIPT       : [AskalSync] 📤 Header enviado: 4_Clothing (14 categorias)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_9_Mascaras [1/23] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_9_Mascaras [2/23] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_9_Mascaras [3/23] (2 items, 512 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_9_Mascaras [4/23] (2 items, 497 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_9_Mascaras [5/23] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_9_Mascaras [6/23] (2 items, 682 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_9_Mascaras [7/23] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_9_Mascaras [8/23] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_9_Mascaras [9/23] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_9_Mascaras [10/23] (2 items, 594 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_9_Mascaras [11/23] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_9_Mascaras [12/12] (1 items, 427 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_9_Mascaras (12 batches, 23 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [1/85] (2 items, 593 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [2/85] (2 items, 488 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [3/85] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [4/85] (2 items, 494 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [5/85] (2 items, 497 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [6/85] (2 items, 588 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [7/85] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [8/85] (2 items, 492 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [9/85] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [10/85] (2 items, 622 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [11/85] (2 items, 544 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [12/85] (2 items, 550 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [13/85] (2 items, 570 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [14/85] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [15/85] (2 items, 495 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [16/85] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [17/85] (2 items, 507 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [18/85] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [19/85] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [20/85] (2 items, 495 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [21/85] (2 items, 627 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [22/85] (2 items, 492 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [23/85] (2 items, 585 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [24/85] (2 items, 493 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [25/85] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [26/85] (2 items, 555 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [27/85] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [28/85] (2 items, 638 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [29/85] (2 items, 492 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [30/85] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [31/85] (2 items, 491 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [32/85] (2 items, 529 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [33/85] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [34/85] (2 items, 491 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [35/85] (2 items, 564 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [36/85] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [37/85] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [38/85] (2 items, 493 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [39/85] (2 items, 492 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [40/85] (2 items, 497 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [41/85] (2 items, 587 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [42/85] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Calcas [43/43] (1 items, 424 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_2_Calcas (43 batches, 85 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_12_Luvas [1/31] (2 items, 556 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_12_Luvas [2/31] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_12_Luvas [3/31] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_12_Luvas [4/31] (2 items, 494 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_12_Luvas [5/31] (2 items, 594 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_12_Luvas [6/31] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_12_Luvas [7/31] (2 items, 556 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_12_Luvas [8/31] (2 items, 550 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_12_Luvas [9/31] (2 items, 654 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_12_Luvas [10/31] (2 items, 490 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_12_Luvas [11/31] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_12_Luvas [12/31] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_12_Luvas [13/31] (2 items, 577 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_12_Luvas [14/31] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_12_Luvas [15/31] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_12_Luvas [16/16] (1 items, 442 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_12_Luvas (16 batches, 31 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [1/149] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [2/149] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [3/149] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [4/149] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [5/149] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [6/149] (2 items, 509 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [7/149] (2 items, 619 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [8/149] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [9/149] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [10/149] (2 items, 591 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [11/149] (2 items, 489 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [12/149] (2 items, 648 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [13/149] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [14/149] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [15/149] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [16/149] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [17/149] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [18/149] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [19/149] (2 items, 557 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [20/149] (2 items, 546 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [21/149] (2 items, 553 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [22/149] (2 items, 601 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [23/149] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [24/149] (2 items, 494 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [25/149] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [26/149] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [27/149] (2 items, 533 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [28/149] (2 items, 493 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [29/149] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [30/149] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [31/149] (2 items, 490 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [32/149] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [33/149] (2 items, 601 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [34/149] (2 items, 619 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [35/149] (2 items, 562 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [36/149] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [37/149] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [38/149] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [39/149] (2 items, 602 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [40/149] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [41/149] (2 items, 648 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [42/149] (2 items, 510 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [43/149] (2 items, 507 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [44/149] (2 items, 591 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [45/149] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [46/149] (2 items, 577 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [47/149] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [48/149] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [49/149] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [50/149] (2 items, 497 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [51/149] (2 items, 556 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [52/149] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [53/149] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [54/149] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [55/149] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [56/149] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [57/149] (2 items, 509 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [58/149] (2 items, 639 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [59/149] (2 items, 559 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [60/149] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [61/149] (2 items, 541 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [62/149] (2 items, 509 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [63/149] (2 items, 562 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [64/149] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [65/149] (2 items, 627 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [66/149] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [67/149] (2 items, 507 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [68/149] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [69/149] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [70/149] (2 items, 514 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [71/149] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [72/149] (2 items, 542 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [73/149] (2 items, 520 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [74/149] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Casmisas [75/75] (1 items, 418 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_1_Casmisas (75 batches, 149 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [1/55] (2 items, 550 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [2/55] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [3/55] (2 items, 594 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [4/55] (2 items, 540 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [5/55] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [6/55] (2 items, 495 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [7/55] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [8/55] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [9/55] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [10/55] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [11/55] (2 items, 507 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [12/55] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [13/55] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [14/55] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [15/55] (2 items, 578 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [16/55] (2 items, 592 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [17/55] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [18/55] (2 items, 507 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [19/55] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [20/55] (2 items, 509 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [21/55] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [22/55] (2 items, 579 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [23/55] (2 items, 574 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [24/55] (2 items, 575 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [25/55] (2 items, 550 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [26/55] (2 items, 566 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [27/55] (2 items, 576 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_13_Calcados [28/28] (1 items, 430 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_13_Calcados (28 batches, 55 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [1/84] (2 items, 512 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [2/84] (2 items, 520 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [3/84] (2 items, 512 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [4/84] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [5/84] (2 items, 509 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [6/84] (2 items, 516 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [7/84] (2 items, 616 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [8/84] (2 items, 510 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [9/84] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [10/84] (2 items, 515 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [11/84] (2 items, 511 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [12/84] (2 items, 564 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [13/84] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [14/84] (2 items, 519 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [15/84] (2 items, 519 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [16/84] (2 items, 514 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [17/84] (2 items, 520 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [18/84] (2 items, 655 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [19/84] (2 items, 580 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [20/84] (2 items, 507 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [21/84] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [22/84] (2 items, 616 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [23/84] (2 items, 517 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [24/84] (2 items, 514 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [25/84] (2 items, 551 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [26/84] (2 items, 518 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [27/84] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [28/84] (2 items, 513 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [29/84] (2 items, 516 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [30/84] (2 items, 563 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [31/84] (2 items, 672 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [32/84] (2 items, 584 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [33/84] (2 items, 540 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [34/84] (2 items, 558 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [35/84] (2 items, 514 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [36/84] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [37/84] (2 items, 510 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [38/84] (2 items, 584 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [39/84] (2 items, 612 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [40/84] (2 items, 507 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [41/84] (2 items, 515 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Chapeus_e_Bones [42/42] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_8_Chapeus_e_Bones (42 batches, 84 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_10_MultiSlot [1/12] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_10_MultiSlot [2/12] (2 items, 492 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_10_MultiSlot [3/12] (2 items, 631 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_10_MultiSlot [4/12] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_10_MultiSlot [5/12] (2 items, 530 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_10_MultiSlot [6/6] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_10_MultiSlot (6 batches, 12 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [1/47] (2 items, 536 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [2/47] (2 items, 706 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [3/47] (2 items, 525 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [4/47] (2 items, 582 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [5/47] (2 items, 538 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [6/47] (2 items, 530 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [7/47] (2 items, 579 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [8/47] (2 items, 675 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [9/47] (2 items, 528 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [10/47] (2 items, 646 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [11/47] (2 items, 541 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [12/47] (2 items, 530 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [13/47] (2 items, 530 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [14/47] (2 items, 526 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [15/47] (2 items, 529 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [16/47] (2 items, 655 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [17/47] (2 items, 527 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [18/47] (2 items, 566 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [19/47] (2 items, 528 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [20/47] (2 items, 539 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [21/47] (2 items, 592 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [22/47] (2 items, 533 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [23/47] (2 items, 528 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Protetores_de_Cabeca [24/24] (1 items, 456 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_6_Protetores_de_Cabeca (24 batches, 47 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Coletes [1/29] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Coletes [2/29] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Coletes [3/29] (2 items, 556 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Coletes [4/29] (2 items, 571 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Coletes [5/29] (2 items, 511 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Coletes [6/29] (2 items, 554 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Coletes [7/29] (2 items, 636 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Coletes [8/29] (2 items, 634 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Coletes [9/29] (2 items, 600 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Coletes [10/29] (2 items, 569 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Coletes [11/29] (2 items, 528 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Coletes [12/29] (2 items, 561 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Coletes [13/29] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Coletes [14/29] (2 items, 522 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Coletes [15/15] (1 items, 432 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_4_Coletes (15 batches, 29 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_7_Capacetes [1/14] (2 items, 523 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_7_Capacetes [2/14] (2 items, 524 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_7_Capacetes [3/14] (2 items, 509 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_7_Capacetes [4/14] (2 items, 556 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_7_Capacetes [5/14] (2 items, 516 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_7_Capacetes [6/14] (2 items, 514 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_7_Capacetes [7/7] (2 items, 665 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_7_Capacetes (7 batches, 14 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Cintos [1/7] (2 items, 490 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Cintos [2/7] (2 items, 530 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Cintos [3/7] (2 items, 490 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Cintos [4/4] (1 items, 414 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_5_Cintos (4 batches, 7 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_11_Oculos [1/20] (2 items, 494 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_11_Oculos [2/20] (2 items, 493 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_11_Oculos [3/20] (2 items, 495 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_11_Oculos [4/20] (2 items, 490 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_11_Oculos [5/20] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_11_Oculos [6/20] (2 items, 492 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_11_Oculos [7/20] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_11_Oculos [8/20] (2 items, 493 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_11_Oculos [9/20] (2 items, 495 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_11_Oculos [10/10] (2 items, 655 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_11_Oculos (10 batches, 20 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_14_Variedades [1/7] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_14_Variedades [2/7] (2 items, 553 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_14_Variedades [3/7] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_14_Variedades [4/4] (1 items, 423 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_14_Variedades (4 batches, 7 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [1/44] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [2/44] (2 items, 494 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [3/44] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [4/44] (2 items, 492 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [5/44] (2 items, 545 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [6/44] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [7/44] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [8/44] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [9/44] (2 items, 525 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [10/44] (2 items, 539 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [11/44] (2 items, 579 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [12/44] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [13/44] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [14/44] (2 items, 545 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [15/44] (2 items, 511 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [16/44] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [17/44] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [18/44] (2 items, 554 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [19/44] (2 items, 524 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [20/44] (2 items, 511 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [21/44] (2 items, 558 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Mochilas [22/22] (2 items, 549 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_3_Mochilas (22 batches, 44 items)
+SCRIPT       : [AskalSync] 📤 Header enviado: 5_Outfits (5 categorias)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_TEMPLARIO [1/7] (2 items, 495 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_TEMPLARIO [2/7] (2 items, 493 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_TEMPLARIO [3/7] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_TEMPLARIO [4/4] (1 items, 451 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_5_TEMPLARIO (4 batches, 7 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_TRAPO [1/7] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_TRAPO [2/7] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_TRAPO [3/7] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_TRAPO [4/4] (1 items, 418 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_3_TRAPO (4 batches, 7 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_CORTUME [1/35] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_CORTUME [2/35] (2 items, 557 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_CORTUME [3/35] (2 items, 555 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_CORTUME [4/35] (2 items, 551 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_CORTUME [5/35] (2 items, 557 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_CORTUME [6/35] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_CORTUME [7/35] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_CORTUME [8/35] (2 items, 620 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_CORTUME [9/35] (2 items, 580 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_CORTUME [10/35] (2 items, 491 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_CORTUME [11/35] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_CORTUME [12/35] (2 items, 565 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_CORTUME [13/35] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_CORTUME [14/35] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_CORTUME [15/35] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_CORTUME [16/35] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_CORTUME [17/35] (2 items, 507 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_CORTUME [18/18] (1 items, 424 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_4_CORTUME (18 batches, 35 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_NBQ [1/14] (2 items, 484 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_NBQ [2/14] (2 items, 484 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_NBQ [3/14] (2 items, 486 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_NBQ [4/14] (2 items, 487 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_NBQ [5/14] (2 items, 484 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_NBQ [6/14] (2 items, 485 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_NBQ [7/7] (2 items, 486 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_2_NBQ (7 batches, 14 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_GHILLIE [1/20] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_GHILLIE [2/20] (2 items, 553 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_GHILLIE [3/20] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_GHILLIE [4/20] (2 items, 611 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_GHILLIE [5/20] (2 items, 619 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_GHILLIE [6/20] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_GHILLIE [7/20] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_GHILLIE [8/20] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_GHILLIE [9/20] (2 items, 510 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_GHILLIE [10/10] (2 items, 495 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_1_GHILLIE (10 batches, 20 items)
+SCRIPT       : [AskalSync] 📤 Header enviado: 6_Firearms (8 categorias)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Rifles_Sniper [1/21] (2 items, 563 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Rifles_Sniper [2/21] (2 items, 543 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Rifles_Sniper [3/21] (2 items, 577 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Rifles_Sniper [4/21] (2 items, 567 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Rifles_Sniper [5/21] (2 items, 525 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Rifles_Sniper [6/21] (2 items, 551 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Rifles_Sniper [7/21] (2 items, 550 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Rifles_Sniper [8/21] (2 items, 599 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Rifles_Sniper [9/21] (2 items, 626 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Rifles_Sniper [10/21] (2 items, 551 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Rifles_Sniper [11/11] (1 items, 465 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_6_Rifles_Sniper (11 batches, 21 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Escopetas [1/7] (2 items, 517 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Escopetas [2/7] (2 items, 512 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Escopetas [3/7] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Escopetas [4/4] (1 items, 421 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_2_Escopetas (4 batches, 7 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_7_Metralhadora [1/1] (1 items, 494 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Rifles_de_Assalto [1/19] (2 items, 597 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Rifles_de_Assalto [2/19] (2 items, 578 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Rifles_de_Assalto [3/19] (2 items, 572 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Rifles_de_Assalto [4/19] (2 items, 634 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Rifles_de_Assalto [5/19] (2 items, 608 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Rifles_de_Assalto [6/19] (2 items, 594 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Rifles_de_Assalto [7/19] (2 items, 647 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Rifles_de_Assalto [8/19] (2 items, 572 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Rifles_de_Assalto [9/19] (2 items, 595 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Rifles_de_Assalto [10/10] (1 items, 504 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_4_Rifles_de_Assalto (10 batches, 19 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Outros [1/7] (2 items, 477 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Outros [2/7] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Outros [3/7] (2 items, 562 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Outros [4/4] (1 items, 430 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_8_Outros (4 batches, 7 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Pistolas [1/16] (2 items, 497 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Pistolas [2/16] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Pistolas [3/16] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Pistolas [4/16] (2 items, 514 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Pistolas [5/16] (2 items, 509 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Pistolas [6/16] (2 items, 522 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Pistolas [7/16] (2 items, 536 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Pistolas [8/8] (2 items, 519 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_1_Pistolas (8 batches, 16 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Submetralhadoras [1/13] (2 items, 527 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Submetralhadoras [2/13] (2 items, 594 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Submetralhadoras [3/13] (2 items, 588 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Submetralhadoras [4/13] (2 items, 609 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Submetralhadoras [5/13] (2 items, 667 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Submetralhadoras [6/13] (2 items, 590 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Submetralhadoras [7/7] (1 items, 486 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_3_Submetralhadoras (7 batches, 13 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Atirador_Designado [1/6] (2 items, 566 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Atirador_Designado [2/6] (2 items, 558 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Atirador_Designado [3/3] (2 items, 551 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_5_Atirador_Designado (3 batches, 6 items)
+SCRIPT       : [AskalSync] 📤 Header enviado: 7_Ammunition (3 categorias)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Caixas [1/23] (2 items, 538 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Caixas [2/23] (2 items, 533 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Caixas [3/23] (2 items, 511 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Caixas [4/23] (2 items, 513 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Caixas [5/23] (2 items, 509 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Caixas [6/23] (2 items, 537 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Caixas [7/23] (2 items, 530 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Caixas [8/23] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Caixas [9/23] (2 items, 521 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Caixas [10/23] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Caixas [11/23] (2 items, 515 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Caixas [12/12] (1 items, 452 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_2_Caixas (12 batches, 23 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Outros [1/12] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Outros [2/12] (2 items, 538 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Outros [3/12] (2 items, 488 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Outros [4/12] (2 items, 569 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Outros [5/12] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Outros [6/6] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_3_Outros (6 batches, 12 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_AVULSAS [1/23] (2 items, 494 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_AVULSAS [2/23] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_AVULSAS [3/23] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_AVULSAS [4/23] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_AVULSAS [5/23] (2 items, 509 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_AVULSAS [6/23] (2 items, 497 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_AVULSAS [7/23] (2 items, 478 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_AVULSAS [8/23] (2 items, 497 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_AVULSAS [9/23] (2 items, 512 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_AVULSAS [10/23] (2 items, 494 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_AVULSAS [11/23] (2 items, 489 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_AVULSAS [12/12] (1 items, 417 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_1_AVULSAS (12 batches, 23 items)
+SCRIPT       : [AskalSync] 📤 Header enviado: 8_Attachments (6 categorias)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [1/73] (2 items, 547 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [2/73] (2 items, 512 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [3/73] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [4/73] (2 items, 514 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [5/73] (2 items, 556 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [6/73] (2 items, 512 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [7/73] (2 items, 513 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [8/73] (2 items, 512 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [9/73] (2 items, 516 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [10/73] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [11/73] (2 items, 507 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [12/73] (2 items, 550 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [13/73] (2 items, 513 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [14/73] (2 items, 519 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [15/73] (2 items, 513 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [16/73] (2 items, 521 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [17/73] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [18/73] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [19/73] (2 items, 511 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [20/73] (2 items, 509 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [21/73] (2 items, 513 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [22/73] (2 items, 516 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [23/73] (2 items, 516 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [24/73] (2 items, 558 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [25/73] (2 items, 514 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [26/73] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [27/73] (2 items, 519 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [28/73] (2 items, 516 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [29/73] (2 items, 517 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [30/73] (2 items, 517 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [31/73] (2 items, 550 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [32/73] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [33/73] (2 items, 553 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [34/73] (2 items, 511 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [35/73] (2 items, 548 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [36/73] (2 items, 552 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Carregadores [37/37] (1 items, 431 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_1_Carregadores (37 batches, 73 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [1/50] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [2/50] (2 items, 550 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [3/50] (2 items, 540 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [4/50] (2 items, 556 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [5/50] (2 items, 510 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [6/50] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [7/50] (2 items, 538 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [8/50] (2 items, 511 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [9/50] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [10/50] (2 items, 511 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [11/50] (2 items, 554 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [12/50] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [13/50] (2 items, 578 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [14/50] (2 items, 553 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [15/50] (2 items, 538 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [16/50] (2 items, 541 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [17/50] (2 items, 562 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [18/50] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [19/50] (2 items, 542 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [20/50] (2 items, 542 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [21/50] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [22/50] (2 items, 509 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [23/50] (2 items, 497 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [24/50] (2 items, 516 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Suportes [25/25] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_3_Suportes (25 batches, 50 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Lanternas [1/1] (2 items, 511 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Miras [1/29] (2 items, 521 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Miras [2/29] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Miras [3/29] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Miras [4/29] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Miras [5/29] (2 items, 495 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Miras [6/29] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Miras [7/29] (2 items, 495 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Miras [8/29] (2 items, 495 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Miras [9/29] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Miras [10/29] (2 items, 494 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Miras [11/29] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Miras [12/29] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Miras [13/29] (2 items, 535 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Miras [14/29] (2 items, 509 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Miras [15/15] (1 items, 423 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_5_Miras (15 batches, 29 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Ponteiras [1/11] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Ponteiras [2/11] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Ponteiras [3/11] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Ponteiras [4/11] (2 items, 495 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Ponteiras [5/11] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Ponteiras [6/6] (1 items, 426 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_2_Ponteiras (6 batches, 11 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Trilhos [1/7] (2 items, 520 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Trilhos [2/7] (2 items, 514 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Trilhos [3/7] (2 items, 520 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Trilhos [4/4] (1 items, 431 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_4_Trilhos (4 batches, 7 items)
+SCRIPT       : [AskalSync] 📤 Header enviado: 9_Explosives (2 categorias)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Granadas [1/13] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Granadas [2/13] (2 items, 566 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Granadas [3/13] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Granadas [4/13] (2 items, 524 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Granadas [5/13] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Granadas [6/13] (2 items, 620 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Granadas [7/7] (1 items, 458 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_1_Granadas (7 batches, 13 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Minas [1/4] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Minas [2/2] (2 items, 494 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_2_Minas (2 batches, 4 items)
+SCRIPT       : [AskalSync] 📤 Header enviado: 10_Base (11 categorias)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Bandeiras [1/33] (2 items, 494 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Bandeiras [2/33] (2 items, 488 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Bandeiras [3/33] (2 items, 494 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Bandeiras [4/33] (2 items, 488 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Bandeiras [5/33] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Bandeiras [6/33] (2 items, 487 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Bandeiras [7/33] (2 items, 492 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Bandeiras [8/33] (2 items, 872 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Bandeiras [9/33] (2 items, 489 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Bandeiras [10/33] (2 items, 488 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Bandeiras [11/33] (2 items, 494 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Bandeiras [12/33] (2 items, 493 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Bandeiras [13/33] (2 items, 494 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Bandeiras [14/33] (2 items, 487 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Bandeiras [15/33] (2 items, 490 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Bandeiras [16/33] (2 items, 491 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Bandeiras [17/17] (1 items, 416 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_1_Bandeiras (17 batches, 33 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Cozinha [1/8] (2 items, 483 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Cozinha [2/8] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Cozinha [3/8] (2 items, 473 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Cozinha [4/4] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_4_Cozinha (4 batches, 8 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Comunicacao [1/4] (2 items, 514 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_8_Comunicacao [2/2] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_8_Comunicacao (2 batches, 4 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_9_Armadilhas [1/5] (2 items, 486 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_9_Armadilhas [2/5] (2 items, 494 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_9_Armadilhas [3/3] (1 items, 419 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_9_Armadilhas (3 batches, 5 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [1/57] (2 items, 482 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [2/57] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [3/57] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [4/57] (2 items, 492 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [5/57] (2 items, 486 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [6/57] (2 items, 492 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [7/57] (2 items, 490 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [8/57] (2 items, 507 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [9/57] (2 items, 495 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [10/57] (2 items, 492 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [11/57] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [12/57] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [13/57] (2 items, 495 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [14/57] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [15/57] (2 items, 487 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [16/57] (2 items, 507 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [17/57] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [18/57] (2 items, 492 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [19/57] (2 items, 491 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [20/57] (2 items, 493 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [21/57] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [22/57] (2 items, 601 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [23/57] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [24/57] (2 items, 489 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [25/57] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [26/57] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [27/57] (2 items, 490 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [28/57] (2 items, 491 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Consumiveis [29/29] (1 items, 422 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_3_Consumiveis (29 batches, 57 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [1/69] (2 items, 492 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [2/69] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [3/69] (2 items, 495 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [4/69] (2 items, 490 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [5/69] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [6/69] (2 items, 493 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [7/69] (2 items, 486 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [8/69] (2 items, 507 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [9/69] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [10/69] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [11/69] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [12/69] (2 items, 497 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [13/69] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [14/69] (2 items, 493 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [15/69] (2 items, 489 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [16/69] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [17/69] (2 items, 495 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [18/69] (2 items, 491 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [19/69] (2 items, 492 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [20/69] (2 items, 484 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [21/69] (2 items, 497 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [22/69] (2 items, 492 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [23/69] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [24/69] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [25/69] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [26/69] (2 items, 537 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [27/69] (2 items, 507 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [28/69] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [29/69] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [30/69] (2 items, 492 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [31/69] (2 items, 606 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [32/69] (2 items, 488 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [33/69] (2 items, 534 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [34/69] (2 items, 522 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Ferramentas [35/35] (1 items, 421 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_5_Ferramentas (35 batches, 69 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_10_Visao [1/4] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_10_Visao [2/2] (2 items, 487 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_10_Visao (2 batches, 4 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_11_Equipamentos [1/4] (2 items, 524 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_11_Equipamentos [2/2] (2 items, 536 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_11_Equipamentos (2 batches, 4 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_7_Navegacao [1/4] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_7_Navegacao [2/2] (2 items, 493 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_7_Navegacao (2 batches, 4 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Containers [1/36] (2 items, 540 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Containers [2/36] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Containers [3/36] (2 items, 495 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Containers [4/36] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Containers [5/36] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Containers [6/36] (2 items, 495 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Containers [7/36] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Containers [8/36] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Containers [9/36] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Containers [10/36] (2 items, 561 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Containers [11/36] (2 items, 541 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Containers [12/36] (2 items, 565 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Containers [13/36] (2 items, 559 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Containers [14/36] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Containers [15/36] (2 items, 491 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Containers [16/36] (2 items, 528 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Containers [17/36] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_6_Containers [18/18] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_6_Containers (18 batches, 36 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Tendas [1/10] (2 items, 542 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Tendas [2/10] (2 items, 497 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Tendas [3/10] (2 items, 493 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Tendas [4/10] (2 items, 524 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Tendas [5/5] (2 items, 481 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_2_Tendas (5 batches, 10 items)
+SCRIPT       : [AskalSync] 📤 Header enviado: 11_Cultivation (3 categorias)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Sementes_Avulsas [1/6] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Sementes_Avulsas [2/6] (2 items, 509 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Sementes_Avulsas [3/3] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_1_Sementes_Avulsas (3 batches, 6 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Pacotes [1/5] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Pacotes [2/5] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Pacotes [3/3] (1 items, 423 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_2_Pacotes (3 batches, 5 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Cultivo [1/1] (2 items, 492 bytes)
+SCRIPT       : [AskalSync] 📤 Header enviado: 12_Seasonal (4 categorias)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Aniversario [1/3] (2 items, 517 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Aniversario [2/2] (1 items, 435 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_3_Aniversario (2 batches, 3 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Outros [1/1] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Natal [1/5] (2 items, 495 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Natal [2/5] (2 items, 515 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Natal [3/3] (1 items, 409 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_2_Natal (3 batches, 5 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Halloween [1/9] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Halloween [2/9] (2 items, 504 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Halloween [3/9] (2 items, 541 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Halloween [4/9] (2 items, 527 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Halloween [5/5] (1 items, 418 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_1_Halloween (5 batches, 9 items)
+SCRIPT       : [AskalSync] 📤 Header enviado: 13_Collectibles (1 categorias)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [1/145] (2 items, 513 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [2/145] (2 items, 511 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [3/145] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [4/145] (2 items, 518 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [5/145] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [6/145] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [7/145] (2 items, 516 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [8/145] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [9/145] (2 items, 509 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [10/145] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [11/145] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [12/145] (2 items, 515 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [13/145] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [14/145] (2 items, 522 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [15/145] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [16/145] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [17/145] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [18/145] (2 items, 494 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [19/145] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [20/145] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [21/145] (2 items, 492 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [22/145] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [23/145] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [24/145] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [25/145] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [26/145] (2 items, 514 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [27/145] (2 items, 520 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [28/145] (2 items, 497 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [29/145] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [30/145] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [31/145] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [32/145] (2 items, 511 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [33/145] (2 items, 513 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [34/145] (2 items, 507 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [35/145] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [36/145] (2 items, 514 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [37/145] (2 items, 492 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [38/145] (2 items, 497 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [39/145] (2 items, 513 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [40/145] (2 items, 518 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [41/145] (2 items, 493 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [42/145] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [43/145] (2 items, 515 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [44/145] (2 items, 511 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [45/145] (2 items, 493 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [46/145] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [47/145] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [48/145] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [49/145] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [50/145] (2 items, 515 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [51/145] (2 items, 509 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [52/145] (2 items, 494 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [53/145] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [54/145] (2 items, 519 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [55/145] (2 items, 506 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [56/145] (2 items, 497 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [57/145] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [58/145] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [59/145] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [60/145] (2 items, 509 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [61/145] (2 items, 522 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [62/145] (2 items, 511 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [63/145] (2 items, 517 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [64/145] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [65/145] (2 items, 503 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [66/145] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [67/145] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [68/145] (2 items, 512 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [69/145] (2 items, 523 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [70/145] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [71/145] (2 items, 501 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [72/145] (2 items, 513 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Livros [73/73] (1 items, 424 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_1_Livros (73 batches, 145 items)
+SCRIPT       : [AskalSync] 📤 Header enviado: 14_Vehicles (5 categorias)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Ferramentas [1/11] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Ferramentas [2/11] (2 items, 496 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Ferramentas [3/11] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Ferramentas [4/11] (2 items, 500 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Ferramentas [5/11] (2 items, 513 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_4_Ferramentas [6/6] (1 items, 429 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_4_Ferramentas (6 batches, 11 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Aquaticos [1/4] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Aquaticos [2/2] (2 items, 541 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_2_Aquaticos (2 batches, 4 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [1/167] (2 items, 661 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [2/167] (2 items, 632 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [3/167] (2 items, 535 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [4/167] (2 items, 538 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [5/167] (2 items, 573 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [6/167] (2 items, 528 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [7/167] (2 items, 679 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [8/167] (2 items, 538 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [9/167] (2 items, 532 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [10/167] (2 items, 539 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [11/167] (2 items, 772 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [12/167] (2 items, 539 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [13/167] (2 items, 542 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [14/167] (2 items, 648 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [15/167] (2 items, 680 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [16/167] (2 items, 537 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [17/167] (2 items, 547 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [18/167] (2 items, 533 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [19/167] (2 items, 542 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [20/167] (2 items, 558 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [21/167] (2 items, 528 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [22/167] (2 items, 533 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [23/167] (2 items, 533 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [24/167] (2 items, 551 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [25/167] (2 items, 552 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [26/167] (2 items, 533 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [27/167] (2 items, 536 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [28/167] (2 items, 544 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [29/167] (2 items, 534 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [30/167] (2 items, 537 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [31/167] (2 items, 533 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [32/167] (2 items, 538 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [33/167] (2 items, 537 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [34/167] (2 items, 541 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [35/167] (2 items, 538 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [36/167] (2 items, 642 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [37/167] (2 items, 695 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [38/167] (2 items, 536 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [39/167] (2 items, 542 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [40/167] (2 items, 630 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [41/167] (2 items, 574 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [42/167] (2 items, 530 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [43/167] (2 items, 536 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [44/167] (2 items, 533 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [45/167] (2 items, 538 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [46/167] (2 items, 534 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [47/167] (2 items, 526 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [48/167] (2 items, 572 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [49/167] (2 items, 540 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [50/167] (2 items, 660 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [51/167] (2 items, 533 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [52/167] (2 items, 532 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [53/167] (2 items, 689 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [54/167] (2 items, 844 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [55/167] (2 items, 679 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [56/167] (2 items, 673 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [57/167] (2 items, 536 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [58/167] (2 items, 530 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [59/167] (2 items, 540 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [60/167] (2 items, 527 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [61/167] (2 items, 531 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [62/167] (2 items, 525 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [63/167] (2 items, 526 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [64/167] (2 items, 545 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [65/167] (2 items, 541 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [66/167] (2 items, 666 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [67/167] (2 items, 652 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [68/167] (2 items, 672 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [69/167] (2 items, 636 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [70/167] (2 items, 549 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [71/167] (2 items, 634 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [72/167] (2 items, 635 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [73/167] (2 items, 537 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [74/167] (2 items, 542 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [75/167] (2 items, 534 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [76/167] (2 items, 538 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [77/167] (2 items, 539 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [78/167] (2 items, 680 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [79/167] (2 items, 541 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [80/167] (2 items, 637 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [81/167] (2 items, 536 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [82/167] (2 items, 533 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [83/167] (2 items, 671 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_5_Portas_e_Capos [84/84] (1 items, 451 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_5_Portas_e_Capos (84 batches, 167 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Terrestres [1/17] (2 items, 572 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Terrestres [2/17] (2 items, 545 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Terrestres [3/17] (2 items, 513 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Terrestres [4/17] (2 items, 550 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Terrestres [5/17] (2 items, 565 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Terrestres [6/17] (2 items, 515 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Terrestres [7/17] (2 items, 512 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Terrestres [8/17] (2 items, 519 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Terrestres [9/9] (1 items, 424 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_1_Terrestres (9 batches, 17 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Pneus [1/7] (2 items, 494 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Pneus [2/7] (2 items, 491 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Pneus [3/7] (2 items, 498 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_3_Pneus [4/4] (1 items, 420 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_3_Pneus (4 batches, 7 items)
+SCRIPT       : [AskalSync] 📤 Header enviado: 15_Improvised (2 categorias)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Insumos_Coletaveis [1/16] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Insumos_Coletaveis [2/16] (2 items, 521 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Insumos_Coletaveis [3/16] (2 items, 519 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Insumos_Coletaveis [4/16] (2 items, 512 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Insumos_Coletaveis [5/16] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Insumos_Coletaveis [6/16] (2 items, 559 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Insumos_Coletaveis [7/16] (2 items, 519 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_1_Insumos_Coletaveis [8/8] (2 items, 513 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_1_Insumos_Coletaveis (8 batches, 16 items)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [1/68] (2 items, 555 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [2/68] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [3/68] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [4/68] (2 items, 522 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [5/68] (2 items, 513 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [6/68] (2 items, 519 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [7/68] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [8/68] (2 items, 499 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [9/68] (2 items, 512 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [10/68] (2 items, 511 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [11/68] (2 items, 512 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [12/68] (2 items, 514 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [13/68] (2 items, 512 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [14/68] (2 items, 514 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [15/68] (2 items, 513 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [16/68] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] [AVISO] Batch muito grande: 1086 bytes (limite: 1000)
+SCRIPT       : [AskalSync] [AVISO] Batch muito grande: 1010 bytes (limite: 1000)
+SCRIPT       : [AskalSync] ⚠️ Item muito grande para enviar: armband_altis
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [18/68] (2 items, 514 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [19/68] (2 items, 513 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [20/68] (2 items, 502 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [21/68] (2 items, 508 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [22/68] (2 items, 511 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [23/68] (2 items, 514 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [24/68] (2 items, 515 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [25/68] (2 items, 514 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [26/68] (2 items, 514 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [27/68] (2 items, 513 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [28/68] (2 items, 522 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [29/68] (2 items, 518 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [30/68] (2 items, 511 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [31/68] (2 items, 520 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [32/68] (2 items, 517 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [33/68] (2 items, 521 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [34/68] (2 items, 505 bytes)
+SCRIPT       : [AskalSync] 📤 Batch enviado: CAT_2_Confeccionaveis [35/35] (1 items, 442 bytes)
+SCRIPT       : [AskalSync] ✅ Categoria dividida: CAT_2_Confeccionaveis (34 batches, 68 items)
+SCRIPT       : [AskalSync] 📤 Enviando conclusão (73 categorias)...
+SCRIPT       : [AskalMarket] ✅ MarketConfig carregada de $profile:Askal/Market/MarketConfig.json
+SCRIPT       : [AskalSync] ✅ Sincronização completa! Enviadas 73 categorias
+SCRIPT       : [AskalSync] ========================================
+SCRIPT       : [AskalCore] ========================================
+SCRIPT       : ---- PlayerBase OnStoreLoad SUCCESS ----
+SCRIPT       : [AskalTrader] ✅ UserAction registrada: ActionOpenAskalTraderMenu
+SCRIPT       : [AskalVirtualStoreConfig] ✅ Config carregada de: $profile:Askal/Market/VirtualStore_Config.json
+SCRIPT       : [AskalSell] [RPC] RequestInventoryHealth recebido de: Survivor
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalSell] [RPC] Health coletado para 48 tipos de itens
+SCRIPT       : [AskalSell] [RPC] InventoryHealthResponse enviado com 48 itens
+SCRIPT       : [AskalPurchase] [RPC] PurchaseItemRequest recebido - Type: 0 | IsServer: true
+SCRIPT       : [AskalPurchase] [RPC] Lendo parâmetros do RPC...
+SCRIPT       : [AskalPurchase] [RPC] Parâmetros lidos com sucesso
+SCRIPT       : [AskalPurchase] [RPC] SteamId resolvido: 76561198984855494 | Trader: 
+SCRIPT       : [AskalPurchase] [PROCESSAR] Iniciando processamento de compra...
+SCRIPT       : [AskalPurchase] [COMPRA] Solicitação de compra recebida:
+SCRIPT       : [AskalPurchase]   Player: 76561198984855494
+SCRIPT       : [AskalPurchase]   Item: powderedmilk
+SCRIPT       : [AskalPurchase]   Preço solicitado: 449
+SCRIPT       : [AskalPurchase]   Moeda: Askal_Money
+SCRIPT       : [AskalPurchase]   Trader: 
+SCRIPT       : [AskalPurchase]   Quantidade: 100 | Tipo: 3 | Conteúdo: 0
+SCRIPT       : [AskalPurchase] [PROCESSAR] Chamando AskalPurchaseService.ProcessPurchaseWithQuantity...
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalBalance] Sistema de balance inicializado (persistência em tempo real)
+SCRIPT       : [AskalBalance] RESERVE_OK steamId=76561198984855494 amount=449 currency=Askal_Money available_after=999190497
+SCRIPT       : [AskalPurchase] 🛠️ Criando item: powderedmilk
+SCRIPT       : [AskalPurchase] 📊 Quantidade: 100
+SCRIPT       : [AskalBalance] ENQUEUE_PERSIST steamId=76561198984855494
+SCRIPT       : [AskalPurchase] ORDER_PLACED steamId=76561198984855494 item=powderedmilk price=449
+SCRIPT       : [AskalPurchase] ✅ Compra realizada!
+SCRIPT       : [AskalPurchase]   Item: powderedmilk | Qty: 100 | Tipo: 3
+SCRIPT       : [AskalPurchase] [PROCESSAR] ProcessPurchaseWithQuantity retornou: true
+SCRIPT       : [AskalPurchase] [RESULTADO] SUCESSO - Compra realizada com sucesso
+SCRIPT       : [AskalPurchase] [PROCESSAR] Enviando resposta ao cliente...
+SCRIPT       : [AskalPurchase] [PROCESSAR] Resposta enviada
+SCRIPT       : [AskalSell] [RPC] RequestInventoryHealth recebido de: Survivor
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalSell] [RPC] Health coletado para 49 tipos de itens
+SCRIPT       : [AskalSell] [RPC] InventoryHealthResponse enviado com 49 itens
+SCRIPT       : [AskalPurchase] [RPC] PurchaseItemRequest recebido - Type: 0 | IsServer: true
+SCRIPT       : [AskalPurchase] [RPC] Lendo parâmetros do RPC...
+SCRIPT       : [AskalPurchase] [RPC] Parâmetros lidos com sucesso
+SCRIPT       : [AskalPurchase] [RPC] SteamId resolvido: 76561198984855494 | Trader: 
+SCRIPT       : [AskalPurchase] [PROCESSAR] Iniciando processamento de compra...
+SCRIPT       : [AskalPurchase] [COMPRA] Solicitação de compra recebida:
+SCRIPT       : [AskalPurchase]   Player: 76561198984855494
+SCRIPT       : [AskalPurchase]   Item: powderedmilk
+SCRIPT       : [AskalPurchase]   Preço solicitado: 112
+SCRIPT       : [AskalPurchase]   Moeda: Askal_Money
+SCRIPT       : [AskalPurchase]   Trader: 
+SCRIPT       : [AskalPurchase]   Quantidade: 25 | Tipo: 3 | Conteúdo: 0
+SCRIPT       : [AskalPurchase] [PROCESSAR] Chamando AskalPurchaseService.ProcessPurchaseWithQuantity...
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalPurchase] ⚠️ Ajustando preço informado pelo cliente. Recebido: 112 | Autoritativo: 449
+SCRIPT       : [AskalBalance] RESERVE_OK steamId=76561198984855494 amount=449 currency=Askal_Money available_after=999190497
+SCRIPT       : [AskalPurchase] 🛠️ Criando item: powderedmilk
+SCRIPT       : [AskalPurchase] 📊 Quantidade: 25
+SCRIPT       : [AskalBalance] ENQUEUE_PERSIST steamId=76561198984855494
+SCRIPT       : [AskalJsonLoader] ✅ Arquivo salvo: $profile:Askal/Database/Players/76561198984855494.json
+SCRIPT       : [AskalBalance] ✅ Dados do player salvos: 76561198984855494
+SCRIPT       : [AskalBalance] Flushed 1 pending saves to disk
+SCRIPT       : [AskalPurchase] ORDER_PLACED steamId=76561198984855494 item=powderedmilk price=449
+SCRIPT       : [AskalPurchase] ✅ Compra realizada!
+SCRIPT       : [AskalPurchase]   Item: powderedmilk | Qty: 25 | Tipo: 3
+SCRIPT       : [AskalPurchase] [PROCESSAR] ProcessPurchaseWithQuantity retornou: true
+SCRIPT       : [AskalPurchase] [RESULTADO] SUCESSO - Compra realizada com sucesso
+SCRIPT       : [AskalPurchase] [PROCESSAR] Enviando resposta ao cliente...
+SCRIPT       : [AskalPurchase] [PROCESSAR] Resposta enviada
+SCRIPT       : [AskalSell] [RPC] RequestInventoryHealth recebido de: Survivor
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalSell] [RPC] Health coletado para 48 tipos de itens
+SCRIPT       : [AskalSell] [RPC] InventoryHealthResponse enviado com 48 itens
+SCRIPT       : [AskalPurchase] [RPC] PurchaseItemRequest recebido - Type: 0 | IsServer: true
+SCRIPT       : [AskalPurchase] [RPC] Lendo parâmetros do RPC...
+SCRIPT       : [AskalPurchase] [RPC] Parâmetros lidos com sucesso
+SCRIPT       : [AskalPurchase] [RPC] SteamId resolvido: 76561198984855494 | Trader: 
+SCRIPT       : [AskalPurchase] [PROCESSAR] Iniciando processamento de compra...
+SCRIPT       : [AskalPurchase] [COMPRA] Solicitação de compra recebida:
+SCRIPT       : [AskalPurchase]   Player: 76561198984855494
+SCRIPT       : [AskalPurchase]   Item: candycane_redgreen
+SCRIPT       : [AskalPurchase]   Preço solicitado: 5098
+SCRIPT       : [AskalPurchase]   Moeda: Askal_Money
+SCRIPT       : [AskalPurchase]   Trader: 
+SCRIPT       : [AskalPurchase]   Quantidade: 100 | Tipo: 3 | Conteúdo: 0
+SCRIPT       : [AskalPurchase] [PROCESSAR] Chamando AskalPurchaseService.ProcessPurchaseWithQuantity...
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalBalance] RESERVE_OK steamId=76561198984855494 amount=5098 currency=Askal_Money available_after=999185399
+SCRIPT       : [AskalPurchase] 🛠️ Criando item: candycane_redgreen
+SCRIPT       : [AskalPurchase] 📊 Quantidade: 100
+SCRIPT       : [AskalBalance] ENQUEUE_PERSIST steamId=76561198984855494
+SCRIPT       : [AskalJsonLoader] ✅ Arquivo salvo: $profile:Askal/Database/Players/76561198984855494.json
+SCRIPT       : [AskalBalance] ✅ Dados do player salvos: 76561198984855494
+SCRIPT       : [AskalBalance] Flushed 1 pending saves to disk
+SCRIPT       : [AskalPurchase] ORDER_PLACED steamId=76561198984855494 item=candycane_redgreen price=5098
+SCRIPT       : [AskalPurchase] ✅ Compra realizada!
+SCRIPT       : [AskalPurchase]   Item: candycane_redgreen | Qty: 100 | Tipo: 3
+SCRIPT       : [AskalPurchase] [PROCESSAR] ProcessPurchaseWithQuantity retornou: true
+SCRIPT       : [AskalPurchase] [RESULTADO] SUCESSO - Compra realizada com sucesso
+SCRIPT       : [AskalPurchase] [PROCESSAR] Enviando resposta ao cliente...
+SCRIPT       : [AskalPurchase] [PROCESSAR] Resposta enviada
+SCRIPT       : [AskalSell] [RPC] RequestInventoryHealth recebido de: Survivor
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalSell] [RPC] Health coletado para 48 tipos de itens
+SCRIPT       : [AskalSell] [RPC] InventoryHealthResponse enviado com 48 itens
+SCRIPT       : [AskalPurchase] [RPC] PurchaseItemRequest recebido - Type: 0 | IsServer: true
+SCRIPT       : [AskalPurchase] [RPC] Lendo parâmetros do RPC...
+SCRIPT       : [AskalPurchase] [RPC] Parâmetros lidos com sucesso
+SCRIPT       : [AskalPurchase] [RPC] SteamId resolvido: 76561198984855494 | Trader: 
+SCRIPT       : [AskalPurchase] [PROCESSAR] Iniciando processamento de compra...
+SCRIPT       : [AskalPurchase] [COMPRA] Solicitação de compra recebida:
+SCRIPT       : [AskalPurchase]   Player: 76561198984855494
+SCRIPT       : [AskalPurchase]   Item: nail
+SCRIPT       : [AskalPurchase]   Preço solicitado: 2200
+SCRIPT       : [AskalPurchase]   Moeda: Askal_Money
+SCRIPT       : [AskalPurchase]   Trader: 
+SCRIPT       : [AskalPurchase]   Quantidade: 2 | Tipo: 2 | Conteúdo: 0
+SCRIPT       : [AskalPurchase] [PROCESSAR] Chamando AskalPurchaseService.ProcessPurchaseWithQuantity...
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalPurchase] [STACKABLE] Preço: 1100 x 2 = 2200
+SCRIPT       : [AskalBalance] RESERVE_OK steamId=76561198984855494 amount=2200 currency=Askal_Money available_after=999183199
+SCRIPT       : [AskalPurchase] 🛠️ Criando item: nail
+SCRIPT       : [AskalPurchase] 📦 STACKABLE: 2 unidades (min: 0, max: 99)
+SCRIPT       : [AskalBalance] ENQUEUE_PERSIST steamId=76561198984855494
+SCRIPT       : [AskalJsonLoader] ✅ Arquivo salvo: $profile:Askal/Database/Players/76561198984855494.json
+SCRIPT       : [AskalBalance] ✅ Dados do player salvos: 76561198984855494
+SCRIPT       : [AskalBalance] Flushed 1 pending saves to disk
+SCRIPT       : [AskalPurchase] ORDER_PLACED steamId=76561198984855494 item=nail price=2200
+SCRIPT       : [AskalPurchase] ✅ Compra realizada!
+SCRIPT       : [AskalPurchase]   Item: nail | Qty: 2 | Tipo: 2
+SCRIPT       : [AskalPurchase] [PROCESSAR] ProcessPurchaseWithQuantity retornou: true
+SCRIPT       : [AskalPurchase] [RESULTADO] SUCESSO - Compra realizada com sucesso
+SCRIPT       : [AskalPurchase] [PROCESSAR] Enviando resposta ao cliente...
+SCRIPT       : [AskalPurchase] [PROCESSAR] Resposta enviada
+SCRIPT       : [AskalSell] [RPC] RequestInventoryHealth recebido de: Survivor
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalSell] [RPC] Health coletado para 49 tipos de itens
+SCRIPT       : [AskalSell] [RPC] InventoryHealthResponse enviado com 49 itens
+SCRIPT       : [AskalPurchase] [RPC] PurchaseItemRequest recebido - Type: 0 | IsServer: true
+SCRIPT       : [AskalPurchase] [RPC] Lendo parâmetros do RPC...
+SCRIPT       : [AskalPurchase] [RPC] Parâmetros lidos com sucesso
+SCRIPT       : [AskalPurchase] [RPC] SteamId resolvido: 76561198984855494 | Trader: 
+SCRIPT       : [AskalPurchase] [PROCESSAR] Iniciando processamento de compra...
+SCRIPT       : [AskalPurchase] [COMPRA] Solicitação de compra recebida:
+SCRIPT       : [AskalPurchase]   Player: 76561198984855494
+SCRIPT       : [AskalPurchase]   Item: ammo_9x39
+SCRIPT       : [AskalPurchase]   Preço solicitado: 104
+SCRIPT       : [AskalPurchase]   Moeda: Askal_Money
+SCRIPT       : [AskalPurchase]   Trader: 
+SCRIPT       : [AskalPurchase]   Quantidade: 8 | Tipo: 2 | Conteúdo: 0
+SCRIPT       : [AskalPurchase] [PROCESSAR] Chamando AskalPurchaseService.ProcessPurchaseWithQuantity...
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalPurchase] [STACKABLE] Preço: 13 x 8 = 104
+SCRIPT       : [AskalBalance] RESERVE_OK steamId=76561198984855494 amount=104 currency=Askal_Money available_after=999183095
+SCRIPT       : [AskalPurchase] 🛠️ Criando item: ammo_9x39
+SCRIPT       : [AskalPurchase] 📦 STACKABLE: 1 unidades (min: 0, max: 1)
+SCRIPT       : [AskalBalance] ENQUEUE_PERSIST steamId=76561198984855494
+SCRIPT       : [AskalJsonLoader] ✅ Arquivo salvo: $profile:Askal/Database/Players/76561198984855494.json
+SCRIPT       : [AskalBalance] ✅ Dados do player salvos: 76561198984855494
+SCRIPT       : [AskalBalance] Flushed 1 pending saves to disk
+SCRIPT       : [AskalPurchase] ORDER_PLACED steamId=76561198984855494 item=ammo_9x39 price=104
+SCRIPT       : [AskalPurchase] ✅ Compra realizada!
+SCRIPT       : [AskalPurchase]   Item: ammo_9x39 | Qty: 8 | Tipo: 2
+SCRIPT       : [AskalPurchase] [PROCESSAR] ProcessPurchaseWithQuantity retornou: true
+SCRIPT       : [AskalPurchase] [RESULTADO] SUCESSO - Compra realizada com sucesso
+SCRIPT       : [AskalPurchase] [PROCESSAR] Enviando resposta ao cliente...
+SCRIPT       : [AskalPurchase] [PROCESSAR] Resposta enviada
