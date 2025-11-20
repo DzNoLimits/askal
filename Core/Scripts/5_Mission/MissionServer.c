@@ -33,10 +33,19 @@ modded class MissionServer extends MissionBase
         Print("[AskalCore] Core inicializado - Database pronto para uso");
         Print("[AskalCore] Market deve inicializar seus próprios módulos");
         Print("[AskalCore] ========================================");
+        
+        // [AskalDevTest] dev runner removed - production build
     }
     
     // NOTA: Seguindo padrão TraderX - não enviamos dados automaticamente
     // O cliente solicita quando abre o menu via RequestDatasets RPC
     // Isso evita sobrecarga e permite controle melhor do timing
+    
+    // ITER-1: Flush pending saves on shutdown
+    override void OnMissionFinish()
+    {
+        AskalPlayerBalance.FlushAllPendingSaves();
+        super.OnMissionFinish();
+    }
 }
 

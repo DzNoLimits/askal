@@ -5,6 +5,12 @@
 
 class AskalPurchaseModule
 {
+	// ITER-1: Rate limiting per player
+	private static ref map<string, ref array<float>> s_RequestTimes = new map<string, ref array<float>>();
+	private static const float RATE_LIMIT_WINDOW = 10.0; // 10 seconds
+	private static const int MAX_REQUESTS_PER_WINDOW = 5; // Max 5 requests per 10 seconds
+	private static bool s_MarketEnabled = true; // Config toggle for emergency disable
+	
 	private static ref AskalPurchaseModule s_Instance;
 	
 	void AskalPurchaseModule()
@@ -50,8 +56,57 @@ class AskalPurchaseModule
 		return "";
 	}
 	
+	// ITER-1: Rate limiting check
+	private static bool CheckRateLimit(string steamId)
+	{
+		if (!s_MarketEnabled)
+		{
+			Print("[AskalPurchase] RATE_LIMIT steamId=" + steamId + " reason=market_disabled");
+			return false;
+		}
+		
+		if (!s_RequestTimes.Contains(steamId))
+		{
+			s_RequestTimes.Set(steamId, new array<float>());
+		}
+		
+		array<float> times = s_RequestTimes.Get(steamId);
+		float now = GetGame().GetTime();
+		
+		// Remove old entries outside window
+		for (int i = times.Count() - 1; i >= 0; i--)
+		{
+			if (now - times.Get(i) > RATE_LIMIT_WINDOW)
+				times.Remove(i);
+		}
+		
+		if (times.Count() >= MAX_REQUESTS_PER_WINDOW)
+		{
+			Print("[AskalPurchase] RATE_LIMIT steamId=" + steamId + " count=" + times.Count() + " window=" + RATE_LIMIT_WINDOW);
+			return false;
+		}
+		
+		times.Insert(now);
+		return true;
+	}
+	
+	// ITER-1: Emergency disable market (for rollback)
+	static void SetMarketEnabled(bool enabled)
+	{
+		s_MarketEnabled = enabled;
+		Print("[AskalPurchase] Market enabled: " + enabled);
+	}
+	
 	protected void ProcessPurchaseRequest(PlayerIdentity sender, string steamId, string itemClass, int requestedPrice, string currencyId, float itemQuantity, int quantityType, int contentType, string traderName = "")
 	{
+		// ITER-1: Rate limiting check FIRST
+		if (!CheckRateLimit(steamId))
+		{
+			Print("[AskalPurchase] [RATE_LIMIT] Request rejected for: " + steamId);
+			SendPurchaseResponse(sender, false, itemClass, 0, "Rate limit exceeded. Please wait.");
+			return;
+		}
+		
 		Print("[AskalPurchase] [PROCESSAR] Iniciando processamento de compra...");
 		
 		if (!itemClass || itemClass == "")

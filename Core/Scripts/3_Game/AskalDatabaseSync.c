@@ -128,7 +128,7 @@ class AskalDatabaseSync
 		Print("[AskalSync] ✅ Encontrados " + datasetIDs.Count() + " datasets");
 		
 		// Preparar dados de sincronização
-		array<ref AskalDatasetSyncData> allDatasets = new array<ref AskalDatasetSyncData>();
+		ref array<ref AskalDatasetSyncData> allDatasets = new array<ref AskalDatasetSyncData>();
 		int totalCategories = 0;
 		
 		foreach (string datasetID : datasetIDs)
