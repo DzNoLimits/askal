@@ -43,8 +43,8 @@ class AskalDevTestConfig
 		allow_crash_simulation = false;
 		write_to_profile = true;
 		write_to_fs = true;
-		fs_output_path_windows = "C:\\AskalTestResults";
-		fs_output_path_unix = "Config/Askal/test_results";
+		fs_output_path_windows = "$profile:Askal\\output";
+		fs_output_path_unix = "$profile:Askal\\output";
 		test_player_id_prefix = "TEST_PLAYER_";
 		log_tags = new AskalDevTestLogTags();
 	}
@@ -61,10 +61,8 @@ class AskalDevTestRunner
 		AskalDevTestConfig config = new AskalDevTestConfig();
 		
 		array<string> candidatePaths = {
-			"Config/askal_dev.json",
-			"config/askal_dev.json",
-			"$profile:config/askal_dev.json",
-			"$profile:Askal/config/askal_dev.json"
+			"$profile:Askal\\output",
+			"$profile:Askal\\askal_dev.json"
 		};
 		
 		string configPath = "";
@@ -248,6 +246,11 @@ class AskalDevTestRunner
 		string fileName = "iter_1_" + testName + "_result.json";
 		bool success = false;
 		
+		// Get log tag once for reuse
+		string logTag = s_Config.log_tags.file_written;
+		if (!logTag || logTag == "")
+			logTag = "TEST_FILE_WRITTEN";
+		
 		// Write to profile path if enabled
 		if (s_Config.write_to_profile)
 		{
@@ -259,9 +262,6 @@ class AskalDevTestRunner
 			{
 				FPrintln(fh, json);
 				CloseFile(fh);
-				string logTag = s_Config.log_tags.file_written;
-				if (!logTag || logTag == "")
-					logTag = "TEST_FILE_WRITTEN";
 				Print("[AskalDevTest] " + logTag + " path=" + profilePath);
 				success = true;
 			}
@@ -285,9 +285,6 @@ class AskalDevTestRunner
 			{
 				FPrintln(fsFh, json);
 				CloseFile(fsFh);
-				string logTag = s_Config.log_tags.file_written;
-				if (!logTag || logTag == "")
-					logTag = "TEST_FILE_WRITTEN";
 				Print("[AskalDevTest] " + logTag + " path=" + fsPath);
 				success = true;
 			}
