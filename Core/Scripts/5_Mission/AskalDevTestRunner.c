@@ -1,24 +1,52 @@
 // ==========================================
 // AskalDevTestRunner - Server-side test harness for ITER-1 hotfix
-// Runs automatically when market_dev_autotest = true in config/askal_dev.cfg
+// Runs automatically when enable = true in config/askal_dev.json
 // Tests: concurrent purchase, mass spam, crash recovery
 // ==========================================
 
+class AskalDevTestLogTags
+{
+	string concurrent;
+	string spam;
+	string crash;
+	string file_written;
+	
+	void AskalDevTestLogTags()
+	{
+		concurrent = "TEST_CONCURRENT";
+		spam = "TEST_SPAM";
+		crash = "TEST_CRASH";
+		file_written = "TEST_FILE_WRITTEN";
+	}
+}
+
 class AskalDevTestConfig
 {
-	bool market_dev_autotest;
-	int dev_autotest_concurrent_count;
-	int dev_autotest_spam_requests;
-	float dev_autotest_spam_window;
-	bool dev_autotest_allow_crash;
+	bool enable;
+	int concurrent_count;
+	int spam_requests;
+	float spam_window_seconds;
+	bool allow_crash_simulation;
+	bool write_to_profile;
+	bool write_to_fs;
+	string fs_output_path_windows;
+	string fs_output_path_unix;
+	string test_player_id_prefix;
+	ref AskalDevTestLogTags log_tags;
 	
 	void AskalDevTestConfig()
 	{
-		market_dev_autotest = false;
-		dev_autotest_concurrent_count = 10;
-		dev_autotest_spam_requests = 50;
-		dev_autotest_spam_window = 10.0;
-		dev_autotest_allow_crash = false;
+		enable = false;
+		concurrent_count = 10;
+		spam_requests = 50;
+		spam_window_seconds = 10.0;
+		allow_crash_simulation = false;
+		write_to_profile = true;
+		write_to_fs = true;
+		fs_output_path_windows = "C:\\AskalTestResults";
+		fs_output_path_unix = "Config/Askal/test_results";
+		test_player_id_prefix = "TEST_PLAYER_";
+		log_tags = new AskalDevTestLogTags();
 	}
 }
 
@@ -27,17 +55,16 @@ class AskalDevTestRunner
 	private static ref AskalDevTestConfig s_Config;
 	private static bool s_TestsRun = false;
 	
-	// Load dev test config from file
+	// Load dev test config from JSON file
 	static AskalDevTestConfig LoadConfig()
 	{
 		AskalDevTestConfig config = new AskalDevTestConfig();
 		
 		array<string> candidatePaths = {
-			"$profile:config/askal_dev.cfg",
-			"$profile:config\\askal_dev.cfg",
-			"$profile:Askal/config/askal_dev.cfg",
-			"$profile:Askal\\config\\askal_dev.cfg",
-			"config/askal_dev.cfg"
+			"Config/askal_dev.json",
+			"config/askal_dev.json",
+			"$profile:config/askal_dev.json",
+			"$profile:Askal/config/askal_dev.json"
 		};
 		
 		string configPath = "";
@@ -53,49 +80,35 @@ class AskalDevTestRunner
 		if (!configPath || configPath == "")
 		{
 			Print("[AskalDevTest] ⚠️ Config file not found, using defaults (tests disabled)");
+			Print("[AskalDevTest] Looking for: Config/askal_dev.json");
 			return config;
 		}
 		
-		// Parse simple key=value config file
-		FileHandle fh = OpenFile(configPath, FileMode.READ);
-		if (!fh)
+		Print("[AskalDevTest] Loading config from: " + configPath);
+		
+		// Load JSON config using AskalJsonLoader
+		AskalDevTestConfig loadedConfig;
+		if (!AskalJsonLoader<AskalDevTestConfig>.LoadFromFile(configPath, loadedConfig, false))
 		{
-			Print("[AskalDevTest] ⚠️ Could not open config file: " + configPath);
+			Print("[AskalDevTest] ❌ Failed to load/parse JSON config, using defaults");
 			return config;
 		}
 		
-		string line;
-		while (FGets(fh, line) >= 0)
+		if (loadedConfig)
 		{
-			// Remove whitespace
-			line = line.Trim();
-			
-			// Skip comments and empty lines
-			if (line == "" || line.IndexOf("//") == 0 || line.IndexOf("#") == 0)
-				continue;
-			
-			// Parse key=value
-			int eqPos = line.IndexOf("=");
-			if (eqPos == -1)
-				continue;
-			
-			string key = line.Substring(0, eqPos).Trim();
-			string value = line.Substring(eqPos + 1, line.Length() - eqPos - 1).Trim();
-			
-			if (key == "market_dev_autotest")
-				config.market_dev_autotest = (value == "true" || value == "1");
-			else if (key == "dev_autotest_concurrent_count")
-				config.dev_autotest_concurrent_count = value.ToInt();
-			else if (key == "dev_autotest_spam_requests")
-				config.dev_autotest_spam_requests = value.ToInt();
-			else if (key == "dev_autotest_spam_window")
-				config.dev_autotest_spam_window = value.ToFloat();
-			else if (key == "dev_autotest_allow_crash")
-				config.dev_autotest_allow_crash = (value == "true" || value == "1");
+			config = loadedConfig;
+			Print("[AskalDevTest] ✅ Config loaded successfully from: " + configPath);
+			Print("[AskalDevTest]   enable=" + config.enable);
+			Print("[AskalDevTest]   concurrent_count=" + config.concurrent_count);
+			Print("[AskalDevTest]   spam_requests=" + config.spam_requests);
+			Print("[AskalDevTest]   write_to_profile=" + config.write_to_profile);
+			Print("[AskalDevTest]   write_to_fs=" + config.write_to_fs);
+		}
+		else
+		{
+			Print("[AskalDevTest] ⚠️ Config loaded but is NULL, using defaults");
 		}
 		
-		CloseFile(fh);
-		Print("[AskalDevTest] ✅ Config loaded from: " + configPath);
 		return config;
 	}
 	
@@ -105,22 +118,28 @@ class AskalDevTestRunner
 		if (s_TestsRun)
 			return false;
 		
-		// Only run in offline/dev mode (server only, not multiplayer)
+		// Must be server
 		DayZGame game = DayZGame.Cast(GetGame());
-		if (!game || !game.IsServer() || game.IsMultiplayer())
+		if (!game || !game.IsServer())
 		{
-			Print("[AskalDevTest] ⚠️ Tests only run in offline/dev server mode");
+			Print("[AskalDevTest] ⚠️ Tests only run on server");
 			return false;
 		}
 		
 		if (!s_Config)
 			s_Config = LoadConfig();
 		
-		return s_Config.market_dev_autotest;
+		if (!s_Config)
+		{
+			Print("[AskalDevTest] ⚠️ Config is NULL, tests disabled");
+			return false;
+		}
+		
+		return s_Config.enable;
 	}
 	
-	// Ensure test results directory exists
-	static string GetTestResultsDir()
+	// Ensure test results directory exists (profile path)
+	static string GetTestResultsDirProfile()
 	{
 		string baseDir = "$profile:Askal";
 		if (!FileExist(baseDir))
@@ -133,12 +152,73 @@ class AskalDevTestRunner
 		return resultsDir;
 	}
 	
-	// Write JSON result file
+	// Ensure test results directory exists (filesystem path)
+	static string GetTestResultsDirFS()
+	{
+		// Choose path based on platform (Windows uses backslash, Unix uses forward slash)
+		// Simple heuristic: if path contains backslash, assume Windows
+		string fsPath = s_Config.fs_output_path_unix;
+		if (s_Config.fs_output_path_windows.IndexOf("\\") != -1 || s_Config.fs_output_path_windows.IndexOf(":") != -1)
+		{
+			// Likely Windows path, check if it looks like Windows (has drive letter or backslash)
+			fsPath = s_Config.fs_output_path_windows;
+		}
+		
+		if (!fsPath || fsPath == "")
+			fsPath = "Config/Askal/test_results";
+		
+		Print("[AskalDevTest] Using FS output path: " + fsPath);
+		
+		// Create directory structure if needed
+		array<string> pathParts = new array<string>();
+		string currentPath = "";
+		
+		// Split path by / or \
+		for (int i = 0; i < fsPath.Length(); i++)
+		{
+			string char = fsPath.Substring(i, 1);
+			if (char == "/" || char == "\\")
+			{
+				if (currentPath != "")
+				{
+					pathParts.Insert(currentPath);
+					currentPath = "";
+				}
+			}
+			else
+			{
+				currentPath += char;
+			}
+		}
+		if (currentPath != "")
+			pathParts.Insert(currentPath);
+		
+		// Build directory path step by step
+		string buildPath = "";
+		string separator = "/";
+		if (fsPath.IndexOf("\\") != -1)
+			separator = "\\";
+		
+		for (int j = 0; j < pathParts.Count(); j++)
+		{
+			if (buildPath == "")
+				buildPath = pathParts.Get(j);
+			else
+				buildPath = buildPath + separator + pathParts.Get(j);
+			
+			if (!FileExist(buildPath))
+			{
+				MakeDirectory(buildPath);
+				Print("[AskalDevTest] Created directory: " + buildPath);
+			}
+		}
+		
+		return fsPath;
+	}
+	
+	// Write JSON result file (writes to both profile and FS if enabled)
 	static bool WriteResultFile(string testName, ref map<string, string> data)
 	{
-		string resultsDir = GetTestResultsDir();
-		string filePath = resultsDir + "/iter_1_" + testName + "_result.json";
-		
 		// Build JSON manually (simple structure)
 		string json = "{\n";
 		json += "  \"test\": \"" + testName + "\",\n";
@@ -165,28 +245,83 @@ class AskalDevTestRunner
 		
 		json += "}";
 		
-		FileHandle fh = OpenFile(filePath, FileMode.WRITE);
-		if (!fh)
+		string fileName = "iter_1_" + testName + "_result.json";
+		bool success = false;
+		
+		// Write to profile path if enabled
+		if (s_Config.write_to_profile)
 		{
-			Print("[AskalDevTest] ❌ Could not write result file: " + filePath);
+			string profileDir = GetTestResultsDirProfile();
+			string profilePath = profileDir + "/" + fileName;
+			
+			FileHandle fh = OpenFile(profilePath, FileMode.WRITE);
+			if (fh)
+			{
+				FPrintln(fh, json);
+				CloseFile(fh);
+				string logTag = s_Config.log_tags.file_written;
+				if (!logTag || logTag == "")
+					logTag = "TEST_FILE_WRITTEN";
+				Print("[AskalDevTest] " + logTag + " path=" + profilePath);
+				success = true;
+			}
+			else
+			{
+				Print("[AskalDevTest] ❌ Could not write to profile path: " + profilePath);
+			}
+		}
+		
+		// Write to filesystem path if enabled
+		if (s_Config.write_to_fs)
+		{
+			string fsDir = GetTestResultsDirFS();
+			string separator = "/";
+			if (fsDir.IndexOf("\\") != -1)
+				separator = "\\";
+			string fsPath = fsDir + separator + fileName;
+			
+			FileHandle fsFh = OpenFile(fsPath, FileMode.WRITE);
+			if (fsFh)
+			{
+				FPrintln(fsFh, json);
+				CloseFile(fsFh);
+				string logTag = s_Config.log_tags.file_written;
+				if (!logTag || logTag == "")
+					logTag = "TEST_FILE_WRITTEN";
+				Print("[AskalDevTest] " + logTag + " path=" + fsPath);
+				success = true;
+			}
+			else
+			{
+				Print("[AskalDevTest] ❌ Could not write to FS path: " + fsPath);
+			}
+		}
+		
+		if (!success)
+		{
+			Print("[AskalDevTest] ❌ Failed to write result file: " + fileName);
 			return false;
 		}
 		
-		FPrintln(fh, json);
-		CloseFile(fh);
-		Print("[AskalDevTest] ✅ Result written: " + filePath);
 		return true;
 	}
 	
 	// Test 1: Concurrent Purchase (double-spend prevention)
 	static void RunConcurrentPurchaseTest()
 	{
-		Print("[AskalDevTest] TEST_CONCURRENT Starting concurrent purchase test...");
+		string logTag = s_Config.log_tags.concurrent;
+		if (!logTag || logTag == "")
+			logTag = "TEST_CONCURRENT";
+		Print("[AskalDevTest] " + logTag + " START");
+		Print("[AskalDevTest] " + logTag + " Starting concurrent purchase test...");
 		
-		string testPlayerId = "TEST_PLAYER_CONCURRENT";
+		string prefix = s_Config.test_player_id_prefix;
+		if (!prefix || prefix == "")
+			prefix = "TEST_PLAYER_";
+		string testPlayerId = prefix + "CONCURRENT";
 		string currency = "Askal_Coin";
 		int testAmount = 500;
-		int concurrentCount = s_Config.dev_autotest_concurrent_count;
+		int concurrentCount = s_Config.concurrent_count;
 		
 		// Give test player enough balance
 		AskalPlayerBalance.AddBalance(testPlayerId, testAmount * concurrentCount, currency);
@@ -235,17 +370,25 @@ class AskalDevTestRunner
 		
 		WriteResultFile("concurrent_purchase", result);
 		
-		Print("[AskalDevTest] TEST_CONCURRENT Completed: OK=" + reserveOk + " FAIL=" + reserveFail + " (Expected: OK=1 FAIL=" + (concurrentCount - 1) + ")");
+		Print("[AskalDevTest] " + logTag + " Completed: OK=" + reserveOk + " FAIL=" + reserveFail + " (Expected: OK=1 FAIL=" + (concurrentCount - 1) + ")");
+		Print("[AskalDevTest] " + logTag + " END");
 	}
 	
 	// Test 2: Mass Spam (rate limiting)
 	static void RunMassSpamTest()
 	{
-		Print("[AskalDevTest] TEST_SPAM Starting mass spam test...");
+		string logTag = s_Config.log_tags.spam;
+		if (!logTag || logTag == "")
+			logTag = "TEST_SPAM";
+		Print("[AskalDevTest] " + logTag + " START");
+		Print("[AskalDevTest] " + logTag + " Starting mass spam test...");
 		
-		string testPlayerId = "TEST_PLAYER_SPAM";
-		int spamRequests = s_Config.dev_autotest_spam_requests;
-		float windowSeconds = s_Config.dev_autotest_spam_window;
+		string prefix = s_Config.test_player_id_prefix;
+		if (!prefix || prefix == "")
+			prefix = "TEST_PLAYER_";
+		string testPlayerId = prefix + "SPAM";
+		int spamRequests = s_Config.spam_requests;
+		float windowSeconds = s_Config.spam_window_seconds;
 		
 		float startTime = GetGame().GetTime();
 		int rateLimitHits = 0;
@@ -302,15 +445,23 @@ class AskalDevTestRunner
 		
 		WriteResultFile("mass_spam", result);
 		
-		Print("[AskalDevTest] TEST_SPAM Completed: Accepted=" + accepted + " LockFailures=" + rateLimitHits + " (Note: Rate limit tested via RPC integration)");
+		Print("[AskalDevTest] " + logTag + " Completed: Accepted=" + accepted + " LockFailures=" + rateLimitHits + " (Note: Rate limit tested via RPC integration)");
+		Print("[AskalDevTest] " + logTag + " END");
 	}
 	
 	// Test 3: Crash Recovery (reservation persistence)
 	static void RunCrashRecoveryTest()
 	{
-		Print("[AskalDevTest] TEST_CRASH Starting crash recovery test...");
+		string logTag = s_Config.log_tags.crash;
+		if (!logTag || logTag == "")
+			logTag = "TEST_CRASH";
+		Print("[AskalDevTest] " + logTag + " START");
+		Print("[AskalDevTest] " + logTag + " Starting crash recovery test...");
 		
-		string testPlayerId = "TEST_PLAYER_CRASH";
+		string prefix = s_Config.test_player_id_prefix;
+		if (!prefix || prefix == "")
+			prefix = "TEST_PLAYER_";
+		string testPlayerId = prefix + "CRASH";
 		string currency = "Askal_Coin";
 		int testAmount = 1000;
 		int initialBalance = 5000;
@@ -325,7 +476,7 @@ class AskalDevTestRunner
 		
 		if (!reserved)
 		{
-			Print("[AskalDevTest] TEST_CRASH Failed: Could not reserve funds");
+			Print("[AskalDevTest] " + logTag + " Failed: Could not reserve funds");
 			return;
 		}
 		
@@ -363,7 +514,8 @@ class AskalDevTestRunner
 		
 		WriteResultFile("crash_recovery", result);
 		
-		Print("[AskalDevTest] TEST_CRASH Completed: Balance=" + balanceAfter + " Expected=" + initialBalance + " RecoveryOK=" + recoveryOk);
+		Print("[AskalDevTest] " + logTag + " Completed: Balance=" + balanceAfter + " Expected=" + initialBalance + " RecoveryOK=" + recoveryOk);
+		Print("[AskalDevTest] " + logTag + " END");
 	}
 	
 	// Run all tests
@@ -405,7 +557,14 @@ class AskalDevTestRunner
 		RunCrashRecoveryTest();
 		
 		Print("[AskalDevTest] ========================================");
-		Print("[AskalDevTest] All tests completed. Results in: $profile:Askal/test_results/");
+		Print("[AskalDevTest] All tests completed.");
+		if (s_Config.write_to_profile)
+			Print("[AskalDevTest] Profile results: $profile:Askal/test_results/");
+		if (s_Config.write_to_fs)
+		{
+			string fsPath = GetTestResultsDirFS();
+			Print("[AskalDevTest] FS results: " + fsPath + "/");
+		}
 		Print("[AskalDevTest] ========================================");
 	}
 	

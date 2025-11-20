@@ -1,0 +1,19 @@
+{
+	"enable": false,
+	"concurrent_count": 10,
+	"spam_requests": 50,
+	"spam_window_seconds": 10,
+	"allow_crash_simulation": false,
+	"write_to_profile": true,
+	"write_to_fs": true,
+	"fs_output_path_windows": "C:\\AskalTestResults",
+	"fs_output_path_unix": "Config/Askal/test_results",
+	"test_player_id_prefix": "TEST_PLAYER_",
+	"log_tags": {
+		"concurrent": "TEST_CONCURRENT",
+		"spam": "TEST_SPAM",
+		"crash": "TEST_CRASH",
+		"file_written": "TEST_FILE_WRITTEN"
+	}
+}
+
