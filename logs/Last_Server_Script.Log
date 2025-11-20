@@ -1,5 +1,5 @@
 ---------------------------------------------
-Log C:\Program Files (x86)\Steam\steamapps\common\DayZServer\Config\script_2025-11-19_17-16-48.log started at 19.11. 17:16:48
+Log C:\Program Files (x86)\Steam\steamapps\common\DayZServer\Config\script_2025-11-19_22-47-35.log started at 19.11. 22:47:35
 
 SCRIPT       : Registered 331 temporary action enum(s), UAN==331
 SCRIPT       : ... Backlit Effects Enabled
@@ -11,7 +11,6 @@ SCRIPT       : [AskalCore] ========================================
 SCRIPT       : [AskalCore] Cliente inicializado (dados recebidos via RPC)
 SCRIPT       : [AskalCore] ✅ RPCs do Core registrados
 SCRIPT       : [AskalCore] ========================================
-SCRIPT    (W): @"Askal/Core/Scripts/5_Mission/askaldevtestrunner.c,137": FIX-ME: Method argument can't be strong reference
 SCRIPT       : [AskalCore] ========================================
 SCRIPT       : [AskalCore] MissionServer do Core inicializado
 SCRIPT       : [AskalCore] ========================================
@@ -71,7 +70,6 @@ SCRIPT       : [ASKAL_CORE] Database marked as loaded
 SCRIPT       : [ASKAL_CORE] ==========================================
 SCRIPT       : [AskalCore] ✅ Datasets carregados: 15
 SCRIPT       : [AskalCore] ========================================
-SCRIPT       : 17:17:10.565 [WARNING]	File "$mission:storage_1/communityframework/modstorageplayers.bin" was not closed. Always shut down the server gracefully to prevent data loss.
 SCRIPT       : [AskalMarket] ========================================
 SCRIPT       : [AskalMarket] INICIANDO MÓDULOS DO MARKET
 SCRIPT       : [AskalMarket] ========================================
@@ -105,7 +103,6 @@ SCRIPT       : [AskalMarket] ========================================
 SCRIPT       : [AskalJsonLoader] ✅ Arquivo carregado: $mission:Askal/Traders/Faroleiro.json
 SCRIPT       : [AskalTrader] ✅ Trader carregado: FAROLEIRO (Faroleiro)
 SCRIPT       : [AskalTraderVendingMachine] ✅ Trader estático configurado: FAROLEIRO
-SCRIPT       : [AskalDevTest] ⚠️ Tests only run in offline/dev server mode
 SCRIPT       : [AskalCore] ========================================
 SCRIPT       : [AskalCore] 📥 Cliente solicitou sync: Survivor
 SCRIPT       : [AskalCore] Datasets disponíveis: 15
@@ -1170,11 +1167,36 @@ SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players con
 SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
 SCRIPT       : [AskalSell] [RPC] Health coletado para 48 tipos de itens
 SCRIPT       : [AskalSell] [RPC] InventoryHealthResponse enviado com 48 itens
-SCRIPT       : [AskalSell] [RPC] RequestInventoryHealth recebido de: Survivor
+SCRIPT       : [AskalPurchase] [RPC] PurchaseItemRequest recebido - Type: 0 | IsServer: true
+SCRIPT       : [AskalPurchase] [RPC] Lendo parâmetros do RPC...
+SCRIPT       : [AskalPurchase] [RPC] Parâmetros lidos com sucesso
+SCRIPT       : [AskalPurchase] [RPC] SteamId resolvido: 76561198984855494 | Trader: 
+SCRIPT       : [AskalPurchase] [PROCESSAR] Iniciando processamento de compra...
+SCRIPT       : [AskalPurchase] [COMPRA] Solicitação de compra recebida:
+SCRIPT       : [AskalPurchase]   Player: 76561198984855494
+SCRIPT       : [AskalPurchase]   Item: candycane_yellow
+SCRIPT       : [AskalPurchase]   Preço solicitado: 5098
+SCRIPT       : [AskalPurchase]   Moeda: Askal_Money
+SCRIPT       : [AskalPurchase]   Trader: 
+SCRIPT       : [AskalPurchase]   Quantidade: 100 | Tipo: 3 | Conteúdo: 0
+SCRIPT       : [AskalPurchase] [PROCESSAR] Chamando AskalPurchaseService.ProcessPurchaseWithQuantity...
 SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
 SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
-SCRIPT       : [AskalSell] [RPC] Health coletado para 48 tipos de itens
-SCRIPT       : [AskalSell] [RPC] InventoryHealthResponse enviado com 48 itens
+SCRIPT       : [AskalBalance] Sistema de balance inicializado (persistência em tempo real)
+SCRIPT       : [AskalBalance] RESERVE_OK steamId=76561198984855494 amount=5098 currency=Askal_Money available_after=999177997
+SCRIPT       : [AskalPurchase] 🛠️ Criando item: candycane_yellow
+SCRIPT       : [AskalPurchase] 📊 Quantidade: 100
+SCRIPT       : [AskalBalance] ENQUEUE_PERSIST steamId=76561198984855494
+SCRIPT       : [AskalJsonLoader] ✅ Arquivo salvo: $profile:Askal/Database/Players/76561198984855494.json
+SCRIPT       : [AskalBalance] ✅ Dados do player salvos: 76561198984855494
+SCRIPT       : [AskalBalance] Flushed 1 pending saves to disk
+SCRIPT       : [AskalPurchase] ORDER_PLACED steamId=76561198984855494 item=candycane_yellow price=5098
+SCRIPT       : [AskalPurchase] ✅ Compra realizada!
+SCRIPT       : [AskalPurchase]   Item: candycane_yellow | Qty: 100 | Tipo: 3
+SCRIPT       : [AskalPurchase] [PROCESSAR] ProcessPurchaseWithQuantity retornou: true
+SCRIPT       : [AskalPurchase] [RESULTADO] SUCESSO - Compra realizada com sucesso
+SCRIPT       : [AskalPurchase] [PROCESSAR] Enviando resposta ao cliente...
+SCRIPT       : [AskalPurchase] [PROCESSAR] Resposta enviada
 SCRIPT       : [AskalSell] [RPC] RequestInventoryHealth recebido de: Survivor
 SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
 SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
@@ -1187,24 +1209,201 @@ SCRIPT       : [AskalPurchase] [RPC] SteamId resolvido: 76561198984855494 | Trad
 SCRIPT       : [AskalPurchase] [PROCESSAR] Iniciando processamento de compra...
 SCRIPT       : [AskalPurchase] [COMPRA] Solicitação de compra recebida:
 SCRIPT       : [AskalPurchase]   Player: 76561198984855494
-SCRIPT       : [AskalPurchase]   Item: deagle
-SCRIPT       : [AskalPurchase]   Preço solicitado: 1760
+SCRIPT       : [AskalPurchase]   Item: mag_cz527_5rnd
+SCRIPT       : [AskalPurchase]   Preço solicitado: 389
+SCRIPT       : [AskalPurchase]   Moeda: Askal_Money
+SCRIPT       : [AskalPurchase]   Trader: 
+SCRIPT       : [AskalPurchase]   Quantidade: 5 | Tipo: 1 | Conteúdo: 0
+SCRIPT       : [AskalPurchase] [PROCESSAR] Chamando AskalPurchaseService.ProcessPurchaseWithQuantity...
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalPurchase] ⚠️ Ajustando preço informado pelo cliente. Recebido: 389 | Autoritativo: 385
+SCRIPT       : [AskalBalance] RESERVE_OK steamId=76561198984855494 amount=385 currency=Askal_Money available_after=999177612
+SCRIPT       : [AskalPurchase] 🛠️ Criando item: mag_cz527_5rnd
+SCRIPT       : [AskalPurchase] 🔫 Magazine: 5 balas
+SCRIPT       : [AskalBalance] ENQUEUE_PERSIST steamId=76561198984855494
+SCRIPT       : [AskalJsonLoader] ✅ Arquivo salvo: $profile:Askal/Database/Players/76561198984855494.json
+SCRIPT       : [AskalBalance] ✅ Dados do player salvos: 76561198984855494
+SCRIPT       : [AskalBalance] Flushed 1 pending saves to disk
+SCRIPT       : [AskalPurchase] ORDER_PLACED steamId=76561198984855494 item=mag_cz527_5rnd price=385
+SCRIPT       : [AskalPurchase] ✅ Compra realizada!
+SCRIPT       : [AskalPurchase]   Item: mag_cz527_5rnd | Qty: 5 | Tipo: 1
+SCRIPT       : [AskalPurchase] [PROCESSAR] ProcessPurchaseWithQuantity retornou: true
+SCRIPT       : [AskalPurchase] [RESULTADO] SUCESSO - Compra realizada com sucesso
+SCRIPT       : [AskalPurchase] [PROCESSAR] Enviando resposta ao cliente...
+SCRIPT       : [AskalPurchase] [PROCESSAR] Resposta enviada
+SCRIPT       : [AskalSell] [RPC] RequestInventoryHealth recebido de: Survivor
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalSell] [RPC] Health coletado para 48 tipos de itens
+SCRIPT       : [AskalSell] [RPC] InventoryHealthResponse enviado com 48 itens
+SCRIPT       : [AskalPurchase] [RPC] PurchaseItemRequest recebido - Type: 0 | IsServer: true
+SCRIPT       : [AskalPurchase] [RPC] Lendo parâmetros do RPC...
+SCRIPT       : [AskalPurchase] [RPC] Parâmetros lidos com sucesso
+SCRIPT       : [AskalPurchase] [RPC] SteamId resolvido: 76561198984855494 | Trader: 
+SCRIPT       : [AskalPurchase] [PROCESSAR] Iniciando processamento de compra...
+SCRIPT       : [AskalPurchase] [COMPRA] Solicitação de compra recebida:
+SCRIPT       : [AskalPurchase]   Player: 76561198984855494
+SCRIPT       : [AskalPurchase]   Item: cz75
+SCRIPT       : [AskalPurchase]   Preço solicitado: 2035
 SCRIPT       : [AskalPurchase]   Moeda: Askal_Money
 SCRIPT       : [AskalPurchase]   Trader: 
 SCRIPT       : [AskalPurchase]   Quantidade: -1 | Tipo: 0 | Conteúdo: 0
 SCRIPT       : [AskalPurchase] [PROCESSAR] Chamando AskalPurchaseService.ProcessPurchaseWithQuantity...
 SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
 SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
-SCRIPT       : [AskalBalance] Sistema de balance inicializado (persistência em tempo real)
-SCRIPT       : [AskalBalance] RESERVE_OK steamId=76561198984855494 amount=1760 currency=Askal_Money available_after=999181335
-SCRIPT       : [AskalPurchase] 🛠️ Criando item: deagle
+SCRIPT       : [AskalBalance] RESERVE_OK steamId=76561198984855494 amount=2035 currency=Askal_Money available_after=999175577
+SCRIPT       : [AskalPurchase] 🛠️ Criando item: cz75
 SCRIPT       : [AskalBalance] ENQUEUE_PERSIST steamId=76561198984855494
-SCRIPT       : [AskalPurchase] ORDER_PLACED steamId=76561198984855494 item=deagle price=1760
+SCRIPT       : [AskalJsonLoader] ✅ Arquivo salvo: $profile:Askal/Database/Players/76561198984855494.json
+SCRIPT       : [AskalBalance] ✅ Dados do player salvos: 76561198984855494
+SCRIPT       : [AskalBalance] Flushed 1 pending saves to disk
+SCRIPT       : [AskalPurchase] ORDER_PLACED steamId=76561198984855494 item=cz75 price=2035
 SCRIPT       : [AskalPurchase] ✅ Compra realizada!
-SCRIPT       : [AskalPurchase]   Item: deagle | Qty: -1 | Tipo: 0
+SCRIPT       : [AskalPurchase]   Item: cz75 | Qty: -1 | Tipo: 0
 SCRIPT       : [AskalPurchase] [PROCESSAR] ProcessPurchaseWithQuantity retornou: true
 SCRIPT       : [AskalPurchase] [RESULTADO] SUCESSO - Compra realizada com sucesso
 SCRIPT       : [AskalPurchase] [PROCESSAR] Enviando resposta ao cliente...
 SCRIPT       : [AskalPurchase] [PROCESSAR] Resposta enviada
-SCRIPT       : [WeaponFSM::ValidateAndRepairHelper] :: [INFO] :: [wpnfsm] ValidateAndRepair Attempting to repair: Deagle:8336 - MagazineRepair - Pistol_CLO_DIS_BU0_MA0<bbbdb1b0> - state: 0 != weapon: 1
-SCRIPT       : [WeaponFSM::ValidateAndRepairHelper] :: [INFO] :: [wpnfsm] ValidateAndRepair Attempting to repair: Deagle:8336 - ChamberRepair - Pistol_CLO_DIS_BU0_MA1<bbbda910> - state: 0 != weapon: 1
+SCRIPT       : [WeaponFSM::ValidateAndRepairHelper] :: [INFO] :: [wpnfsm] ValidateAndRepair Attempting to repair: CZ75:21908 - MagazineRepair - Pistol_CLO_DIS_BU0_MA0<33aa920> - state: 0 != weapon: 1
+SCRIPT       : [WeaponFSM::ValidateAndRepairHelper] :: [INFO] :: [wpnfsm] ValidateAndRepair Attempting to repair: CZ75:21908 - ChamberRepair - Pistol_CLO_DIS_BU0_MA1<33ac2a0> - state: 0 != weapon: 1
+SCRIPT       : [AskalSell] [RPC] RequestInventoryHealth recebido de: Survivor
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalSell] [RPC] Health coletado para 48 tipos de itens
+SCRIPT       : [AskalSell] [RPC] InventoryHealthResponse enviado com 48 itens
+SCRIPT       : [AskalPurchase] [RPC] PurchaseItemRequest recebido - Type: 0 | IsServer: true
+SCRIPT       : [AskalPurchase] [RPC] Lendo parâmetros do RPC...
+SCRIPT       : [AskalPurchase] [RPC] Parâmetros lidos com sucesso
+SCRIPT       : [AskalPurchase] [RPC] SteamId resolvido: 76561198984855494 | Trader: 
+SCRIPT       : [AskalPurchase] [PROCESSAR] Iniciando processamento de compra...
+SCRIPT       : [AskalPurchase] [COMPRA] Solicitação de compra recebida:
+SCRIPT       : [AskalPurchase]   Player: 76561198984855494
+SCRIPT       : [AskalPurchase]   Item: ammo_556x45
+SCRIPT       : [AskalPurchase]   Preço solicitado: 105
+SCRIPT       : [AskalPurchase]   Moeda: Askal_Money
+SCRIPT       : [AskalPurchase]   Trader: 
+SCRIPT       : [AskalPurchase]   Quantidade: 7 | Tipo: 2 | Conteúdo: 0
+SCRIPT       : [AskalPurchase] [PROCESSAR] Chamando AskalPurchaseService.ProcessPurchaseWithQuantity...
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalPurchase] [STACKABLE] Preço: 15 x 7 = 105
+SCRIPT       : [AskalBalance] RESERVE_OK steamId=76561198984855494 amount=105 currency=Askal_Money available_after=999175472
+SCRIPT       : [AskalPurchase] 🛠️ Criando item: ammo_556x45
+SCRIPT       : [AskalPurchase] 📦 STACKABLE: 1 unidades (min: 0, max: 1)
+SCRIPT       : [AskalBalance] ENQUEUE_PERSIST steamId=76561198984855494
+SCRIPT       : [AskalJsonLoader] ✅ Arquivo salvo: $profile:Askal/Database/Players/76561198984855494.json
+SCRIPT       : [AskalBalance] ✅ Dados do player salvos: 76561198984855494
+SCRIPT       : [AskalBalance] Flushed 1 pending saves to disk
+SCRIPT       : [AskalPurchase] ORDER_PLACED steamId=76561198984855494 item=ammo_556x45 price=105
+SCRIPT       : [AskalPurchase] ✅ Compra realizada!
+SCRIPT       : [AskalPurchase]   Item: ammo_556x45 | Qty: 7 | Tipo: 2
+SCRIPT       : [AskalPurchase] [PROCESSAR] ProcessPurchaseWithQuantity retornou: true
+SCRIPT       : [AskalPurchase] [RESULTADO] SUCESSO - Compra realizada com sucesso
+SCRIPT       : [AskalPurchase] [PROCESSAR] Enviando resposta ao cliente...
+SCRIPT       : [AskalPurchase] [PROCESSAR] Resposta enviada
+SCRIPT       : [AskalSell] [RPC] RequestInventoryHealth recebido de: Survivor
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalSell] [RPC] Health coletado para 49 tipos de itens
+SCRIPT       : [AskalSell] [RPC] InventoryHealthResponse enviado com 49 itens
+SCRIPT       : [AskalSell] [RPC] RequestInventoryHealth recebido de: Survivor
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalSell] [RPC] Health coletado para 49 tipos de itens
+SCRIPT       : [AskalSell] [RPC] InventoryHealthResponse enviado com 49 itens
+SCRIPT       : [AskalSell] [RPC] RequestInventoryHealth recebido de: Survivor
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalSell] [RPC] Health coletado para 49 tipos de itens
+SCRIPT       : [AskalSell] [RPC] InventoryHealthResponse enviado com 49 itens
+SCRIPT       : [AskalSell] [RPC] SellItemRequest recebido
+SCRIPT       : [AskalSell] [RPC] Item: AviatorGlasses | Currency: Askal_Money | Mode: 1 | Trader: Trader_Default
+SCRIPT       : [AskalSell] [RPC] Buscando player...
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalSell] [RPC] Player encontrado: Survivor
+SCRIPT       : [AskalSell] [RPC] Buscando item no inventario: AviatorGlasses
+SCRIPT       : [AskalSell] [RPC] Item encontrado: AviatorGlasses
+SCRIPT       : [AskalSell] [RPC] Processando venda...
+SCRIPT       : [AskalSell] [PROCESSO] Iniciando ProcessSell
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalSell] [PROCESSO] Item: AviatorGlasses
+SCRIPT       : [AskalSell] [VALIDACAO] Item pode ser removido
+SCRIPT       : [AskalSell] [DATABASE] Buscando item no database: AviatorGlasses
+SCRIPT       : [AskalSell] [DATABASE] Item encontrado - Price: 95 | SellPercent: 50
+SCRIPT       : [AskalSell] [HEALTH] Integridade do item: 100(health01: 1)
+SCRIPT       : [AskalSell] [PRECO] Preco calculado: 48 (item: 48, municao: 0, base: 95, sell: 50, health: 100, coeff: 1)
+SCRIPT       : [AskalSell] [VALIDACAO] Verificando se item tem cargo...
+SCRIPT       : [AskalSell] [VALIDACAO] Resultado da verificação de cargo: false
+SCRIPT       : [AskalSell] [VALIDACAO] ✅ Item não tem cargo - venda permitida
+SCRIPT       : [AskalSell] [PAGAMENTO] Adicionando dinheiro (Mode: 1)...
+SCRIPT       : [AskalSell] [ERRO] Falha ao adicionar dinheiro
+SCRIPT       : [AskalSell] [ERRO] Falha ao processar venda
+SCRIPT       : [AskalSell] [RPC] RequestInventoryHealth recebido de: Survivor
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalSell] [RPC] Health coletado para 49 tipos de itens
+SCRIPT       : [AskalSell] [RPC] InventoryHealthResponse enviado com 49 itens
+SCRIPT       : [AskalSell] [RPC] SellItemRequest recebido
+SCRIPT       : [AskalSell] [RPC] Item: SodaCan_Cola | Currency: Askal_Money | Mode: 1 | Trader: Trader_Default
+SCRIPT       : [AskalSell] [RPC] Buscando player...
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalSell] [RPC] Player encontrado: Survivor
+SCRIPT       : [AskalSell] [RPC] Buscando item no inventario: SodaCan_Cola
+SCRIPT       : [AskalSell] [RPC] Item encontrado: SodaCan_Cola
+SCRIPT       : [AskalSell] [RPC] Processando venda...
+SCRIPT       : [AskalSell] [PROCESSO] Iniciando ProcessSell
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalSell] [PROCESSO] Item: SodaCan_Cola
+SCRIPT       : [AskalSell] [VALIDACAO] Item pode ser removido
+SCRIPT       : [AskalSell] [DATABASE] Buscando item no database: SodaCan_Cola
+SCRIPT       : [AskalSell] [DATABASE] Item encontrado - Price: 90 | SellPercent: 50
+SCRIPT       : [AskalSell] [HEALTH] Integridade do item: 100(health01: 1)
+SCRIPT       : [AskalSell] [QUANTIDADE] Item stackable: 330/330 unidades | Preço unitário: 0 | Preço total: $45
+SCRIPT       : [AskalSell] [PRECO] Preco calculado: 45 (item: 45, municao: 0, base: 90, sell: 50, health: 100, coeff: 1)
+SCRIPT       : [AskalSell] [VALIDACAO] Verificando se item tem cargo...
+SCRIPT       : [AskalSell] [VALIDACAO] Resultado da verificação de cargo: false
+SCRIPT       : [AskalSell] [VALIDACAO] ✅ Item não tem cargo - venda permitida
+SCRIPT       : [AskalSell] [PAGAMENTO] Adicionando dinheiro (Mode: 1)...
+SCRIPT       : [AskalSell] [ERRO] Falha ao adicionar dinheiro
+SCRIPT       : [AskalSell] [ERRO] Falha ao processar venda
+SCRIPT       : [AskalSell] [RPC] RequestInventoryHealth recebido de: Survivor
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalSell] [RPC] Health coletado para 49 tipos de itens
+SCRIPT       : [AskalSell] [RPC] InventoryHealthResponse enviado com 49 itens
+SCRIPT       : [AskalSell] [RPC] SellItemRequest recebido
+SCRIPT       : [AskalSell] [RPC] Item: SodaCan_Cola | Currency: Askal_Money | Mode: 1 | Trader: Trader_Default
+SCRIPT       : [AskalSell] [RPC] Buscando player...
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalSell] [RPC] Player encontrado: Survivor
+SCRIPT       : [AskalSell] [RPC] Buscando item no inventario: SodaCan_Cola
+SCRIPT       : [AskalSell] [RPC] Item encontrado: SodaCan_Cola
+SCRIPT       : [AskalSell] [RPC] Processando venda...
+SCRIPT       : [AskalSell] [PROCESSO] Iniciando ProcessSell
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalSell] [PROCESSO] Item: SodaCan_Cola
+SCRIPT       : [AskalSell] [VALIDACAO] Item pode ser removido
+SCRIPT       : [AskalSell] [DATABASE] Buscando item no database: SodaCan_Cola
+SCRIPT       : [AskalSell] [DATABASE] Item encontrado - Price: 90 | SellPercent: 50
+SCRIPT       : [AskalSell] [HEALTH] Integridade do item: 100(health01: 1)
+SCRIPT       : [AskalSell] [QUANTIDADE] Item stackable: 330/330 unidades | Preço unitário: 0 | Preço total: $45
+SCRIPT       : [AskalSell] [PRECO] Preco calculado: 45 (item: 45, municao: 0, base: 90, sell: 50, health: 100, coeff: 1)
+SCRIPT       : [AskalSell] [VALIDACAO] Verificando se item tem cargo...
+SCRIPT       : [AskalSell] [VALIDACAO] Resultado da verificação de cargo: false
+SCRIPT       : [AskalSell] [VALIDACAO] ✅ Item não tem cargo - venda permitida
+SCRIPT       : [AskalSell] [PAGAMENTO] Adicionando dinheiro (Mode: 1)...
+SCRIPT       : [AskalSell] [ERRO] Falha ao adicionar dinheiro
+SCRIPT       : [AskalSell] [ERRO] Falha ao processar venda
+SCRIPT       : [AskalSell] [RPC] RequestInventoryHealth recebido de: Survivor
+SCRIPT       : [AskalMarketHelpers] 🔍 Buscando player na lista (1 players conectados)
+SCRIPT       : [AskalMarketHelpers] ✅ Player encontrado via comparação de SteamId
+SCRIPT       : [AskalSell] [RPC] Health coletado para 49 tipos de itens
+SCRIPT       : [AskalSell] [RPC] InventoryHealthResponse enviado com 49 itens
+SCRIPT       : [Logout]: New player xZxRNyXR1EvMyLkucaEmpsQvrYt8SMq0MA8yBZkwl6Y= with logout time 15
