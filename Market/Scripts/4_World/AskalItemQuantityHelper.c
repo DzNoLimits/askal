@@ -107,7 +107,7 @@ class AskalItemQuantityHelper
 	static void GetStackableRange(string className, out int minValue, out int maxValue, out float stepValue)
 	{
 		minValue = 1;
-		maxValue = 50; // Fallback padrão
+		maxValue = 1; // Default to 1, will be set from item if available
 		stepValue = 1.0;
 		
 		// Criar objeto temporário para inspeção
@@ -126,51 +126,60 @@ class AskalItemQuantityHelper
 		float qtyMin = item.GetQuantityMin();
 		float qtyMax = item.GetQuantityMax();
 		
-		// Verificar se é munição (pode ter count no config)
-		if (className.IndexOf("Ammo_") == 0)
+		// Use GetQuantityMax() directly - this is the authoritative source
+		if (qtyMax > 0)
 		{
-			// Tentar ler count do config CfgMagazines
-			string configPath = "CfgMagazines " + className + " count";
-			if (GetGame().ConfigIsExisting(configPath))
+			maxValue = Math.Round(qtyMax);
+			if (qtyMin >= 0)
+				minValue = Math.Round(qtyMin);
+			if (minValue < 1)
+				minValue = 1;
+		}
+		
+		// If we already got maxValue from GetQuantityMax(), use it
+		// Otherwise, try config as fallback
+		if (maxValue <= 1)
+		{
+			// Verificar se é munição (pode ter count no config)
+			if (className.IndexOf("Ammo_") == 0)
 			{
-				int configCount = GetGame().ConfigGetInt(configPath);
-				if (configCount > 0)
+				// Tentar ler count do config CfgMagazines
+				string configPath = "CfgMagazines " + className + " count";
+				if (GetGame().ConfigIsExisting(configPath))
 				{
-					maxValue = configCount;
+					int configCount = GetGame().ConfigGetInt(configPath);
+					if (configCount > 1)
+					{
+						maxValue = configCount;
+						GetGame().ObjectDelete(tempObj);
+						return;
+					}
+				}
+			}
+			
+			// Para outros stackables, tentar ler varQuantityMax do config CfgVehicles
+			// Exemplo: Nail tem varQuantityMax = 99.0
+			string varQtyMaxPath = "CfgVehicles " + className + " varQuantityMax";
+			if (GetGame().ConfigIsExisting(varQtyMaxPath))
+			{
+				float configVarQtyMax = GetGame().ConfigGetFloat(varQtyMaxPath);
+				if (configVarQtyMax > 1)
+				{
+					maxValue = Math.Round(configVarQtyMax);
+					// Ler também varQuantityMin se existir
+					string varQtyMinPath = "CfgVehicles " + className + " varQuantityMin";
+					if (GetGame().ConfigIsExisting(varQtyMinPath))
+					{
+						float configVarQtyMin = GetGame().ConfigGetFloat(varQtyMinPath);
+						if (configVarQtyMin >= 1)
+						{
+							minValue = Math.Round(configVarQtyMin);
+						}
+					}
 					GetGame().ObjectDelete(tempObj);
 					return;
 				}
 			}
-		}
-		
-		// Para outros stackables, tentar ler varQuantityMax do config CfgVehicles
-		// Exemplo: Nail tem varQuantityMax = 99.0
-		string varQtyMaxPath = "CfgVehicles " + className + " varQuantityMax";
-		if (GetGame().ConfigIsExisting(varQtyMaxPath))
-		{
-			float configVarQtyMax = GetGame().ConfigGetFloat(varQtyMaxPath);
-			if (configVarQtyMax > 0)
-			{
-				maxValue = Math.Round(configVarQtyMax);
-				// Ler também varQuantityMin se existir
-				string varQtyMinPath = "CfgVehicles " + className + " varQuantityMin";
-				if (GetGame().ConfigIsExisting(varQtyMinPath))
-				{
-					float configVarQtyMin = GetGame().ConfigGetFloat(varQtyMinPath);
-					if (configVarQtyMin >= 0)
-					{
-						minValue = Math.Round(configVarQtyMin);
-					}
-				}
-				GetGame().ObjectDelete(tempObj);
-				return;
-			}
-		}
-		
-		// Fallback: usar valores do objeto
-		if (qtyMax > 0)
-		{
-			maxValue = Math.Round(qtyMax);
 		}
 		
 		// Para AmmoPile, mínimo é 1 se max > 1
