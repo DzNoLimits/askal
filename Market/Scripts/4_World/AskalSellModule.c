@@ -109,10 +109,13 @@ class AskalSellModule
 		else
 		{
 			Print("[AskalSell] [ERRO] Falha ao processar venda");
-			// ProcessSell já valida cargo e retorna mensagem apropriada via outPrice=0
+			// ProcessSell já valida usando IsSellable e retorna mensagem apropriada via outPrice=0
 			string errorMessage = "Falha ao processar venda";
 			if (sellPrice == 0)
-				errorMessage = "Item ocupado, esvazie para vender";
+			{
+				// Mensagem genérica - detalhes estão no log com MARKET_SELL_REJECT
+				errorMessage = "Item não pode ser vendido. Verifique se está vazio ou remova attachments bloqueantes";
+			}
 			SendSellResponse(sender, false, errorMessage, itemClassName, 0);
 		}
 	}

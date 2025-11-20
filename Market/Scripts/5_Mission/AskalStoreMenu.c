@@ -3969,8 +3969,8 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 	/// Obtém os valores min/max para o slider baseado no tipo de item (usa helper centralizado)
 	void GetQuantityRangeForItem(string className, out int minValue, out int maxValue, out string unit, out float stepValue)
 	{
-		minValue = 0;
-		maxValue = 100;
+		minValue = 1;
+		maxValue = 1; // Default to 1 for non-stackable items
 		unit = "";
 		stepValue = 1.0;
 		
@@ -4001,6 +4001,12 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 				break;
 			}
 		}
+		
+		// Ensure maxValue is at least 1
+		if (maxValue < 1)
+			maxValue = 1;
+		if (minValue < 1)
+			minValue = 1;
 	}
 	
 	/// Configura o slider de quantidade e a seleção de conteúdo para o item selecionado
@@ -4064,59 +4070,75 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		int configCount;
 		
 		// Validação crítica: garantir que o slider tenha um range válido
-		// Para munições, tentar ler do config antes de usar fallback
+		// Se maxVal ainda é 1 ou inválido, tentar ler diretamente do item
 		if (maxVal <= 1)
 		{
-			Print("[AskalStore] ⚠️ maxVal <= 1 para " + className + ", tentando ler do config...");
+			Print("[AskalStore] ⚠️ maxVal <= 1 para " + className + ", tentando ler do item...");
 			
-			// Tentar ler do config CfgMagazines primeiro
-			configPath = "CfgMagazines " + className + " count";
-			if (GetGame().ConfigIsExisting(configPath))
+			// Criar objeto temporário para ler GetQuantityMax() diretamente
+			Object tempObj = SpawnTemporaryObject(className);
+			ItemBase tempItem = ItemBase.Cast(tempObj);
+			
+			if (tempItem && tempItem.HasQuantity())
 			{
-				configCount = GetGame().ConfigGetInt(configPath);
-				if (configCount > 1)
+				float qtyMax = tempItem.GetQuantityMax();
+				if (qtyMax > 1)
 				{
-					maxVal = configCount;
-					Print("[AskalStore] 📦 maxVal ajustado do config: " + maxVal);
+					maxVal = Math.Round(qtyMax);
+					Print("[AskalStore] 📦 maxVal ajustado do item.GetQuantityMax(): " + maxVal);
 				}
 			}
 			
-			// Se ainda não encontrou, usar fallback baseado no tipo
+			// Se ainda não encontrou, tentar ler do config CfgMagazines
 			if (maxVal <= 1)
 			{
-				if (className.IndexOf("Ammo_") == 0 || className.IndexOf("Bullet_") == 0)
-				{
-					maxVal = 100; // Fallback comum para munições
-					Print("[AskalStore] ⚠️ Usando fallback para munições: maxVal = " + maxVal);
-				}
-				else
-				{
-					maxVal = 10; // Fallback padrão para outros stackables
-					Print("[AskalStore] ⚠️ Usando fallback genérico: maxVal = " + maxVal);
-				}
-				minVal = 1;
-			}
-		}
-		
-		if (minVal >= maxVal)
-		{
-			Print("[AskalStore] ⚠️ minVal >= maxVal para " + className + ", ajustando valores");
-			minVal = 1;
-			if (maxVal <= 1)
-			{
-				// Tentar ler do config novamente
 				configPath = "CfgMagazines " + className + " count";
 				if (GetGame().ConfigIsExisting(configPath))
 				{
 					configCount = GetGame().ConfigGetInt(configPath);
 					if (configCount > 1)
+					{
 						maxVal = configCount;
-					else
-						maxVal = 10;
+						Print("[AskalStore] 📦 maxVal ajustado do config CfgMagazines: " + maxVal);
+					}
 				}
-				else
-					maxVal = 10;
 			}
+			
+			// Se ainda não encontrou, tentar varQuantityMax do config
+			if (maxVal <= 1)
+			{
+				configPath = "CfgVehicles " + className + " varQuantityMax";
+				if (GetGame().ConfigIsExisting(configPath))
+				{
+					float configVarQtyMax = GetGame().ConfigGetFloat(configPath);
+					if (configVarQtyMax > 1)
+					{
+						maxVal = Math.Round(configVarQtyMax);
+						Print("[AskalStore] 📦 maxVal ajustado do config varQuantityMax: " + maxVal);
+					}
+				}
+			}
+			
+			// Último fallback: se ainda é 1, item não é stackable - ocultar slider
+			if (maxVal <= 1)
+			{
+				Print("[AskalStore] ⚠️ Item não é stackable (maxVal=1), ocultando slider");
+				if (tempObj)
+					GetGame().ObjectDelete(tempObj);
+				m_TransactionQuantitySlider.Show(false);
+				m_SliderQuantityType = AskalItemQuantityType.NONE;
+				return;
+			}
+			
+			if (tempObj)
+				GetGame().ObjectDelete(tempObj);
+		}
+		
+		// Garantir que minVal < maxVal
+		if (minVal >= maxVal)
+		{
+			Print("[AskalStore] ⚠️ minVal >= maxVal para " + className + ", ajustando minVal para 1");
+			minVal = 1;
 		}
 		
 		m_SliderMinValue = minVal;
@@ -4215,8 +4237,8 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 				m_CurrentAmmoCount = 0;
 				
 				// Detecta se é um container de líquido
-				Object tempObj = SpawnTemporaryObject(className);
-				ItemBase container = ItemBase.Cast(tempObj);
+				Object tempObj_local = SpawnTemporaryObject(className);
+				ItemBase container = ItemBase.Cast(tempObj_local);
 				
 				if (container && container.IsLiquidContainer())
 				{
@@ -4259,8 +4281,8 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 						m_TransactionContentPanel.Show(false);
 				}
 				
-				if (tempObj)
-					GetGame().ObjectDelete(tempObj);
+				if (tempObj_local)
+					GetGame().ObjectDelete(tempObj_local);
 				break;
 			}
 		}
@@ -4882,10 +4904,12 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			return false;
 		}
 		
-		// Verificar se item tem cargo ANTES de enviar para o servidor
-		if (HasCargoItemsRecursive(inventoryItem))
+		// Verificação simplificada no cliente - validação completa será feita no servidor
+		// Apenas verificar se é um container óbvio com cargo visível
+		Container_Base container = Container_Base.Cast(inventoryItem);
+		if (container && HasCargoItemsRecursive(inventoryItem))
 		{
-			Print("[AskalStore] [ERRO] Item tem cargo - venda bloqueada no cliente");
+			Print("[AskalStore] [ERRO] Container tem cargo - venda bloqueada no cliente");
 			DisplayTransactionError("[AVISO] Item ocupado: esvazie o inventario do item antes de vende-lo");
 			return false;
 		}

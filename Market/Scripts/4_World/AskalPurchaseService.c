@@ -30,6 +30,13 @@ class AskalPurchaseService
 
 		if (!currencyId || currencyId == "")
 			currencyId = "Askal_Coin";
+		
+		// VALIDAÇÃO SERVIDOR: Verificar se quantidade solicitada é válida
+		if (!ValidateQuantity(itemClass, itemQuantity, quantityType))
+		{
+			Print("[AskalPurchase] ❌ MARKET_PURCHASE_REJECT reason=invalid_quantity player=" + steamId + " item=" + itemClass + " requested_qty=" + itemQuantity);
+			return false;
+		}
 
 		// Calcular preço autoritativo considerando quantidade (para stackables)
 		int authoritativePrice = ComputeItemTotalPriceWithQuantity(itemClass, itemQuantity, quantityType);
@@ -120,7 +127,19 @@ class AskalPurchaseService
 				{
 					int ammoCount = Math.Round(Math.Clamp(quantity, 0, mag.GetAmmoMax()));
 					mag.ServerSetAmmoCount(ammoCount);
-					Print("[AskalPurchase] 🔫 Magazine: " + ammoCount + " balas");
+					
+					// Verificar quantidade aplicada
+					int actualAmmo = mag.GetAmmoCount();
+					Print("[AskalPurchase] AMMO_SPAWN qty=" + actualAmmo + " type=" + itemClass + " player=" + player.GetIdentity().GetPlainId());
+					
+					if (actualAmmo != ammoCount)
+					{
+						Print("[AskalPurchase] ⚠️ Quantidade de munição não corresponde! Solicitado: " + ammoCount + " | Atual: " + actualAmmo);
+					}
+					else
+					{
+						Print("[AskalPurchase] 🔫 Magazine: " + ammoCount + " balas");
+					}
 				}
 			}
 			else if (quantityType == 2 && itemBase.HasQuantity()) // STACKABLE
@@ -129,8 +148,30 @@ class AskalPurchaseService
 				float qtyMin = itemBase.GetQuantityMin();
 				float qtyMax = itemBase.GetQuantityMax();
 				float clampedQty = Math.Clamp(quantity, qtyMin, qtyMax);
+				
+				// Verificar quantidade inicial (antes de SetQuantity)
+				float initialQty = itemBase.GetQuantity();
+				Print("[AskalPurchase] 📦 STACKABLE - Quantidade inicial: " + initialQty + " | Solicitado: " + clampedQty);
+				
+				// Definir quantidade
 				itemBase.SetQuantity(clampedQty);
-				Print("[AskalPurchase] 📦 STACKABLE: " + clampedQty + " unidades (min: " + qtyMin + ", max: " + qtyMax + ")");
+				
+				// Verificar quantidade aplicada (depois de SetQuantity)
+				float actualQty = itemBase.GetQuantity();
+				Print("[AskalPurchase] AMMO_SPAWN qty=" + Math.Round(actualQty) + " type=" + itemClass + " player=" + player.GetIdentity().GetPlainId());
+				
+				if (Math.AbsFloat(actualQty - clampedQty) > 0.01)
+				{
+					Print("[AskalPurchase] ⚠️ Quantidade não corresponde! Solicitado: " + clampedQty + " | Atual: " + actualQty + " | Tentando novamente...");
+					// Tentar novamente - pode haver timing issue
+					itemBase.SetQuantity(clampedQty);
+					actualQty = itemBase.GetQuantity();
+					Print("[AskalPurchase] 📦 STACKABLE (tentativa 2): " + actualQty + " unidades (solicitado: " + clampedQty + ", min: " + qtyMin + ", max: " + qtyMax + ")");
+				}
+				else
+				{
+					Print("[AskalPurchase] 📦 STACKABLE: " + clampedQty + " unidades (min: " + qtyMin + ", max: " + qtyMax + ")");
+				}
 			}
 			else if (quantityType == 3 && itemBase.HasQuantity()) // QUANTIFIABLE
 			{
@@ -150,6 +191,15 @@ class AskalPurchaseService
 					Print("[AskalPurchase] 📊 Quantidade: " + clampedQtyPercent);
 				}
 			}
+			else
+			{
+				// Item não suporta quantidade variável - verificar se tem quantidade padrão
+				if (itemBase.HasQuantity())
+				{
+					float defaultQty = itemBase.GetQuantity();
+					Print("[AskalPurchase] 📦 Item não stackable - quantidade padrão: " + defaultQty);
+				}
+			}
 		}
 
 		return item;
@@ -160,6 +210,73 @@ class AskalPurchaseService
 	static PlayerBase GetPlayerFromIdentity(PlayerIdentity identity)
 	{
 		return AskalMarketHelpers.GetPlayerFromIdentity(identity);
+	}
+	
+	// Validar quantidade solicitada contra limites do item (validação servidor)
+	static bool ValidateQuantity(string itemClass, float requestedQuantity, int quantityType)
+	{
+		if (!itemClass || itemClass == "")
+			return false;
+		
+		if (requestedQuantity <= 0)
+			return false;
+		
+		// Criar objeto temporário para validar limites
+		Object tempObj = GetGame().CreateObject(itemClass, vector.Zero, true, false, false);
+		if (!tempObj)
+		{
+			Print("[AskalPurchase] ⚠️ Não foi possível criar objeto temporário para validação: " + itemClass);
+			return true; // Permitir se não conseguir validar (fallback permissivo)
+		}
+		
+		ItemBase item = ItemBase.Cast(tempObj);
+		if (!item)
+		{
+			GetGame().ObjectDelete(tempObj);
+			return true; // Não é ItemBase, permitir (validação será feita em CreateSimpleItem)
+		}
+		
+		bool isValid = false;
+		
+		if (quantityType == 1 && item.IsMagazine()) // MAGAZINE
+		{
+			Magazine mag = Magazine.Cast(item);
+			if (mag)
+			{
+				int ammoMax = mag.GetAmmoMax();
+				isValid = (requestedQuantity >= 0 && requestedQuantity <= ammoMax);
+				if (!isValid)
+					Print("[AskalPurchase] ❌ Quantidade inválida para magazine: " + requestedQuantity + " (max: " + ammoMax + ")");
+			}
+			else
+			{
+				isValid = true; // Não é magazine válido, permitir
+			}
+		}
+		else if (quantityType == 2 && item.HasQuantity()) // STACKABLE
+		{
+			float qtyMin = item.GetQuantityMin();
+			float qtyMax = item.GetQuantityMax();
+			isValid = (requestedQuantity >= qtyMin && requestedQuantity <= qtyMax);
+			if (!isValid)
+				Print("[AskalPurchase] ❌ Quantidade inválida para stackable: " + requestedQuantity + " (min: " + qtyMin + ", max: " + qtyMax + ")");
+		}
+		else if (quantityType == 3 && item.HasQuantity()) // QUANTIFIABLE
+		{
+			float qtyMin_local = item.GetQuantityMin();
+			float qtyMax_local = item.GetQuantityMax();
+			isValid = (requestedQuantity >= qtyMin_local && requestedQuantity <= qtyMax_local);
+			if (!isValid)
+				Print("[AskalPurchase] ❌ Quantidade inválida para quantifiable: " + requestedQuantity + " (min: " + qtyMin_local + ", max: " + qtyMax_local + ")");
+		}
+		else
+		{
+			// Tipo não suporta quantidade ou quantidade padrão (1)
+			isValid = (requestedQuantity == 1 || requestedQuantity == 0);
+		}
+		
+		GetGame().ObjectDelete(tempObj);
+		return isValid;
 	}
 
 	// Calcular preço total considerando quantidade (para stackables)
@@ -222,31 +339,114 @@ class AskalPurchaseService
 		return adjusted;
 	}
 
-	protected static void AttachDefaultAttachments(EntityAI itemEntity, string itemClass)
+	// Criar attachments recursivamente (com limite de profundidade)
+	// depth: profundidade atual (0 = item raiz)
+	static void AttachDefaultAttachmentsRecursive(EntityAI parentEntity, string parentClass, int depth, string playerId)
 	{
-		if (!itemEntity)
+		if (!parentEntity || !parentClass || parentClass == "")
 			return;
-
-		ItemData itemData = AskalDatabase.GetItem(itemClass);
-		if (!itemData)
+		
+		// Safety guard: evitar recursão infinita
+		if (depth >= 4)
+		{
+			Print("[AskalPurchase] ⚠️ Profundidade máxima de attachments atingida (4) para: " + parentClass);
 			return;
-
-		array<string> attachments = itemData.GetAttachments();
-		if (!attachments)
+		}
+		
+		// Ler attachments do dataset/config
+		array<string> attachments = GetAttachmentsForItem(parentClass);
+		if (!attachments || attachments.Count() == 0)
 			return;
-
+		
 		for (int i = 0; i < attachments.Count(); i++)
 		{
 			string attachmentClass = attachments.Get(i);
 			if (!attachmentClass || attachmentClass == "")
 				continue;
-
-			EntityAI attachmentEntity = EntityAI.Cast(itemEntity.GetInventory().CreateAttachment(attachmentClass));
+			
+			// Criar attachment no parent
+			EntityAI attachmentEntity = EntityAI.Cast(parentEntity.GetInventory().CreateAttachment(attachmentClass));
 			if (!attachmentEntity)
 			{
-				Print("[AskalPurchase] ⚠️ Falha ao anexar attachment: " + attachmentClass);
+				Print("[AskalPurchase] ⚠️ Falha ao anexar attachment: " + attachmentClass + " ao parent: " + parentClass);
+				continue;
+			}
+			
+			// Log criação do attachment
+			Print("[AskalPurchase] ATTACH_CREATED parent=" + parentClass + " att=" + attachmentClass + " player=" + playerId + " depth=" + depth);
+			
+			// Recursivamente criar attachments para este attachment
+			AttachDefaultAttachmentsRecursive(attachmentEntity, attachmentClass, depth + 1, playerId);
+		}
+	}
+	
+	// Obter attachments para um item (do dataset ou config)
+	static array<string> GetAttachmentsForItem(string itemClass)
+	{
+		array<string> attachments = new array<string>();
+		
+		// 1. Tentar ler do dataset (ItemData)
+		ItemData itemData = AskalDatabase.GetItem(itemClass);
+		if (itemData)
+		{
+			array<string> datasetAttachments = itemData.GetAttachments();
+			if (datasetAttachments && datasetAttachments.Count() > 0)
+			{
+				for (int i = 0; i < datasetAttachments.Count(); i++)
+				{
+					string att = datasetAttachments.Get(i);
+					if (att && att != "")
+						attachments.Insert(att);
+				}
+				return attachments; // Retornar se encontrou no dataset
 			}
 		}
+		
+		// 2. Tentar ler do config (CfgVehicles, CfgWeapons, CfgMagazines)
+		TStringArray configs = new TStringArray();
+		configs.Insert("CfgVehicles");
+		configs.Insert("CfgWeapons");
+		configs.Insert("CfgMagazines");
+		
+		TStringArray foundAttachments = new TStringArray();
+		foreach (string configPath : configs)
+		{
+			string fullPath = configPath + " " + itemClass + " attachments";
+			GetGame().ConfigGetTextArray(fullPath, foundAttachments);
+			
+			if (foundAttachments.Count() > 0)
+			{
+				for (int j = 0; j < foundAttachments.Count(); j++)
+				{
+					string att_local = foundAttachments.Get(j);
+					if (att_local && att_local != "")
+						attachments.Insert(att_local);
+				}
+				break; // Encontrou no primeiro config válido
+			}
+		}
+		
+		return attachments;
+	}
+	
+	// Wrapper público (mantém compatibilidade com código existente)
+	protected static void AttachDefaultAttachments(EntityAI itemEntity, string itemClass)
+	{
+		if (!itemEntity || !itemClass || itemClass == "")
+			return;
+		
+		// Obter player ID para logging (se disponível)
+		string playerId = "";
+		PlayerBase player = PlayerBase.Cast(itemEntity.GetHierarchyRootPlayer());
+		if (player && player.GetIdentity())
+		{
+			playerId = player.GetIdentity().GetPlainId();
+			if (!playerId || playerId == "")
+				playerId = player.GetIdentity().GetId();
+		}
+		
+		// Criar attachments recursivamente (inicia em depth=0)
+		AttachDefaultAttachmentsRecursive(itemEntity, itemClass, 0, playerId);
 	}
 }
 

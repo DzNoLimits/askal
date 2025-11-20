@@ -198,17 +198,18 @@ class AskalSellService
 		
 		Print("[AskalSell] [PRECO] Preco calculado: " + totalPrice + " (item: " + Math.Round(priceWithHealth) + ", municao: " + Math.Round(ammoPrice) + ", base: " + basePrice + ", sell%: " + sellPercent + ", health%: " + healthPercent + ", coeff: " + sellCoeff + ")");
 		
-		// VERIFICAR: Se item tem cargo, NÃO permitir venda (deve estar vazio) - ANTES de processar pagamento
-		Print("[AskalSell] [VALIDACAO] Verificando se item tem cargo...");
-		bool hasCargo = HasCargoItemsRecursive(itemToSell);
-		Print("[AskalSell] [VALIDACAO] Resultado da verificação de cargo: " + hasCargo);
-		if (hasCargo)
+		// VERIFICAR: Se item pode ser vendido usando lógica robusta
+		Print("[AskalSell] [VALIDACAO] Verificando se item pode ser vendido...");
+		string rejectReason = "";
+		bool isSellable = IsSellable(itemToSell, rejectReason);
+		Print("[AskalSell] [VALIDACAO] Resultado da verificação: " + isSellable);
+		if (!isSellable)
 		{
-			Print("[AskalSell] [ERRO] Item tem cargo - venda bloqueada");
+			Print("[AskalSell] [ERRO] MARKET_SELL_REJECT reason=" + rejectReason + " player=" + steamId + " item=" + itemClass);
 			outPrice = 0;
 			return false;
 		}
-		Print("[AskalSell] [VALIDACAO] ✅ Item não tem cargo - venda permitida");
+		Print("[AskalSell] [VALIDACAO] ✅ Item pode ser vendido");
 		
 		// Retornar preço via parâmetro de saída
 		outPrice = totalPrice;
@@ -258,6 +259,95 @@ class AskalSellService
 	static PlayerBase GetPlayerFromIdentity(PlayerIdentity identity)
 	{
 		return AskalMarketHelpers.GetPlayerFromIdentity(identity);
+	}
+	
+	// Verificar se item pode ser vendido (lógica robusta)
+	// Retorna false se item não pode ser vendido e preenche rejectReason
+	static bool IsSellable(EntityAI item, out string rejectReason)
+	{
+		rejectReason = "";
+		
+		if (!item)
+		{
+			rejectReason = "item_null";
+			return false;
+		}
+		
+		string itemClass = item.GetType();
+		
+		// 1. Verificar se é um container real (Container_Base ou tem cargo capacity)
+		Container_Base container = Container_Base.Cast(item);
+		if (container)
+		{
+			// Verificar se tem itens no cargo (não attachments)
+			if (HasCargoItemsRecursive(item))
+			{
+				rejectReason = "container_has_cargo";
+				return false;
+			}
+			// Container vazio pode ser vendido
+			return true;
+		}
+		
+		// 2. Verificar se item tem inventory e se tem cargo (não attachments)
+		if (item.GetInventory())
+		{
+			// Verificar se tem itens no cargo (excluindo attachments)
+			if (HasCargoItemsRecursive(item))
+			{
+				rejectReason = "has_cargo_items";
+				return false;
+			}
+			
+			// 3. Verificar attachments bloqueantes (magazines, batteries, scopes)
+			int attCount = item.GetInventory().AttachmentCount();
+			if (attCount > 0)
+			{
+				array<string> blockingAttTypes = {"Mag_", "Battery", "Scope_"};
+				
+				for (int i = 0; i < attCount; i++)
+				{
+					EntityAI att = item.GetInventory().GetAttachmentFromIndex(i);
+					if (!att)
+						continue;
+					
+					string attClass = att.GetType();
+					
+					// Verificar se attachment é do tipo bloqueante
+					for (int j = 0; j < blockingAttTypes.Count(); j++)
+					{
+						string blockingPrefix = blockingAttTypes.Get(j);
+						if (attClass.IndexOf(blockingPrefix) == 0)
+						{
+							rejectReason = "has_blocking_attachment_" + blockingPrefix;
+							return false;
+						}
+					}
+				}
+			}
+		}
+		
+		// 4. Verificar se é stackable/consumable - sempre permitir
+		ItemBase itemBase = ItemBase.Cast(item);
+		if (itemBase && itemBase.HasQuantity())
+		{
+			// Stackable items podem sempre ser vendidos
+			return true;
+		}
+		
+		// 5. Verificar tipos conhecidos de consumables (whitelist)
+		array<string> consumableTypes = {"Bandage", "Food", "Drink", "Fruit", "Vegetable", "Meat", "Ammo_"};
+		for (int k = 0; k < consumableTypes.Count(); k++)
+		{
+			string consumablePrefix = consumableTypes.Get(k);
+			if (itemClass.IndexOf(consumablePrefix) == 0)
+			{
+				return true;
+			}
+		}
+		
+		// 6. Por padrão, permitir venda se não tem cargo
+		return true;
 	}
 	
 	// Verificar recursivamente se item tem cargo (itens dentro de containers)
