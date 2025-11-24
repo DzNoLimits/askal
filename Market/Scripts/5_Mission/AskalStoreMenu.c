@@ -7958,4 +7958,3 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		return 100.0;
 	}
 }
-
