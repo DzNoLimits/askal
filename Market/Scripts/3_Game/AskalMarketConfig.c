@@ -36,6 +36,7 @@ class AskalMarketConfigFile
 	string Version;
 	string Description;
 	string WarnText;
+	int MarketMode; // 0: Disabled, 1: Enabled
 	int DelayTimeMS;
 	ref map<string, ref AskalCurrencyConfig> Currencies;
 	ref map<string, float> Liquids;
@@ -44,6 +45,7 @@ class AskalMarketConfigFile
 	void AskalMarketConfigFile()
 	{
 		WarnText = "";
+		MarketMode = 1; // Default: Enabled
 		DelayTimeMS = 500;
 		Currencies = new map<string, ref AskalCurrencyConfig>();
 		Liquids = new map<string, float>();
@@ -61,6 +63,7 @@ class AskalMarketConfig
 	protected ref map<int, string> m_LiquidNames; // liquidType -> display
 	ref map<string, ref AskalCurrencyConfig> Currencies; // walletId -> config
 	string WarnText;
+	int MarketMode; // 0: Disabled, 1: Enabled
 	int DelayTimeMS;
 	
 	void AskalMarketConfig()
@@ -69,6 +72,7 @@ class AskalMarketConfig
 		m_LiquidNames = new map<int, string>();
 		Currencies = new map<string, ref AskalCurrencyConfig>();
 		WarnText = "";
+		MarketMode = 1; // Default: Enabled
 		DelayTimeMS = 500; // Default: 500ms
 		
 		// Carregar config apenas se ainda não foi carregada
@@ -134,6 +138,10 @@ class AskalMarketConfig
 		m_LiquidNames.Clear();
 		Currencies.Clear();
 		WarnText = fileData.WarnText;
+		MarketMode = fileData.MarketMode;
+		// Garantir que MarketMode seja 0 ou 1
+		if (MarketMode != 0 && MarketMode != 1)
+			MarketMode = 1; // Default: Enabled
 		DelayTimeMS = fileData.DelayTimeMS;
 		if (DelayTimeMS <= 0)
 			DelayTimeMS = 500; // Fallback
@@ -195,6 +203,7 @@ class AskalMarketConfig
 		m_LiquidPrices.Clear();
 		m_LiquidNames.Clear();
 		WarnText = "";
+		MarketMode = 1; // Default: Enabled
 		DelayTimeMS = 500;
 		
 		AddDefaultCurrency();
@@ -271,5 +280,17 @@ class AskalMarketConfig
 		if (Currencies.Find(currencyId, config))
 			return config;
 		return NULL;
+	}
+	
+	// Verificar se o Market está habilitado
+	bool IsMarketEnabled()
+	{
+		return MarketMode == 1;
+	}
+	
+	// Obter o modo do Market
+	int GetMarketMode()
+	{
+		return MarketMode;
 	}
 }

@@ -184,7 +184,7 @@ class AskalStoreMenu extends UIScriptedMenu
 	protected ref array<float> m_NotificationSlideParentWidths;
 	protected const float NOTIFICATION_LIFETIME = 5.0; // 5 segundos
 	protected const int MAX_NOTIFICATIONS = 10; // Máximo de notificações visíveis
-	protected const float NOTIFICATION_ANIMATION_DURATION = 0.5; // Meio segundo para deslizar
+	protected const float NOTIFICATION_ANIMATION_DURATION = 0.6; // Meio segundo para deslizar
 	
 	// Configuração do Trader Atual
 	protected string m_CurrentTraderName;
@@ -312,6 +312,13 @@ protected string m_LastVirtualStoreConfigSignature = "";
 	
 	protected void LoadVirtualStoreConfig()
 	{
+		// Verificar se o Virtual Store está habilitado
+		if (!AskalVirtualStoreSettings.IsVirtualStoreEnabled())
+		{
+			Print("[AskalStore] ⚠️ Virtual Store está desabilitado (VirtualStoreMode = 0)");
+			return;
+		}
+		
 		if (m_VirtualStoreConfigLoaded)
 		{
 			EnsureVirtualStoreConfigApplied();
@@ -411,6 +418,7 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		else
 			m_VirtualStoreSetupModes.Clear();
 		
+		bool hasSetupItems = false;
 		if (setupKeys && setupValues && setupKeys.Count() == setupValues.Count())
 		{
 			for (int i = 0; i < setupKeys.Count(); i++)
@@ -418,7 +426,14 @@ protected string m_LastVirtualStoreConfigSignature = "";
 				string key = setupKeys.Get(i);
 				int mode = setupValues.Get(i);
 				if (key && key != "")
-					m_VirtualStoreSetupModes.Set(key, mode);
+				{
+					// Normalizar chave (adicionar prefixos DS_ ou CAT_ se necessário)
+					// Isso garante que o Virtual Market use a mesma lógica dos traders
+					string normalizedKey = NormalizeSetupItemKey(key);
+					m_VirtualStoreSetupModes.Set(normalizedKey, mode);
+					Print("[AskalStore] 📦 VirtualStore SetupItem: " + key + " → " + normalizedKey + " = " + mode);
+					hasSetupItems = true;
+				}
 			}
 		}
 		
@@ -434,8 +449,57 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		m_VirtualStoreCurrencyId = currencyId;
 		m_ActiveCurrencyId = currencyId;
 		
+		// Se não há trader configurado, definir título como "Mercado Virtual"
+		if ((!m_CurrentTraderName || m_CurrentTraderName == "") && m_VirtualStoreSetupModes && m_VirtualStoreSetupModes.Count() > 0)
+		{
+			if (m_HeaderTitleText)
+			{
+				m_HeaderTitleText.SetText("Mercado Virtual");
+				Print("[AskalStore] ✅ Título definido como: Mercado Virtual (Virtual Store aplicado)");
+			}
+			else if (m_RootWidget)
+			{
+				m_HeaderTitleText = TextWidget.Cast(m_RootWidget.FindAnyWidget("market_header_title_text"));
+				if (m_HeaderTitleText)
+				{
+					m_HeaderTitleText.SetText("Mercado Virtual");
+					Print("[AskalStore] ✅ Título encontrado e definido como: Mercado Virtual (Virtual Store aplicado)");
+				}
+			}
+		}
+		
 		RefreshCurrencyShortname();
 		UpdateTransactionSummary();
+		
+		// Se o Virtual Store está ativo (sem trader) e SetupItems foi recebido, recarregar datasets
+		// Isso corrige o problema de datasets "fantasma" na primeira abertura
+		if ((!m_CurrentTraderName || m_CurrentTraderName == "") && hasSetupItems && m_RootWidget)
+		{
+			Print("[AskalStore] 🔄 Recarregando datasets após Virtual Store config ser aplicada...");
+			LoadDatasetsFromCore();
+			
+			// Recarregar primeira categoria se houver datasets (para aplicar filtros)
+			if (m_Datasets.Count() > 0)
+			{
+				Print("[AskalStore] 🔄 Recarregando dataset após Virtual Store config ser aplicada...");
+				Print("[AskalStore] 🔄 Dataset selecionado: " + m_Datasets.Get(0));
+				LoadDataset(0);
+				if (m_Categories.Count() > 0)
+				{
+					Print("[AskalStore] 🔄 Recarregando categoria após Virtual Store config ser aplicada...");
+					Print("[AskalStore] 🔄 Categoria selecionada: " + m_Categories.Get(0));
+					LoadCategory(0);
+				}
+				else
+				{
+					Print("[AskalStore] ⚠️ Nenhuma categoria disponível após filtrar datasets");
+				}
+			}
+			else
+			{
+				Print("[AskalStore] ⚠️ Nenhum dataset disponível após filtrar com Virtual Store SetupItems");
+			}
+		}
 	}
 	
 	override Widget Init()
@@ -873,19 +937,53 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		Print("[AskalStore] Widgets inicializados");
 		
 		// Carregar datasets dinamicamente do Core Database
-		Print("[AskalStore] 🔄 Carregando datasets do Core Database...");
-		LoadDatasetsFromCore();
-		
-		// Carregar primeira categoria e mostrar itens
-		if (m_Datasets.Count() > 0)
+		// Se o Virtual Store está ativo, tentar aplicar config antes de carregar
+		bool isVirtualStore = (!m_CurrentTraderName || m_CurrentTraderName == "");
+		if (isVirtualStore)
 		{
-			LoadDataset(0);
-			if (m_Categories.Count() > 0)
-				LoadCategory(0);
+			// Tentar aplicar config se já estiver disponível
+			EnsureVirtualStoreConfigApplied();
+			
+			// Se ainda está aguardando config, os datasets serão carregados quando a config chegar
+			if (m_WaitingVirtualStoreConfig && (!m_VirtualStoreSetupModes || m_VirtualStoreSetupModes.Count() == 0))
+			{
+				Print("[AskalStore] ⏳ Aguardando Virtual Store config antes de carregar datasets...");
+				Print("[AskalStore] ⏳ Os datasets serão carregados quando a config chegar.");
+			}
+			else
+			{
+				Print("[AskalStore] 🔄 Carregando datasets do Core Database (Virtual Store config aplicada)...");
+				LoadDatasetsFromCore();
+				
+				// Carregar primeira categoria e mostrar itens
+				if (m_Datasets.Count() > 0)
+				{
+					LoadDataset(0);
+					if (m_Categories.Count() > 0)
+						LoadCategory(0);
+				}
+				else
+				{
+					Print("[AskalStore] ⚠️ Nenhum dataset encontrado no Core Database!");
+				}
+			}
 		}
 		else
 		{
-			Print("[AskalStore] ⚠️ Nenhum dataset encontrado no Core Database!");
+			Print("[AskalStore] 🔄 Carregando datasets do Core Database...");
+			LoadDatasetsFromCore();
+			
+			// Carregar primeira categoria e mostrar itens
+			if (m_Datasets.Count() > 0)
+			{
+				LoadDataset(0);
+				if (m_Categories.Count() > 0)
+					LoadCategory(0);
+			}
+			else
+			{
+				Print("[AskalStore] ⚠️ Nenhum dataset encontrado no Core Database!");
+			}
 		}
 		
 		// Escanear inventário do player
@@ -928,80 +1026,356 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		return categoryID;
 	}
 	
+	// Normalizar chave do SetupItems: adicionar prefixos CAT_ ou DS_ se necessário
+	// Prioridade: Item individual > Categoria > Dataset
+	// Categorias geralmente começam com número (ex: "2_Drinks")
+	// Datasets geralmente têm formato específico ou começam com letras
+	// "ALL" permanece como está
+	string NormalizeSetupItemKey(string key)
+	{
+		if (!key || key == "")
+			return key;
+		
+		// "ALL" permanece como está
+		if (key == "ALL")
+			return key;
+		
+		// Se já tem prefixo, retornar como está
+		if (key.IndexOf("CAT_") == 0 || key.IndexOf("DS_") == 0)
+			return key;
+		
+		// Verificar se começa com número seguido de underscore (categoria ou dataset)
+		// Exemplos de categoria: "2_Drinks", "1_Food"
+		// Exemplos de dataset: "14_Vehicles", "13_Collectibles"
+		// Padrão: número + underscore + texto
+		bool startsWithNumberUnderscore = false;
+		string firstChar = "";
+		string secondChar = "";
+		
+		if (key.Length() > 2)
+		{
+			firstChar = key.Substring(0, 1);
+			secondChar = key.Substring(1, 1);
+			
+			// Verificar se começa com número (0-9) seguido de underscore
+			bool isDigit = false;
+			if (firstChar == "0")
+				isDigit = true;
+			else if (firstChar == "1")
+				isDigit = true;
+			else if (firstChar == "2")
+				isDigit = true;
+			else if (firstChar == "3")
+				isDigit = true;
+			else if (firstChar == "4")
+				isDigit = true;
+			else if (firstChar == "5")
+				isDigit = true;
+			else if (firstChar == "6")
+				isDigit = true;
+			else if (firstChar == "7")
+				isDigit = true;
+			else if (firstChar == "8")
+				isDigit = true;
+			else if (firstChar == "9")
+				isDigit = true;
+			
+			if (isDigit && secondChar == "_")
+			{
+				startsWithNumberUnderscore = true;
+			}
+		}
+		
+		// Se começa com número + underscore, pode ser categoria ou dataset
+		// Por padrão, tratamos como categoria (mais comum)
+		// Se não for encontrado como categoria, será tratado como dataset depois
+		if (startsWithNumberUnderscore)
+		{
+			return "CAT_" + key;
+		}
+		
+		// Verificar se é item individual (classname)
+		// Items individuais geralmente começam com letra e podem ou não ter underscore
+		// Se não começa com número + underscore, provavelmente é item individual
+		bool hasUnderscore = (key.IndexOf("_") != -1);
+		
+		if (!hasUnderscore)
+		{
+			// Provavelmente é item individual (classname), retornar como está
+			return key;
+		}
+		
+		// Se tem underscore mas não começa com número + underscore, é item individual
+		// Exemplos: "huntingbag", "powderedmilk", "tunacan"
+		return key;
+	}
+	
+	// Obter o map de SetupItems correto (trader ou virtual store)
+	map<string, int> GetSetupItemsMap()
+	{
+		// Prioridade: Trader > Virtual Store
+		if (m_TraderSetupItems && m_TraderSetupItems.Count() > 0)
+			return m_TraderSetupItems;
+		
+		if (m_VirtualStoreSetupModes && m_VirtualStoreSetupModes.Count() > 0)
+			return m_VirtualStoreSetupModes;
+		
+		return null;
+	}
+	
 	int GetDatasetMode(string datasetID)
 	{
-		if (!m_TraderSetupItems || m_TraderSetupItems.Count() == 0)
+		Print("[AskalStore] 🔍 GetDatasetMode: Verificando dataset " + datasetID);
+		
+		map<string, int> setupItems = GetSetupItemsMap();
+		if (!setupItems || setupItems.Count() == 0)
 		{
+			Print("[AskalStore] ⚠️ GetDatasetMode: SetupItems está vazio ou NULL - retornando 3 (tudo disponível)");
 			// Sem filtros, tudo disponível (modo 3 = buy and sell)
 			return 3;
 		}
 		
+		Print("[AskalStore] 🔍 GetDatasetMode: SetupItems tem " + setupItems.Count() + " entradas");
+		
+		// Debug: listar todas as chaves do SetupItems
+		for (int i = 0; i < setupItems.Count(); i++)
+		{
+			string key = setupItems.GetKey(i);
+			int value = setupItems.GetElement(i);
+			Print("[AskalStore]   📦 SetupItem[" + i + "]: " + key + " = " + value);
+		}
+		
 		// Normalizar ID
 		string normalizedID = NormalizeDatasetID(datasetID);
+		Print("[AskalStore] 🔍 GetDatasetMode: Dataset normalizado: " + datasetID + " → " + normalizedID);
 		
 		// Verificar se há "ALL": 3 (todos os datasets disponíveis)
 		int allMode = -1;
-		if (m_TraderSetupItems.Contains("ALL"))
+		if (setupItems.Contains("ALL"))
 		{
-			allMode = m_TraderSetupItems.Get("ALL");
+			allMode = setupItems.Get("ALL");
+			Print("[AskalStore] 🔍 GetDatasetMode: ALL encontrado = " + allMode);
 		}
 		
-		// Verificar se há configuração específica para este dataset (DS_*)
-		if (m_TraderSetupItems.Contains(normalizedID))
+		// Verificar se há configuração específica para este dataset (DS_*) - PRIORIDADE 1
+		if (setupItems.Contains(normalizedID))
 		{
-			return m_TraderSetupItems.Get(normalizedID);
+			int datasetMode = setupItems.Get(normalizedID);
+			Print("[AskalStore] ✅ GetDatasetMode: Dataset específico encontrado - " + normalizedID + " = " + datasetMode);
+			return datasetMode;
 		}
 		
-		// Se "ALL" está definido, usar esse modo
+		// Fallback: verificar dataset sem prefixo (compatibilidade com configurações antigas)
+		if (setupItems.Contains(datasetID))
+		{
+			int datasetModeFallback = setupItems.Get(datasetID);
+			Print("[AskalStore] ✅ GetDatasetMode: Dataset sem prefixo encontrado - " + datasetID + " = " + datasetModeFallback);
+			return datasetModeFallback;
+		}
+		
+		// PRIORIDADE 2: Verificar se alguma categoria deste dataset está configurada
+		// Se uma categoria do dataset está configurada, o dataset deve estar disponível
+		Print("[AskalStore] 🔍 GetDatasetMode: Verificando categorias do dataset " + normalizedID);
+		AskalDatabaseClientCache cache = AskalDatabaseClientCache.GetInstance();
+		if (cache)
+		{
+			Print("[AskalStore] 🔍 GetDatasetMode: Cache obtido, buscando dataset " + datasetID);
+			map<string, ref AskalDatasetSyncData> datasets = cache.GetDatasets();
+			if (datasets && datasets.Contains(datasetID))
+			{
+				Print("[AskalStore] 🔍 GetDatasetMode: Dataset " + datasetID + " encontrado no cache");
+				AskalDatasetSyncData dataset = datasets.Get(datasetID);
+				if (dataset && dataset.Categories)
+				{
+					Print("[AskalStore] 🔍 GetDatasetMode: Dataset tem " + dataset.Categories.Count() + " categorias");
+					// Verificar cada categoria do dataset
+					for (int catIdx = 0; catIdx < dataset.Categories.Count(); catIdx++)
+					{
+						string categoryID = dataset.Categories.GetKey(catIdx);
+						string normalizedCategoryID = NormalizeCategoryID(categoryID);
+						Print("[AskalStore] 🔍 GetDatasetMode: Verificando categoria " + categoryID + " (normalizado: " + normalizedCategoryID + ")");
+						
+						// Verificar se esta categoria está no SetupItems
+						if (setupItems.Contains(normalizedCategoryID))
+						{
+							int categoryMode = setupItems.Get(normalizedCategoryID);
+							Print("[AskalStore] ✅ GetDatasetMode: Categoria do dataset encontrada - " + normalizedCategoryID + " = " + categoryMode + " (dataset: " + normalizedID + ")");
+							// Retornar o modo da categoria (ou o mais permissivo se houver múltiplas)
+							// Por enquanto, retornar o primeiro encontrado
+							return categoryMode;
+						}
+						
+						// Fallback: verificar categoria sem prefixo
+						if (setupItems.Contains(categoryID))
+						{
+							int categoryModeFallback = setupItems.Get(categoryID);
+							Print("[AskalStore] ✅ GetDatasetMode: Categoria do dataset (sem prefixo) encontrada - " + categoryID + " = " + categoryModeFallback + " (dataset: " + normalizedID + ")");
+							return categoryModeFallback;
+						}
+						
+						Print("[AskalStore] 🔍 GetDatasetMode: Categoria " + normalizedCategoryID + " não encontrada no SetupItems");
+					}
+					Print("[AskalStore] 🔍 GetDatasetMode: Nenhuma categoria do dataset " + normalizedID + " está configurada no SetupItems");
+					
+					// FALLBACK: Verificar se há uma chave no SetupItems que corresponde ao dataset
+					// Exemplo: "2_Drinks" no JSON foi normalizado como "CAT_2_Drinks", mas deveria ser "DS_2_Drinks"
+					// Se não encontramos categorias, verificar se há uma chave que corresponde ao nome do dataset
+					Print("[AskalStore] 🔍 GetDatasetMode: Executando fallback para dataset " + normalizedID);
+					string datasetNameWithoutPrefix = datasetID;
+					if (datasetNameWithoutPrefix.IndexOf("DS_") == 0)
+					{
+						int prefixLength = datasetNameWithoutPrefix.Length() - 3;
+						datasetNameWithoutPrefix = datasetNameWithoutPrefix.Substring(3, prefixLength); // Remove "DS_"
+						Print("[AskalStore] 🔍 GetDatasetMode: Dataset sem prefixo: " + datasetNameWithoutPrefix);
+					}
+					
+					// Verificar se foi normalizado incorretamente como categoria (ex: "CAT_2_Drinks" quando deveria ser "DS_2_Drinks")
+					string categoryKey = "CAT_" + datasetNameWithoutPrefix;
+					Print("[AskalStore] 🔍 GetDatasetMode: Verificando chave de categoria: " + categoryKey);
+					if (setupItems.Contains(categoryKey))
+					{
+						int datasetModeFromCategory = setupItems.Get(categoryKey);
+						Print("[AskalStore] ✅ GetDatasetMode: Dataset encontrado como categoria (normalização incorreta corrigida) - " + categoryKey + " = " + datasetModeFromCategory + " (dataset: " + normalizedID + ")");
+						return datasetModeFromCategory;
+					}
+					else
+					{
+						Print("[AskalStore] 🔍 GetDatasetMode: Chave " + categoryKey + " não encontrada no SetupItems");
+					}
+					
+					// Verificar também se há uma chave sem prefixo que corresponde ao dataset
+					Print("[AskalStore] 🔍 GetDatasetMode: Verificando chave sem prefixo: " + datasetNameWithoutPrefix);
+					if (setupItems.Contains(datasetNameWithoutPrefix))
+					{
+						int datasetModeFromFallback = setupItems.Get(datasetNameWithoutPrefix);
+						Print("[AskalStore] ✅ GetDatasetMode: Dataset encontrado sem prefixo - " + datasetNameWithoutPrefix + " = " + datasetModeFromFallback + " (dataset: " + normalizedID + ")");
+						return datasetModeFromFallback;
+					}
+					else
+					{
+						Print("[AskalStore] 🔍 GetDatasetMode: Chave " + datasetNameWithoutPrefix + " não encontrada no SetupItems");
+					}
+				}
+				else
+				{
+					Print("[AskalStore] ⚠️ GetDatasetMode: Dataset " + datasetID + " não tem Categories ou dataset é NULL");
+				}
+			}
+			else
+			{
+				int datasetsCount = 0;
+				if (datasets)
+					datasetsCount = datasets.Count();
+				Print("[AskalStore] ⚠️ GetDatasetMode: Dataset " + datasetID + " não encontrado no cache (datasets: " + datasetsCount + ")");
+			}
+		}
+		else
+		{
+			Print("[AskalStore] ⚠️ GetDatasetMode: Cache não disponível");
+		}
+		
+		// Se "ALL" está definido, usar esse modo - PRIORIDADE 3
 		if (allMode >= 0)
 		{
+			Print("[AskalStore] 🔍 GetDatasetMode: Usando modo ALL = " + allMode);
 			return allMode;
 		}
 		
 		// Sem configuração, não disponível
+		Print("[AskalStore] ❌ GetDatasetMode: Nenhuma configuração encontrada para " + datasetID + " (normalizado: " + normalizedID + ") - retornando -1");
 		return -1;
 	}
 	
 	// Verificar se uma categoria está disponível e retornar o modo
 	int GetCategoryMode(string datasetID, string categoryID)
 	{
-		if (!m_TraderSetupItems || m_TraderSetupItems.Count() == 0)
+		Print("[AskalStore] 🔍 GetCategoryMode: Verificando categoria " + categoryID + " (dataset: " + datasetID + ")");
+		
+		map<string, int> setupItems = GetSetupItemsMap();
+		if (!setupItems || setupItems.Count() == 0)
 		{
+			Print("[AskalStore] ⚠️ GetCategoryMode: SetupItems está vazio - retornando 3 (tudo disponível)");
 			return 3; // Sem filtros, tudo disponível
 		}
 		
 		// Normalizar IDs
 		string normalizedDatasetID = NormalizeDatasetID(datasetID);
 		string normalizedCategoryID = NormalizeCategoryID(categoryID);
+		Print("[AskalStore] 🔍 GetCategoryMode: Categoria normalizada: " + categoryID + " → " + normalizedCategoryID);
 		
-		// Verificar categoria específica (CAT_*)
-		if (m_TraderSetupItems.Contains(normalizedCategoryID))
+		// Verificar categoria específica (CAT_*) - PRIORIDADE 1
+		if (setupItems.Contains(normalizedCategoryID))
 		{
-			return m_TraderSetupItems.Get(normalizedCategoryID);
+			int categoryMode = setupItems.Get(normalizedCategoryID);
+			Print("[AskalStore] ✅ GetCategoryMode: Categoria encontrada - " + normalizedCategoryID + " = " + categoryMode);
+			return categoryMode;
 		}
 		
-		// Verificar dataset (DS_*)
-		int datasetMode = GetDatasetMode(normalizedDatasetID);
-		if (datasetMode >= 0)
+		// Fallback: verificar categoria sem prefixo (compatibilidade com configurações antigas)
+		if (setupItems.Contains(categoryID))
 		{
+			int categoryModeFallback = setupItems.Get(categoryID);
+			Print("[AskalStore] ✅ GetCategoryMode: Categoria sem prefixo encontrada - " + categoryID + " = " + categoryModeFallback);
+			return categoryModeFallback;
+		}
+		
+		// Verificar dataset (DS_*) - PRIORIDADE 2
+		// IMPORTANTE: Só usar o modo do dataset se o dataset estiver EXPLICITAMENTE configurado
+		// Se apenas categorias específicas estão configuradas, NÃO usar o modo do dataset
+		// Isso permite que apenas categorias específicas apareçam quando configuradas
+		if (setupItems.Contains(normalizedDatasetID))
+		{
+			int datasetMode = setupItems.Get(normalizedDatasetID);
+			Print("[AskalStore] 🔍 GetCategoryMode: Dataset explicitamente configurado - " + normalizedDatasetID + " = " + datasetMode);
 			return datasetMode;
 		}
 		
-		// Verificar "ALL"
-		if (m_TraderSetupItems.Contains("ALL"))
+		// Fallback: verificar dataset sem prefixo
+		string datasetNameWithoutPrefix = normalizedDatasetID;
+		if (datasetNameWithoutPrefix.IndexOf("DS_") == 0)
 		{
-			return m_TraderSetupItems.Get("ALL");
+			int prefixLength = datasetNameWithoutPrefix.Length() - 3;
+			datasetNameWithoutPrefix = datasetNameWithoutPrefix.Substring(3, prefixLength);
+		}
+		if (setupItems.Contains(datasetNameWithoutPrefix))
+		{
+			int datasetModeFallback = setupItems.Get(datasetNameWithoutPrefix);
+			Print("[AskalStore] 🔍 GetCategoryMode: Dataset explicitamente configurado (sem prefixo) - " + datasetNameWithoutPrefix + " = " + datasetModeFallback);
+			return datasetModeFallback;
 		}
 		
+		// Se o dataset NÃO está explicitamente configurado, NÃO usar o modo do dataset
+		// Isso garante que apenas categorias específicas apareçam quando configuradas
+		Print("[AskalStore] 🔍 GetCategoryMode: Dataset não está explicitamente configurado, não usando modo do dataset");
+		
+		// Verificar "ALL" - PRIORIDADE 3
+		if (setupItems.Contains("ALL"))
+		{
+			int allMode = setupItems.Get("ALL");
+			Print("[AskalStore] 🔍 GetCategoryMode: Usando modo ALL = " + allMode);
+			return allMode;
+		}
+		
+		Print("[AskalStore] ❌ GetCategoryMode: Nenhuma configuração encontrada para categoria " + categoryID + " (normalizado: " + normalizedCategoryID + ") - retornando -1");
 		return -1;
 	}
 	
 	// Verificar se um item está disponível e retornar o modo
 	int GetItemMode(string datasetID, string categoryID, string itemClassName)
 	{
-		if (!m_TraderSetupItems || m_TraderSetupItems.Count() == 0)
+		// Verificar se há trader configurado
+		map<string, int> setupItems = m_TraderSetupItems;
+		if (!setupItems || setupItems.Count() == 0)
 		{
-			return 3; // Sem filtros, tudo disponível
+			// Se não há trader, verificar Virtual Store
+			if (m_VirtualStoreSetupModes && m_VirtualStoreSetupModes.Count() > 0)
+			{
+				setupItems = m_VirtualStoreSetupModes;
+			}
+			else
+			{
+				return 3; // Sem filtros, tudo disponível
+			}
 		}
 		
 		// Normalizar IDs
@@ -1009,9 +1383,9 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		string normalizedCategoryID = NormalizeCategoryID(categoryID);
 		
 		// Verificar item específico (className exato) - PRIORIDADE 1
-		if (m_TraderSetupItems.Contains(itemClassName))
+		if (setupItems.Contains(itemClassName))
 		{
-			int itemMode = m_TraderSetupItems.Get(itemClassName);
+			int itemMode = setupItems.Get(itemClassName);
 			Print("[AskalStore] 🔍 GetItemMode: Item específico encontrado - " + itemClassName + " = " + itemMode);
 			return itemMode;
 		}
@@ -1033,9 +1407,9 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		}
 		
 		// Verificar "ALL" - PRIORIDADE 4
-		if (m_TraderSetupItems.Contains("ALL"))
+		if (setupItems.Contains("ALL"))
 		{
-			int allMode = m_TraderSetupItems.Get("ALL");
+			int allMode = setupItems.Get("ALL");
 			Print("[AskalStore] 🔍 GetItemMode: ALL encontrado = " + allMode);
 			return allMode;
 		}
@@ -1047,13 +1421,129 @@ protected string m_LastVirtualStoreConfigSignature = "";
 	// Verificar se um dataset está disponível (não disabled)
 	bool IsDatasetAvailable(string datasetID)
 	{
-		return GetDatasetMode(datasetID) >= 0;
+		// Primeiro, verificar se o dataset está explicitamente configurado
+		int mode = GetDatasetMode(datasetID);
+		if (mode >= 0)
+		{
+			Print("[AskalStore] 🔍 IsDatasetAvailable: " + datasetID + " → modo=" + mode + " → disponível=true");
+			return true;
+		}
+		
+		// Se o dataset não está explicitamente configurado, verificar se há algum item ou categoria no dataset que está configurado
+		// Isso permite que itens individuais ou categorias apareçam mesmo que o dataset não esteja explicitamente configurado
+		map<string, int> setupItems = GetSetupItemsMap();
+		if (!setupItems || setupItems.Count() == 0)
+		{
+			Print("[AskalStore] 🔍 IsDatasetAvailable: " + datasetID + " → modo=-1 → disponível=false (SetupItems vazio)");
+			return false;
+		}
+		
+		// Verificar se há alguma categoria ou item no dataset que está configurado no SetupItems
+		AskalDatabaseClientCache cache = AskalDatabaseClientCache.GetInstance();
+		if (!cache)
+		{
+			Print("[AskalStore] 🔍 IsDatasetAvailable: " + datasetID + " → modo=-1 → disponível=false (cache não disponível)");
+			return false;
+		}
+		
+		AskalDatasetSyncData dataset = cache.GetDataset(datasetID);
+		if (!dataset || !dataset.Categories)
+		{
+			Print("[AskalStore] 🔍 IsDatasetAvailable: " + datasetID + " → modo=-1 → disponível=false (dataset não encontrado)");
+			return false;
+		}
+		
+		// Verificar se alguma categoria do dataset está configurada
+		for (int catIdx = 0; catIdx < dataset.Categories.Count(); catIdx++)
+		{
+			string categoryID = dataset.Categories.GetKey(catIdx);
+			if (categoryID)
+			{
+				string normalizedCategoryID = NormalizeCategoryID(categoryID);
+				if (setupItems.Contains(normalizedCategoryID) || setupItems.Contains(categoryID))
+				{
+					Print("[AskalStore] ✅ IsDatasetAvailable: Dataset " + datasetID + " está disponível porque categoria " + categoryID + " está configurada");
+					return true;
+				}
+				
+				// Verificar se algum item da categoria está configurado
+				AskalCategorySyncData category = dataset.Categories.Get(categoryID);
+				if (category && category.Items)
+				{
+					for (int itemIdx = 0; itemIdx < category.Items.Count(); itemIdx++)
+					{
+						string itemClassName = category.Items.GetKey(itemIdx);
+						if (itemClassName && setupItems.Contains(itemClassName))
+						{
+							int itemMode = setupItems.Get(itemClassName);
+							if (itemMode >= 0)
+							{
+								Print("[AskalStore] ✅ IsDatasetAvailable: Dataset " + datasetID + " está disponível porque item " + itemClassName + " está configurado (modo: " + itemMode + ")");
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		Print("[AskalStore] 🔍 IsDatasetAvailable: " + datasetID + " → modo=-1 → disponível=false (nenhuma categoria/item configurado)");
+		return false;
 	}
 	
 	// Verificar se uma categoria está disponível
 	bool IsCategoryAvailable(string datasetID, string categoryID)
 	{
-		return GetCategoryMode(datasetID, categoryID) >= 0;
+		// Primeiro, verificar se a categoria está explicitamente configurada
+		int categoryMode = GetCategoryMode(datasetID, categoryID);
+		if (categoryMode >= 0)
+		{
+			return true;
+		}
+		
+		// Se a categoria não está explicitamente configurada, verificar se há algum item na categoria que está configurado
+		// Isso permite que itens individuais apareçam mesmo que a categoria não esteja explicitamente configurada
+		map<string, int> setupItems = GetSetupItemsMap();
+		if (!setupItems || setupItems.Count() == 0)
+		{
+			return false;
+		}
+		
+		// Verificar se há algum item na categoria que está configurado no SetupItems
+		AskalDatabaseClientCache cache = AskalDatabaseClientCache.GetInstance();
+		if (!cache)
+		{
+			return false;
+		}
+		
+		AskalDatasetSyncData dataset = cache.GetDataset(datasetID);
+		if (!dataset)
+		{
+			return false;
+		}
+		
+		AskalCategorySyncData category = dataset.Categories.Get(categoryID);
+		if (!category || !category.Items)
+		{
+			return false;
+		}
+		
+		// Verificar se algum item da categoria está configurado no SetupItems
+		for (int itemIdx = 0; itemIdx < category.Items.Count(); itemIdx++)
+		{
+			string itemClassName = category.Items.GetKey(itemIdx);
+			if (itemClassName && setupItems.Contains(itemClassName))
+			{
+				int itemMode = setupItems.Get(itemClassName);
+				if (itemMode >= 0)
+				{
+					Print("[AskalStore] ✅ IsCategoryAvailable: Categoria " + categoryID + " está disponível porque item " + itemClassName + " está configurado (modo: " + itemMode + ")");
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 	
 	// Verificar se um item está disponível
@@ -1071,6 +1561,23 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		Print("[AskalStore] ========================================");
 		Print("[AskalStore] LoadDatasetsFromCore() - CACHE SIMPLIFICADO");
 		
+		// Debug: verificar SetupItems antes de filtrar
+		Print("[AskalStore] 🔍 LoadDatasetsFromCore: Verificando SetupItems...");
+		if (!m_TraderSetupItems || m_TraderSetupItems.Count() == 0)
+		{
+			Print("[AskalStore] ⚠️ LoadDatasetsFromCore: m_TraderSetupItems está vazio ou NULL!");
+		}
+		else
+		{
+			Print("[AskalStore] ✅ LoadDatasetsFromCore: m_TraderSetupItems tem " + m_TraderSetupItems.Count() + " entradas");
+			for (int setupIdx = 0; setupIdx < m_TraderSetupItems.Count(); setupIdx++)
+			{
+				string key = m_TraderSetupItems.GetKey(setupIdx);
+				int value = m_TraderSetupItems.GetElement(setupIdx);
+				Print("[AskalStore]   📦 SetupItem[" + setupIdx + "]: " + key + " = " + value);
+			}
+		}
+
 		m_Datasets.Clear();
 		
 		// Verificar se está sincronizado
@@ -1305,6 +1812,22 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		}
 		
 		// Filtrar itens baseado no SetupItems do trader
+		Print("[AskalStore] 🔍 LoadCategory: Filtrando " + orderedItemIDs.Count() + " itens da categoria " + categoryID + " (dataset: " + datasetID + ")");
+		
+		int setupItemsCount = 0;
+		if (m_TraderSetupItems)
+			setupItemsCount = m_TraderSetupItems.Count();
+		Print("[AskalStore] 🔍 LoadCategory: SetupItems tem " + setupItemsCount + " entradas");
+		
+		// Se há um trader configurado mas SetupItems está vazio, não carregar itens
+		// (pode ser que o SetupItems ainda não foi carregado)
+		if (m_CurrentTraderName != "" && setupItemsCount == 0)
+		{
+			Print("[AskalStore] ⚠️ LoadCategory: Trader configurado (" + m_CurrentTraderName + ") mas SetupItems está vazio - aguardando carregamento");
+			Print("[AskalStore] ⚠️ LoadCategory: Itens não serão carregados até SetupItems ser recebido");
+			return;
+		}
+		
 		for (int orderedIdx = 0; orderedIdx < orderedItemIDs.Count(); orderedIdx++)
 		{
 			string classNameLoop = orderedItemIDs.Get(orderedIdx);
@@ -1312,6 +1835,7 @@ protected string m_LastVirtualStoreConfigSignature = "";
 			// Verificar se o item está disponível para este trader
 			// Modo -1 = disabled (não aparece), modo 0+ = aparece (mas botões podem estar desabilitados)
 			int itemMode = GetItemMode(datasetID, categoryID, classNameLoop);
+			Print("[AskalStore] 🔍 LoadCategory: Item " + classNameLoop + " → modo=" + itemMode);
 			if (itemMode < 0) // Modo -1 = disabled, não aparece na lista
 			{
 				Print("[AskalStore] 🔒 Item filtrado (disabled): " + classNameLoop);
@@ -1834,12 +2358,34 @@ protected string m_LastVirtualStoreConfigSignature = "";
 				EntityAI previewItem = EntityAI.Cast(SpawnTemporaryObject(itemData.GetClassName()));
 				if (previewItem)
 				{
-					ApplyDefaultAttachmentsToEntity(previewItem, itemData.GetDefaultAttachments());
-					cardPreview.SetItem(previewItem);
-					cardPreview.SetModelPosition(Vector(0, 0, 0.5));
-					cardPreview.SetModelOrientation(Vector(0, 0, 0));
-					cardPreview.SetView(previewItem.GetViewIndex());
-					cardPreview.Show(true);
+					array<string> defaultAttachments = itemData.GetDefaultAttachments();
+					Print("[AskalStore] 🎨 Aplicando attachments ao preview do card: " + itemData.GetClassName() + " | Count: " + defaultAttachments.Count().ToString());
+					if (defaultAttachments && defaultAttachments.Count() > 0)
+					{
+						for (int attIdx = 0; attIdx < defaultAttachments.Count(); attIdx++)
+						{
+							Print("[AskalStore]   - Preview attachment " + attIdx.ToString() + ": " + defaultAttachments.Get(attIdx));
+						}
+					}
+					ApplyDefaultAttachmentsToEntity(previewItem, defaultAttachments);
+					
+					// Para veículos, aguardar um pouco antes de definir o preview para garantir que attachments sejam aplicados
+					CarScript carPreview = CarScript.Cast(previewItem);
+					BoatScript boatPreview = BoatScript.Cast(previewItem);
+					if (carPreview || boatPreview)
+					{
+						// Delay para veículos para garantir que attachments sejam aplicados primeiro
+						GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(SetVehicleCardPreview, 500, false, cardPreview, previewItem);
+					}
+					else
+					{
+						cardPreview.SetItem(previewItem);
+						cardPreview.SetModelPosition(Vector(0, 0, 0.5));
+						cardPreview.SetModelOrientation(Vector(0, 0, 0));
+						cardPreview.SetView(previewItem.GetViewIndex());
+						cardPreview.Show(true);
+					}
+					
 					m_PreviewItems.Insert(previewItem);
 					Print("[AskalStore] ✅ Preview 3D criado no card: " + itemData.GetClassName());
 										}
@@ -1930,6 +2476,17 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		{
 			Print("[AskalStore] ⚠️ m_PlayerInventoryItems é NULL, nada para renderizar");
 			return;
+		}
+		
+		// Solicitar health dos itens apenas quando necessário (ao visualizar itens para venda)
+		// Isso evita RPCs desnecessários ao abrir/fechar o menu
+		if (GetGame().IsMultiplayer() && GetGame().IsClient())
+		{
+			// Só solicitar se ainda não foi solicitado ou se o health map está vazio
+			if (!m_ItemHealthMap || m_ItemHealthMap.Count() == 0)
+			{
+				RequestInventoryHealth();
+			}
 		}
 		
 		if (!m_InventoryDisplayItems)
@@ -2047,6 +2604,7 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		if (!className || className == "")
 			return false;
 		
+		// Verificar se o item existe no cache
 		string normalizedClass = NormalizeClassName(className);
 		AskalDatabaseClientCache cache = AskalDatabaseClientCache.GetInstance();
 		if (!cache)
@@ -2055,7 +2613,48 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		AskalItemSyncData syncData = cache.FindItem(className);
 		if (!syncData && normalizedClass != className)
 			syncData = cache.FindItem(normalizedClass);
-		return syncData != NULL;
+		
+		// Se o item não está no cache (não está configurado em nenhum dataset), não pode ser vendido
+		if (!syncData)
+		{
+			Print("[AskalStore] 🔒 IsItemSellableByTrader: Item " + className + " não está configurado em nenhum dataset");
+			return false;
+		}
+		
+		// Obter dataset e categoria do item
+		string datasetID = "";
+		string categoryID = "";
+		ResolveDatasetAndCategoryForClass(className, datasetID, categoryID);
+		
+		// Se não conseguiu resolver dataset/categoria, o item não está configurado corretamente
+		if (datasetID == "" || categoryID == "")
+		{
+			Print("[AskalStore] 🔒 IsItemSellableByTrader: Item " + className + " não está configurado em nenhuma categoria");
+			return false;
+		}
+		
+		// Se há um trader configurado, verificar se o item pode ser vendido (modo 2 ou 3)
+		if (m_CurrentTraderName != "" && m_TraderSetupItems && m_TraderSetupItems.Count() > 0)
+		{
+			// Verificar modo do item
+			int itemMode = GetItemMode(datasetID, categoryID, className);
+			if (itemMode < 0)
+			{
+				Print("[AskalStore] 🔒 IsItemSellableByTrader: Item " + className + " não está disponível para venda (modo: " + itemMode + ")");
+				return false;
+			}
+			
+			// Modo 2 = Sell Only, Modo 3 = Buy and Sell
+			// Modo 0 = Visible Only (não pode vender), Modo 1 = Buy Only (não pode vender)
+			bool canSell = (itemMode == 2 || itemMode == 3);
+			Print("[AskalStore] 🔍 IsItemSellableByTrader: Item " + className + " → modo=" + itemMode + " → podeVender=" + canSell);
+			return canSell;
+		}
+		
+		// Sem trader configurado, mas item está configurado - ainda assim bloquear por segurança
+		// O servidor fará a validação final, mas no cliente também bloqueamos para melhor UX
+		Print("[AskalStore] 🔒 IsItemSellableByTrader: Item " + className + " não pode ser vendido sem trader configurado");
+		return false;
 	}
 	
 	protected void CopyInventoryAttachmentsToPreview(EntityAI source, EntityAI preview)
@@ -2175,9 +2774,63 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		// Obter health do item (do servidor via RPC) ou usar 100% como fallback
 		float healthPercent = GetItemHealth(item.GetType());
 		
-		// Estimativa base: preço base * percentual de venda * proporção de health
-		// Preço proporcional à integridade (1% health = 1% do valor)
-		float estimatedPrice = basePrice * (sellPercent / 100.0) * (healthPercent / 100.0);
+		// Verificar se item tem quantidade (STACKABLE ou QUANTIFIABLE)
+		ItemBase itemBase = ItemBase.Cast(item);
+		Magazine mag = Magazine.Cast(item);
+		float estimatedPrice = 0.0;
+		
+		if (itemBase && itemBase.HasQuantity() && !mag) // Não processar se já é magazine
+		{
+			float currentQty = itemBase.GetQuantity();
+			float maxQty = itemBase.GetQuantityMax();
+			
+			if (maxQty > 0 && currentQty > 0)
+			{
+				// Detectar se é QUANTIFIABLE (itens como saco de arroz, carnes, etc)
+				AskalItemQuantityType qtyType = AskalItemQuantityHelper.DetectQuantityType(item.GetType());
+				bool isQuantifiable = (qtyType == AskalItemQuantityType.QUANTIFIABLE);
+				
+				if (isQuantifiable)
+				{
+					// QUANTIFIABLE: basePrice é o preço de um item completo (100%)
+					// Calcular preço proporcional à quantidade atual (currentQty / maxQty)
+					// Exemplo: saco de arroz com 50% = 50% do preço base
+					float quantityPercent = (currentQty / maxQty) * 100.0;
+					
+					// Preço base proporcional à quantidade = basePrice * (currentQty / maxQty)
+					float proportionalBasePrice = basePrice * (currentQty / maxQty);
+					
+					// Preço de venda = preço proporcional * sellPercent * health * sellCoeff
+					float proportionalSellPrice = proportionalBasePrice * (sellPercent / 100.0);
+					estimatedPrice = proportionalSellPrice * (healthPercent / 100.0);
+				}
+				else
+				{
+					// STACKABLE: basePrice é o preço de uma pilha completa (maxQty unidades)
+					// Preço unitário = basePrice / maxQty
+					float unitPrice = basePrice / maxQty;
+					
+					// Preço base de venda por unidade = unitPrice * sellPercent
+					float unitSellPrice = unitPrice * (sellPercent / 100.0);
+					
+					// Preço total = quantidade atual * preço unitário de venda * health
+					float totalUnitPrice = currentQty * unitSellPrice;
+					estimatedPrice = totalUnitPrice * (healthPercent / 100.0);
+				}
+			}
+			else
+			{
+				// Quantidade inválida, usar cálculo padrão
+				estimatedPrice = basePrice * (sellPercent / 100.0) * (healthPercent / 100.0);
+			}
+		}
+		else
+		{
+			// Item sem quantidade ou magazine: usar cálculo padrão
+			// Estimativa base: preço base * percentual de venda * proporção de health
+			// Preço proporcional à integridade (1% health = 1% do valor)
+			estimatedPrice = basePrice * (sellPercent / 100.0) * (healthPercent / 100.0);
+		}
 		
 		// Tenta estimar attachments de forma simplificada (sem recursão que usa GetHealth01)
 		if (item.GetInventory())
@@ -2677,7 +3330,16 @@ protected string m_LastVirtualStoreConfigSignature = "";
 			EntityAI itemEntity = EntityAI.Cast(SpawnTemporaryObject(itemData.GetClassName()));
 			if (itemEntity)
 			{
-				ApplyDefaultAttachmentsToEntity(itemEntity, itemData.GetDefaultAttachments());
+				array<string> defaultAttachments = itemData.GetDefaultAttachments();
+				Print("[AskalStore] 🎨 Aplicando attachments ao preview selecionado: " + itemData.GetClassName() + " | Count: " + defaultAttachments.Count().ToString());
+				if (defaultAttachments && defaultAttachments.Count() > 0)
+				{
+					for (int attIdx = 0; attIdx < defaultAttachments.Count(); attIdx++)
+					{
+						Print("[AskalStore]   - Preview attachment " + attIdx.ToString() + ": " + defaultAttachments.Get(attIdx));
+					}
+				}
+				ApplyDefaultAttachmentsToEntity(itemEntity, defaultAttachments);
 				UpdateSelectedItemPreview(itemEntity);
 				m_PreviewItems.Insert(itemEntity);
 			}
@@ -3664,8 +4326,23 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			// Fechar menu
 			if (w == m_CloseButton)
 			{
-				Print("[AskalStore] Fechando menu...");
+				Print("[AskalStore] ========================================");
+				Print("[AskalStore] Botão de fechar pressionado - fechando menu");
 				Close();
+				
+				// Limpar referência no MissionGameplay
+				MissionGameplay missionGP = MissionGameplay.Cast(GetGame().GetMission());
+				if (missionGP)
+				{
+					missionGP.OnMenuClosed();
+					Print("[AskalStore] ✅ Referência limpa no MissionGameplay");
+				}
+				else
+				{
+					Print("[AskalStore] ⚠️ MissionGameplay não encontrado");
+				}
+				Print("[AskalStore] ========================================");
+				
 				return true;
 			}
 			
@@ -4611,16 +5288,20 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		
 		m_SelectedItemUnitPrice = price;
 		
-		// Para compras únicas (não batch), m_TransactionQuantity deve ser sempre 1
-		// O preço já foi ajustado por CalculateAdjustedPrice que incorpora a quantidade do slider
+		// Para compras únicas (não batch):
+		// - Se o item tem slider (MAGAZINE, STACKABLE, QUANTIFIABLE), o preço já foi ajustado pelo slider
+		//   e m_TransactionQuantity representa quantas unidades do item (com a quantidade do slider) comprar
+		// - Se o item não tem slider (NONE), m_TransactionQuantity representa quantas unidades comprar
 		int transactionQty = 1;
 		if (m_TransactionQuantity > 0 && m_TransactionQuantity <= 9999)
 			transactionQty = m_TransactionQuantity;
 		else
 			transactionQty = 1;
 		
+		// O preço já foi ajustado por CalculateAdjustedPrice que incorpora a quantidade do slider
+		// Agora multiplicamos pelo número de unidades (transactionQty)
 		int totalPrice = price * transactionQty;
-		Print("[AskalStore] 💰 Tentando comprar: " + itemClass + " | TransactionQty: " + transactionQty + " | Total: " + totalPrice + " " + currencyId);
+		Print("[AskalStore] 💰 Tentando comprar: " + itemClass + " | TransactionQty: " + transactionQty + " | Preço unitário (já ajustado pelo slider): " + price + " | Total: " + totalPrice + " " + currencyId);
 		
 		if (GetGame().IsClient())
 		{
@@ -4644,39 +5325,48 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			if (!steamId || steamId == "")
 				steamId = identity.GetId();
 			
-			float itemQuantity = -1;
-			int itemContent = 0;
-			
-			if (m_SliderQuantityType != AskalItemQuantityType.NONE)
-			{
-				switch (m_SliderQuantityType)
-				{
-					case AskalItemQuantityType.MAGAZINE:
-					{
-						itemQuantity = m_CurrentAmmoCount;
-						break;
-					}
-					case AskalItemQuantityType.STACKABLE:
-					{
-						itemQuantity = m_CurrentAmmoCount;
-						break;
-					}
-					case AskalItemQuantityType.QUANTIFIABLE:
-					{
-						itemQuantity = m_CurrentQuantityPercent;
-						itemContent = m_CurrentSelectedContent.ToInt();
-						break;
-					}
-				}
-			}
-			
+			// Enviar múltiplas requests se transactionQty > 1
+			// Cada request representa uma unidade do item com a quantidade do slider (se aplicável)
+			// O preço unitário já foi ajustado pelo slider, então cada request usa o preço unitário
 			string traderName = m_CurrentTraderName;
 			if (!traderName || traderName == "")
 				traderName = "";
 			
-			Param8<string, string, int, string, float, int, int, string> params = new Param8<string, string, int, string, float, int, int, string>(steamId, itemClass, totalPrice, currencyId, itemQuantity, m_SliderQuantityType, itemContent, traderName);
-			GetRPCManager().SendRPC("AskalMarketModule", "PurchaseItemRequest", params, true, identity, NULL);
-			Print("[AskalStore] 📤 RPC de compra enviado | ItemQty: " + itemQuantity + " | QtyType: " + m_SliderQuantityType + " | Content: " + itemContent + " | Trader: " + traderName);
+			for (int unitIdx = 0; unitIdx < transactionQty; unitIdx++)
+			{
+				float itemQuantity = -1;
+				int itemContent = 0;
+				int itemQuantityType = AskalItemQuantityType.NONE;
+				
+				if (m_SliderQuantityType != AskalItemQuantityType.NONE)
+				{
+					itemQuantityType = m_SliderQuantityType;
+					switch (m_SliderQuantityType)
+					{
+						case AskalItemQuantityType.MAGAZINE:
+						{
+							itemQuantity = m_CurrentAmmoCount;
+							break;
+						}
+						case AskalItemQuantityType.STACKABLE:
+						{
+							itemQuantity = m_CurrentAmmoCount;
+							break;
+						}
+						case AskalItemQuantityType.QUANTIFIABLE:
+						{
+							itemQuantity = m_CurrentQuantityPercent;
+							itemContent = m_CurrentSelectedContent.ToInt();
+							break;
+						}
+					}
+				}
+				
+				// Cada request usa o preço unitário (já ajustado pelo slider)
+				Param8<string, string, int, string, float, int, int, string> params = new Param8<string, string, int, string, float, int, int, string>(steamId, itemClass, price, currencyId, itemQuantity, itemQuantityType, itemContent, traderName);
+				GetRPCManager().SendRPC("AskalMarketModule", "PurchaseItemRequest", params, true, identity, NULL);
+				Print("[AskalStore] 📤 RPC de compra enviado para item: " + itemClass);
+			}
 		}
 		
 		StartButtonCooldown(actionButton);
@@ -4736,13 +5426,59 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			if (!itemClass || itemClass == "")
 				continue;
 			
-			AskalPurchaseRequestData request = new AskalPurchaseRequestData();
-			request.ItemClass = itemClass;
-			request.Price = itemData.GetPrice();
-			request.Quantity = -1.0;
-			request.QuantityType = AskalItemQuantityType.NONE;
-			request.ContentType = 0;
-			requests.Insert(request);
+			// Obter quantidade e tipo de quantidade do item selecionado
+			// Se este é o item atualmente selecionado, usar os valores do slider/units panel
+			// Caso contrário, usar valores padrão
+			float itemQuantity = -1.0;
+			int itemQuantityType = AskalItemQuantityType.NONE;
+			int itemContentType = 0;
+			int transactionUnits = 1;
+			
+			// Verificar se este é o item atualmente selecionado
+			if (itemIndex == m_SelectedItemIndex)
+			{
+				// Usar quantidade do transaction units panel
+				transactionUnits = m_TransactionQuantity;
+				if (transactionUnits <= 0 || transactionUnits > 9999)
+					transactionUnits = 1;
+				
+				// Usar valores do slider se disponível
+				if (m_SliderQuantityType != AskalItemQuantityType.NONE)
+				{
+					itemQuantityType = m_SliderQuantityType;
+					switch (m_SliderQuantityType)
+					{
+						case AskalItemQuantityType.MAGAZINE:
+						{
+							itemQuantity = m_CurrentAmmoCount;
+							break;
+						}
+						case AskalItemQuantityType.STACKABLE:
+						{
+							itemQuantity = m_CurrentAmmoCount;
+							break;
+						}
+						case AskalItemQuantityType.QUANTIFIABLE:
+						{
+							itemQuantity = m_CurrentQuantityPercent;
+							itemContentType = m_CurrentSelectedContent.ToInt();
+							break;
+						}
+					}
+				}
+			}
+			
+			// Criar request para cada unidade (transactionUnits vezes)
+			for (int unitIdx = 0; unitIdx < transactionUnits; unitIdx++)
+			{
+				AskalPurchaseRequestData request = new AskalPurchaseRequestData();
+				request.ItemClass = itemClass;
+				request.Price = itemData.GetPrice();
+				request.Quantity = itemQuantity;
+				request.QuantityType = itemQuantityType;
+				request.ContentType = itemContentType;
+				requests.Insert(request);
+			}
 		}
 		
 		if (!requests || requests.Count() == 0)
@@ -5381,7 +6117,12 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		{
 			ScanPlayerInventory();
 			if (m_BatchSellEnabled || m_ShowingInventoryForSale)
+			{
+				// Limpar health map para forçar nova solicitação após venda
+				if (m_ItemHealthMap)
+					m_ItemHealthMap.Clear();
 				RenderInventoryItemsForSale();
+			}
 			UpdateTransactionSummary();
 		}
 	}
@@ -5401,8 +6142,34 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			// Armazenar nome do trader
 			m_CurrentTraderName = traderName;
 			
-			// Obter SetupItems do helper
-			m_TraderSetupItems = AskalNotificationHelper.GetPendingTraderSetupItems();
+			// Obter SetupItems do helper (fazer cópia para não perder a referência)
+			map<string, int> pendingSetupItems = AskalNotificationHelper.GetPendingTraderSetupItems();
+			m_TraderSetupItems = new map<string, int>();
+			if (pendingSetupItems)
+			{
+				for (int setupIdx = 0; setupIdx < pendingSetupItems.Count(); setupIdx++)
+				{
+					string key = pendingSetupItems.GetKey(setupIdx);
+					int value = pendingSetupItems.GetElement(setupIdx);
+					m_TraderSetupItems.Set(key, value);
+				}
+			}
+			
+			// Debug: verificar SetupItems recebido
+			if (!m_TraderSetupItems || m_TraderSetupItems.Count() == 0)
+			{
+				Print("[AskalStore] ⚠️ SetupItems está vazio ou NULL para trader: " + traderName);
+			}
+			else
+			{
+				Print("[AskalStore] ✅ SetupItems recebido com " + m_TraderSetupItems.Count() + " entradas para trader: " + traderName);
+				for (int i = 0; i < m_TraderSetupItems.Count(); i++)
+				{
+					string setupKey = m_TraderSetupItems.GetKey(i);
+					int setupValue = m_TraderSetupItems.GetElement(i);
+					Print("[AskalStore]   📦 SetupItem[" + i + "]: " + setupKey + " = " + setupValue);
+				}
+			}
 			
 			// Atualizar título do menu
 			if (m_HeaderTitleText)
@@ -5412,14 +6179,29 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			}
 			
 			// Recarregar datasets com filtros do trader
+			Print("[AskalStore] 🔄 Recarregando datasets após SetupItems ser carregado...");
 			LoadDatasetsFromCore();
 			
-			// Recarregar primeira categoria se houver datasets
+			// Recarregar primeira categoria se houver datasets (para aplicar filtros)
 			if (m_Datasets.Count() > 0)
 			{
+				Print("[AskalStore] 🔄 Recarregando dataset após SetupItems ser carregado...");
+				Print("[AskalStore] 🔄 Dataset selecionado: " + m_Datasets.Get(0));
 				LoadDataset(0);
 				if (m_Categories.Count() > 0)
+				{
+					Print("[AskalStore] 🔄 Recarregando categoria após SetupItems ser carregado...");
+					Print("[AskalStore] 🔄 Categoria selecionada: " + m_Categories.Get(0));
 					LoadCategory(0);
+				}
+				else
+				{
+					Print("[AskalStore] ⚠️ Nenhuma categoria disponível após filtrar datasets");
+				}
+			}
+			else
+			{
+				Print("[AskalStore] ⚠️ Nenhum dataset disponível após filtrar com SetupItems");
 			}
 		}
 		
@@ -5454,8 +6236,34 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			// Armazenar nome do trader
 			m_CurrentTraderName = pendingTraderMenu;
 			
-			// Obter SetupItems do helper
-			m_TraderSetupItems = AskalNotificationHelper.GetPendingTraderSetupItems();
+			// Obter SetupItems do helper (fazer cópia para não perder a referência)
+			map<string, int> pendingSetupItems = AskalNotificationHelper.GetPendingTraderSetupItems();
+			m_TraderSetupItems = new map<string, int>();
+			if (pendingSetupItems)
+			{
+				for (int setupIdx = 0; setupIdx < pendingSetupItems.Count(); setupIdx++)
+				{
+					string key = pendingSetupItems.GetKey(setupIdx);
+					int value = pendingSetupItems.GetElement(setupIdx);
+					m_TraderSetupItems.Set(key, value);
+				}
+			}
+			
+			// Debug: verificar SetupItems recebido
+			if (!m_TraderSetupItems || m_TraderSetupItems.Count() == 0)
+			{
+				Print("[AskalStore] ⚠️ SetupItems está vazio ou NULL para trader: " + pendingTraderMenu);
+			}
+			else
+			{
+				Print("[AskalStore] ✅ SetupItems recebido com " + m_TraderSetupItems.Count() + " entradas para trader: " + pendingTraderMenu);
+				for (int i = 0; i < m_TraderSetupItems.Count(); i++)
+				{
+					string setupKey = m_TraderSetupItems.GetKey(i);
+					int setupValue = m_TraderSetupItems.GetElement(i);
+					Print("[AskalStore]   📦 SetupItem[" + i + "]: " + setupKey + " = " + setupValue);
+				}
+			}
 			
 			// Atualizar título do menu
 			if (m_HeaderTitleText)
@@ -5485,6 +6293,34 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			// Chamar OpenTraderMenu para aplicar configuração
 			OpenTraderMenu(pendingTraderMenu);
 			AskalNotificationHelper.ClearPendingTraderMenu();
+		}
+		else
+		{
+			// Se não há trader pendente, verificar se é Virtual Market
+			// Se há Virtual Store configurado mas não há trader, definir título como "Mercado Virtual"
+			bool hasNoTrader = (!m_CurrentTraderName || m_CurrentTraderName == "");
+			bool hasVirtualStore = (m_VirtualStoreSetupModes && m_VirtualStoreSetupModes.Count() > 0);
+			if (hasNoTrader && hasVirtualStore)
+			{
+				if (m_HeaderTitleText)
+				{
+					m_HeaderTitleText.SetText("Mercado Virtual");
+					Print("[AskalStore] ✅ Título definido como: Mercado Virtual");
+				}
+				else
+				{
+					// Tentar encontrar novamente
+					if (m_RootWidget)
+					{
+						m_HeaderTitleText = TextWidget.Cast(m_RootWidget.FindAnyWidget("market_header_title_text"));
+						if (m_HeaderTitleText)
+						{
+							m_HeaderTitleText.SetText("Mercado Virtual");
+							Print("[AskalStore] ✅ Título encontrado e definido como: Mercado Virtual");
+						}
+					}
+				}
+			}
 		}
 		
 		// Desativar controles primeiro
@@ -6111,6 +6947,11 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		if (!entity || !attachments)
 			return;
 		
+		// Verificar se é um veículo
+		CarScript car = CarScript.Cast(entity);
+		BoatScript boat = BoatScript.Cast(entity);
+		bool isVehicle = (car != NULL || boat != NULL);
+		
 		// Separar magazines de outros attachments (magazines devem ser aplicados por último)
 		array<string> magazines = new array<string>();
 		array<string> otherAttachments = new array<string>();
@@ -6132,53 +6973,111 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			}
 		}
 		
-		// Aplicar outros attachments primeiro
-		foreach (string attachClass : otherAttachments)
+		// Para veículos, aplicar attachments com delay para garantir que o inventário esteja pronto
+		if (isVehicle)
 		{
-			EntityAI attachmentEntity = EntityAI.Cast(entity.GetInventory().CreateAttachment(attachClass));
-			if (!attachmentEntity)
-			{
-				Print("[AskalStore] ⚠️ Falha ao anexar attachment no preview: " + attachClass);
-				continue;
-			}
+			Print("[AskalStore] 🚗 Aplicando attachments a veículo: " + entity.GetType() + " | Total: " + (otherAttachments.Count() + magazines.Count()).ToString());
+			// Aplicar attachments em lotes com delay para veículos
+			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ApplyVehicleAttachmentsBatch, 100, false, entity, otherAttachments, 0);
+			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ApplyVehicleAttachmentsBatch, 250, false, entity, magazines, 0);
 		}
-		
-		// Aplicar magazines por último (ordem importa para preview)
-		Weapon_Base weapon = Weapon_Base.Cast(entity);
-		foreach (string magazineClass : magazines)
+		else
 		{
-			EntityAI magazineEntity = EntityAI.Cast(entity.GetInventory().CreateAttachment(magazineClass));
-			if (!magazineEntity)
+			// Aplicar outros attachments primeiro (para não-veículos)
+			foreach (string attachClass : otherAttachments)
 			{
-				Print("[AskalStore] ⚠️ Falha ao anexar magazine no preview: " + magazineClass);
-				continue;
+				EntityAI attachmentEntity = EntityAI.Cast(entity.GetInventory().CreateAttachment(attachClass));
+				if (!attachmentEntity)
+				{
+					Print("[AskalStore] ⚠️ Falha ao anexar attachment no preview: " + attachClass);
+					continue;
+				}
 			}
 			
-			Magazine mag = Magazine.Cast(magazineEntity);
-			if (mag)
+			// Aplicar magazines por último (ordem importa para preview)
+			Weapon_Base weapon = Weapon_Base.Cast(entity);
+			foreach (string magazineClass : magazines)
 			{
-				// Preencher o magazine para forçar atualização do proxy visual
-				int ammoMax = mag.GetAmmoMax();
-				if (ammoMax > 0)
+				EntityAI magazineEntity = EntityAI.Cast(entity.GetInventory().CreateAttachment(magazineClass));
+				if (!magazineEntity)
 				{
-					// Preencher com quantidade máxima para garantir que o proxy apareça
-					mag.LocalSetAmmoCount(ammoMax);
+					Print("[AskalStore] ⚠️ Falha ao anexar magazine no preview: " + magazineClass);
+					continue;
 				}
 				
-				mag.Update();
+				Magazine mag = Magazine.Cast(magazineEntity);
+				if (mag)
+				{
+					// Preencher o magazine para forçar atualização do proxy visual
+					int ammoMax = mag.GetAmmoMax();
+					if (ammoMax > 0)
+					{
+						// Preencher com quantidade máxima para garantir que o proxy apareça
+						mag.LocalSetAmmoCount(ammoMax);
+					}
+					
+					mag.Update();
+				}
+			}
+			
+			// Atualizar FSM e sincronizar estado da arma (como SpawnAttachedMagazine faz)
+			if (weapon)
+			{
+				weapon.RandomizeFSMState();
+				weapon.Synchronize();
+				weapon.ShowMagazine();
 			}
 		}
 		
-		// Atualizar FSM e sincronizar estado da arma (como SpawnAttachedMagazine faz)
-		if (weapon)
+		// Forçar refresh visual após aplicar attachments (delay maior para veículos)
+		int refreshDelay = 150;
+		if (isVehicle)
+			refreshDelay = 400;
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ForceEntityPreviewRefresh, refreshDelay, false, entity);
+	}
+	
+	// Aplicar attachments a veículos em lotes (para evitar problemas de sincronização)
+	protected void ApplyVehicleAttachmentsBatch(EntityAI vehicle, array<string> attachments, int startIndex)
+	{
+		if (!vehicle || !attachments)
+			return;
+		
+		// Aplicar até 5 attachments por vez para evitar sobrecarga
+		int batchSize = 5;
+		int endIndex = startIndex + batchSize;
+		if (endIndex > attachments.Count())
+			endIndex = attachments.Count();
+		
+		for (int i = startIndex; i < endIndex; i++)
 		{
-			weapon.RandomizeFSMState();
-			weapon.Synchronize();
-			weapon.ShowMagazine();
+			string attachClass = attachments.Get(i);
+			if (!attachClass || attachClass == "")
+				continue;
+			
+			EntityAI attachmentEntity = EntityAI.Cast(vehicle.GetInventory().CreateAttachment(attachClass));
+			if (!attachmentEntity)
+			{
+				Print("[AskalStore] ⚠️ Falha ao anexar attachment no veículo: " + attachClass);
+				continue;
+			}
+			Print("[AskalStore] ✅ Attachment anexado ao veículo: " + attachClass);
+			
+			// Forçar atualização do attachment
+			attachmentEntity.Update();
 		}
 		
-		// Forçar refresh visual após aplicar attachments
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ForceEntityPreviewRefresh, 150, false, entity);
+		// Se ainda há attachments para aplicar, agendar próximo lote
+		if (endIndex < attachments.Count())
+		{
+			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ApplyVehicleAttachmentsBatch, 50, false, vehicle, attachments, endIndex);
+		}
+		else
+		{
+			// Todos os attachments foram aplicados, forçar atualização
+			vehicle.Update();
+			vehicle.SetSynchDirty();
+			Print("[AskalStore] ✅ Todos os attachments do veículo foram aplicados!");
+		}
 	}
 	
 	// Força refresh do preview após aplicar attachments
@@ -6196,8 +7095,53 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		}
 		else
 		{
-			entity.Update();
+			// Para veículos, forçar atualização mais agressiva
+			CarScript car = CarScript.Cast(entity);
+			BoatScript boat = BoatScript.Cast(entity);
+			if (car || boat)
+			{
+				entity.Update();
+				entity.SetSynchDirty();
+				
+				// Forçar atualização do preview widget se existir
+				if (m_SelectedItemPreview)
+				{
+					m_SelectedItemPreview.SetItem(NULL);
+					GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(RefreshVehiclePreview, 100, false, entity);
+				}
+			}
+			else
+			{
+				entity.Update();
+			}
 		}
+	}
+	
+	// Refresh específico para preview de veículos
+	protected void RefreshVehiclePreview(EntityAI vehicle)
+	{
+		if (!vehicle || !m_SelectedItemPreview)
+			return;
+		
+		m_SelectedItemPreview.SetItem(vehicle);
+		m_SelectedItemPreview.SetView(vehicle.GetViewIndex());
+		m_SelectedItemPreview.Update();
+		Print("[AskalStore] 🔄 Preview de veículo atualizado!");
+	}
+	
+	// Definir preview do card para veículos (com delay para garantir attachments)
+	protected void SetVehicleCardPreview(ItemPreviewWidget cardPreview, EntityAI vehicle)
+	{
+		if (!cardPreview || !vehicle)
+			return;
+		
+		cardPreview.SetItem(vehicle);
+		cardPreview.SetModelPosition(Vector(0, 0, 0.5));
+		cardPreview.SetModelOrientation(Vector(0, 0, 0));
+		cardPreview.SetView(vehicle.GetViewIndex());
+		cardPreview.Show(true);
+		cardPreview.Update();
+		Print("[AskalStore] 🔄 Preview do card de veículo atualizado!");
 	}
 
 	protected void AddItemEntryForCategory(string datasetID, string categoryID, AskalCategorySyncData category, string className, AskalItemSyncData syncItem, map<string, bool> processedClasses, AskalDatabaseClientCache cache, bool includeVariants = true, bool createCard = true)
@@ -6578,13 +7522,8 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		
 		Print("[AskalStore] ✅ Inventário escaneado: " + totalUniqueTypes + " tipos de itens únicos");
 		
-		// Solicitar health dos itens do servidor (se multiplayer)
-		if (GetGame().IsMultiplayer() && GetGame().IsClient())
-		{
-			RequestInventoryHealth();
-		}
-		
-		// Processar health pendente do helper (3_Game)
+		// Health será solicitado apenas quando necessário (ao visualizar itens para venda)
+		// Processar health pendente do helper (3_Game) se já existir
 		ProcessPendingHealth();
 	}
 	
@@ -6707,6 +7646,34 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 	
 	override bool OnKeyDown(Widget w, int x, int y, int key)
 	{
+		Print("[AskalStore] 🔍 OnKeyDown chamado - key: " + key.ToString() + " (KC_ESCAPE = " + KeyCode.KC_ESCAPE.ToString() + ")");
+		
+		// ESC para fechar o menu - verificar ANTES de chamar super
+		if (key == KeyCode.KC_ESCAPE)
+		{
+			Print("[AskalStore] ========================================");
+			Print("[AskalStore] ✅ ESC detectado - fechando menu");
+			
+			// Fechar usando o método da classe base
+			Close();
+			
+			// Limpar referência no MissionGameplay
+			MissionGameplay missionGP = MissionGameplay.Cast(GetGame().GetMission());
+			if (missionGP)
+			{
+				missionGP.OnMenuClosed();
+				Print("[AskalStore] ✅ Referência limpa no MissionGameplay");
+			}
+			else
+			{
+				Print("[AskalStore] ⚠️ MissionGameplay não encontrado");
+			}
+			Print("[AskalStore] ========================================");
+			
+			return true; // Interceptar o ESC para não passar para o menu pai
+		}
+		
+		// Chamar super apenas se não for ESC
 		if (super.OnKeyDown(w, x, y, key))
 			return true;
 		

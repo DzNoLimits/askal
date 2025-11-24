@@ -147,7 +147,7 @@ class AskalSellService
 			}
 		}
 		
-		// CALCULAR PREÇO DE QUANTIDADE EM STACKABLES
+		// CALCULAR PREÇO DE QUANTIDADE EM STACKABLES E QUANTIFIABLES
 		float quantityPrice = 0.0;
 		ItemBase itemBase = ItemBase.Cast(itemToSell);
 		if (itemBase && itemBase.HasQuantity() && !mag) // Não processar se já é magazine
@@ -157,23 +157,51 @@ class AskalSellService
 			
 			if (maxQty > 0 && currentQty > 0)
 			{
-				// CORREÇÃO: Calcular preço unitário primeiro
-				// basePrice é o preço de uma pilha completa (maxQty unidades)
-				// Preço unitário = basePrice / maxQty
-				float unitPrice = basePrice / maxQty;
+				// Detectar se é QUANTIFIABLE (itens como saco de arroz, carnes, etc)
+				// QUANTIFIABLE: quantidade já reflete o estado (50% de arroz = 50% da quantidade máxima)
+				// STACKABLE: quantidade é número de unidades empilhadas
+				AskalItemQuantityType qtyType = AskalItemQuantityHelper.DetectQuantityType(itemToSell.GetType());
+				bool isQuantifiable = (qtyType == AskalItemQuantityType.QUANTIFIABLE);
 				
-				// Preço base de venda por unidade = unitPrice * sellPercent
-				float unitSellPrice = unitPrice * (sellPercent / 100.0);
-				
-				// Preço total = quantidade atual * preço unitário de venda * health * sellCoeff
-				float totalUnitPrice = currentQty * unitSellPrice;
-				quantityPrice = totalUnitPrice * (healthPercent / 100.0);
-				
-				// Aplicar coeficiente de venda
-				if (sellCoeff > 0)
-					quantityPrice = quantityPrice * sellCoeff;
-				
-				Print("[AskalSell] [QUANTIDADE] Item stackable: " + currentQty + "/" + maxQty + " unidades | Preço unitário: " + Math.Round(unitPrice) + " | Preço total: $" + Math.Round(quantityPrice));
+				if (isQuantifiable)
+				{
+					// QUANTIFIABLE: basePrice é o preço de um item completo (100%)
+					// Calcular preço proporcional à quantidade atual (currentQty / maxQty)
+					// Exemplo: saco de arroz com 50% = 50% do preço base
+					float quantityPercent = (currentQty / maxQty) * 100.0;
+					
+					// Preço base proporcional à quantidade = basePrice * (currentQty / maxQty)
+					float proportionalBasePrice = basePrice * (currentQty / maxQty);
+					
+					// Preço de venda = preço proporcional * sellPercent * health * sellCoeff
+					float proportionalSellPrice = proportionalBasePrice * (sellPercent / 100.0);
+					quantityPrice = proportionalSellPrice * (healthPercent / 100.0);
+					
+					// Aplicar coeficiente de venda
+					if (sellCoeff > 0)
+						quantityPrice = quantityPrice * sellCoeff;
+					
+					Print("[AskalSell] [QUANTIFIABLE] Item: " + currentQty + "/" + maxQty + " (" + Math.Round(quantityPercent) + "%) | Preço base proporcional: $" + Math.Round(proportionalBasePrice) + " | Health: " + healthPercent + "% | Preço final: $" + Math.Round(quantityPrice));
+				}
+				else
+				{
+					// STACKABLE: basePrice é o preço de uma pilha completa (maxQty unidades)
+					// Preço unitário = basePrice / maxQty
+					float unitPrice = basePrice / maxQty;
+					
+					// Preço base de venda por unidade = unitPrice * sellPercent
+					float unitSellPrice = unitPrice * (sellPercent / 100.0);
+					
+					// Preço total = quantidade atual * preço unitário de venda * health * sellCoeff
+					float totalUnitPrice = currentQty * unitSellPrice;
+					quantityPrice = totalUnitPrice * (healthPercent / 100.0);
+					
+					// Aplicar coeficiente de venda
+					if (sellCoeff > 0)
+						quantityPrice = quantityPrice * sellCoeff;
+					
+					Print("[AskalSell] [STACKABLE] Item: " + currentQty + "/" + maxQty + " unidades | Preço unitário: " + Math.Round(unitPrice) + " | Preço total: $" + Math.Round(quantityPrice));
+				}
 			}
 		}
 		
@@ -218,9 +246,12 @@ class AskalSellService
 		Print("[AskalSell] [PAGAMENTO] Adicionando dinheiro (Mode: " + transactionMode + ")...");
 		bool paymentSuccess = false;
 		
+		// TEMPORÁRIO: Usar balance virtual (modo 2) para venda, já que compra funciona com balance virtual
+		// TODO: Implementar moeda física corretamente quando necessário
 		if (transactionMode == 1)
 		{
-			paymentSuccess = AskalCurrencyInventoryManager.AddPhysicalCurrency(player, totalPrice, currencyId);
+			Print("[AskalSell] [PAGAMENTO] Modo físico (1) - usando balance virtual temporariamente");
+			paymentSuccess = AskalPlayerBalance.AddBalance(steamId, totalPrice, currencyId);
 		}
 		else if (transactionMode == 2)
 		{
@@ -229,8 +260,8 @@ class AskalSellService
 		else
 		{
 			Print("[AskalSell] [ERRO] TransactionMode invalido: " + transactionMode);
-		return false;
-	}
+			return false;
+		}
 	
 		if (!paymentSuccess)
 	{

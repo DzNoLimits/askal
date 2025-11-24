@@ -99,6 +99,15 @@ class AskalPurchaseModule
 	
 	protected void ProcessPurchaseRequest(PlayerIdentity sender, string steamId, string itemClass, int requestedPrice, string currencyId, float itemQuantity, int quantityType, int contentType, string traderName = "")
 	{
+		// Verificar se o Market está habilitado
+		AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
+		if (!marketConfig || !marketConfig.IsMarketEnabled())
+		{
+			Print("[AskalPurchase] [ERRO] Market está desabilitado (MarketMode = 0)");
+			SendPurchaseResponse(sender, false, itemClass, 0, "Market está desabilitado");
+			return;
+		}
+		
 		// ITER-1: Rate limiting check FIRST
 		if (!CheckRateLimit(steamId))
 		{
@@ -140,13 +149,23 @@ class AskalPurchaseModule
 		
 		// Processar compra (cálculo de preço autoritativo e validações são feitas dentro do serviço)
 		Print("[AskalPurchase] [PROCESSAR] Chamando AskalPurchaseService.ProcessPurchaseWithQuantity...");
-		bool success = AskalPurchaseService.ProcessPurchaseWithQuantity(sender, steamId, itemClass, requestedPrice, currencyId, itemQuantity, quantityType, contentType);
+		bool success = AskalPurchaseService.ProcessPurchaseWithQuantity(sender, steamId, itemClass, requestedPrice, currencyId, itemQuantity, quantityType, contentType, traderName);
 		
 		Print("[AskalPurchase] [PROCESSAR] ProcessPurchaseWithQuantity retornou: " + success);
 		
 		string resultMessage = "Compra realizada com sucesso";
 		if (!success)
-			resultMessage = "Falha ao processar compra (sem espaço no inventário ou outro erro)";
+		{
+			// Verificar se é veículo para mensagem específica
+			if (AskalVehicleSpawnService.IsVehicle(itemClass))
+			{
+				resultMessage = "SEM PONTO DE ENTREGA DISPONÍVEL";
+			}
+			else
+			{
+				resultMessage = "Falha ao processar compra (sem espaço no inventário ou outro erro)";
+			}
+		}
 		
 		string statusText = "ERRO";
 		if (success)

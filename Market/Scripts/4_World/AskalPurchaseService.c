@@ -5,7 +5,7 @@
 class AskalPurchaseService
 {
 	// Processar compra COM quantidade e conteúdo customizados
-	static bool ProcessPurchaseWithQuantity(PlayerIdentity identity, string steamId, string itemClass, int price, string currencyId, float itemQuantity, int quantityType, int contentType)
+	static bool ProcessPurchaseWithQuantity(PlayerIdentity identity, string steamId, string itemClass, int price, string currencyId, float itemQuantity, int quantityType, int contentType, string traderName = "")
 	{
 		if (!identity)
 		{
@@ -58,18 +58,53 @@ class AskalPurchaseService
 			return false;
 		}
 		
-		// Criar item
-		EntityAI createdItem = CreateSimpleItem(player, itemClass, itemQuantity, quantityType, contentType);
-		if (!createdItem)
+		// Verificar se é veículo (CarScript ou BoatScript)
+		// Veículos são spawnados no mundo, não no inventário
+		EntityAI createdItem = NULL;
+		if (AskalVehicleSpawnService.IsVehicle(itemClass))
 		{
-			Print("[AskalPurchase] ❌ Não foi possível criar item: " + itemClass);
-			// ITER-1: Release reservation if item creation fails
-			AskalPlayerBalance.ReleaseReservation(steamId, price, currencyId);
-			return false;
+			Print("[AskalPurchase] 🚗 Detectado veículo: " + itemClass);
+			createdItem = AskalVehicleSpawnService.SpawnVehicleInWorld(player, itemClass, traderName);
+			if (!createdItem)
+			{
+				Print("[AskalPurchase] ❌ Não foi possível spawnar veículo: " + itemClass);
+				Print("[AskalPurchase] ❌ Motivo: SEM PONTO DE ENTREGA DISPONÍVEL");
+				// ITER-1: Release reservation if vehicle spawn fails
+				AskalPlayerBalance.ReleaseReservation(steamId, price, currencyId);
+				return false;
+			}
+			
+			// Aplicar attachments padrão aos veículos
+			Print("[AskalPurchase] 🔧 Aplicando attachments ao veículo: " + itemClass);
+			
+			// Obter attachments do dataset
+			array<string> attachments = GetAttachmentsForItem(itemClass);
+			Print("[AskalPurchase] 📋 Attachments encontrados: " + attachments.Count().ToString());
+			if (attachments && attachments.Count() > 0)
+			{
+				for (int i = 0; i < attachments.Count(); i++)
+				{
+					Print("[AskalPurchase]   - Attachment " + i.ToString() + ": " + attachments.Get(i));
+				}
+			}
+			
+			AttachDefaultAttachments(createdItem, itemClass);
 		}
-
-		// Attachments padrão (apenas se item foi criado com sucesso)
-		AttachDefaultAttachments(createdItem, itemClass);
+		else
+		{
+			// Criar item normal (não-veículo)
+			createdItem = CreateSimpleItem(player, itemClass, itemQuantity, quantityType, contentType);
+			if (!createdItem)
+			{
+				Print("[AskalPurchase] ❌ Não foi possível criar item: " + itemClass);
+				// ITER-1: Release reservation if item creation fails
+				AskalPlayerBalance.ReleaseReservation(steamId, price, currencyId);
+				return false;
+			}
+			
+			// Attachments padrão (apenas para itens não-veículos)
+			AttachDefaultAttachments(createdItem, itemClass);
+		}
 
 		// ITER-1: Confirm reservation (convert to actual deduction)
 		if (!AskalPlayerBalance.ConfirmReservation(steamId, price, currencyId))
@@ -87,60 +122,64 @@ class AskalPurchaseService
 		return true;
 	}
 
-	// Criar item simples (limpo e direto)
-	// Busca recursivamente por espaço no inventário (incluindo containers) e sempre dropa no chão se necessário
+	// Criar item simples com busca inteligente em 3 etapas
+	// 1. Attachment slots compatíveis (recursivo: player slots até itens no inventário)
+	// 2. Inventory slots (cargo de containers - recursivo)
+	// 3. Mãos do player (se ocupadas, falha a compra)
 	static EntityAI CreateSimpleItem(PlayerBase player, string itemClass, float quantity, int quantityType, int contentType)
 	{
 		Print("[AskalPurchase] 🛠️ Criando item: " + itemClass);
 
-		// ESTRATÉGIA 1: Tentar criar no inventário principal (busca recursiva automática)
-		EntityAI item = player.GetInventory().CreateInInventory(itemClass);
-		if (item)
+		EntityAI createdItem = NULL;
+
+		// ETAPA 1: Buscar attachment slots compatíveis (recursivo)
+		// Apenas para itens que podem ser attachments (pular se não for necessário)
+		Print("[AskalPurchase] 🔍 ETAPA 1: Buscando attachment slots compatíveis...");
+		createdItem = FindCompatibleAttachmentSlotRecursive(player, itemClass);
+		if (createdItem)
 		{
-			Print("[AskalPurchase] ✅ Item criado no inventário principal");
+			Print("[AskalPurchase] ✅ Item encaixado em attachment slot");
 		}
 		else
 		{
-			Print("[AskalPurchase] ⚠️ Inventário principal cheio, tentando nas mãos...");
-			// ESTRATÉGIA 2: Tentar criar nas mãos
-			item = player.GetHumanInventory().CreateInHands(itemClass);
-			if (item)
+			Print("[AskalPurchase] ⚠️ ETAPA 1: Nenhum attachment slot compatível encontrado");
+			
+			// ETAPA 2: Buscar inventory slots (cargo de containers - recursivo)
+			Print("[AskalPurchase] 🔍 ETAPA 2: Buscando inventory slots em containers...");
+			createdItem = FindInventorySlotRecursive(player, itemClass);
+			if (createdItem)
 			{
-				Print("[AskalPurchase] ✅ Item criado nas mãos");
+				Print("[AskalPurchase] ✅ Item colocado em inventory slot");
 			}
 			else
 			{
-				Print("[AskalPurchase] ⚠️ Mãos ocupadas, tentando buscar espaço em containers...");
-				// ESTRATÉGIA 3: Buscar recursivamente em containers (mochilas, etc)
-				item = FindSpaceInContainers(player, itemClass);
-				if (item)
+				Print("[AskalPurchase] ⚠️ ETAPA 2: Nenhum inventory slot disponível");
+				
+				// ETAPA 3: Tentar colocar nas mãos do player
+				Print("[AskalPurchase] 🔍 ETAPA 3: Tentando colocar nas mãos...");
+				if (player.GetHumanInventory())
 				{
-					Print("[AskalPurchase] ✅ Item criado em container");
+					createdItem = player.GetHumanInventory().CreateInHands(itemClass);
+					if (createdItem)
+					{
+						Print("[AskalPurchase] ✅ Item colocado nas mãos");
+					}
+					else
+					{
+						Print("[AskalPurchase] ❌ ETAPA 3: Mãos ocupadas - compra não pode ser concluída");
+						return NULL;
+					}
+				}
+				else
+				{
+					Print("[AskalPurchase] ❌ ETAPA 3: GetHumanInventory() retornou NULL");
+					return NULL;
 				}
 			}
 		}
 
-		// ESTRATÉGIA 4: Se ainda não encontrou espaço, dropar no chão
-		if (!item)
-		{
-			Print("[AskalPurchase] ⚠️ Nenhum espaço encontrado, criando no chão...");
-			vector playerPos = player.GetPosition();
-			// Adicionar pequeno offset para evitar que o item fique dentro do player
-			playerPos[1] = playerPos[1] + 0.5; // Elevar um pouco
-			Object itemObj = GetGame().CreateObjectEx(itemClass, playerPos, ECE_PLACE_ON_SURFACE | ECE_CREATEPHYSICS);
-			item = EntityAI.Cast(itemObj);
-			
-			if (!item)
-			{
-				Print("[AskalPurchase] ❌ Falha crítica ao criar item no chão: " + itemClass);
-				return NULL;
-			}
-			
-			Print("[AskalPurchase] ⚠️ Item criado no chão próximo ao player: " + itemClass);
-		}
-
 		// Aplicar quantidade apenas para tipos que funcionam
-		ItemBase itemBase = ItemBase.Cast(item);
+		ItemBase itemBase = ItemBase.Cast(createdItem);
 		if (itemBase)
 		{
 			if (quantityType == 1 && itemBase.IsMagazine()) // MAGAZINE
@@ -167,41 +206,95 @@ class AskalPurchaseService
 			}
 			else if (quantityType == 2 && itemBase.HasQuantity()) // STACKABLE
 			{
-				// Para stackables, definir quantidade diretamente
-				float qtyMin = itemBase.GetQuantityMin();
-				float qtyMax = itemBase.GetQuantityMax();
-				float clampedQty = Math.Clamp(quantity, qtyMin, qtyMax);
+				// CRÍTICO: Verificar se é munição ANTES de calcular limites
+				// Munições usam GetAmmoMax() em vez de GetQuantityMax()
+				Ammunition_Base ammoPile = Ammunition_Base.Cast(itemBase);
+				float clampedQty;
 				
-				// Verificar quantidade inicial (antes de SetQuantity)
-				float initialQty = itemBase.GetQuantity();
-				Print("[AskalPurchase] 📦 STACKABLE - Quantidade inicial: " + initialQty + " | Solicitado: " + clampedQty + " | Max: " + qtyMax);
-				
-				// CRÍTICO: Forçar quantidade mesmo se já foi criado com valor padrão
-				// Alguns itens são criados com quantidade padrão (metade do max), precisamos sobrescrever
-				itemBase.SetQuantity(clampedQty);
-				
-				// Aguardar um frame para garantir que SetQuantity foi aplicado
-				// Verificar quantidade aplicada (depois de SetQuantity)
-				float actualQty = itemBase.GetQuantity();
-				Print("[AskalPurchase] AMMO_SPAWN qty=" + Math.Round(actualQty) + " type=" + itemClass + " player=" + player.GetIdentity().GetPlainId());
-				
-				// Se ainda não corresponde, tentar múltiplas vezes
-				int retryCount = 0;
-				while (Math.AbsFloat(actualQty - clampedQty) > 0.01 && retryCount < 3)
+				if (ammoPile && ammoPile.IsAmmoPile())
 				{
-					Print("[AskalPurchase] ⚠️ Quantidade não corresponde! Solicitado: " + clampedQty + " | Atual: " + actualQty + " | Tentativa " + (retryCount + 1));
-					itemBase.SetQuantity(clampedQty);
-					actualQty = itemBase.GetQuantity();
-					retryCount++;
-				}
-				
-				if (Math.AbsFloat(actualQty - clampedQty) > 0.01)
-				{
-					Print("[AskalPurchase] ❌ ERRO: Não foi possível definir quantidade! Solicitado: " + clampedQty + " | Final: " + actualQty);
+					// Para munições, usar GetAmmoMax() (como Trader faz)
+					int ammoMin = 1; // Munições sempre começam com mínimo 1
+					int ammoMax = ammoPile.GetAmmoMax();
+					
+					// Log para debug
+					Print("[AskalPurchase] 🔫 AMMO PILE detectado - Max: " + ammoMax + " | Solicitado: " + quantity);
+					
+					// Clamp usando limites de munição
+					clampedQty = Math.Clamp(quantity, ammoMin, ammoMax);
+					
+					// Verificar quantidade inicial (antes de ServerSetAmmoCount)
+					int initialAmmo = ammoPile.GetAmmoCount();
+					Print("[AskalPurchase] 📦 STACKABLE (AmmoPile) - Quantidade inicial: " + initialAmmo + " | Solicitado: " + clampedQty + " | Max: " + ammoMax);
+					
+					// Munição stackable: usar ServerSetAmmoCount (como Trader e TraderX fazem)
+					int ammoCount_stackable = Math.Round(clampedQty);
+					ammoCount_stackable = Math.Clamp(ammoCount_stackable, ammoMin, ammoMax);
+					
+					ammoPile.ServerSetAmmoCount(ammoCount_stackable);
+					ammoPile.SetSynchDirty(); // Sincronizar com cliente (como Trader faz)
+					
+					// Verificar quantidade aplicada
+					int actualAmmo_stackable = ammoPile.GetAmmoCount();
+					Print("[AskalPurchase] AMMO_SPAWN qty=" + actualAmmo_stackable + " type=" + itemClass + " player=" + player.GetIdentity().GetPlainId());
+					
+					if (actualAmmo_stackable != ammoCount_stackable)
+					{
+						Print("[AskalPurchase] ⚠️ Quantidade de munição não corresponde! Solicitado: " + ammoCount_stackable + " | Atual: " + actualAmmo_stackable);
+						// Tentar novamente
+						ammoPile.ServerSetAmmoCount(ammoCount_stackable);
+						ammoPile.SetSynchDirty();
+						actualAmmo_stackable = ammoPile.GetAmmoCount();
+						
+						if (actualAmmo_stackable != ammoCount_stackable)
+						{
+							Print("[AskalPurchase] ❌ ERRO: Não foi possível definir quantidade de munição! Solicitado: " + ammoCount_stackable + " | Final: " + actualAmmo_stackable);
+						}
+						else
+						{
+							Print("[AskalPurchase] 📦 STACKABLE (AmmoPile): " + ammoCount_stackable + " unidades aplicadas com sucesso");
+						}
+					}
+					else
+					{
+						Print("[AskalPurchase] 📦 STACKABLE (AmmoPile): " + ammoCount_stackable + " unidades aplicadas com sucesso");
+					}
 				}
 				else
 				{
-					Print("[AskalPurchase] 📦 STACKABLE: " + clampedQty + " unidades aplicadas com sucesso (min: " + qtyMin + ", max: " + qtyMax + ")");
+					// Item stackable não-ammo: usar SetQuantity normalmente
+					float qtyMin = itemBase.GetQuantityMin();
+					float qtyMax = itemBase.GetQuantityMax();
+					clampedQty = Math.Clamp(quantity, qtyMin, qtyMax);
+					
+					// Verificar quantidade inicial (antes de SetQuantity)
+					float initialQty = itemBase.GetQuantity();
+					Print("[AskalPurchase] 📦 STACKABLE (não-ammo) - Quantidade inicial: " + initialQty + " | Solicitado: " + clampedQty + " | Max: " + qtyMax);
+					
+					itemBase.SetQuantity(clampedQty);
+					
+					// Verificar quantidade aplicada (depois de SetQuantity)
+					float actualQty = itemBase.GetQuantity();
+					Print("[AskalPurchase] AMMO_SPAWN qty=" + Math.Round(actualQty) + " type=" + itemClass + " player=" + player.GetIdentity().GetPlainId());
+					
+					// Se ainda não corresponde, tentar múltiplas vezes
+					int retryCount = 0;
+					while (Math.AbsFloat(actualQty - clampedQty) > 0.01 && retryCount < 3)
+					{
+						Print("[AskalPurchase] ⚠️ Quantidade não corresponde! Solicitado: " + clampedQty + " | Atual: " + actualQty + " | Tentativa " + (retryCount + 1));
+						itemBase.SetQuantity(clampedQty);
+						actualQty = itemBase.GetQuantity();
+						retryCount++;
+					}
+					
+					if (Math.AbsFloat(actualQty - clampedQty) > 0.01)
+					{
+						Print("[AskalPurchase] ❌ ERRO: Não foi possível definir quantidade! Solicitado: " + clampedQty + " | Final: " + actualQty);
+					}
+					else
+					{
+						Print("[AskalPurchase] 📦 STACKABLE: " + clampedQty + " unidades aplicadas com sucesso (min: " + qtyMin + ", max: " + qtyMax + ")");
+					}
 				}
 			}
 			else if (quantityType == 3 && itemBase.HasQuantity()) // QUANTIFIABLE
@@ -246,7 +339,7 @@ class AskalPurchaseService
 			}
 		}
 
-		return item;
+		return createdItem;
 	}
 
 
@@ -256,29 +349,155 @@ class AskalPurchaseService
 		return AskalMarketHelpers.GetPlayerFromIdentity(identity);
 	}
 	
-	// Buscar espaço recursivamente em containers (mochilas, etc)
-	static EntityAI FindSpaceInContainers(PlayerBase player, string itemClass)
+	// ETAPA 1: Buscar attachment slots compatíveis recursivamente
+	// Busca desde os slots do player (camisa, calça, mochila, etc) até itens no inventário
+	// Tenta encaixar o item comprado em qualquer slot de attachment disponível
+	static EntityAI FindCompatibleAttachmentSlotRecursive(PlayerBase player, string itemClass)
 	{
 		if (!player || !itemClass || itemClass == "")
 			return NULL;
 		
-		// Enumerar todos os itens no inventário do player
-		array<EntityAI> allItems = new array<EntityAI>();
-		player.GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, allItems);
+		Print("[AskalPurchase] 🔍 Buscando attachment slots para: " + itemClass);
 		
-		// Procurar containers (mochilas, etc) e tentar criar o item dentro deles
-		for (int i = 0; i < allItems.Count(); i++)
+		// Buscar recursivamente em todos os itens que podem ter attachment slots
+		// Começar pelo próprio player (slots de corpo: camisa, calça, mochila, etc)
+		array<EntityAI> checkedItems = new array<EntityAI>();
+		return FindCompatibleAttachmentSlotRecursiveInternal(player, player, itemClass, checkedItems);
+	}
+	
+	// Função interna recursiva para buscar attachment slots
+	// Tenta criar o item como attachment em cada item do inventário
+	static EntityAI FindCompatibleAttachmentSlotRecursiveInternal(PlayerBase player, EntityAI parentItem, string itemClass, array<EntityAI> checkedItems)
+	{
+		if (!parentItem || !parentItem.GetInventory())
+			return NULL;
+		
+		// Proteção contra loops infinitos
+		if (checkedItems.Find(parentItem) != -1)
+			return NULL;
+		checkedItems.Insert(parentItem);
+		
+		// Tentar criar o item como attachment neste parent
+		// CreateAttachment tenta automaticamente encontrar um slot compatível
+		// Usar try-catch implícito: se falhar, apenas retorna NULL
+		EntityAI attachedItem = NULL;
+		if (parentItem.GetInventory())
 		{
-			EntityAI containerItem = allItems.Get(i);
-			if (!containerItem || !containerItem.GetInventory())
+			attachedItem = parentItem.GetInventory().CreateAttachment(itemClass);
+		}
+		
+		if (attachedItem)
+		{
+			Print("[AskalPurchase] ✅ Item encaixado em attachment slot de " + parentItem.GetType());
+			return attachedItem;
+		}
+		
+		// Se não encontrou, buscar recursivamente nos itens dentro deste parent
+		array<EntityAI> childItems = new array<EntityAI>();
+		if (parentItem.GetInventory())
+		{
+			parentItem.GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, childItems);
+		}
+		
+		foreach (EntityAI childItem : childItems)
+		{
+			if (!childItem || childItem == parentItem)
 				continue;
 			
-			// Tentar criar o item dentro deste container
-			EntityAI item = containerItem.GetInventory().CreateInInventory(itemClass);
-			if (item)
+			// Tentar encaixar neste child item
+			if (childItem.GetInventory())
 			{
-				Print("[AskalPurchase] ✅ Item criado em container: " + containerItem.GetType());
-				return item;
+				EntityAI foundItem = FindCompatibleAttachmentSlotRecursiveInternal(player, childItem, itemClass, checkedItems);
+				if (foundItem)
+					return foundItem;
+			}
+		}
+		
+		return NULL;
+	}
+	
+	// ETAPA 2: Buscar inventory slots (cargo de containers) recursivamente
+	static EntityAI FindInventorySlotRecursive(PlayerBase player, string itemClass)
+	{
+		if (!player || !itemClass || itemClass == "")
+		{
+			Print("[AskalPurchase] ⚠️ FindInventorySlotRecursive: Parâmetros inválidos");
+			return NULL;
+		}
+		
+		// Começar pelo inventário principal do player
+		Print("[AskalPurchase] 🔍 Tentando criar no inventário principal...");
+		if (player.GetInventory())
+		{
+			EntityAI createdItem = player.GetInventory().CreateInInventory(itemClass);
+			if (createdItem)
+			{
+				Print("[AskalPurchase] ✅ Item criado no inventário principal");
+				return createdItem;
+			}
+			else
+			{
+				Print("[AskalPurchase] ⚠️ Inventário principal cheio, buscando em containers...");
+			}
+		}
+		else
+		{
+			Print("[AskalPurchase] ⚠️ player.GetInventory() retornou NULL");
+		}
+		
+		// Buscar recursivamente em containers (mochilas, coletes, etc)
+		array<EntityAI> checkedContainers = new array<EntityAI>();
+		EntityAI foundItem = FindInventorySlotRecursiveInternal(player, player, itemClass, checkedContainers);
+		if (foundItem)
+		{
+			Print("[AskalPurchase] ✅ Item encontrado em container recursivo");
+		}
+		else
+		{
+			Print("[AskalPurchase] ⚠️ Nenhum container com espaço encontrado");
+		}
+		return foundItem;
+	}
+	
+	// Função interna recursiva para buscar inventory slots
+	static EntityAI FindInventorySlotRecursiveInternal(PlayerBase player, EntityAI parentContainer, string itemClass, array<EntityAI> checkedContainers)
+	{
+		if (!parentContainer || !parentContainer.GetInventory())
+			return NULL;
+		
+		// Proteção contra loops infinitos
+		if (checkedContainers.Find(parentContainer) != -1)
+			return NULL;
+		checkedContainers.Insert(parentContainer);
+		
+		// Tentar criar no cargo deste container
+		Print("[AskalPurchase] 🔍 Tentando criar em container: " + parentContainer.GetType());
+		EntityAI createdItem = parentContainer.GetInventory().CreateInInventory(itemClass);
+		if (createdItem)
+		{
+			Print("[AskalPurchase] ✅ Item criado em container: " + parentContainer.GetType());
+			return createdItem;
+		}
+		
+		// Se não encontrou, buscar recursivamente nos containers dentro deste
+		array<EntityAI> childItems = new array<EntityAI>();
+		if (parentContainer.GetInventory())
+		{
+			parentContainer.GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, childItems);
+		}
+		
+		Print("[AskalPurchase] 🔍 Verificando " + childItems.Count() + " itens dentro do container...");
+		foreach (EntityAI childItem : childItems)
+		{
+			if (!childItem || childItem == parentContainer)
+				continue;
+			
+			// Verificar se este child é um container
+			if (childItem.GetInventory())
+			{
+				EntityAI foundItem = FindInventorySlotRecursiveInternal(player, childItem, itemClass, checkedContainers);
+				if (foundItem)
+					return foundItem;
 			}
 		}
 		
@@ -291,8 +510,22 @@ class AskalPurchaseService
 		if (!itemClass || itemClass == "")
 			return false;
 		
+		// CRÍTICO: Para itens NONE (quantityType=0), aceitar quantity=-1 como válido
+		// Itens não stackable não têm quantidade variável, então -1 é o valor padrão
+		if (quantityType == 0) // NONE
+		{
+			// Para itens NONE, aceitar qualquer quantidade (incluindo -1)
+			// A quantidade será ignorada na criação do item
+			Print("[AskalPurchase] ✅ Item NONE (não stackable) - quantidade ignorada: " + requestedQuantity);
+			return true;
+		}
+		
+		// Para outros tipos, validar que quantidade > 0
 		if (requestedQuantity <= 0)
+		{
+			Print("[AskalPurchase] ❌ Quantidade inválida (<= 0): " + requestedQuantity + " para tipo: " + quantityType);
 			return false;
+		}
 		
 		// Criar objeto temporário para validar limites
 		Object tempObj = GetGame().CreateObject(itemClass, vector.Zero, true, false, false);
@@ -322,49 +555,87 @@ class AskalPurchaseService
 		}
 		else if (quantityType == 2) // STACKABLE
 		{
-			// Para stackables, verificar GetQuantityMax() primeiro
-			if (item.HasQuantity())
+			Print("[AskalPurchase] 🔍 Validando STACKABLE: " + itemClass + " | Qty solicitada: " + requestedQuantity);
+			
+			// Para ammo, priorizar config sobre HasQuantity (config é mais confiável)
+			if (itemClass.IndexOf("Ammo_") == 0 || itemClass.IndexOf("ammo_") == 0)
 			{
-				float qtyMin = item.GetQuantityMin();
-				float qtyMax = item.GetQuantityMax();
-				isValid = (requestedQuantity >= qtyMin && requestedQuantity <= qtyMax);
-				if (!isValid)
-					Print("[AskalPurchase] ❌ Quantidade inválida para stackable: " + requestedQuantity + " (min: " + qtyMin + ", max: " + qtyMax + ")");
-			}
-			else
-			{
-				// Se não tem HasQuantity(), tentar ler do config (para ammo que pode não ter HasQuantity mas tem count no config)
-				if (itemClass.IndexOf("Ammo_") == 0 || itemClass.IndexOf("ammo_") == 0)
+				string configPath = "CfgMagazines " + itemClass + " count";
+				if (GetGame().ConfigIsExisting(configPath))
 				{
-					string configPath = "CfgMagazines " + itemClass + " count";
-					if (GetGame().ConfigIsExisting(configPath))
+					int configCount = GetGame().ConfigGetInt(configPath);
+					isValid = (requestedQuantity >= 1 && requestedQuantity <= configCount);
+					if (isValid)
 					{
-						int configCount = GetGame().ConfigGetInt(configPath);
-						isValid = (requestedQuantity >= 1 && requestedQuantity <= configCount);
-						if (!isValid)
-							Print("[AskalPurchase] ❌ Quantidade inválida para ammo (config): " + requestedQuantity + " (max: " + configCount + ")");
+						Print("[AskalPurchase] ✅ Ammo validado pelo config: " + requestedQuantity + " (max: " + configCount + ")");
 					}
 					else
 					{
-						// Fallback permissivo para ammo sem config
-						Print("[AskalPurchase] ⚠️ Ammo sem HasQuantity() e sem config - permitindo: " + requestedQuantity);
-						isValid = true;
+						Print("[AskalPurchase] ❌ Quantidade inválida para ammo (config): " + requestedQuantity + " (max: " + configCount + ")");
+					}
+				}
+				else if (item.HasQuantity())
+				{
+					// Se não tem config, usar HasQuantity como fallback
+					float qtyMin_ammo = item.GetQuantityMin();
+					float qtyMax_ammo = item.GetQuantityMax();
+					isValid = (requestedQuantity >= qtyMin_ammo && requestedQuantity <= qtyMax_ammo);
+					if (isValid)
+					{
+						Print("[AskalPurchase] ✅ Ammo validado por HasQuantity: " + requestedQuantity + " (min: " + qtyMin_ammo + ", max: " + qtyMax_ammo + ")");
+					}
+					else
+					{
+						Print("[AskalPurchase] ❌ Quantidade inválida para ammo (HasQuantity): " + requestedQuantity + " (min: " + qtyMin_ammo + ", max: " + qtyMax_ammo + ")");
 					}
 				}
 				else
 				{
-					// Não é ammo e não tem HasQuantity - permitir quantidade padrão
-					isValid = (requestedQuantity == 1);
+					// Fallback permissivo para ammo sem config e sem HasQuantity
+					Print("[AskalPurchase] ⚠️ Ammo sem config e sem HasQuantity - permitindo: " + requestedQuantity);
+					isValid = true;
 				}
+			}
+			else if (item.HasQuantity())
+			{
+				// Para stackables não-ammo, usar HasQuantity
+				float qtyMin = item.GetQuantityMin();
+				float qtyMax = item.GetQuantityMax();
+				isValid = (requestedQuantity >= qtyMin && requestedQuantity <= qtyMax);
+				if (isValid)
+				{
+					Print("[AskalPurchase] ✅ Stackable validado: " + requestedQuantity + " (min: " + qtyMin + ", max: " + qtyMax + ")");
+				}
+				else
+				{
+					Print("[AskalPurchase] ❌ Quantidade inválida para stackable: " + requestedQuantity + " (min: " + qtyMin + ", max: " + qtyMax + ")");
+				}
+			}
+			else
+			{
+				// Não é ammo e não tem HasQuantity - permitir quantidade padrão
+				Print("[AskalPurchase] ⚠️ Stackable sem HasQuantity - permitindo quantidade padrão: " + requestedQuantity);
+				isValid = (requestedQuantity == 1);
 			}
 		}
 		else if (quantityType == 3 && item.HasQuantity()) // QUANTIFIABLE
 		{
-			float qtyMin_local = item.GetQuantityMin();
-			float qtyMax_local = item.GetQuantityMax();
-			isValid = (requestedQuantity >= qtyMin_local && requestedQuantity <= qtyMax_local);
+			// Para QUANTIFIABLE, requestedQuantity é um PERCENTUAL (0-100), não quantidade absoluta
+			// Validar apenas se está no range de percentual válido
+			isValid = (requestedQuantity >= 0.0 && requestedQuantity <= 100.0);
 			if (!isValid)
-				Print("[AskalPurchase] ❌ Quantidade inválida para quantifiable: " + requestedQuantity + " (min: " + qtyMin_local + ", max: " + qtyMax_local + ")");
+				Print("[AskalPurchase] ❌ Percentual inválido para quantifiable: " + requestedQuantity + " (deve estar entre 0-100)");
+			else
+				Print("[AskalPurchase] ✅ Percentual válido para quantifiable: " + requestedQuantity + "%");
+		}
+		else if (quantityType == 3) // QUANTIFIABLE sem HasQuantity (permitir, será tratado em CreateSimpleItem)
+		{
+			// Para itens QUANTIFIABLE sem HasQuantity, validar apenas o percentual
+			isValid = (requestedQuantity >= 0.0 && requestedQuantity <= 100.0);
+			if (!isValid)
+				Print("[AskalPurchase] ❌ Percentual inválido para quantifiable (sem HasQuantity): " + requestedQuantity);
+			else
+				Print("[AskalPurchase] ✅ Percentual válido para quantifiable (sem HasQuantity): " + requestedQuantity + "%");
 		}
 		else
 		{

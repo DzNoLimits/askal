@@ -20,6 +20,7 @@ class CfgMods
 		author = "Askal";
 		authorID = "0";
 		version = "1.0.0";
+		inputs = "Askal/Market/Scripts/Data/Inputs.xml";
 		extra = 0;
 		type = "mod";
 		dependencies[] = {"Game","World","Mission"};

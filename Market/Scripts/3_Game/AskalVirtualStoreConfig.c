@@ -116,12 +116,13 @@ class AskalVirtualStoreSettings
 		return s_Config;
 	}
 	
-	static void ApplyConfigFromServer(string currencyId, float buyCoeff, float sellCoeff, array<string> setupKeys, array<int> setupValues)
+	static void ApplyConfigFromServer(string currencyId, float buyCoeff, float sellCoeff, int virtualStoreMode, array<string> setupKeys, array<int> setupValues)
 	{
 		AskalVirtualStoreConfig config = GetConfig();
 		
 		config.BuyCoefficient = buyCoeff;
 		config.SellCoefficient = sellCoeff;
+		config.VirtualStoreMode = virtualStoreMode;
 		
 		if (!config.AcceptedCurrencyList)
 			config.AcceptedCurrencyList = new array<string>();
@@ -148,6 +149,8 @@ class AskalVirtualStoreSettings
 		config.NormalizeAcceptedCurrency();
 		config.EnsureDefaults();
 		s_ConfigSynced = true;
+		
+		Print("[AskalVirtualStore] ✅ Config sincronizada do servidor: VirtualStoreMode=" + virtualStoreMode.ToString());
 	}
 	
 	static bool IsConfigSynced()
@@ -168,5 +171,69 @@ class AskalVirtualStoreSettings
 	static string GetPrimaryCurrency()
 	{
 		return GetConfig().GetPrimaryCurrency();
+	}
+	
+	// Verificar se o Virtual Store está habilitado
+	static bool IsVirtualStoreEnabled()
+	{
+		AskalVirtualStoreConfig config = NULL;
+		bool enabled = false;
+		
+		// No servidor, carregar diretamente do arquivo para garantir que está atualizado
+		if (GetGame() && GetGame().IsServer())
+		{
+			config = AskalVirtualStoreConfig.LoadFromAny();
+			if (!config)
+			{
+				Print("[AskalVirtualStore] ⚠️ IsVirtualStoreEnabled: Config não encontrada no servidor - retornando false");
+				return false;
+			}
+			// Garantir que VirtualStoreMode seja 0 ou 1
+			if (config.VirtualStoreMode != 0 && config.VirtualStoreMode != 1)
+			{
+				Print("[AskalVirtualStore] ⚠️ IsVirtualStoreEnabled: VirtualStoreMode inválido (" + config.VirtualStoreMode + ") - usando padrão (enabled)");
+				return true; // Default: Enabled
+			}
+			enabled = config.VirtualStoreMode == 1;
+			Print("[AskalVirtualStore] 🔍 IsVirtualStoreEnabled (servidor): VirtualStoreMode=" + config.VirtualStoreMode + " → " + enabled.ToString());
+			return enabled;
+		}
+		
+		// No cliente, usar config sincronizada
+		config = GetConfig();
+		if (!config)
+		{
+			Print("[AskalVirtualStore] ⚠️ IsVirtualStoreEnabled: Config NULL no cliente - retornando false");
+			return false;
+		}
+		
+		// Se a config foi sincronizada do servidor, usar ela
+		// Caso contrário, no cliente não podemos confiar (retornar false para segurança)
+		if (!s_ConfigSynced)
+		{
+			// No cliente, se não foi sincronizado, não assumir que está habilitado
+			// Isso evita que o menu abra antes da config chegar
+			Print("[AskalVirtualStore] ⚠️ IsVirtualStoreEnabled: Config não sincronizada no cliente - retornando false");
+			return false;
+		}
+		
+		// Garantir que VirtualStoreMode seja 0 ou 1
+		if (config.VirtualStoreMode != 0 && config.VirtualStoreMode != 1)
+		{
+			Print("[AskalVirtualStore] ⚠️ IsVirtualStoreEnabled: VirtualStoreMode inválido (" + config.VirtualStoreMode + ") - usando padrão (enabled)");
+			return true; // Default: Enabled
+		}
+		enabled = config.VirtualStoreMode == 1;
+		Print("[AskalVirtualStore] 🔍 IsVirtualStoreEnabled (cliente): VirtualStoreMode=" + config.VirtualStoreMode + " → " + enabled.ToString());
+		return enabled;
+	}
+	
+	// Obter o modo do Virtual Store
+	static int GetVirtualStoreMode()
+	{
+		AskalVirtualStoreConfig config = GetConfig();
+		if (!config)
+			return 1; // Default: Enabled
+		return config.VirtualStoreMode;
 	}
 }

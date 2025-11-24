@@ -106,6 +106,7 @@ class AskalCoreModule : CF_ModuleGame
 		string currencyId = config.GetPrimaryCurrency();
 		float buyCoeff = config.BuyCoefficient;
 		float sellCoeff = config.SellCoefficient;
+		int virtualStoreMode = config.VirtualStoreMode;
 		
 		ref array<string> setupKeys = new array<string>();
 		ref array<int> setupValues = new array<int>();
@@ -123,7 +124,7 @@ class AskalCoreModule : CF_ModuleGame
 			}
 		}
 		
-		Param5<string, float, float, ref array<string>, ref array<int>> data = new Param5<string, float, float, ref array<string>, ref array<int>>(currencyId, buyCoeff, sellCoeff, setupKeys, setupValues);
+		Param6<string, float, float, int, ref array<string>, ref array<int>> data = new Param6<string, float, float, int, ref array<string>, ref array<int>>(currencyId, buyCoeff, sellCoeff, virtualStoreMode, setupKeys, setupValues);
 		GetRPCManager().SendRPC("AskalCoreModule", "VirtualStoreConfigResponse", data, true, sender, NULL);
 	}
 	
@@ -198,20 +199,35 @@ class AskalCoreModule : CF_ModuleGame
 		if (type != CallType.Client)
 			return;
 		
-		Param5<string, float, float, ref array<string>, ref array<int>> data;
+		Print("[AskalCore] ========================================");
+		Print("[AskalCore] 📥 VirtualStoreConfigResponse recebido");
+		
+		Param6<string, float, float, int, ref array<string>, ref array<int>> data;
 		if (!ctx.Read(data))
 		{
 			Print("[AskalCore] ❌ Erro ao ler VirtualStoreConfigResponse");
+			Print("[AskalCore] ========================================");
 			return;
 		}
 		
 		string currencyId = data.param1;
 		float buyCoeff = data.param2;
 		float sellCoeff = data.param3;
-		array<string> setupKeys = data.param4;
-		array<int> setupValues = data.param5;
+		int virtualStoreMode = data.param4;
+		array<string> setupKeys = data.param5;
+		array<int> setupValues = data.param6;
 		
-		AskalVirtualStoreSettings.ApplyConfigFromServer(currencyId, buyCoeff, sellCoeff, setupKeys, setupValues);
+		Print("[AskalCore] 📦 VirtualStoreMode: " + virtualStoreMode.ToString());
+		
+		string setupCountStr = "0";
+		if (setupKeys)
+			setupCountStr = setupKeys.Count().ToString();
+		Print("[AskalCore] 📦 SetupItems: " + setupCountStr + " entradas");
+		
+		AskalVirtualStoreSettings.ApplyConfigFromServer(currencyId, buyCoeff, sellCoeff, virtualStoreMode, setupKeys, setupValues);
+		
+		Print("[AskalCore] ✅ Config do Virtual Store aplicada no cliente");
+		Print("[AskalCore] ========================================");
 	}
 	
 	override void OnMissionStart(Class sender, CF_EventArgs args)

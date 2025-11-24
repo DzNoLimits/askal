@@ -179,7 +179,7 @@ class AskalMarketModule : CF_ModuleGame
             setupCount = setupKeys.Count();
         Print("[AskalMarket] 📦 SetupItems: " + setupCount.ToString() + " entradas");
         
-        // Converter arrays de volta para map
+        // Converter arrays de volta para map e normalizar chaves (adicionar prefixos CAT_/DS_ se necessário)
         ref map<string, int> setupItems = new map<string, int>();
         if (setupKeys && setupValues && setupKeys.Count() == setupValues.Count())
         {
@@ -187,7 +187,12 @@ class AskalMarketModule : CF_ModuleGame
             {
                 string key = setupKeys.Get(i);
                 int value = setupValues.Get(i);
-                setupItems.Set(key, value);
+                
+                // Normalizar chave: adicionar prefixos CAT_ ou DS_ se necessário
+                string normalizedKey = NormalizeSetupItemKey(key);
+                setupItems.Set(normalizedKey, value);
+                
+                Print("[AskalMarket] 📦 SetupItem: " + key + " → " + normalizedKey + " = " + value);
             }
         }
         
@@ -207,6 +212,90 @@ class AskalMarketModule : CF_ModuleGame
     override void OnMissionFinish(Class sender, CF_EventArgs args)
     {
         CF_Log.Info("[AskalMarket] OnMissionFinish()");
+    }
+    
+    // Normalizar chave do SetupItems: adicionar prefixos CAT_ ou DS_ se necessário
+    // Prioridade: Item individual > Categoria > Dataset
+    // Categorias geralmente começam com número (ex: "2_Drinks")
+    // Datasets geralmente têm formato específico ou começam com letras
+    // "ALL" permanece como está
+    static string NormalizeSetupItemKey(string key)
+    {
+        if (!key || key == "")
+            return key;
+        
+        // "ALL" permanece como está
+        if (key == "ALL")
+            return key;
+        
+        // Se já tem prefixo, retornar como está
+        if (key.IndexOf("CAT_") == 0 || key.IndexOf("DS_") == 0)
+            return key;
+        
+        // Verificar se é categoria (geralmente começa com número seguido de underscore)
+        // Exemplos: "2_Drinks", "1_Food", "3_Weapons"
+        // Padrão: número + underscore + texto
+        bool isCategory = false;
+        if (key.Length() > 2)
+        {
+            string firstChar = key.Substring(0, 1);
+            string secondChar = key.Substring(1, 1);
+            
+            // Verificar se começa com número (0-9) seguido de underscore
+            // Usar comparação de string para evitar problemas com ToInt()
+            bool isDigit = false;
+            if (firstChar == "0")
+                isDigit = true;
+            else if (firstChar == "1")
+                isDigit = true;
+            else if (firstChar == "2")
+                isDigit = true;
+            else if (firstChar == "3")
+                isDigit = true;
+            else if (firstChar == "4")
+                isDigit = true;
+            else if (firstChar == "5")
+                isDigit = true;
+            else if (firstChar == "6")
+                isDigit = true;
+            else if (firstChar == "7")
+                isDigit = true;
+            else if (firstChar == "8")
+                isDigit = true;
+            else if (firstChar == "9")
+                isDigit = true;
+            
+            if (isDigit && secondChar == "_")
+            {
+                isCategory = true;
+            }
+        }
+        
+        if (isCategory)
+        {
+            return "CAT_" + key;
+        }
+        
+        // Verificar se é dataset (geralmente começa com letras ou tem formato específico)
+        // Por padrão, se não é categoria e não é "ALL", assumir que é dataset
+        // Mas vamos ser mais conservadores: apenas adicionar DS_ se parecer um dataset
+        // Por enquanto, vamos assumir que se não é categoria, pode ser dataset ou item individual
+        // Items individuais (classnames) geralmente começam com letra maiúscula e não têm underscore no início
+        // Datasets podem ter formato variado
+        
+        // Verificar se provavelmente é item individual (classname)
+        // Items individuais geralmente começam com letra e não têm underscore no início
+        // Se não começa com número (já verificamos acima) e não tem underscore, provavelmente é item
+        bool hasUnderscore = (key.IndexOf("_") != -1);
+        
+        if (!hasUnderscore)
+        {
+            // Provavelmente é item individual (classname), retornar como está
+            return key;
+        }
+        
+        // Caso contrário, assumir que é dataset e adicionar prefixo DS_
+        return "DS_" + key;
     }
 }
 

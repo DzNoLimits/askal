@@ -22,6 +22,13 @@ class ActionOpenAskalTraderMenu: ActionInteractBase
 		if (!player || !target)
 			return false;
 		
+		// Verificar se o Market está habilitado
+		AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
+		if (!marketConfig || !marketConfig.IsMarketEnabled())
+		{
+			return false;
+		}
+		
 		// Obter objeto do target
 		Object targetObj = target.GetObject();
 		if (!targetObj)

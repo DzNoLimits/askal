@@ -249,10 +249,30 @@ class AskalTraderValidationHelper
 	// Verificar se item pode ser vendido
 	static bool CanSellItem(string traderName, string itemClassName, string datasetID = "", string categoryID = "")
 	{
-		if (!traderName || traderName == "")
+		// Primeiro, verificar se o item está configurado em algum dataset
+		// Se não está configurado, não pode ser vendido
+		if (datasetID == "" || categoryID == "")
 		{
-			// Se não há trader, permitir (compatibilidade com VirtualStore antigo)
-			return true;
+			Print("[AskalTraderValidation] 🔍 Resolvendo dataset/categoria para: " + itemClassName);
+			ResolveDatasetAndCategoryForClass(itemClassName, datasetID, categoryID);
+			Print("[AskalTraderValidation] 🔍 Resolvido - Dataset: " + datasetID + " | Categoria: " + categoryID);
+		}
+		
+		// Se o item não está em nenhum dataset/categoria, bloquear venda
+		if (datasetID == "" || categoryID == "")
+		{
+			Print("[AskalTraderValidation] ❌ Item não pode ser vendido: " + itemClassName + " (não está configurado em nenhum dataset/categoria)");
+			return false;
+		}
+		
+		// Se não há traderName, ainda verificar se o item está configurado
+		// Mas sem trader, não podemos verificar o modo específico
+		// Por segurança, bloquear se não há trader configurado
+		if (!traderName || traderName == "" || traderName == "Trader_Default")
+		{
+			Print("[AskalTraderValidation] ⚠️ Sem trader configurado para venda de: " + itemClassName);
+			Print("[AskalTraderValidation] ❌ Item não pode ser vendido sem trader configurado");
+			return false;
 		}
 		
 		// Carregar config do trader (buscar por TraderName, não por fileName)
@@ -261,14 +281,6 @@ class AskalTraderValidationHelper
 		{
 			Print("[AskalTraderValidation] ⚠️ Trader não encontrado ou sem SetupItems: " + traderName);
 			return false; // Se trader existe mas não tem config, bloquear por segurança
-		}
-		
-		// Se dataset/category não foram fornecidos, tentar resolver
-		if (datasetID == "" || categoryID == "")
-		{
-			Print("[AskalTraderValidation] 🔍 Resolvendo dataset/categoria para: " + itemClassName);
-			ResolveDatasetAndCategoryForClass(itemClassName, datasetID, categoryID);
-			Print("[AskalTraderValidation] 🔍 Resolvido - Dataset: " + datasetID + " | Categoria: " + categoryID);
 		}
 		
 		// Obter modo do item

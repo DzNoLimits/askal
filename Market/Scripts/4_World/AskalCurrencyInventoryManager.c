@@ -120,16 +120,67 @@ class AskalCurrencyInventoryManager
 	// Adiciona moedas físicas ao inventário (com troco otimizado)
 	static bool AddPhysicalCurrency(PlayerBase player, int amountToAdd, string currencyId)
 	{
+		string playerStatus = "NULL";
+		if (player)
+			playerStatus = "OK";
+		Print("[AskalCurrency] 🔍 AddPhysicalCurrency chamado: player=" + playerStatus + " amount=" + amountToAdd + " currency=" + currencyId);
+		
 		if (!player || amountToAdd <= 0)
+		{
+			string playerStatus2 = "NULL";
+			if (player)
+				playerStatus2 = "OK";
+			Print("[AskalCurrency] ❌ Validação inicial falhou: player=" + playerStatus2 + " amount=" + amountToAdd);
 			return false;
+		}
 		
 		AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
 		if (!marketConfig)
+		{
+			Print("[AskalCurrency] ❌ AskalMarketConfig.GetInstance() retornou NULL");
 			return false;
+		}
+		
+		Print("[AskalCurrency] 🔍 Buscando configuração de moeda: " + currencyId);
+		
+		// Debug: listar todas as moedas configuradas
+		if (marketConfig.Currencies)
+		{
+			array<string> currencyKeys = marketConfig.Currencies.GetKeyArray();
+			Print("[AskalCurrency] 🔍 Moedas configuradas (" + currencyKeys.Count() + "):");
+			for (int j = 0; j < currencyKeys.Count(); j++)
+			{
+				string key = currencyKeys.Get(j);
+				Print("[AskalCurrency]   - " + key);
+			}
+		}
+		else
+		{
+			Print("[AskalCurrency] ⚠️ marketConfig.Currencies é NULL");
+		}
 		
 		AskalCurrencyConfig currencyConfig = marketConfig.GetCurrencyConfig(currencyId);
-		if (!currencyConfig || !currencyConfig.Values)
+		if (!currencyConfig)
+		{
+			Print("[AskalCurrency] ❌ GetCurrencyConfig retornou NULL para currencyId: " + currencyId);
+			Print("[AskalCurrency] ❌ Verifique se a moeda está configurada no MarketConfig.json");
+			Print("[AskalCurrency] ❌ DICA: O currencyId deve corresponder ao WalletId da moeda na configuração");
 			return false;
+		}
+		
+		if (!currencyConfig.Values)
+		{
+			Print("[AskalCurrency] ❌ currencyConfig.Values é NULL");
+			return false;
+		}
+		
+		if (currencyConfig.Values.Count() == 0)
+		{
+			Print("[AskalCurrency] ❌ currencyConfig.Values está vazio");
+			return false;
+		}
+		
+		Print("[AskalCurrency] ✅ Configuração de moeda encontrada: " + currencyConfig.Values.Count() + " denominações");
 		
 		// Calcula troco otimizado (maior denominação primeiro)
 		array<ref Param2<string, int>> change = CalculateChange(amountToAdd, currencyConfig.Values);

@@ -2,6 +2,8 @@ modded class MissionGameplay extends MissionBase
 {
 	protected ref AskalStoreMenu m_ToolsMenu;
 	protected bool m_SyncRequested = false;
+	protected bool m_ToggleInProgress = false;
+	protected float m_MenuCreatedTime = 0.0;
 	
 	void MissionGameplay()
 	{
@@ -17,6 +19,11 @@ modded class MissionGameplay extends MissionBase
 			GetRPCManager().SendRPC("AskalCoreModule", "RequestDatasets", NULL, true, NULL, NULL);
 			m_SyncRequested = true;
 			Print("[AskalMarket] ✅ RPC RequestDatasets enviado");
+			
+			// Solicitar configuração do Virtual Store
+			Print("[AskalMarket] 📤 Solicitando configuração do Virtual Store...");
+			GetRPCManager().SendRPC("AskalCoreModule", "RequestVirtualStoreConfig", NULL, true, NULL, NULL);
+			Print("[AskalMarket] ✅ RPC RequestVirtualStoreConfig enviado");
 		}
 		
 		Print("[AskalMarket] ========================================");
@@ -45,91 +52,140 @@ modded class MissionGameplay extends MissionBase
 		Print("[AskalMarket] ========================================");
 	}
 	
-	override void OnKeyPress(int key)
-	{
-		super.OnKeyPress(key);
-		
-		// Tecla O - Toggle menu da loja
-		if (key == KeyCode.KC_O)
-		{
-			Print("[AskalMarket] ========================================");
-			Print("[AskalMarket] Tecla O pressionada");
-		
-			// Verificar sincronização
-			if (GetGame().IsMultiplayer() && GetGame().IsClient())
-			{
-				bool isSynced = AskalDatabaseSync.IsClientSynced();
-				int datasetCount = AskalDatabaseClientCache.GetInstance().GetDatasets().Count();
-				
-				Print("[AskalMarket] Estado:");
-				
-				string syncStatus = "NÃO";
-				if (isSynced)
-				{
-					syncStatus = "SIM";
-		}
-		
-				Print("[AskalMarket]   Sincronizado: " + syncStatus);
-				Print("[AskalMarket]   Datasets: " + datasetCount);
-				
-				if (!isSynced)
-		{
-					Print("[AskalMarket] ⚠️ Database ainda não sincronizado");
-					
-			PlayerBase player = PlayerBase.Cast(GetGame().GetPlayer());
-			if (player)
-			{
-				player.MessageStatus("Aguardando sincronização do servidor...");
-			}
-					
-					// Tentar solicitar novamente
-					if (!m_SyncRequested)
-					{
-						Print("[AskalMarket] 📤 Re-solicitando sincronização...");
-						GetRPCManager().SendRPC("AskalCoreModule", "RequestDatasets", NULL, true, NULL, NULL);
-						m_SyncRequested = true;
-					}
-					
-					Print("[AskalMarket] ========================================");
-			return;
-		}
-			}
-		
-			// Abrir/fechar menu
-			ToggleToolsMenu();
-			Print("[AskalMarket] ========================================");
-		}
-	}
+	// Atalho "O" removido - agora o menu é aberto através do botão no menu in-game (ESC)
+	// override void OnKeyPress(int key) removido
 	
 	void ToggleToolsMenu()
 	{
-		Print("[AskalMarket] ToggleToolsMenu()");
-		
-		if (m_ToolsMenu)
+		// Proteção contra múltiplas chamadas simultâneas
+		if (m_ToggleInProgress)
 		{
-			Print("[AskalMarket] Fechando menu");
-			m_ToolsMenu.Close();
-			m_ToolsMenu = NULL;
+			Print("[AskalMarket] ⚠️ ToggleToolsMenu já em progresso, ignorando");
+			return;
 		}
-		else
+		
+		m_ToggleInProgress = true;
+		
+		// Verificar se menu já existe e está aberto (múltiplas verificações)
+		bool menuIsOpen = false;
+		AskalStoreMenu menuToClose = NULL;
+		Widget menuRoot;
+		
+		// Verificação 1: Instância estática
+		AskalStoreMenu staticInstance = AskalStoreMenu.GetInstance();
+		if (staticInstance)
 		{
-			Print("[AskalMarket] Abrindo menu");
+			menuRoot = staticInstance.GetLayoutRoot();
+			if (menuRoot && menuRoot.IsVisible())
+				{
+				menuIsOpen = true;
+				menuToClose = staticInstance;
+				Print("[AskalMarket] 🔍 Menu detectado como aberto via GetInstance()");
+			}
+		}
+		
+		// Verificação 2: Referência local
+		if (!menuIsOpen && m_ToolsMenu)
+		{
+			menuRoot = m_ToolsMenu.GetLayoutRoot();
+			if (menuRoot && menuRoot.IsVisible())
+			{
+				menuIsOpen = true;
+				menuToClose = m_ToolsMenu;
+				Print("[AskalMarket] 🔍 Menu detectado como aberto via m_ToolsMenu");
+			}
+			else if (menuRoot)
+		{
+				// Menu existe mas não está visível, limpar referência
+				Print("[AskalMarket] ⚠️ Menu existe mas não está visível, limpando referência");
+				m_ToolsMenu = NULL;
+			}
+		}
+		
+		// Verificação 3: UIManager
+		if (!menuIsOpen)
+		{
+			UIManager uiManager = GetGame().GetUIManager();
+			if (uiManager)
+			{
+				UIScriptedMenu activeUIMenu = UIScriptedMenu.Cast(uiManager.GetMenu());
+				if (activeUIMenu)
+					{
+					AskalStoreMenu castedMenu = AskalStoreMenu.Cast(activeUIMenu);
+					if (castedMenu)
+					{
+						menuIsOpen = true;
+						menuToClose = castedMenu;
+						Print("[AskalMarket] 🔍 Menu detectado como aberto via UIManager");
+					}
+				}
+		}
+			}
+		
+		// Se menu está aberto, fechar
+		if (menuIsOpen && menuToClose)
+		{
+			Print("[AskalMarket] ========================================");
+			Print("[AskalMarket] ToggleToolsMenu: Menu está aberto, fechando...");
+	
+			// Fechar usando o método do menu
+			menuToClose.Close();
+		
+			// Limpar referências
+			m_ToolsMenu = NULL;
+			OnMenuClosed();
+			
+			Print("[AskalMarket] ✅ Menu fechado via toggle");
+			Print("[AskalMarket] ========================================");
+			m_ToggleInProgress = false;
+			return;
+		}
+		
+		// Menu está fechado, verificar se Virtual Store está habilitado
+		if (!AskalVirtualStoreSettings.IsVirtualStoreEnabled())
+		{
+			Print("[AskalMarket] ⚠️ Virtual Store está desabilitado");
+			m_ToggleInProgress = false;
+			return;
+		}
+		
+		// Criar e abrir menu
+		Print("[AskalMarket] ========================================");
+		Print("[AskalMarket] ToggleToolsMenu: Abrindo menu do Virtual Store");
 		m_ToolsMenu = new AskalStoreMenu();
 		if (m_ToolsMenu)
 		{
 			GetGame().GetUIManager().ShowScriptedMenu(m_ToolsMenu, NULL);
-				Print("[AskalMarket] ✅ Menu aberto");
+			Print("[AskalMarket] ✅ Menu do Virtual Store aberto");
 		}
 		else
 		{
 				Print("[AskalMarket] ❌ Erro ao criar menu");
 		}
+		Print("[AskalMarket] ========================================");
+		
+		m_ToggleInProgress = false;
+	}
+	
+	// Método para limpar referência quando menu é fechado
+	void OnMenuClosed()
+	{
+		if (m_ToolsMenu)
+		{
+			m_ToolsMenu = NULL;
+			Print("[AskalMarket] ✅ Referência do menu limpa (OnMenuClosed)");
 	}
 	}
 
 	override void OnUpdate(float timeslice)
 	{
 		super.OnUpdate(timeslice);
+		
+		#ifndef SERVER
+		// REMOVIDO: Verificação de visibilidade estava causando problemas
+		// O menu se fecha naturalmente quando o usuário pressiona ESC ou fecha
+		// A referência será limpa quando o menu for fechado explicitamente
+		#endif
 		
 		// Verificar se há solicitação de abertura de menu do trader pendente
 		// Isso permite que o menu seja criado quando o RPC é recebido

@@ -36,6 +36,15 @@ class AskalSellModule
 			return;
 		}
 		
+		// Verificar se o Market está habilitado
+		AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
+		if (!marketConfig || !marketConfig.IsMarketEnabled())
+		{
+			Print("[AskalSell] [ERRO] Market está desabilitado (MarketMode = 0)");
+			SendSellResponse(sender, false, "Market está desabilitado", "", 0);
+			return;
+		}
+		
 		// Param5: steamId, itemClassName, currencyId, transactionMode, traderOrVirtualStoreID
 		Param5<string, string, string, int, string> data;
 		if (!ctx.Read(data))
@@ -63,15 +72,16 @@ class AskalSellModule
 		if (!currencyId || currencyId == "")
 			currencyId = "Askal_Coin";
 		
-		// VALIDAÇÃO: Verificar se item pode ser vendido neste trader
-		if (traderName && traderName != "" && traderName != "Trader_Default")
+		// VALIDAÇÃO: Verificar se item pode ser vendido
+		// Sempre validar, mesmo sem traderName (para garantir que item está configurado)
+		if (!AskalTraderValidationHelper.CanSellItem(traderName, itemClassName))
 		{
-			if (!AskalTraderValidationHelper.CanSellItem(traderName, itemClassName))
-			{
-				Print("[AskalSell] [ERRO] Item não pode ser vendido neste trader: " + itemClassName + " | Trader: " + traderName);
-				SendSellResponse(sender, false, "Item não pode ser vendido neste trader", itemClassName, 0);
-				return;
-			}
+			string traderDisplayName = "N/A";
+			if (traderName && traderName != "")
+				traderDisplayName = traderName;
+			Print("[AskalSell] [ERRO] Item não pode ser vendido: " + itemClassName + " | Trader: " + traderDisplayName);
+			SendSellResponse(sender, false, "Item não pode ser vendido (não está configurado ou não permitido)", itemClassName, 0);
+			return;
 		}
 		
 		// Busca o player

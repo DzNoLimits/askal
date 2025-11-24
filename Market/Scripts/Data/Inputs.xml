@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<modded_inputs>
+    <inputs>
+        <actions>
+            <input name="UAAskalMarketToggleVirtualStore" loc="Abrir Loja Virtual" />
+        </actions>
+
+        <sorting name="Askal_Market" loc="ASKAL">
+			<input name="UAAskalMarketToggleVirtualStore" />
+		</sorting>
+    </inputs>
+
+    <preset>
+        <input name="UAAskalMarketToggleVirtualStore">
+            <btn name="kO">
+            </btn>
+        </input>
+    </preset>
+</modded_inputs>
+

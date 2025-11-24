@@ -20,6 +20,8 @@ class AskalTraderConfig
 	float BuyCoefficient; // Coeficiente de compra
 	float SellCoefficient; // Coeficiente de venda
 	ref map<string, int> SetupItems; // Dataset/Category/Item : ItemMode
+	ref map<string, ref array<ref VehicleSpawnPoint>> VehicleSpawnPoints; // "Land" ou "Water" : array de pontos de spawn
+	ref map<string, ref array<ref VehicleSpawnPoint>> VeHicleSpawnPoints; // Campo com typo (compatibilidade)
 	
 	[NonSerialized()]
 	string m_FileName;
@@ -37,6 +39,8 @@ class AskalTraderConfig
 		BuyCoefficient = 1.0;
 		SellCoefficient = 1.0;
 		SetupItems = new map<string, int>();
+		VehicleSpawnPoints = new map<string, ref array<ref VehicleSpawnPoint>>();
+		VeHicleSpawnPoints = new map<string, ref array<ref VehicleSpawnPoint>>(); // Compatibilidade com typo
 	}
 	
 	// Obter attachments (suporta ambos os campos)
@@ -283,6 +287,27 @@ class AskalTraderConfig
 	string GetFileName()
 	{
 		return m_FileName;
+	}
+	
+	// Obter pontos de spawn de veículos (suporta ambos os campos)
+	map<string, ref array<ref VehicleSpawnPoint>> GetVehicleSpawnPoints()
+	{
+		if (VehicleSpawnPoints && VehicleSpawnPoints.Count() > 0)
+			return VehicleSpawnPoints;
+		if (VeHicleSpawnPoints && VeHicleSpawnPoints.Count() > 0)
+			return VeHicleSpawnPoints; // Fallback para typo
+		return new map<string, ref array<ref VehicleSpawnPoint>>();
+	}
+	
+	// Obter pontos de spawn para tipo específico (Land ou Water)
+	array<ref VehicleSpawnPoint> GetVehicleSpawnPointsForType(string spawnType)
+	{
+		map<string, ref array<ref VehicleSpawnPoint>> spawnPoints = GetVehicleSpawnPoints();
+		if (spawnPoints && spawnPoints.Contains(spawnType))
+		{
+			return spawnPoints.Get(spawnType);
+		}
+		return new array<ref VehicleSpawnPoint>();
 	}
 }
 
