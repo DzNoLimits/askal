@@ -274,79 +274,67 @@ class AskalSellService
 		}
 		
 		string itemClass = item.GetType();
+		Print("[AskalSell] [IsSellable] Verificando item: " + itemClass);
 		
-		// 1. Verificar se é um container real (Container_Base ou tem cargo capacity)
+		// 1. Verificar se é um container real (Container_Base)
 		Container_Base container = Container_Base.Cast(item);
 		if (container)
 		{
+			Print("[AskalSell] [IsSellable] É Container_Base, verificando cargo...");
 			// Verificar se tem itens no cargo (não attachments)
-			if (HasCargoItemsRecursive(item))
+			bool hasCargo = HasCargoItemsRecursive(item);
+			Print("[AskalSell] [IsSellable] Container tem cargo: " + hasCargo);
+			if (hasCargo)
 			{
 				rejectReason = "container_has_cargo";
 				return false;
 			}
 			// Container vazio pode ser vendido
+			Print("[AskalSell] [IsSellable] ✅ Container vazio pode ser vendido");
 			return true;
 		}
 		
 		// 2. Verificar se item tem inventory e se tem cargo (não attachments)
 		if (item.GetInventory())
 		{
+			Print("[AskalSell] [IsSellable] Item tem inventory, verificando cargo...");
 			// Verificar se tem itens no cargo (excluindo attachments)
-			if (HasCargoItemsRecursive(item))
+			bool hasCargoItems = HasCargoItemsRecursive(item);
+			Print("[AskalSell] [IsSellable] Item tem cargo: " + hasCargoItems);
+			if (hasCargoItems)
 			{
 				rejectReason = "has_cargo_items";
 				return false;
 			}
 			
-			// 3. Verificar attachments bloqueantes (magazines, batteries, scopes)
-			int attCount = item.GetInventory().AttachmentCount();
-			if (attCount > 0)
-			{
-				array<string> blockingAttTypes = {"Mag_", "Battery", "Scope_"};
-				
-				for (int i = 0; i < attCount; i++)
-				{
-					EntityAI att = item.GetInventory().GetAttachmentFromIndex(i);
-					if (!att)
-						continue;
-					
-					string attClass = att.GetType();
-					
-					// Verificar se attachment é do tipo bloqueante
-					for (int j = 0; j < blockingAttTypes.Count(); j++)
-					{
-						string blockingPrefix = blockingAttTypes.Get(j);
-						if (attClass.IndexOf(blockingPrefix) == 0)
-						{
-							rejectReason = "has_blocking_attachment_" + blockingPrefix;
-							return false;
-						}
-					}
-				}
-			}
+			// NOTA: Attachments são vendidos junto com o item - não bloquear venda por causa de attachments
+			// A lógica anterior bloqueava itens com batteries, scopes, etc, mas isso é muito restritivo
+			// Attachments fazem parte do item e devem ser vendidos junto
 		}
 		
-		// 4. Verificar se é stackable/consumable - sempre permitir
+		// 3. Verificar se é stackable/consumable - sempre permitir
 		ItemBase itemBase = ItemBase.Cast(item);
 		if (itemBase && itemBase.HasQuantity())
 		{
+			Print("[AskalSell] [IsSellable] ✅ Item stackable pode ser vendido");
 			// Stackable items podem sempre ser vendidos
 			return true;
 		}
 		
-		// 5. Verificar tipos conhecidos de consumables (whitelist)
+		// 4. Verificar tipos conhecidos de consumables (whitelist)
 		array<string> consumableTypes = {"Bandage", "Food", "Drink", "Fruit", "Vegetable", "Meat", "Ammo_"};
 		for (int k = 0; k < consumableTypes.Count(); k++)
 		{
 			string consumablePrefix = consumableTypes.Get(k);
 			if (itemClass.IndexOf(consumablePrefix) == 0)
 			{
+				Print("[AskalSell] [IsSellable] ✅ Item consumable pode ser vendido");
 				return true;
 			}
 		}
 		
-		// 6. Por padrão, permitir venda se não tem cargo
+		// 5. Por padrão, permitir venda se não tem cargo
+		Print("[AskalSell] [IsSellable] ✅ Item pode ser vendido (padrão)");
 		return true;
 	}
 	

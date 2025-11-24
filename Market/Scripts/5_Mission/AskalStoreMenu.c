@@ -4242,6 +4242,7 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 				
 				if (container && container.IsLiquidContainer())
 				{
+					// É container de líquido - mostrar slider e seletor de conteúdo
 					m_CurrentItemIsLiquidContainer = true;
 					m_CurrentLiquidCapacity = Math.Max(container.GetQuantityMax(), 0.0);
 					
@@ -4273,12 +4274,17 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 					{
 						m_TransactionContentPanel.Show(false);
 					}
-		}
-		else
-		{
+				}
+				else
+				{
+					// Não é container de líquido (comidas, carnes, etc) - ocultar slider e sempre comprar em 100%
 					m_CurrentItemIsLiquidContainer = false;
+					m_CurrentQuantityPercent = 100; // Sempre 100% para não-líquidos
+					if (m_TransactionQuantitySlider)
+						m_TransactionQuantitySlider.Show(false);
 					if (m_TransactionContentPanel)
 						m_TransactionContentPanel.Show(false);
+					Print("[AskalStore] 📦 QUANTIFIABLE não-líquido - slider oculto, quantidade fixa em 100%");
 				}
 				
 				if (tempObj_local)

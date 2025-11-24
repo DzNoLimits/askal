@@ -134,14 +134,28 @@ class AskalCurrencyInventoryManager
 		// Calcula troco otimizado (maior denominação primeiro)
 		array<ref Param2<string, int>> change = CalculateChange(amountToAdd, currencyConfig.Values);
 		
+		// Verificar se CalculateChange retornou valores válidos
+		if (!change || change.Count() == 0)
+		{
+			Print("[AskalCurrency] ❌ ERRO: CalculateChange retornou vazio para " + amountToAdd + " " + currencyId);
+			Print("[AskalCurrency] ❌ Verifique se a moeda está configurada corretamente no MarketConfig");
+			return false;
+		}
+		
+		Print("[AskalCurrency] 💰 Calculando troco para " + amountToAdd + " " + currencyId + " - " + change.Count() + " tipos de moedas");
+		
 		// Tenta adicionar ao inventário
 		int coinsSpawned = 0;
 		array<EntityAI> droppedCoins = new array<EntityAI>();
+		int totalCoinsToSpawn = 0;
 		
 		foreach (Param2<string, int> coinEntry : change)
 		{
 			string coinClass = coinEntry.param1;
 			int coinCount = coinEntry.param2;
+			totalCoinsToSpawn += coinCount;
+			
+			Print("[AskalCurrency] 💰 Spawnando " + coinCount + "x " + coinClass);
 			
 			for (int i = 0; i < coinCount; i++)
 			{
@@ -150,11 +164,17 @@ class AskalCurrencyInventoryManager
 				{
 					// Não há espaço: dropa no chão (Q6 - OPÇÃO C)
 					vector playerPos = player.GetPosition();
+					playerPos[1] = playerPos[1] + 0.5; // Elevar um pouco
 					Object coinObj = GetGame().CreateObjectEx(coinClass, playerPos, ECE_PLACE_ON_SURFACE);
 					coin = EntityAI.Cast(coinObj);
 					if (coin)
 					{
 						droppedCoins.Insert(coin);
+						Print("[AskalCurrency] ⚠️ Moeda dropada no chão: " + coinClass);
+					}
+					else
+					{
+						Print("[AskalCurrency] ❌ ERRO CRÍTICO: Falha ao criar moeda no chão: " + coinClass);
 					}
 				}
 				else
@@ -169,7 +189,14 @@ class AskalCurrencyInventoryManager
 			Print("[AskalCurrency] ⚠️ " + droppedCoins.Count() + " moedas dropadas no chão (inventário cheio)");
 		}
 		
-		Print("[AskalCurrency] ✅ Adicionado " + amountToAdd + " " + currencyId + " (" + coinsSpawned + " moedas spawnadas)");
+		// Verificar se pelo menos algumas moedas foram spawnadas
+		if (coinsSpawned == 0 && droppedCoins.Count() == 0)
+		{
+			Print("[AskalCurrency] ❌ ERRO: Nenhuma moeda foi spawnada! Total esperado: " + totalCoinsToSpawn);
+			return false;
+		}
+		
+		Print("[AskalCurrency] ✅ Adicionado " + amountToAdd + " " + currencyId + " (" + coinsSpawned + " no inventário, " + droppedCoins.Count() + " no chão)");
 		return true;
 	}
 	

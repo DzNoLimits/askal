@@ -88,32 +88,55 @@ class AskalPurchaseService
 	}
 
 	// Criar item simples (limpo e direto)
+	// Busca recursivamente por espaço no inventário (incluindo containers) e sempre dropa no chão se necessário
 	static EntityAI CreateSimpleItem(PlayerBase player, string itemClass, float quantity, int quantityType, int contentType)
 	{
 		Print("[AskalPurchase] 🛠️ Criando item: " + itemClass);
 
-		// Criar item no inventário
+		// ESTRATÉGIA 1: Tentar criar no inventário principal (busca recursiva automática)
 		EntityAI item = player.GetInventory().CreateInInventory(itemClass);
-		if (!item)
+		if (item)
 		{
-			// Tentar criar nas mãos se não couber no inventário
+			Print("[AskalPurchase] ✅ Item criado no inventário principal");
+		}
+		else
+		{
+			Print("[AskalPurchase] ⚠️ Inventário principal cheio, tentando nas mãos...");
+			// ESTRATÉGIA 2: Tentar criar nas mãos
 			item = player.GetHumanInventory().CreateInHands(itemClass);
+			if (item)
+			{
+				Print("[AskalPurchase] ✅ Item criado nas mãos");
+			}
+			else
+			{
+				Print("[AskalPurchase] ⚠️ Mãos ocupadas, tentando buscar espaço em containers...");
+				// ESTRATÉGIA 3: Buscar recursivamente em containers (mochilas, etc)
+				item = FindSpaceInContainers(player, itemClass);
+				if (item)
+				{
+					Print("[AskalPurchase] ✅ Item criado em container");
+				}
+			}
 		}
 
+		// ESTRATÉGIA 4: Se ainda não encontrou espaço, dropar no chão
 		if (!item)
 		{
-			// Última tentativa: criar no chão próximo ao player
+			Print("[AskalPurchase] ⚠️ Nenhum espaço encontrado, criando no chão...");
 			vector playerPos = player.GetPosition();
+			// Adicionar pequeno offset para evitar que o item fique dentro do player
+			playerPos[1] = playerPos[1] + 0.5; // Elevar um pouco
 			Object itemObj = GetGame().CreateObjectEx(itemClass, playerPos, ECE_PLACE_ON_SURFACE | ECE_CREATEPHYSICS);
 			item = EntityAI.Cast(itemObj);
 			
 			if (!item)
 			{
-				Print("[AskalPurchase] ❌ Falha ao criar item: " + itemClass + " (inventário cheio e falha ao criar no chão)");
+				Print("[AskalPurchase] ❌ Falha crítica ao criar item no chão: " + itemClass);
 				return NULL;
 			}
 			
-			Print("[AskalPurchase] ⚠️ Item criado no chão (inventário cheio): " + itemClass);
+			Print("[AskalPurchase] ⚠️ Item criado no chão próximo ao player: " + itemClass);
 		}
 
 		// Aplicar quantidade apenas para tipos que funcionam
@@ -151,26 +174,34 @@ class AskalPurchaseService
 				
 				// Verificar quantidade inicial (antes de SetQuantity)
 				float initialQty = itemBase.GetQuantity();
-				Print("[AskalPurchase] 📦 STACKABLE - Quantidade inicial: " + initialQty + " | Solicitado: " + clampedQty);
+				Print("[AskalPurchase] 📦 STACKABLE - Quantidade inicial: " + initialQty + " | Solicitado: " + clampedQty + " | Max: " + qtyMax);
 				
-				// Definir quantidade
+				// CRÍTICO: Forçar quantidade mesmo se já foi criado com valor padrão
+				// Alguns itens são criados com quantidade padrão (metade do max), precisamos sobrescrever
 				itemBase.SetQuantity(clampedQty);
 				
+				// Aguardar um frame para garantir que SetQuantity foi aplicado
 				// Verificar quantidade aplicada (depois de SetQuantity)
 				float actualQty = itemBase.GetQuantity();
 				Print("[AskalPurchase] AMMO_SPAWN qty=" + Math.Round(actualQty) + " type=" + itemClass + " player=" + player.GetIdentity().GetPlainId());
 				
-				if (Math.AbsFloat(actualQty - clampedQty) > 0.01)
+				// Se ainda não corresponde, tentar múltiplas vezes
+				int retryCount = 0;
+				while (Math.AbsFloat(actualQty - clampedQty) > 0.01 && retryCount < 3)
 				{
-					Print("[AskalPurchase] ⚠️ Quantidade não corresponde! Solicitado: " + clampedQty + " | Atual: " + actualQty + " | Tentando novamente...");
-					// Tentar novamente - pode haver timing issue
+					Print("[AskalPurchase] ⚠️ Quantidade não corresponde! Solicitado: " + clampedQty + " | Atual: " + actualQty + " | Tentativa " + (retryCount + 1));
 					itemBase.SetQuantity(clampedQty);
 					actualQty = itemBase.GetQuantity();
-					Print("[AskalPurchase] 📦 STACKABLE (tentativa 2): " + actualQty + " unidades (solicitado: " + clampedQty + ", min: " + qtyMin + ", max: " + qtyMax + ")");
+					retryCount++;
+				}
+				
+				if (Math.AbsFloat(actualQty - clampedQty) > 0.01)
+				{
+					Print("[AskalPurchase] ❌ ERRO: Não foi possível definir quantidade! Solicitado: " + clampedQty + " | Final: " + actualQty);
 				}
 				else
 				{
-					Print("[AskalPurchase] 📦 STACKABLE: " + clampedQty + " unidades (min: " + qtyMin + ", max: " + qtyMax + ")");
+					Print("[AskalPurchase] 📦 STACKABLE: " + clampedQty + " unidades aplicadas com sucesso (min: " + qtyMin + ", max: " + qtyMax + ")");
 				}
 			}
 			else if (quantityType == 3 && itemBase.HasQuantity()) // QUANTIFIABLE
@@ -186,9 +217,22 @@ class AskalPurchaseService
 				}
 				else if (itemBase.HasQuantity())
 				{
-					float clampedQtyPercent = Math.Clamp(quantity, itemBase.GetQuantityMin(), itemBase.GetQuantityMax());
-					itemBase.SetQuantity(clampedQtyPercent);
-					Print("[AskalPurchase] 📊 Quantidade: " + clampedQtyPercent);
+					// Para QUANTIFIABLE não-líquidos (comidas, carnes, etc), quantity vem como percentual (0-100)
+					// Converter para quantidade real: maxQty * (percentual / 100)
+					float maxQty = itemBase.GetQuantityMax();
+					float qtyMin_quantifiable = itemBase.GetQuantityMin();
+					
+					// Clamp percentual entre 0-100
+					float clampedPercent = Math.Clamp(quantity, 0.0, 100.0);
+					
+					// Converter percentual para quantidade real
+					float actualQty_quantifiable = maxQty * (clampedPercent / 100.0);
+					
+					// Garantir que está dentro dos limites do item
+					actualQty_quantifiable = Math.Clamp(actualQty_quantifiable, qtyMin_quantifiable, maxQty);
+					
+					itemBase.SetQuantity(actualQty_quantifiable);
+					Print("[AskalPurchase] 📊 QUANTIFIABLE - Percentual: " + clampedPercent + "% | Quantidade real: " + actualQty_quantifiable + " (max: " + maxQty + ")");
 				}
 			}
 			else
@@ -212,7 +256,36 @@ class AskalPurchaseService
 		return AskalMarketHelpers.GetPlayerFromIdentity(identity);
 	}
 	
-	// Validar quantidade solicitada contra limites do item (validação servidor)
+	// Buscar espaço recursivamente em containers (mochilas, etc)
+	static EntityAI FindSpaceInContainers(PlayerBase player, string itemClass)
+	{
+		if (!player || !itemClass || itemClass == "")
+			return NULL;
+		
+		// Enumerar todos os itens no inventário do player
+		array<EntityAI> allItems = new array<EntityAI>();
+		player.GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, allItems);
+		
+		// Procurar containers (mochilas, etc) e tentar criar o item dentro deles
+		for (int i = 0; i < allItems.Count(); i++)
+		{
+			EntityAI containerItem = allItems.Get(i);
+			if (!containerItem || !containerItem.GetInventory())
+				continue;
+			
+			// Tentar criar o item dentro deste container
+			EntityAI item = containerItem.GetInventory().CreateInInventory(itemClass);
+			if (item)
+			{
+				Print("[AskalPurchase] ✅ Item criado em container: " + containerItem.GetType());
+				return item;
+			}
+		}
+		
+		return NULL;
+	}
+	
+		// Validar quantidade solicitada contra limites do item (validação servidor)
 	static bool ValidateQuantity(string itemClass, float requestedQuantity, int quantityType)
 	{
 		if (!itemClass || itemClass == "")
@@ -238,28 +311,52 @@ class AskalPurchaseService
 		
 		bool isValid = false;
 		
-		if (quantityType == 1 && item.IsMagazine()) // MAGAZINE
+		// PRIORIDADE 1: Verificar se é Magazine primeiro (mesmo que quantityType seja 2, pode ser ammo stackable)
+		Magazine mag = Magazine.Cast(item);
+		if (mag && quantityType == 1) // MAGAZINE
 		{
-			Magazine mag = Magazine.Cast(item);
-			if (mag)
+			int ammoMax = mag.GetAmmoMax();
+			isValid = (requestedQuantity >= 0 && requestedQuantity <= ammoMax);
+			if (!isValid)
+				Print("[AskalPurchase] ❌ Quantidade inválida para magazine: " + requestedQuantity + " (max: " + ammoMax + ")");
+		}
+		else if (quantityType == 2) // STACKABLE
+		{
+			// Para stackables, verificar GetQuantityMax() primeiro
+			if (item.HasQuantity())
 			{
-				int ammoMax = mag.GetAmmoMax();
-				isValid = (requestedQuantity >= 0 && requestedQuantity <= ammoMax);
+				float qtyMin = item.GetQuantityMin();
+				float qtyMax = item.GetQuantityMax();
+				isValid = (requestedQuantity >= qtyMin && requestedQuantity <= qtyMax);
 				if (!isValid)
-					Print("[AskalPurchase] ❌ Quantidade inválida para magazine: " + requestedQuantity + " (max: " + ammoMax + ")");
+					Print("[AskalPurchase] ❌ Quantidade inválida para stackable: " + requestedQuantity + " (min: " + qtyMin + ", max: " + qtyMax + ")");
 			}
 			else
 			{
-				isValid = true; // Não é magazine válido, permitir
+				// Se não tem HasQuantity(), tentar ler do config (para ammo que pode não ter HasQuantity mas tem count no config)
+				if (itemClass.IndexOf("Ammo_") == 0 || itemClass.IndexOf("ammo_") == 0)
+				{
+					string configPath = "CfgMagazines " + itemClass + " count";
+					if (GetGame().ConfigIsExisting(configPath))
+					{
+						int configCount = GetGame().ConfigGetInt(configPath);
+						isValid = (requestedQuantity >= 1 && requestedQuantity <= configCount);
+						if (!isValid)
+							Print("[AskalPurchase] ❌ Quantidade inválida para ammo (config): " + requestedQuantity + " (max: " + configCount + ")");
+					}
+					else
+					{
+						// Fallback permissivo para ammo sem config
+						Print("[AskalPurchase] ⚠️ Ammo sem HasQuantity() e sem config - permitindo: " + requestedQuantity);
+						isValid = true;
+					}
+				}
+				else
+				{
+					// Não é ammo e não tem HasQuantity - permitir quantidade padrão
+					isValid = (requestedQuantity == 1);
+				}
 			}
-		}
-		else if (quantityType == 2 && item.HasQuantity()) // STACKABLE
-		{
-			float qtyMin = item.GetQuantityMin();
-			float qtyMax = item.GetQuantityMax();
-			isValid = (requestedQuantity >= qtyMin && requestedQuantity <= qtyMax);
-			if (!isValid)
-				Print("[AskalPurchase] ❌ Quantidade inválida para stackable: " + requestedQuantity + " (min: " + qtyMin + ", max: " + qtyMax + ")");
 		}
 		else if (quantityType == 3 && item.HasQuantity()) // QUANTIFIABLE
 		{
