@@ -2,8 +2,86 @@
 // AskalMarketHelpers - Funções auxiliares compartilhadas
 // ==========================================
 
+// Player metadata for market operations
+class PlayerMeta
+{
+	bool playerConfigValid;
+	string configLoadReason;
+	
+	void PlayerMeta()
+	{
+		playerConfigValid = false;
+		configLoadReason = "";
+	}
+}
+
 class AskalMarketHelpers
 {
+	private static ref map<string, ref PlayerMeta> s_PlayerMeta = new map<string, ref PlayerMeta>();
+	private static ref map<string, bool> s_LoadLocks = new map<string, bool>();
+	
+	// Get or create PlayerMeta for a steamId
+	static PlayerMeta GetPlayerMeta(string steamId)
+	{
+		if (!steamId || steamId == "")
+			return NULL;
+		
+		if (!s_PlayerMeta.Contains(steamId))
+			s_PlayerMeta.Set(steamId, new PlayerMeta());
+		
+		return s_PlayerMeta.Get(steamId);
+	}
+	
+	// Set player config validation state
+	static void SetPlayerConfigValid(string steamId, bool valid, string reason = "")
+	{
+		PlayerMeta meta = GetPlayerMeta(steamId);
+		if (meta)
+		{
+			meta.playerConfigValid = valid;
+			meta.configLoadReason = reason;
+		}
+	}
+	
+	// Check if player config is valid
+	static bool IsPlayerConfigValid(string steamId)
+	{
+		PlayerMeta meta = GetPlayerMeta(steamId);
+		if (!meta)
+			return false;
+		return meta.playerConfigValid;
+	}
+	
+	// Get config load reason
+	static string GetConfigLoadReason(string steamId)
+	{
+		PlayerMeta meta = GetPlayerMeta(steamId);
+		if (!meta)
+			return "";
+		return meta.configLoadReason;
+	}
+	
+	// Try to acquire load lock (returns true if acquired, false if already locked)
+	static bool TryAcquireLoadLock(string steamId)
+	{
+		if (!steamId || steamId == "")
+			return false;
+		
+		if (s_LoadLocks.Contains(steamId) && s_LoadLocks.Get(steamId))
+			return false; // Already locked
+		
+		s_LoadLocks.Set(steamId, true);
+		return true;
+	}
+	
+	// Release load lock
+	static void ReleaseLoadLock(string steamId)
+	{
+		if (!steamId || steamId == "")
+			return;
+		
+		s_LoadLocks.Set(steamId, false);
+	}
 	// Obter PlayerBase de PlayerIdentity (versão melhorada com múltiplas estratégias)
 	static PlayerBase GetPlayerFromIdentity(PlayerIdentity identity)
 	{
@@ -114,5 +192,36 @@ class AskalMarketHelpers
 		
 		// For now, return default currency
 		return marketConfig.GetDefaultCurrencyId();
+	}
+	
+	// Call this on player connect/OnStoreLoad to load/create/migrate player config
+	// This should be called from 4_World context (has access to PlayerMeta)
+	static void OnPlayerConnect(string steamId)
+	{
+		if (!steamId || steamId == "")
+			return;
+		
+		// Load or create player config synchronously
+		AskalPlayerData playerData;
+		bool success;
+		string reason;
+		AskalPlayerConfigLoader.LoadOrCreatePlayerConfigSync(steamId, playerData, success, reason);
+		
+		if (success && playerData)
+		{
+			// Initialize in-memory balances
+			AskalPlayerBalance.InitializePlayerBalances(steamId, playerData);
+			// Mark as valid
+			SetPlayerConfigValid(steamId, true, reason);
+			AskalPlayerBalance.SetPlayerConfigValidInternal(steamId, true);
+			Print("[AskalMarketHelpers] Player " + steamId + " config loaded/created successfully on connect");
+		}
+		else
+		{
+			// Mark as invalid
+			SetPlayerConfigValid(steamId, false, reason);
+			AskalPlayerBalance.SetPlayerConfigValidInternal(steamId, false);
+			Print("[AskalMarketHelpers] Player " + steamId + " config load/create failed on connect — reason: " + reason);
+		}
 	}
 }

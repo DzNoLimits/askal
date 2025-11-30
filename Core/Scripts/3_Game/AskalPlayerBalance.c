@@ -291,9 +291,47 @@ class AskalPlayerBalance
 		return true;
 	}
 	
-	// Validate and load player config (MUST be called before any transaction)
+	// Validate and load player config using synchronous loader (MUST be called before any transaction)
 	// Returns true if config is valid and loaded, false otherwise
 	static bool ValidateAndLoadPlayerConfig(string steamId)
+	{
+		// Use the new synchronous loader
+		AskalPlayerData playerData;
+		bool success;
+		string reason;
+		
+		AskalPlayerConfigLoader.LoadOrCreatePlayerConfigSync(steamId, playerData, success, reason);
+		
+		if (success && playerData)
+		{
+			// Initialize in-memory balances
+			s_Cache.Set(steamId, playerData);
+			s_CacheTimestamps.Set(steamId, GetGame().GetTime());
+			
+			// Update internal validation flag
+			// Note: PlayerMeta is set from 4_World context (AskalPurchaseModule)
+			s_PlayerConfigValid.Set(steamId, true);
+			
+			return true;
+		}
+		else
+		{
+			// Mark as invalid
+			// Note: PlayerMeta is set from 4_World context (AskalPurchaseModule)
+			s_PlayerConfigValid.Set(steamId, false);
+			
+			// Clear in-memory balances
+			if (s_Cache.Contains(steamId))
+				s_Cache.Remove(steamId);
+			if (s_CacheTimestamps.Contains(steamId))
+				s_CacheTimestamps.Remove(steamId);
+			
+			return false;
+		}
+	}
+	
+	// Legacy ValidateAndLoadPlayerConfig - kept for compatibility but now uses new loader
+	static bool ValidateAndLoadPlayerConfigLegacy(string steamId)
 	{
 		if (!steamId || steamId == "")
 		{
@@ -585,15 +623,38 @@ class AskalPlayerBalance
 	
 	// Check if player config is valid (must be called before transactions)
 	// Public method for external validation checks
+	// Note: This is called from 3_Game context, PlayerMeta check is done in 4_World
 	static bool IsPlayerConfigValid(string steamId)
 	{
 		if (!steamId || steamId == "")
 			return false;
 		
+		// Check internal validation flag
+		// Note: PlayerMeta is checked in 4_World context (AskalPurchaseModule)
 		if (!s_PlayerConfigValid.Contains(steamId))
 			return false;
 		
 		return s_PlayerConfigValid.Get(steamId);
+	}
+	
+	// Initialize in-memory balances from loaded player config
+	static void InitializePlayerBalances(string steamId, AskalPlayerData playerData)
+	{
+		if (!steamId || steamId == "" || !playerData)
+			return;
+		
+		s_Cache.Set(steamId, playerData);
+		s_CacheTimestamps.Set(steamId, GetGame().GetTime());
+		s_PlayerConfigValid.Set(steamId, true);
+	}
+	
+	// Set internal validation flag (called from 4_World context)
+	static void SetPlayerConfigValidInternal(string steamId, bool valid)
+	{
+		if (!steamId || steamId == "")
+			return;
+		
+		s_PlayerConfigValid.Set(steamId, valid);
 	}
 	
 	// Carregar dados do player (lê sempre do disco)

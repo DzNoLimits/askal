@@ -5573,9 +5573,15 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		// itemMode: -1=Disabled, 0=See Only, 1=Buy Only, 2=Sell Only, 3=Buy+Sell
 		m_CurrentItemMode = itemMode;
 		
+		// Determinar permissões baseadas no modo do item
+		// Modo 1 = Apenas compra -> não mostrar botão de venda
+		// Modo 2 = Apenas venda -> não mostrar botão de compra
+		// Modo 3 = Compra e venda -> mostrar ambos (se player tiver item para venda)
+		// Modo <= 0 = Desabilitado -> não mostrar nenhum
 		bool canBuy = (itemMode == 1 || itemMode == 3);
 		bool canSell = (itemMode == 2 || itemMode == 3);
 		
+		// Verificar se player tem o item (apenas para venda)
 		bool playerHasItem = false;
 		if (m_BatchSellEnabled)
 			playerHasItem = true;
@@ -5584,14 +5590,24 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		else if (m_CurrentSelectedClassName && m_CurrentSelectedClassName != "")
 			playerHasItem = IsItemInInventory(m_CurrentSelectedClassName);
 		
-		if (canSell && !playerHasItem)
+		// Se modo é 1 (Buy Only), não permitir venda mesmo que player tenha o item
+		if (itemMode == 1)
 			canSell = false;
+		
+		// Se modo é 2 (Sell Only), não permitir compra
+		if (itemMode == 2)
+			canBuy = false;
+		
+		// Se modo <= 0, desabilitar ambos
 		if (itemMode <= 0)
 		{
 			canBuy = false;
-			if (itemMode <= 0)
-				canSell = false;
+			canSell = false;
 		}
+		
+		// Se modo permite venda mas player não tem o item, desabilitar venda
+		if (canSell && !playerHasItem)
+			canSell = false;
 		
 		m_CurrentCanBuy = canBuy;
 		m_CurrentCanSell = canSell;
@@ -5630,6 +5646,19 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 				m_BuyButtonSolo.Show(false);
 			if (m_SellButtonSolo)
 				m_SellButtonSolo.Show(false);
+			
+			// Zerar valores quando nenhum botão é exibido
+			ResetButtonTotals();
+		}
+		
+		// Zerar valores dos botões que não devem ser exibidos
+		if (!canBuy)
+		{
+			UpdateBuyTotalForLayout(0);
+		}
+		if (!canSell)
+		{
+			UpdateSellTotalForLayout(0);
 		}
 		
 		int resolvedLayout = 0;

@@ -99,12 +99,43 @@ class AskalPurchaseModule
 	
 	protected void ProcessPurchaseRequest(PlayerIdentity sender, string steamId, string itemClass, int requestedPrice, string currencyId, float itemQuantity, int quantityType, int contentType, string traderName = "")
 	{
+		Print("[AskalPurchase] Purchase request start for " + steamId + " | trader=" + traderName + " | requestedCurrency=" + currencyId);
+		
 		// CRITICAL: Check player config validation BEFORE any processing
-		if (!AskalPlayerBalance.IsPlayerConfigValid(steamId))
+		if (!AskalMarketHelpers.IsPlayerConfigValid(steamId))
 		{
-			Print("[AskalPurchase] REJECTED purchase for " + steamId + ": player config missing/invalid");
-			SendPurchaseResponse(sender, false, itemClass, 0, "Player configuration missing or invalid. Contact admin or reconnect.");
-			return;
+			// Attempt one-time synchronous fallback
+			Print("[AskalPurchase] Player config invalid, attempting fallback load for: " + steamId);
+			AskalPlayerData fallbackData;
+			bool fallbackSuccess;
+			string fallbackReason;
+			AskalPlayerConfigLoader.LoadOrCreatePlayerConfigSync(steamId, fallbackData, fallbackSuccess, fallbackReason);
+			
+			if (fallbackSuccess && fallbackData)
+			{
+				// Initialize in-memory balances
+				AskalPlayerBalance.InitializePlayerBalances(steamId, fallbackData);
+				AskalMarketHelpers.SetPlayerConfigValid(steamId, true, fallbackReason);
+				// Also update internal flag
+				AskalPlayerBalance.SetPlayerConfigValidInternal(steamId, true);
+				Print("[AskalPurchase] Fallback load succeeded for: " + steamId);
+			}
+			else
+			{
+				// Fallback failed, mark as invalid and reject
+				AskalMarketHelpers.SetPlayerConfigValid(steamId, false, fallbackReason);
+				AskalPlayerBalance.SetPlayerConfigValidInternal(steamId, false);
+				
+				string rejectReason = AskalMarketHelpers.GetConfigLoadReason(steamId);
+				if (rejectReason == "")
+					rejectReason = fallbackReason;
+				if (rejectReason == "")
+					rejectReason = "unknown error";
+				
+				Print("[AskalPurchase] REJECTED purchase for " + steamId + ": player config missing/invalid — reason: " + rejectReason);
+				SendPurchaseResponse(sender, false, itemClass, 0, "Player configuration missing or invalid. Contact admin or reconnect.");
+				return;
+			}
 		}
 		
 		// ITER-1: Rate limiting check FIRST
@@ -147,7 +178,7 @@ class AskalPurchaseModule
 			Print("[AskalPurchase] Resolved currency using default: " + currencyId);
 		}
 		
-		Print("[AskalPurchase] Resolved currency for purchase: " + currencyId);
+		Print("[AskalPurchase] Resolved currency for purchase: " + currencyId + " (trader: " + traderName + ")");
 		
 		// VALIDAÇÃO: Verificar se item pode ser comprado neste trader
 		if (traderName && traderName != "")
