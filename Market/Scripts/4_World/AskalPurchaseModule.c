@@ -99,6 +99,14 @@ class AskalPurchaseModule
 	
 	protected void ProcessPurchaseRequest(PlayerIdentity sender, string steamId, string itemClass, int requestedPrice, string currencyId, float itemQuantity, int quantityType, int contentType, string traderName = "")
 	{
+		// CRITICAL: Check player config validation BEFORE any processing
+		if (!AskalPlayerBalance.IsPlayerConfigValid(steamId))
+		{
+			Print("[AskalPurchase] REJECTED purchase for " + steamId + ": player config missing/invalid");
+			SendPurchaseResponse(sender, false, itemClass, 0, "Player configuration missing or invalid. Contact admin or reconnect.");
+			return;
+		}
+		
 		// ITER-1: Rate limiting check FIRST
 		if (!CheckRateLimit(steamId))
 		{

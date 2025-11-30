@@ -82,13 +82,35 @@ class AskalJsonLoader<Class T>
         return timestamp;
     }
     
+    // Generate UTC ISO timestamp (format: YYYY-MM-DDTHH:MM:SSZ)
+    protected static string GenerateUtcIsoTimestamp()
+    {
+        int year, month, day, hour, minute, second;
+        GetYearMonthDay(year, month, day);
+        GetHourMinuteSecond(hour, minute, second);
+        
+        string timestamp = year.ToString() + "-";
+        if (month < 10) timestamp += "0";
+        timestamp += month.ToString() + "-";
+        if (day < 10) timestamp += "0";
+        timestamp += day.ToString() + "T";
+        if (hour < 10) timestamp += "0";
+        timestamp += hour.ToString() + ":";
+        if (minute < 10) timestamp += "0";
+        timestamp += minute.ToString() + ":";
+        if (second < 10) timestamp += "0";
+        timestamp += second.ToString() + "Z";
+        
+        return timestamp;
+    }
+    
     // Create backup of file before modification
     protected static bool CreateBackup(string filePath, string originalContent)
     {
         if (!filePath || filePath == "" || !originalContent || originalContent == "")
             return false;
         
-        string timestamp = GenerateTimestamp();
+        string timestamp = GenerateUtcIsoTimestamp();
         string backupPath = filePath + ".bak." + timestamp;
         
         FileHandle fh = OpenFile(backupPath, FileMode.WRITE);
@@ -101,6 +123,28 @@ class AskalJsonLoader<Class T>
         FPrintln(fh, originalContent);
         CloseFile(fh);
         Print("[AskalJsonLoader] Backup written: " + backupPath);
+        return true;
+    }
+    
+    // Create backup of corrupt file (raw data)
+    static bool CreateCorruptBackup(string filePath, string rawContent)
+    {
+        if (!filePath || filePath == "" || !rawContent || rawContent == "")
+            return false;
+        
+        string timestamp = GenerateUtcIsoTimestamp();
+        string corruptPath = filePath + ".corrupt." + timestamp;
+        
+        FileHandle fh = OpenFile(corruptPath, FileMode.WRITE);
+        if (!fh)
+        {
+            Print("[AskalJsonLoader] ❌ Não foi possível criar backup corrupto: " + corruptPath);
+            return false;
+        }
+        
+        FPrintln(fh, rawContent);
+        CloseFile(fh);
+        Print("[AskalJsonLoader] Corrupt player file backup written: " + corruptPath);
         return true;
     }
     

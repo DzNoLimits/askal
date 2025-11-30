@@ -39,6 +39,9 @@ class AskalPlayerBalance
 	private static bool s_Initialized = false;
 	private static bool s_MarketConfigLoaded = false;
 	private static ref AskalMarketConfig s_MarketConfig;
+	
+	// Player config validation state (must be validated before any transaction)
+	private static ref map<string, bool> s_PlayerConfigValid = new map<string, bool>();
 
 	// ITER-1: Simple lock mechanism (non-blocking with timeout simulation)
 	private static bool TryLockPlayer(string steamId)
@@ -286,6 +289,311 @@ class AskalPlayerBalance
 		}
 		
 		return true;
+	}
+	
+	// Validate and load player config (MUST be called before any transaction)
+	// Returns true if config is valid and loaded, false otherwise
+	static bool ValidateAndLoadPlayerConfig(string steamId)
+	{
+		if (!steamId || steamId == "")
+		{
+			Print("[AskalJsonLoader] ERROR: ValidateAndLoadPlayerConfig called with empty steamId");
+			s_PlayerConfigValid.Set(steamId, false);
+			return false;
+		}
+		
+		// Check if already validated and cached
+		if (s_PlayerConfigValid.Contains(steamId) && s_PlayerConfigValid.Get(steamId))
+		{
+			// Verify file still exists
+			string cachedFilePath = GetPlayerFilePath(steamId);
+			if (FileExist(cachedFilePath))
+				return true;
+			// File was deleted, need to revalidate
+			s_PlayerConfigValid.Set(steamId, false);
+		}
+		
+		Init();
+		EnsureMarketConfigLoaded();
+		
+		// Check if MarketConfig is available
+		if (!s_MarketConfig || !s_MarketConfig.Currencies)
+		{
+			Print("[AskalJsonLoader] ERROR: MarketConfig not available — cannot migrate/seed balances");
+			s_PlayerConfigValid.Set(steamId, false);
+			return false;
+		}
+		
+		string configFilePath = GetPlayerFilePath(steamId);
+		if (!configFilePath || configFilePath == "")
+		{
+			Print("[AskalJsonLoader] ERROR: Invalid file path for player: " + steamId);
+			s_PlayerConfigValid.Set(steamId, false);
+			return false;
+		}
+		
+		Print("[AskalJsonLoader] Loading player file: " + configFilePath);
+		
+		AskalPlayerData playerData = new AskalPlayerData();
+		string originalContent = "";
+		bool fileExists = FileExist(configFilePath);
+		bool parseSuccess = false;
+		bool needsMigrationFlag = false;
+		
+		if (fileExists)
+		{
+			// Try to load and parse file
+			FileHandle fh = OpenFile(configFilePath, FileMode.READ);
+			if (fh)
+			{
+				string rawContent = "";
+				string line;
+				while (FGets(fh, line) > 0)
+				{
+					rawContent = rawContent + "\n" + line;
+				}
+				CloseFile(fh);
+				
+				if (rawContent != "")
+				{
+					originalContent = rawContent;
+					
+					// Check if Balance is legacy numeric format (simple heuristic: look for "Balance":<number>)
+					// This is a basic check - full JSON parsing would be needed for robust detection
+					bool hasLegacyNumericBalance = false;
+					int legacyBalanceValue = 0;
+					
+					// Try to detect legacy format: "Balance":<number> (not "Balance":{...})
+					int balancePos = rawContent.IndexOf("\"Balance\"");
+					if (balancePos >= 0)
+					{
+						// Find colon after "Balance"
+						string afterBalance = rawContent.Substring(balancePos, rawContent.Length() - balancePos);
+						int colonPos = afterBalance.IndexOf(":");
+						if (colonPos >= 0)
+						{
+							string afterColon = afterBalance.Substring(colonPos + 1, afterBalance.Length() - colonPos - 1);
+							afterColon.Trim();
+							// Check if it starts with a digit (numeric) instead of "{" (object)
+							if (afterColon.Length() > 0)
+							{
+								string firstChar = afterColon.Substring(0, 1);
+								// Check if first character is a digit by comparing with "0" and "9"
+								if (firstChar >= "0" && firstChar <= "9")
+								{
+									// Extract number (simple extraction)
+									string numberStr = "";
+									for (int numIdx = 0; numIdx < afterColon.Length(); numIdx++)
+									{
+										string charStr = afterColon.Substring(numIdx, 1);
+										// Check if character is a digit
+										if (charStr >= "0" && charStr <= "9")
+											numberStr += charStr;
+										else if (charStr == "," || charStr == "}" || charStr == "\n" || charStr == "\r") // comma, }, newline
+											break;
+									}
+									if (numberStr != "")
+									{
+										legacyBalanceValue = numberStr.ToInt();
+										hasLegacyNumericBalance = true;
+										Print("[AskalJsonLoader] Detected legacy numeric Balance: " + legacyBalanceValue);
+									}
+								}
+							}
+						}
+					}
+					
+					// Try to parse JSON
+					string error;
+					JsonSerializer serializer = new JsonSerializer();
+					parseSuccess = serializer.ReadFromString(playerData, rawContent, error);
+					
+					if (!parseSuccess || error != string.Empty)
+					{
+						Print("[AskalJsonLoader] ERROR: Failed to parse player JSON: " + error);
+						Print("[AskalJsonLoader] Creating corrupt backup and replacing with default file");
+						
+						// Create corrupt backup
+						if (!AskalJsonLoader<AskalPlayerData>.CreateCorruptBackup(configFilePath, rawContent))
+						{
+							Print("[AskalJsonLoader] ERROR: Failed to create corrupt backup, aborting");
+							s_PlayerConfigValid.Set(steamId, false);
+							return false;
+						}
+						
+						// Reset playerData for default creation
+						playerData = new AskalPlayerData();
+						originalContent = "";
+					}
+					else if (hasLegacyNumericBalance)
+					{
+						// Balance was numeric, convert to object format
+						Print("[AskalJsonLoader] Converting legacy numeric Balance to object format");
+						playerData.Balance = new map<string, int>();
+						
+						// Get default currency ID
+						string defaultCurrencyId = s_MarketConfig.GetDefaultCurrencyId();
+						if (defaultCurrencyId == "")
+							defaultCurrencyId = AskalMarketConstants.DEFAULT_CURRENCY_ID;
+						
+						playerData.Balance.Set(defaultCurrencyId, legacyBalanceValue);
+						Print("[AskalJsonLoader] MIGRATE: Converted legacy Balance " + legacyBalanceValue + " to {" + defaultCurrencyId + ": " + legacyBalanceValue + "}");
+						
+						// Mark for migration save
+						needsMigrationFlag = true;
+					}
+				}
+			}
+		}
+		else
+		{
+			Print("[AskalJsonLoader] Player file not found: " + configFilePath + " — creating default");
+		}
+		
+		// If file doesn't exist or parse failed, create default
+		if (!fileExists || !parseSuccess)
+		{
+			playerData = CreateDefaultPlayerData();
+			if (!playerData)
+			{
+				Print("[AskalJsonLoader] ERROR: Failed to create default player data");
+				s_PlayerConfigValid.Set(steamId, false);
+				return false;
+			}
+			
+			// Set FirstLogin timestamp if creating new file
+			if (!fileExists)
+			{
+				int year, month, day, hour, minute, second;
+				GetYearMonthDay(year, month, day);
+				GetHourMinuteSecond(hour, minute, second);
+				
+				string firstLogin = year.ToString() + "-";
+				if (month < 10) firstLogin += "0";
+				firstLogin += month.ToString() + "-";
+				if (day < 10) firstLogin += "0";
+				firstLogin += day.ToString() + "T";
+				if (hour < 10) firstLogin += "0";
+				firstLogin += hour.ToString() + ":";
+				if (minute < 10) firstLogin += "0";
+				firstLogin += minute.ToString() + ":";
+				if (second < 10) firstLogin += "0";
+				firstLogin += second.ToString() + "Z";
+				playerData.FirstLogin = firstLogin;
+			}
+			
+			// Log currencies being created
+			string currencyList = "";
+			if (s_MarketConfig && s_MarketConfig.Currencies)
+			{
+				for (int listIdx = 0; listIdx < s_MarketConfig.Currencies.Count(); listIdx++)
+				{
+					string listCurrencyId = s_MarketConfig.Currencies.GetKey(listIdx);
+					if (currencyList != "")
+						currencyList += ", ";
+					currencyList += listCurrencyId;
+				}
+			}
+			Print("[AskalJsonLoader] Created new player JSON for " + steamId + " with currencies: " + currencyList);
+			
+			// Save new file atomically
+			if (!AskalJsonLoader<AskalPlayerData>.SaveToFile(configFilePath, playerData))
+			{
+				Print("[AskalJsonLoader] ERROR: Failed to save new player file: " + configFilePath);
+				s_PlayerConfigValid.Set(steamId, false);
+				return false;
+			}
+			
+			// Verify file was created
+			if (!FileExist(configFilePath))
+			{
+				Print("[AskalJsonLoader] ERROR: File was not created after save: " + configFilePath);
+				s_PlayerConfigValid.Set(steamId, false);
+				return false;
+			}
+		}
+		else
+		{
+			// File exists and parsed successfully, migrate if needed
+			// Ensure Balance is an object (not legacy numeric)
+			if (!playerData.Balance)
+			{
+				playerData.Balance = new map<string, int>();
+			}
+			
+			// If legacy conversion was detected, needsMigrationFlag is already set
+			// Otherwise, check for missing currencies
+			if (!needsMigrationFlag)
+			{
+				needsMigrationFlag = false; // Will be set to true if currencies are missing
+			}
+			
+			// Migrate: ensure all currencies exist
+			for (int migrateIdx = 0; migrateIdx < s_MarketConfig.Currencies.Count(); migrateIdx++)
+			{
+				string migrateCurrencyId = s_MarketConfig.Currencies.GetKey(migrateIdx);
+				AskalCurrencyConfig migrateCurrencyConfig = s_MarketConfig.Currencies.GetElement(migrateIdx);
+				if (!migrateCurrencyConfig)
+					continue;
+				
+				if (!playerData.Balance.Contains(migrateCurrencyId))
+				{
+					needsMigrationFlag = true;
+					int seedValue = 0;
+					
+					if (migrateCurrencyConfig.Mode == AskalMarketConstants.CURRENCY_MODE_DISABLED)
+					{
+						seedValue = 0;
+					}
+					else
+					{
+						seedValue = migrateCurrencyConfig.StartCurrency;
+						if (seedValue < 0)
+							seedValue = 0;
+					}
+					
+					playerData.Balance.Set(migrateCurrencyId, seedValue);
+					Print("[AskalJsonLoader] MIGRATE: Added missing currency \"" + migrateCurrencyId + "\"=" + seedValue + " to player " + steamId);
+				}
+			}
+			
+			// If migration was needed, save with backup
+			if (needsMigrationFlag)
+			{
+				// Save migrated data atomically with backup
+				if (!AskalJsonLoader<AskalPlayerData>.SaveToFileWithBackup(configFilePath, playerData, originalContent))
+				{
+					Print("[AskalJsonLoader] ERROR: Failed to save migrated player file");
+					s_PlayerConfigValid.Set(steamId, false);
+					return false;
+				}
+				
+				Print("[AskalJsonLoader] Player file saved (migrated): " + configFilePath);
+			}
+		}
+		
+		// Populate in-memory balance structures
+		s_Cache.Set(steamId, playerData);
+		s_CacheTimestamps.Set(steamId, GetGame().GetTime());
+		
+		// Mark as valid
+		s_PlayerConfigValid.Set(steamId, true);
+		Print("[AskalJsonLoader] Player config validated and loaded for: " + steamId);
+		
+		return true;
+	}
+	
+	// Check if player config is valid (must be called before transactions)
+	// Public method for external validation checks
+	static bool IsPlayerConfigValid(string steamId)
+	{
+		if (!steamId || steamId == "")
+			return false;
+		
+		if (!s_PlayerConfigValid.Contains(steamId))
+			return false;
+		
+		return s_PlayerConfigValid.Get(steamId);
 	}
 	
 	// Carregar dados do player (lê sempre do disco)
@@ -756,9 +1064,12 @@ class AskalPlayerBalance
 			return 0;
 		}
 		
-		// Ensure player file exists on first access
-		Print("[AskalBalance] 🔍 GetBalance: Garantindo que arquivo existe...");
-		EnsurePlayerFileExists(steamId);
+		// Validate and load player config BEFORE any operation
+		if (!ValidateAndLoadPlayerConfig(steamId))
+		{
+			Print("[AskalBalance] ❌ GetBalance: Player config validation failed for: " + steamId);
+			return 0;
+		}
 		
 		// Resolve currency ID (use default if not provided)
 		if (!currencyId || currencyId == "")
@@ -798,9 +1109,12 @@ class AskalPlayerBalance
 			return false;
 		}
 		
-		// Ensure player file exists before attempting to reserve
-		Print("[AskalBalance] 🔍 ReserveFunds: Garantindo que arquivo existe...");
-		EnsurePlayerFileExists(steamId);
+		// Validate and load player config BEFORE any transaction
+		if (!ValidateAndLoadPlayerConfig(steamId))
+		{
+			Print("[AskalBalance] RESERVE_FAIL steamId=" + steamId + " reason=config_invalid");
+			return false;
+		}
 		
 		// Resolve currency ID
 		if (!currencyId || currencyId == "")
