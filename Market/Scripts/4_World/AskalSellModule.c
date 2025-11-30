@@ -60,8 +60,12 @@ class AskalSellModule
 				steamId = sender.GetId();
 		}
 		
+		// Resolve currency ID using config default if not set
 		if (!currencyId || currencyId == "")
-			currencyId = "Askal_Coin";
+		{
+			AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
+			currencyId = marketConfig.GetDefaultCurrencyId();
+		}
 		
 		// VALIDAÇÃO: Verificar se item pode ser vendido neste trader
 		if (traderName && traderName != "" && traderName != "Trader_Default")

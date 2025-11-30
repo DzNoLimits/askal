@@ -116,8 +116,10 @@ class AskalPurchaseModule
 			return;
 		}
 		
+		// Resolve currency ID using config
+		AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
 		if (!currencyId || currencyId == "")
-			currencyId = "Askal_Coin";
+			currencyId = marketConfig.GetDefaultCurrencyId();
 		
 		// VALIDAÇÃO: Verificar se item pode ser comprado neste trader
 		if (traderName && traderName != "")

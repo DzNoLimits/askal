@@ -100,4 +100,19 @@ class AskalMarketHelpers
 			return false;
 		return game.IsClient();
 	}
+	
+	// Resolve currency ID for an item (optional: can be extended to support per-item currency)
+	// For now, returns default currency from config
+	static string ResolveItemCurrency(string itemClass = "", string traderName = "")
+	{
+		AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
+		if (!marketConfig)
+			return AskalMarketConstants.DEFAULT_CURRENCY_ID;
+		
+		// Future: Check if item config specifies a currency
+		// Future: Check if trader config overrides currency
+		
+		// For now, return default currency
+		return marketConfig.GetDefaultCurrencyId();
+	}
 }

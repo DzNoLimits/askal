@@ -4528,8 +4528,12 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		int price = itemData.GetPrice();
 		AskalDatabaseClientCache cache = AskalDatabaseClientCache.GetInstance();
 		string currencyId = m_ActiveCurrencyId;
+		// Resolve currency ID using config default if not set
 		if (!currencyId || currencyId == "")
-			currencyId = "Askal_Coin";
+		{
+			AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
+			currencyId = marketConfig.GetDefaultCurrencyId();
+		}
 		
 		if (m_SelectedVariantClass != "")
 		{
@@ -4690,8 +4694,12 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			steamId = identity.GetId();
 		
 		string currencyId = m_ActiveCurrencyId;
+		// Resolve currency ID using config default if not set
 		if (!currencyId || currencyId == "")
-			currencyId = "Askal_Coin";
+		{
+			AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
+			currencyId = marketConfig.GetDefaultCurrencyId();
+		}
 		
 		ref array<ref AskalPurchaseRequestData> requests = new array<ref AskalPurchaseRequestData>();
 		for (int idx = 0; idx < m_BatchBuySelectedIndexes.Count(); idx++)
@@ -4911,8 +4919,12 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			steamId = identity.GetId();
 		
 		string currencyId = m_ActiveCurrencyId;
+		// Resolve currency ID using config default if not set
 		if (!currencyId || currencyId == "")
-			currencyId = "Askal_Coin";
+		{
+			AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
+			currencyId = marketConfig.GetDefaultCurrencyId();
+		}
 		
 		int transactionMode = 1;
 		string traderName = m_CurrentTraderName;

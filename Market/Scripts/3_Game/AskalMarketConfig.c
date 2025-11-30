@@ -20,6 +20,7 @@ class AskalCurrencyConfig
 	string WalletId;
 	string ShortName;
 	int StartCurrency;
+	int Mode; // 0=Disabled, 1=Physical, 2=Virtual (default: 1 for backwards compatibility)
 	ref array<ref AskalCurrencyValueConfig> Values;
 	
 	void AskalCurrencyConfig()
@@ -27,6 +28,7 @@ class AskalCurrencyConfig
 		WalletId = "";
 		ShortName = "";
 		StartCurrency = 0;
+		Mode = 1; // Default to physical (backwards compatible)
 		Values = new array<ref AskalCurrencyValueConfig>();
 	}
 }
@@ -37,6 +39,7 @@ class AskalMarketConfigFile
 	string Description;
 	string WarnText;
 	int DelayTimeMS;
+	string DefaultCurrencyId; // Top-level default currency ID
 	ref map<string, ref AskalCurrencyConfig> Currencies;
 	ref map<string, float> Liquids;
 	ref map<string, string> LiquidNames;
@@ -45,6 +48,7 @@ class AskalMarketConfigFile
 	{
 		WarnText = "";
 		DelayTimeMS = 500;
+		DefaultCurrencyId = "";
 		Currencies = new map<string, ref AskalCurrencyConfig>();
 		Liquids = new map<string, float>();
 		LiquidNames = new map<string, string>();
@@ -62,6 +66,7 @@ class AskalMarketConfig
 	ref map<string, ref AskalCurrencyConfig> Currencies; // walletId -> config
 	string WarnText;
 	int DelayTimeMS;
+	string DefaultCurrencyId; // Default currency ID
 	
 	void AskalMarketConfig()
 	{
@@ -70,6 +75,7 @@ class AskalMarketConfig
 		Currencies = new map<string, ref AskalCurrencyConfig>();
 		WarnText = "";
 		DelayTimeMS = 500; // Default: 500ms
+		DefaultCurrencyId = "";
 		
 		// Carregar config apenas se ainda não foi carregada
 		if (!s_ConfigLoaded)
@@ -138,6 +144,9 @@ class AskalMarketConfig
 		if (DelayTimeMS <= 0)
 			DelayTimeMS = 500; // Fallback
 		
+		// Set DefaultCurrencyId from config, or use first currency as fallback
+		DefaultCurrencyId = fileData.DefaultCurrencyId;
+		
 		if (fileData.Liquids)
 		{
 			foreach (string liquidKey, float price : fileData.Liquids)
@@ -169,6 +178,11 @@ class AskalMarketConfig
 				if (!currencyCfg.Values)
 					currencyCfg.Values = new array<ref AskalCurrencyValueConfig>();
 				
+				// Backwards compatibility: Mode defaults to 1 (Physical) in constructor
+				// If JSON explicitly sets Mode to 0, it will be 0 (disabled)
+				// If JSON omits Mode, constructor default (1) is used
+				// No additional logic needed - constructor handles backwards compatibility
+				
 				// Backfill do nome do wallet
 				if (!currencyCfg.WalletId || currencyCfg.WalletId == "")
 					currencyCfg.WalletId = currencyId;
@@ -177,10 +191,18 @@ class AskalMarketConfig
 			}
 		}
 		
+		// Set DefaultCurrencyId to first currency if not specified
+		if ((!DefaultCurrencyId || DefaultCurrencyId == "") && Currencies.Count() > 0)
+		{
+			DefaultCurrencyId = Currencies.GetKey(0);
+			Print("[AskalMarket] DefaultCurrencyId não especificado, usando primeira moeda: " + DefaultCurrencyId);
+		}
+		
 		// Garante pelo menos uma moeda padrão
 		if (Currencies.Count() == 0)
 		{
 			AddDefaultCurrency();
+			DefaultCurrencyId = "Askal_DefaultWallet";
 		}
 		
 		if (m_LiquidPrices.Count() == 0)
@@ -196,8 +218,10 @@ class AskalMarketConfig
 		m_LiquidNames.Clear();
 		WarnText = "";
 		DelayTimeMS = 500;
+		DefaultCurrencyId = "";
 		
 		AddDefaultCurrency();
+		DefaultCurrencyId = "Askal_DefaultWallet";
 		LoadDefaultLiquids();
 	}
 	
@@ -271,5 +295,26 @@ class AskalMarketConfig
 		if (Currencies.Find(currencyId, config))
 			return config;
 		return NULL;
+	}
+	
+	// Get default currency ID (from config or first currency)
+	string GetDefaultCurrencyId()
+	{
+		if (DefaultCurrencyId && DefaultCurrencyId != "")
+			return DefaultCurrencyId;
+		
+		if (Currencies.Count() > 0)
+			return Currencies.GetKey(0);
+		
+		return AskalMarketConstants.DEFAULT_CURRENCY_ID;
+	}
+	
+	// Resolve currency ID (use provided or default)
+	string ResolveCurrencyId(string currencyId = "")
+	{
+		if (currencyId && currencyId != "")
+			return currencyId;
+		
+		return GetDefaultCurrencyId();
 	}
 }

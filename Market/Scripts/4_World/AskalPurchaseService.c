@@ -20,7 +20,7 @@ class AskalPurchaseService
 				steamId = identity.GetId();
 		}
 
-		// Obter player
+		// Obter player (only needed for Mode 1 - physical currency)
 		PlayerBase player = GetPlayerFromIdentity(identity);
 		if (!player)
 		{
@@ -28,8 +28,26 @@ class AskalPurchaseService
 			return false;
 		}
 
+		// Resolve currency ID
+		AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
 		if (!currencyId || currencyId == "")
-			currencyId = "Askal_Coin";
+			currencyId = marketConfig.GetDefaultCurrencyId();
+
+		// Get currency config and validate Mode
+		AskalCurrencyConfig currencyConfig = marketConfig.GetCurrencyConfig(currencyId);
+		if (!currencyConfig)
+		{
+			Print("[AskalPurchase] ❌ Currency não encontrada: " + currencyId);
+			return false;
+		}
+
+		// Check currency Mode
+		int currencyMode = currencyConfig.Mode;
+		if (currencyMode == AskalMarketConstants.CURRENCY_MODE_DISABLED)
+		{
+			Print("[AskalPurchase] ❌ Currency está desabilitada (Mode=0): " + currencyId);
+			return false;
+		}
 
 		// Calcular preço autoritativo considerando quantidade (para stackables)
 		int authoritativePrice = ComputeItemTotalPriceWithQuantity(itemClass, itemQuantity, quantityType);
@@ -47,37 +65,67 @@ class AskalPurchaseService
 		// ITER-1: Reserve funds atomically BEFORE creating item (prevents TOCTOU)
 		if (!AskalPlayerBalance.ReserveFunds(steamId, price, currencyId))
 		{
-			Print("[AskalPurchase] ❌ Falha ao reservar funds: " + steamId + " | Amount: " + price);
+			Print("[AskalPurchase] ❌ Falha ao reservar funds: " + steamId + " | Amount: " + price + " | Currency: " + currencyId);
 			return false;
 		}
-		
-		// Criar item
-		EntityAI createdItem = CreateSimpleItem(player, itemClass, itemQuantity, quantityType, contentType);
-		if (!createdItem)
+
+		// Handle based on currency Mode
+		if (currencyMode == AskalMarketConstants.CURRENCY_MODE_VIRTUAL)
 		{
-			Print("[AskalPurchase] ❌ Não foi possível criar item: " + itemClass);
-			// ITER-1: Release reservation if item creation fails
+			// Mode 2 (Virtual): No item spawn, just numeric balance change
+			Print("[AskalPurchase] Currency mode=2 (VIRTUAL) -> no item spawn requested");
+			
+			// Confirm reservation (deduct balance)
+			if (!AskalPlayerBalance.ConfirmReservation(steamId, price, currencyId))
+			{
+				Print("[AskalPurchase] ❌ Erro ao confirmar reserva para currency virtual");
+				AskalPlayerBalance.ReleaseReservation(steamId, price, currencyId);
+				return false;
+			}
+
+			Print("[AskalPurchase] ORDER_PLACED steamId=" + steamId + " item=" + itemClass + " price=" + price + " currency=" + currencyId + " mode=VIRTUAL");
+			Print("[AskalPurchase] ✅ Compra realizada (virtual currency)!");
+			Print("[AskalPurchase]   Item: " + itemClass + " | Qty: " + itemQuantity + " | Tipo: " + quantityType);
+			return true;
+		}
+		else if (currencyMode == AskalMarketConstants.CURRENCY_MODE_PHYSICAL)
+		{
+			// Mode 1 (Physical): Spawn items via Values mapping
+			Print("[AskalPurchase] Currency mode=1 (PHYSICAL) -> attempting spawn via Values mapping");
+			
+			// Criar item
+			EntityAI createdItem = CreateSimpleItem(player, itemClass, itemQuantity, quantityType, contentType);
+			if (!createdItem)
+			{
+				Print("[AskalPurchase] ❌ Não foi possível criar item: " + itemClass);
+				// ITER-1: Release reservation if item creation fails
+				AskalPlayerBalance.ReleaseReservation(steamId, price, currencyId);
+				return false;
+			}
+
+			// Attachments padrão (apenas se item foi criado com sucesso)
+			AttachDefaultAttachments(createdItem, itemClass);
+
+			// ITER-1: Confirm reservation (convert to actual deduction)
+			if (!AskalPlayerBalance.ConfirmReservation(steamId, price, currencyId))
+			{
+				Print("[AskalPurchase] ❌ Erro ao confirmar reserva");
+				GetGame().ObjectDelete(createdItem);
+				AskalPlayerBalance.ReleaseReservation(steamId, price, currencyId);
+				return false;
+			}
+
+			Print("[AskalPurchase] ORDER_PLACED steamId=" + steamId + " item=" + itemClass + " price=" + price + " currency=" + currencyId + " mode=PHYSICAL");
+			Print("[AskalPurchase] ✅ Compra realizada!");
+			Print("[AskalPurchase]   Item: " + itemClass + " | Qty: " + itemQuantity + " | Tipo: " + quantityType);
+			return true;
+		}
+		else
+		{
+			Print("[AskalPurchase] ❌ Currency mode inválido: " + currencyMode + " para currency: " + currencyId);
 			AskalPlayerBalance.ReleaseReservation(steamId, price, currencyId);
 			return false;
 		}
-
-		// Attachments padrão (apenas se item foi criado com sucesso)
-		AttachDefaultAttachments(createdItem, itemClass);
-
-		// ITER-1: Confirm reservation (convert to actual deduction)
-		if (!AskalPlayerBalance.ConfirmReservation(steamId, price, currencyId))
-		{
-			Print("[AskalPurchase] ❌ Erro ao confirmar reserva");
-			GetGame().ObjectDelete(createdItem);
-			AskalPlayerBalance.ReleaseReservation(steamId, price, currencyId);
-			return false;
-		}
-
-		Print("[AskalPurchase] ORDER_PLACED steamId=" + steamId + " item=" + itemClass + " price=" + price);
-		Print("[AskalPurchase] ✅ Compra realizada!");
-		Print("[AskalPurchase]   Item: " + itemClass + " | Qty: " + itemQuantity + " | Tipo: " + quantityType);
-
-		return true;
 	}
 
 	// Criar item simples (limpo e direto)
