@@ -61,26 +61,87 @@ class AskalPlayerBalance
 		s_PlayerLocks.Set(steamId, false);
 	}
 
-	// ITER-1: Get cached data or load from disk
+	// ITER-1: Get cached data or load from disk (guarantees file creation if missing)
 	private static AskalPlayerData GetCachedOrLoad(string steamId)
 	{
+		if (!steamId || steamId == "")
+		{
+			Print("[AskalBalance] ❌ GetCachedOrLoad: steamId vazio!");
+			return NULL;
+		}
+		
+		// ALWAYS ensure file exists first - don't trust cache
+		EnsurePlayerFileExists(steamId);
+		
+		// Declare filePath once at function scope
+		string filePath = GetPlayerFilePath(steamId);
+		
 		float now = GetGame().GetTime();
 		if (s_Cache.Contains(steamId))
 		{
 			float cacheTime = s_CacheTimestamps.Get(steamId);
 			if (now - cacheTime < CACHE_TTL)
 			{
-				return s_Cache.Get(steamId);
+				// Verify file still exists before returning cached data
+				if (FileExist(filePath))
+				{
+					return s_Cache.Get(steamId);
+				}
+				else
+				{
+					Print("[AskalBalance] ⚠️ GetCachedOrLoad: Cache existe mas arquivo não, recarregando...");
+					s_Cache.Remove(steamId);
+					s_CacheTimestamps.Remove(steamId);
+				}
 			}
-			s_Cache.Remove(steamId);
-			s_CacheTimestamps.Remove(steamId);
+			else
+			{
+				s_Cache.Remove(steamId);
+				s_CacheTimestamps.Remove(steamId);
+			}
 		}
 
+		// LoadPlayerData will create file if it doesn't exist
+		Print("[AskalBalance] 🔍 GetCachedOrLoad: Carregando dados do player: " + steamId);
 		AskalPlayerData data = LoadPlayerData(steamId);
 		if (data)
 		{
-			s_Cache.Set(steamId, data);
-			s_CacheTimestamps.Set(steamId, now);
+			// Verify file exists before caching
+			if (FileExist(filePath))
+			{
+				s_Cache.Set(steamId, data);
+				s_CacheTimestamps.Set(steamId, now);
+				Print("[AskalBalance] ✅ GetCachedOrLoad: Dados carregados e cache atualizado para: " + steamId);
+			}
+			else
+			{
+				Print("[AskalBalance] ⚠️ GetCachedOrLoad: Dados carregados mas arquivo não existe, recriando...");
+				EnsurePlayerFileExists(steamId);
+				filePath = GetPlayerFilePath(steamId); // Update path
+				data = LoadPlayerData(steamId);
+				if (data && FileExist(filePath))
+				{
+					s_Cache.Set(steamId, data);
+					s_CacheTimestamps.Set(steamId, now);
+				}
+			}
+		}
+		else
+		{
+			// If LoadPlayerData failed, try to create default data
+			Print("[AskalBalance] ⚠️ GetCachedOrLoad: LoadPlayerData retornou NULL, tentando criar dados padrão para: " + steamId);
+			EnsurePlayerFileExists(steamId);
+			filePath = GetPlayerFilePath(steamId); // Update path
+			data = LoadPlayerData(steamId);
+			if (data)
+			{
+				if (FileExist(filePath))
+				{
+					s_Cache.Set(steamId, data);
+					s_CacheTimestamps.Set(steamId, now);
+					Print("[AskalBalance] ✅ GetCachedOrLoad: Dados padrão criados e salvos para: " + steamId);
+				}
+			}
 		}
 		return data;
 	}
@@ -92,20 +153,30 @@ class AskalPlayerBalance
 
 		string baseDir = "$profile:Askal";
 		if (!FileExist(baseDir))
+		{
 			MakeDirectory(baseDir);
+			Print("[AskalBalance] 📁 Pasta criada: " + baseDir);
+		}
 
 		string dbDir = baseDir + "/Database";
 		if (!FileExist(dbDir))
+		{
 			MakeDirectory(dbDir);
+			Print("[AskalBalance] 📁 Pasta criada: " + dbDir);
+		}
 
 		string playersDir = dbDir + "/Players";
 		if (!FileExist(playersDir))
+		{
 			MakeDirectory(playersDir);
+			Print("[AskalBalance] 📁 Pasta criada: " + playersDir);
+		}
 
 		// ITER-1: Initialize outbox flush timer
 		s_LastOutboxFlush = GetGame().GetTime();
 
 		Print("[AskalBalance] Sistema de balance inicializado (persistência em tempo real)");
+		Print("[AskalBalance] 📂 Diretório de players: " + playersDir);
 		s_Initialized = true;
 	}
 
@@ -115,6 +186,14 @@ class AskalPlayerBalance
 			return;
 
 		s_MarketConfig = AskalMarketConfig.GetInstance();
+		if (!s_MarketConfig)
+		{
+			Print("[AskalBalance] ❌ EnsureMarketConfigLoaded: Falha ao carregar MarketConfig (GetInstance retornou NULL)");
+		}
+		else if (!s_MarketConfig.Currencies)
+		{
+			Print("[AskalBalance] ⚠️ EnsureMarketConfigLoaded: MarketConfig sem moedas configuradas");
+		}
 
 		s_MarketConfigLoaded = true;
 	}
@@ -128,20 +207,114 @@ class AskalPlayerBalance
 		return "$profile:Askal/Database/Players/" + steamId + ".json";
 	}
 	
+	// Migrate player data to ensure all currencies are present
+	private static bool MigratePlayerData(string steamId, string filePath, AskalPlayerData playerData, string originalContent)
+	{
+		if (!playerData || !filePath || filePath == "")
+			return false;
+		
+		EnsureMarketConfigLoaded();
+		if (!s_MarketConfig || !s_MarketConfig.Currencies)
+		{
+			Print("[AskalJsonLoader] ERROR: MarketConfig not available, skipping player currency migration for: " + steamId);
+			return false;
+		}
+		
+		bool needsMigration = false;
+		
+		// Ensure Balance exists and is an object
+		if (!playerData.Balance)
+		{
+			playerData.Balance = new map<string, int>;
+			needsMigration = true;
+			Print("[AskalJsonLoader] Balance missing => creating object for player " + steamId);
+		}
+		
+		// First, migrate old balance format (item class names) to new format (currency IDs)
+		// This might add/modify entries, so check if it made changes
+		int balanceCountBefore = playerData.Balance.Count();
+		MigrateBalanceFormat(playerData);
+		if (playerData.Balance.Count() != balanceCountBefore)
+		{
+			needsMigration = true;
+		}
+		
+		// Migrate: ensure all currencies are present
+		for (int currencyIdx = 0; currencyIdx < s_MarketConfig.Currencies.Count(); currencyIdx++)
+		{
+			string currencyId = s_MarketConfig.Currencies.GetKey(currencyIdx);
+			AskalCurrencyConfig currencyConfig = s_MarketConfig.Currencies.GetElement(currencyIdx);
+			if (!currencyConfig)
+				continue;
+			
+			if (!playerData.Balance.Contains(currencyId))
+			{
+				needsMigration = true;
+				int seedValue = 0;
+				
+				if (currencyConfig.Mode == AskalMarketConstants.CURRENCY_MODE_DISABLED)
+				{
+					seedValue = 0;
+					Print("[AskalJsonLoader] MIGRATE: currency " + currencyId + " is disabled (Mode 0); seeding 0");
+				}
+				else
+				{
+					seedValue = currencyConfig.StartCurrency;
+					if (seedValue < 0)
+						seedValue = 0;
+				}
+				
+				playerData.Balance.Set(currencyId, seedValue);
+				Print("[AskalJsonLoader] MIGRATE: Added missing currency \"" + currencyId + "\" = " + seedValue + " to player " + steamId);
+			}
+		}
+		
+		// If migration was needed, save with backup
+		if (needsMigration)
+		{
+			Print("[AskalJsonLoader] Player file saved (migrated): " + filePath);
+			bool saveSuccess = AskalJsonLoader<AskalPlayerData>.SaveToFileWithBackup(filePath, playerData, originalContent);
+			
+			// Update in-memory cache after successful save
+			if (saveSuccess)
+			{
+				s_Cache.Set(steamId, playerData);
+				s_CacheTimestamps.Set(steamId, GetGame().GetTime());
+			}
+			
+			return saveSuccess;
+		}
+		
+		return true;
+	}
+	
 	// Carregar dados do player (lê sempre do disco)
 	static AskalPlayerData LoadPlayerData(string steamId)
 	{
 		if (!steamId || steamId == "")
+		{
+			Print("[AskalBalance] ❌ LoadPlayerData: steamId vazio!");
 			return NULL;
+		}
 
 		Init();
 
 		string filePath = GetPlayerFilePath(steamId);
+		if (!filePath || filePath == "")
+		{
+			Print("[AskalBalance] ❌ LoadPlayerData: Caminho do arquivo inválido para: " + steamId);
+			return NULL;
+		}
+		
+		Print("[AskalBalance] 🔍 LoadPlayerData: Carregando dados do player: " + steamId + " -> " + filePath);
+
 		AskalPlayerData playerData = new AskalPlayerData();
+		string originalContent = "";
 
 		if (FileExist(filePath))
 		{
-			if (AskalJsonLoader<AskalPlayerData>.LoadFromFile(filePath, playerData, false))
+			Print("[AskalBalance] 🔍 LoadPlayerData: Arquivo existe, tentando carregar...");
+			if (AskalJsonLoader<AskalPlayerData>.LoadFromFileWithOriginal(filePath, playerData, originalContent, false))
 			{
 				// Garante estruturas válidas mesmo se JSON foi editado manualmente
 				if (!playerData.Balance)
@@ -149,86 +322,193 @@ class AskalPlayerBalance
 				if (!playerData.Permissions)
 					playerData.Permissions = new map<string, int>;
 				
-				// Migrate old balance format (item class names) to new format (currency IDs)
-				MigrateBalanceFormat(playerData);
+				Print("[AskalBalance] ✅ LoadPlayerData: Arquivo carregado com sucesso, migrando...");
+				// Migrate player data (ensure all currencies present, create backup if needed)
+				MigratePlayerData(steamId, filePath, playerData, originalContent);
 				
 				return playerData;
 			}
-			Print("[AskalBalance] ⚠️ Erro ao carregar dados do player, recriando: " + steamId);
+			Print("[AskalBalance] ⚠️ LoadPlayerData: Erro ao carregar dados do player, recriando: " + steamId);
 		}
 		else
 		{
-			Print("[AskalBalance] ⚠️ Arquivo do player não encontrado, criando novo: " + steamId);
+			Print("[AskalBalance] ⚠️ LoadPlayerData: Arquivo do player NÃO encontrado, criando novo: " + steamId);
 		}
 
+		Print("[AskalBalance] 🔧 LoadPlayerData: Criando dados padrão...");
 		playerData = CreateDefaultPlayerData();
-		SavePlayerData(steamId, playerData);
+		if (!playerData)
+		{
+			Print("[AskalBalance] ❌ LoadPlayerData: CreateDefaultPlayerData retornou NULL!");
+			return NULL;
+		}
+		
+		// Log currencies being created
+		string currencyList = "";
+		if (s_MarketConfig && s_MarketConfig.Currencies)
+		{
+			for (int i = 0; i < s_MarketConfig.Currencies.Count(); i++)
+			{
+				string currencyId = s_MarketConfig.Currencies.GetKey(i);
+				if (currencyList != "")
+					currencyList += ", ";
+				currencyList += currencyId;
+			}
+		}
+		Print("[AskalBalance] 💰 LoadPlayerData: Criando JSON para " + steamId + " com moedas: " + currencyList);
+		
+		// Ensure directories exist before saving
+		Init();
+		
+		// Verify directory exists
+		string playersDir = "$profile:Askal/Database/Players";
+		if (!FileExist(playersDir))
+		{
+			Print("[AskalBalance] ⚠️ LoadPlayerData: Diretório não existe, criando: " + playersDir);
+			MakeDirectory(playersDir);
+		}
+		
+		// Save the new player data
+		Print("[AskalBalance] 💾 LoadPlayerData: Salvando novo arquivo do player...");
+		if (SavePlayerData(steamId, playerData))
+		{
+			// Verify file was created
+			if (FileExist(filePath))
+			{
+				Print("[AskalBalance] ✅✅✅ LoadPlayerData: Arquivo JSON do player criado e verificado: " + filePath);
+			}
+			else
+			{
+				Print("[AskalBalance] ❌❌❌ LoadPlayerData: ERRO - Arquivo NÃO foi criado: " + filePath);
+			}
+		}
+		else
+		{
+			Print("[AskalBalance] ❌❌❌ LoadPlayerData: ERRO CRÍTICO - Falha ao salvar arquivo JSON do player: " + filePath);
+		}
+		
 		return playerData;
 	}
 
 	static AskalPlayerData CreateDefaultPlayerData()
 	{
+		Print("[AskalBalance] 🔧 CreateDefaultPlayerData: Iniciando criação de dados padrão");
 		AskalPlayerData playerData = new AskalPlayerData();
 		playerData.FirstLogin = "0";
 		EnsureMarketConfigLoaded();
 
 		if (s_MarketConfig && s_MarketConfig.Currencies)
 		{
+			Print("[AskalBalance] 🔧 CreateDefaultPlayerData: MarketConfig encontrado, " + s_MarketConfig.Currencies.Count() + " moedas configuradas");
 			for (int currencyIdx = 0; currencyIdx < s_MarketConfig.Currencies.Count(); currencyIdx++)
 			{
 				string currencyId = s_MarketConfig.Currencies.GetKey(currencyIdx);
 				AskalCurrencyConfig currencyConfig = s_MarketConfig.Currencies.GetElement(currencyIdx);
 				if (!currencyConfig)
+				{
+					Print("[AskalBalance] ⚠️ CreateDefaultPlayerData: currencyConfig NULL para " + currencyId);
 					continue;
+				}
 
-				// Skip disabled currencies
+				// Seed all currencies (including disabled ones with 0)
+				int seedValue = 0;
 				if (currencyConfig.Mode == AskalMarketConstants.CURRENCY_MODE_DISABLED)
-					continue;
-
-				int startAmount = currencyConfig.StartCurrency;
-				if (startAmount <= 0)
-					continue;
+				{
+					seedValue = 0;
+					Print("[AskalBalance] 🔧 CreateDefaultPlayerData: " + currencyId + " está desabilitada (Mode 0), seed = 0");
+				}
+				else
+				{
+					seedValue = currencyConfig.StartCurrency;
+					if (seedValue < 0)
+						seedValue = 0;
+					Print("[AskalBalance] 🔧 CreateDefaultPlayerData: " + currencyId + " (Mode " + currencyConfig.Mode + "), StartCurrency = " + currencyConfig.StartCurrency + ", seed = " + seedValue);
+				}
 
 				// Use currency ID as key (not item class name)
-				playerData.Balance.Set(currencyId, startAmount);
-				Print("[AskalBalance] 💰 StartCurrency aplicado: " + currencyId + " = " + startAmount);
+				playerData.Balance.Set(currencyId, seedValue);
+				if (seedValue > 0)
+					Print("[AskalBalance] 💰 StartCurrency aplicado: " + currencyId + " = " + seedValue);
 			}
+			Print("[AskalBalance] 🔧 CreateDefaultPlayerData: Total de moedas no balance: " + playerData.Balance.Count());
 		}
-
-		// Backwards compatibility: ensure at least one balance entry
-		string defaultCurrencyId = "Askal_Money";
-		if (s_MarketConfig)
-			defaultCurrencyId = s_MarketConfig.GetDefaultCurrencyId();
-		if (!playerData.Balance.Contains(defaultCurrencyId))
-			playerData.Balance.Set(defaultCurrencyId, 0);
+		else
+		{
+			// Fallback: ensure at least one balance entry if config not available
+			Print("[AskalBalance] ⚠️ CreateDefaultPlayerData: MarketConfig não encontrado ou sem moedas, usando fallback 'Askal_Money'");
+			playerData.Balance.Set("Askal_Money", 0);
+		}
+		
+		Print("[AskalBalance] ✅ CreateDefaultPlayerData: Dados padrão criados com sucesso");
 		return playerData;
 	}
 	
 	// Salvar dados do player
 	static bool SavePlayerData(string steamId, AskalPlayerData playerData)
 	{
-		// ITER-1: Update cache
-		if (s_Cache.Contains(steamId))
-		{
-			s_Cache.Set(steamId, playerData);
-			s_CacheTimestamps.Set(steamId, GetGame().GetTime());
-		}
-
 		if (!steamId || steamId == "" || !playerData)
+		{
+			string playerDataStatus = "NULL";
+			if (playerData)
+				playerDataStatus = "OK";
+			Print("[AskalBalance] ❌ SavePlayerData: Parâmetros inválidos - steamId=" + steamId + " playerData=" + playerDataStatus);
 			return false;
+		}
 		
+		// Ensure directories exist FIRST
 		Init();
 		
 		string filePath = GetPlayerFilePath(steamId);
+		if (!filePath || filePath == "")
+		{
+			Print("[AskalBalance] ❌ SavePlayerData: Caminho do arquivo inválido para: " + steamId);
+			return false;
+		}
+		
+		Print("[AskalBalance] 💾 SavePlayerData: Salvando dados do player: " + steamId);
+		Print("[AskalBalance] 💾 SavePlayerData: Caminho completo: " + filePath);
+		
+		// Verify directory exists before saving - CREATE IT IF NEEDED
+		string playersDir = "$profile:Askal/Database/Players";
+		if (!FileExist(playersDir))
+		{
+			Print("[AskalBalance] ⚠️ SavePlayerData: Diretório não existe, criando: " + playersDir);
+			MakeDirectory(playersDir);
+			// Verify it was created
+			if (!FileExist(playersDir))
+			{
+				Print("[AskalBalance] ❌❌❌ SavePlayerData: ERRO CRÍTICO - Não foi possível criar diretório: " + playersDir);
+				return false;
+			}
+			Print("[AskalBalance] ✅ SavePlayerData: Diretório criado com sucesso: " + playersDir);
+		}
+		
+		Print("[AskalBalance] 💾 SavePlayerData: Chamando AskalJsonLoader.SaveToFile...");
 		bool success = AskalJsonLoader<AskalPlayerData>.SaveToFile(filePath, playerData);
 		
+		// CRITICAL: Verify file was actually created
 		if (success)
 		{
-			Print("[AskalBalance] ✅ Dados do player salvos: " + steamId);
+			// Wait a tiny bit and verify
+			if (FileExist(filePath))
+			{
+				Print("[AskalBalance] ✅✅✅ SavePlayerData: Arquivo criado e verificado com sucesso: " + filePath);
+				// Update cache
+				s_Cache.Set(steamId, playerData);
+				s_CacheTimestamps.Set(steamId, GetGame().GetTime());
+			}
+			else
+			{
+				Print("[AskalBalance] ❌❌❌ SavePlayerData: ERRO CRÍTICO - SaveToFile retornou TRUE mas arquivo NÃO existe!");
+				Print("[AskalBalance] ❌ Caminho esperado: " + filePath);
+				Print("[AskalBalance] ❌ Verifique permissões do servidor e caminho!");
+				success = false; // Mark as failed since file doesn't exist
+			}
 		}
 		else
 		{
-			Print("[AskalBalance] ❌ Erro ao salvar dados do player: " + steamId);
+			Print("[AskalBalance] ❌❌❌ SavePlayerData: ERRO - SaveToFile retornou FALSE!");
+			Print("[AskalBalance] ❌ Caminho: " + filePath);
 		}
 		
 		return success;
@@ -364,9 +644,122 @@ class AskalPlayerBalance
 		}
 	}
 	
+	// Ensure player file exists (called on first access)
+	static void EnsurePlayerFileExists(string steamId)
+	{
+		if (!steamId || steamId == "")
+		{
+			Print("[AskalBalance] ❌ EnsurePlayerFileExists: steamId vazio!");
+			return;
+		}
+		
+		// ALWAYS check if file exists physically - don't trust cache
+		string filePath = GetPlayerFilePath(steamId);
+		if (!filePath || filePath == "")
+		{
+			Print("[AskalBalance] ❌ EnsurePlayerFileExists: Caminho do arquivo inválido para: " + steamId);
+			return;
+		}
+		
+		Print("[AskalBalance] 🔍 EnsurePlayerFileExists: Verificando arquivo: " + filePath);
+		
+		if (FileExist(filePath))
+		{
+			Print("[AskalBalance] ✅ EnsurePlayerFileExists: Arquivo já existe: " + filePath);
+			return; // File already exists
+		}
+		
+		// File doesn't exist, create it NOW
+		Print("[AskalBalance] 🔄 EnsurePlayerFileExists: Arquivo NÃO existe, criando AGORA: " + steamId);
+		Print("[AskalBalance] 🔄 Caminho completo: " + filePath);
+		
+		// Ensure directories exist FIRST
+		Print("[AskalBalance] 🔧 EnsurePlayerFileExists: Garantindo que diretórios existam");
+		Init();
+		
+		// Verify directory exists
+		string playersDir = "$profile:Askal/Database/Players";
+		if (!FileExist(playersDir))
+		{
+			Print("[AskalBalance] ⚠️ Diretório não existe, criando: " + playersDir);
+			MakeDirectory(playersDir);
+			if (!FileExist(playersDir))
+			{
+				Print("[AskalBalance] ❌ ERRO CRÍTICO: Não foi possível criar diretório: " + playersDir);
+				return;
+			}
+			Print("[AskalBalance] ✅ Diretório criado com sucesso: " + playersDir);
+		}
+		
+		Print("[AskalBalance] 🔧 EnsurePlayerFileExists: Criando dados padrão do player");
+		AskalPlayerData playerData = CreateDefaultPlayerData();
+		if (!playerData)
+		{
+			Print("[AskalBalance] ❌ ERRO CRÍTICO: CreateDefaultPlayerData retornou NULL para: " + steamId);
+			return;
+		}
+		
+		Print("[AskalBalance] 🔧 EnsurePlayerFileExists: Dados padrão criados, salvando arquivo");
+		Print("[AskalBalance] 🔧 EnsurePlayerFileExists: Tentando salvar em: " + filePath);
+		
+		// Try to save multiple times if needed
+		bool saveSuccess = false;
+		for (int retryCount = 0; retryCount < 3; retryCount++)
+		{
+			if (retryCount > 0)
+			{
+				Print("[AskalBalance] 🔧 EnsurePlayerFileExists: Tentativa " + (retryCount + 1) + " de salvar arquivo...");
+			}
+			
+			saveSuccess = SavePlayerData(steamId, playerData);
+			if (saveSuccess)
+			{
+				// Verify file was actually created
+				if (FileExist(filePath))
+				{
+					Print("[AskalBalance] ✅✅✅ ARQUIVO CRIADO E VERIFICADO COM SUCESSO: " + filePath);
+					// Update cache
+					s_Cache.Set(steamId, playerData);
+					s_CacheTimestamps.Set(steamId, GetGame().GetTime());
+					return; // Success!
+				}
+				else
+				{
+					Print("[AskalBalance] ⚠️ SavePlayerData retornou TRUE mas arquivo não existe, tentando novamente...");
+					saveSuccess = false; // Mark as failed to retry
+				}
+			}
+			else
+			{
+				Print("[AskalBalance] ⚠️ SavePlayerData retornou FALSE, tentando novamente...");
+			}
+		}
+		
+		// If we get here, all retries failed
+		Print("[AskalBalance] ❌❌❌ ERRO CRÍTICO: Falha ao criar arquivo após 3 tentativas!");
+		Print("[AskalBalance] ❌ Caminho esperado: " + filePath);
+		Print("[AskalBalance] ❌ Verifique permissões e caminho do servidor!");
+		string dirStatus = "NÃO";
+		if (FileExist(playersDir))
+			dirStatus = "SIM";
+		Print("[AskalBalance] ❌ Diretório existe? " + dirStatus);
+	}
+	
 	// Obter balance de uma moeda específica (usando currency ID)
 	static int GetBalance(string steamId, string currencyId = "")
 	{
+		Print("[AskalBalance] 🔍 GetBalance: Chamado para steamId=" + steamId + " currencyId=" + currencyId);
+		
+		if (!steamId || steamId == "")
+		{
+			Print("[AskalBalance] ❌ GetBalance: steamId vazio!");
+			return 0;
+		}
+		
+		// Ensure player file exists on first access
+		Print("[AskalBalance] 🔍 GetBalance: Garantindo que arquivo existe...");
+		EnsurePlayerFileExists(steamId);
+		
 		// Resolve currency ID (use default if not provided)
 		if (!currencyId || currencyId == "")
 		{
@@ -391,8 +784,23 @@ class AskalPlayerBalance
 	// ITER-1: Reserve funds atomically (prevents double-spend)
 	static bool ReserveFunds(string steamId, int amount, string currencyId = "")
 	{
+		Print("[AskalBalance] 🔍 ReserveFunds: Chamado para steamId=" + steamId + " amount=" + amount + " currencyId=" + currencyId);
+		
 		if (amount <= 0)
+		{
+			Print("[AskalBalance] ❌ ReserveFunds: amount inválido: " + amount);
 			return false;
+		}
+		
+		if (!steamId || steamId == "")
+		{
+			Print("[AskalBalance] RESERVE_FAIL steamId vazio");
+			return false;
+		}
+		
+		// Ensure player file exists before attempting to reserve
+		Print("[AskalBalance] 🔍 ReserveFunds: Garantindo que arquivo existe...");
+		EnsurePlayerFileExists(steamId);
 		
 		// Resolve currency ID
 		if (!currencyId || currencyId == "")

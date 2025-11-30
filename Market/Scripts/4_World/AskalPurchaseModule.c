@@ -116,10 +116,30 @@ class AskalPurchaseModule
 			return;
 		}
 		
-		// Resolve currency ID using config
+		// Resolve currency ID: trader-specific first, then fallback
 		AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
+		if (traderName && traderName != "")
+		{
+			// Try to get trader config and use its AcceptedCurrency
+			AskalTraderConfig traderConfig = AskalTraderConfig.LoadByTraderName(traderName);
+			if (traderConfig && traderConfig.AcceptedCurrency && traderConfig.AcceptedCurrency != "")
+			{
+				currencyId = traderConfig.AcceptedCurrency;
+				Print("[AskalPurchase] Resolved currency from trader " + traderName + ": " + currencyId);
+			}
+		}
+		
+		// Fallback to provided currencyId, then default
 		if (!currencyId || currencyId == "")
-			currencyId = marketConfig.GetDefaultCurrencyId();
+		{
+			if (marketConfig)
+				currencyId = marketConfig.GetDefaultCurrencyId();
+			else
+				currencyId = "Askal_Money";
+			Print("[AskalPurchase] Resolved currency using default: " + currencyId);
+		}
+		
+		Print("[AskalPurchase] Resolved currency for purchase: " + currencyId);
 		
 		// VALIDAÇÃO: Verificar se item pode ser comprado neste trader
 		if (traderName && traderName != "")

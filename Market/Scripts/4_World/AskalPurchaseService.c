@@ -7,6 +7,9 @@ class AskalPurchaseService
 	// Processar compra COM quantidade e conteúdo customizados
 	static bool ProcessPurchaseWithQuantity(PlayerIdentity identity, string steamId, string itemClass, int price, string currencyId, float itemQuantity, int quantityType, int contentType)
 	{
+		Print("[AskalPurchase] 🔍 ProcessPurchaseWithQuantity: INICIANDO COMPRA");
+		Print("[AskalPurchase] 🔍 Parâmetros: steamId=" + steamId + " itemClass=" + itemClass + " price=" + price + " currencyId=" + currencyId);
+		
 		if (!identity)
 		{
 			Print("[AskalPurchase] ❌ Player identity não encontrada");
@@ -19,6 +22,8 @@ class AskalPurchaseService
 			if (!steamId || steamId == "")
 				steamId = identity.GetId();
 		}
+		
+		Print("[AskalPurchase] 🔍 ProcessPurchaseWithQuantity: steamId resolvido: " + steamId);
 
 		// Obter player (only needed for Mode 1 - physical currency)
 		PlayerBase player = GetPlayerFromIdentity(identity);
@@ -28,16 +33,53 @@ class AskalPurchaseService
 			return false;
 		}
 
-		// Resolve currency ID
+		// Resolve currency ID (should already be resolved by caller, but validate)
 		AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
 		if (!currencyId || currencyId == "")
-			currencyId = marketConfig.GetDefaultCurrencyId();
+		{
+			if (marketConfig)
+				currencyId = marketConfig.GetDefaultCurrencyId();
+			else
+				currencyId = "Askal_Money";
+		}
 
-		// Get currency config and validate Mode
-		AskalCurrencyConfig currencyConfig = marketConfig.GetCurrencyConfig(currencyId);
+		Print("[AskalPurchase] 🔍 Validating currency: " + currencyId);
+		
+		// Get currency config and validate it exists
+		AskalCurrencyConfig currencyConfig = NULL;
+		if (marketConfig)
+		{
+			Print("[AskalPurchase] 🔍 MarketConfig found, checking for currency: " + currencyId);
+			Print("[AskalPurchase] 🔍 Available currencies count: " + marketConfig.Currencies.Count());
+			currencyConfig = marketConfig.GetCurrencyConfig(currencyId);
+			
+			// If currency not found, try default currency as fallback
+			if (!currencyConfig)
+			{
+				string defaultCurrencyId = marketConfig.GetDefaultCurrencyId();
+				Print("[AskalPurchase] ⚠️ Currency '" + currencyId + "' not found, default currency is: " + defaultCurrencyId);
+				if (defaultCurrencyId && defaultCurrencyId != "" && defaultCurrencyId != currencyId)
+				{
+					Print("[AskalPurchase] ⚠️ Falling back to default currency: " + defaultCurrencyId);
+					currencyId = defaultCurrencyId;
+					currencyConfig = marketConfig.GetCurrencyConfig(currencyId);
+					if (currencyConfig)
+						Print("[AskalPurchase] ✅ Fallback currency found and validated");
+				}
+			}
+			else
+			{
+				Print("[AskalPurchase] ✅ Currency config found for: " + currencyId);
+			}
+		}
+		else
+		{
+			Print("[AskalPurchase] ⚠️ MarketConfig not available");
+		}
+		
 		if (!currencyConfig)
 		{
-			Print("[AskalPurchase] ❌ Currency não encontrada: " + currencyId);
+			Print("[AskalPurchase] ERROR: Currency not found: " + currencyId + " (and no default currency available)");
 			return false;
 		}
 
@@ -45,7 +87,7 @@ class AskalPurchaseService
 		int currencyMode = currencyConfig.Mode;
 		if (currencyMode == AskalMarketConstants.CURRENCY_MODE_DISABLED)
 		{
-			Print("[AskalPurchase] ❌ Currency está desabilitada (Mode=0): " + currencyId);
+			Print("[AskalPurchase] ERROR: Currency disabled: " + currencyId);
 			return false;
 		}
 
@@ -83,7 +125,7 @@ class AskalPurchaseService
 				return false;
 			}
 
-			Print("[AskalPurchase] ORDER_PLACED steamId=" + steamId + " item=" + itemClass + " price=" + price + " currency=" + currencyId + " mode=VIRTUAL");
+			Print("[AskalPurchase] ORDER_PLACED steamId=" + steamId + " item=" + itemClass + " price=" + price + " currency=" + currencyId);
 			Print("[AskalPurchase] ✅ Compra realizada (virtual currency)!");
 			Print("[AskalPurchase]   Item: " + itemClass + " | Qty: " + itemQuantity + " | Tipo: " + quantityType);
 			return true;
@@ -115,7 +157,7 @@ class AskalPurchaseService
 				return false;
 			}
 
-			Print("[AskalPurchase] ORDER_PLACED steamId=" + steamId + " item=" + itemClass + " price=" + price + " currency=" + currencyId + " mode=PHYSICAL");
+			Print("[AskalPurchase] ORDER_PLACED steamId=" + steamId + " item=" + itemClass + " price=" + price + " currency=" + currencyId);
 			Print("[AskalPurchase] ✅ Compra realizada!");
 			Print("[AskalPurchase]   Item: " + itemClass + " | Qty: " + itemQuantity + " | Tipo: " + quantityType);
 			return true;

@@ -173,12 +173,16 @@ class AskalTraderConfig
 		if (config.AcceptedCurrency != "")
 		{
 			config.AcceptedCurrencyMap.Set(config.AcceptedCurrency, 1); // TransactionMode padrão: 1 (inventário)
+			Print("[AskalTrader] Trader " + config.TraderName + " AcceptedCurrency: " + config.AcceptedCurrency);
 		}
 		else
 		{
 			// Se AcceptedCurrency estiver vazio, usar padrão
-			config.AcceptedCurrency = "Askal_Money";
-			config.AcceptedCurrencyMap.Set("Askal_Money", 1);
+			AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
+			string defaultCurrency = marketConfig.GetDefaultCurrencyId();
+			config.AcceptedCurrency = defaultCurrency;
+			config.AcceptedCurrencyMap.Set(defaultCurrency, 1);
+			Print("[AskalTrader] Trader " + config.TraderName + " AcceptedCurrency: " + defaultCurrency + " (default)");
 		}
 		
 		// Validar campos obrigatórios

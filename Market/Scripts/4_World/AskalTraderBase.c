@@ -50,12 +50,20 @@ class AskalTraderBase
 		return "";
 	}
 	
-	// Obter moedas aceitas
+	// Obter moedas aceitas (map)
 	map<string, int> GetAcceptedCurrencies()
 	{
 		if (m_Config && m_Config.AcceptedCurrencyMap)
 			return m_Config.AcceptedCurrencyMap;
 		return new map<string, int>();
+	}
+	
+	// Obter moeda aceita (string - primary currency)
+	string GetAcceptedCurrency()
+	{
+		if (m_Config && m_Config.AcceptedCurrency && m_Config.AcceptedCurrency != "")
+			return m_Config.AcceptedCurrency;
+		return "";
 	}
 	
 	// Obter setup de itens
