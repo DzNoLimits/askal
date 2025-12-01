@@ -217,14 +217,14 @@ class AskalPurchaseModule
 				// Check again
 				if (!AskalPlayerBalance.HasCurrency(steamId, currencyId))
 				{
-					Print("[AskalPurchase] ❌ Currency not found in player balance: " + currencyId);
+					Print("[AskalPurchase] Purchase rejected: player missing currency " + currencyId);
 					SendPurchaseResponse(sender, false, itemClass, 0, "Currency not available. Please reconnect.");
 					return;
 				}
 			}
 			else
 			{
-				Print("[AskalPurchase] ❌ Currency not found in player balance: " + currencyId + " (refresh failed)");
+				Print("[AskalPurchase] Purchase rejected: player missing currency " + currencyId + " (refresh failed)");
 				SendPurchaseResponse(sender, false, itemClass, 0, "Currency not available. Please reconnect.");
 				return;
 			}

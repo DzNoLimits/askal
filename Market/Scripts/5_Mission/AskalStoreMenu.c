@@ -5957,11 +5957,38 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 	{
 		super.OnShow();
 		
-		// Verificar se há solicitação de abertura de menu do trader pendente
+		// Check for storeMeta first (new RPC)
+		if (AskalNotificationHelper.HasStoreMeta())
+		{
+			string storeMetaCurrencyId = AskalNotificationHelper.GetStoreMetaCurrencyId();
+			string storeMetaCurrencyShortName = AskalNotificationHelper.GetStoreMetaCurrencyShortName();
+			bool storeMetaCanBuy = AskalNotificationHelper.GetStoreMetaCanBuy();
+			bool storeMetaCanSell = AskalNotificationHelper.GetStoreMetaCanSell();
+			
+			Print("[AskalStore] 🏪 OnShow: StoreMeta recebido - currency=" + storeMetaCurrencyId + " (" + storeMetaCurrencyShortName + ") canBuy=" + storeMetaCanBuy + " canSell=" + storeMetaCanSell);
+			
+			// Use storeMeta currency info
+			m_ActiveCurrencyId = storeMetaCurrencyId;
+			m_CurrentCurrencyShortName = storeMetaCurrencyShortName;
+			
+			// Update currency shortname widgets
+			if (m_CurrentCurrencyShortName && m_CurrentCurrencyShortName != "")
+			{
+				UpdateCurrencyShortnameWidgets(m_CurrentCurrencyShortName, storeMetaCanBuy && storeMetaCanSell, storeMetaCanBuy && !storeMetaCanSell, storeMetaCanSell && !storeMetaCanBuy);
+			}
+			
+			// Update button visibility based on permissions
+			UpdateActionButtonsFromStoreMeta(storeMetaCanBuy, storeMetaCanSell);
+			
+			// Clear storeMeta after use
+			AskalNotificationHelper.ClearStoreMeta();
+		}
+		
+		// Verificar se há solicitação de abertura de menu do trader pendente (legacy fallback)
 		string pendingTraderMenu = AskalNotificationHelper.GetPendingTraderMenu();
 		if (pendingTraderMenu && pendingTraderMenu != "")
 		{
-			Print("[AskalStore] 🏪 OnShow: Processando trader pendente: " + pendingTraderMenu);
+			Print("[AskalStore] 🏪 OnShow: Processando trader pendente (legacy): " + pendingTraderMenu);
 			
 			// Armazenar nome do trader
 			m_CurrentTraderName = pendingTraderMenu;
@@ -6319,6 +6346,53 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		m_CurrentActionLayout = resolvedLayout;
 		
 		Print("[AskalStore] UI RefreshButtonsForItem called: item=" + itemClassName + " canBuy=" + canBuy + " canSell=" + canSell + " isBatch=" + isBatchMode + " currency=" + currencyId + " shortName=" + shortName);
+	}
+	
+	// Update button visibility from storeMeta permissions
+	protected void UpdateActionButtonsFromStoreMeta(bool canBuy, bool canSell)
+	{
+		// Update button visibility based on storeMeta permissions
+		bool showDual = canBuy && canSell;
+		bool showBuySolo = canBuy && !canSell;
+		bool showSellSolo = canSell && !canBuy;
+		bool showSinglePanel = (!showDual) && (showBuySolo || showSellSolo);
+		
+		// Update button visibility
+		if (m_BuySellDualPanel)
+			m_BuySellDualPanel.Show(showDual);
+		if (m_BuyButton)
+			m_BuyButton.Show(showDual);
+		if (m_SellButton)
+			m_SellButton.Show(showDual);
+		
+		if (m_BuySellSinglePanel)
+			m_BuySellSinglePanel.Show(showSinglePanel);
+		
+		if (m_BuyButtonSolo)
+			m_BuyButtonSolo.Show(showBuySolo);
+		if (m_SellButtonSolo)
+			m_SellButtonSolo.Show(showSellSolo);
+		
+		if (!showDual && !showSinglePanel)
+		{
+			if (m_BuySellDualPanel)
+				m_BuySellDualPanel.Show(false);
+			if (m_BuySellSinglePanel)
+				m_BuySellSinglePanel.Show(false);
+			if (m_BuyButton)
+				m_BuyButton.Show(false);
+			if (m_SellButton)
+				m_SellButton.Show(false);
+			if (m_BuyButtonSolo)
+				m_BuyButtonSolo.Show(false);
+			if (m_SellButtonSolo)
+				m_SellButtonSolo.Show(false);
+			
+			ResetButtonTotals();
+			Print("[AskalStore] WARN - no valid actions for current store");
+		}
+		
+		Print("[AskalStore] UI UpdateActionButtonsFromStoreMeta: canBuy=" + canBuy + " canSell=" + canSell + " showDual=" + showDual + " showSingle=" + showSinglePanel);
 	}
 	
 	/// Atualiza visibilidade dos botões de ação baseado no item mode

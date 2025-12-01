@@ -153,7 +153,14 @@ class ActionOpenAskalTraderMenu: ActionInteractBase
 		
 		Print("[AskalTrader] 💰 AcceptedCurrency: " + acceptedCurrency + " (shortname: " + currencyShortName + ")");
 		
-		// Enviar RPC para o cliente abrir o menu (nome + SetupItems + AcceptedCurrency + ShortName)
+		// Build and send storeMeta (new RPC)
+		AskalStoreMeta storeMeta = AskalStoreMetaBuilder.BuildStoreMetaForTrader(trader, player);
+		if (storeMeta)
+		{
+			AskalStoreMetaBuilder.SendStoreMetaToClient(player, storeMeta);
+		}
+		
+		// Also send legacy RPC for backwards compatibility
 		Param5<string, ref array<string>, ref array<int>, string, string> params = new Param5<string, ref array<string>, ref array<int>, string, string>(trader.GetTraderName(), setupKeys, setupValues, acceptedCurrency, currencyShortName);
 		GetRPCManager().SendRPC("AskalMarketModule", "OpenTraderMenu", params, true, player.GetIdentity(), NULL);
 	}

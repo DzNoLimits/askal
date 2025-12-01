@@ -172,6 +172,86 @@ class AskalNotificationHelper
 	}
 	
 	// ========================================
+	// SISTEMA DE STORE META (NEW)
+	// ========================================
+	
+	protected static string s_StoreMetaId;
+	protected static string s_StoreMetaName;
+	protected static string s_StoreMetaType;
+	protected static string s_StoreMetaCurrencyId;
+	protected static string s_StoreMetaCurrencyShortName;
+	protected static int s_StoreMetaCurrencyMode;
+	protected static bool s_StoreMetaCanBuy;
+	protected static bool s_StoreMetaCanSell;
+	protected static bool s_StoreMetaBatchMode;
+	protected static float s_StoreMetaBuyCoeff;
+	protected static float s_StoreMetaSellCoeff;
+	protected static bool s_StoreMetaReceived = false;
+	
+	static void SetStoreMeta(string storeId, string storeName, string storeType, string currencyId, string currencyShortName, int currencyMode, bool canBuy, bool canSell, bool batchMode, float buyCoeff, float sellCoeff)
+	{
+		s_StoreMetaId = storeId;
+		s_StoreMetaName = storeName;
+		s_StoreMetaType = storeType;
+		s_StoreMetaCurrencyId = currencyId;
+		s_StoreMetaCurrencyShortName = currencyShortName;
+		s_StoreMetaCurrencyMode = currencyMode;
+		s_StoreMetaCanBuy = canBuy;
+		s_StoreMetaCanSell = canSell;
+		s_StoreMetaBatchMode = batchMode;
+		s_StoreMetaBuyCoeff = buyCoeff;
+		s_StoreMetaSellCoeff = sellCoeff;
+		s_StoreMetaReceived = true;
+		Print("[AskalNotification] 🏪 StoreMeta recebido: " + storeName + " currency=" + currencyId + " (" + currencyShortName + ") canBuy=" + canBuy + " canSell=" + canSell);
+	}
+	
+	static bool HasStoreMeta()
+	{
+		return s_StoreMetaReceived;
+	}
+	
+	static string GetStoreMetaCurrencyId()
+	{
+		return s_StoreMetaCurrencyId;
+	}
+	
+	static string GetStoreMetaCurrencyShortName()
+	{
+		return s_StoreMetaCurrencyShortName;
+	}
+	
+	static bool GetStoreMetaCanBuy()
+	{
+		return s_StoreMetaCanBuy;
+	}
+	
+	static bool GetStoreMetaCanSell()
+	{
+		return s_StoreMetaCanSell;
+	}
+	
+	static bool GetStoreMetaBatchMode()
+	{
+		return s_StoreMetaBatchMode;
+	}
+	
+	static void ClearStoreMeta()
+	{
+		s_StoreMetaId = "";
+		s_StoreMetaName = "";
+		s_StoreMetaType = "";
+		s_StoreMetaCurrencyId = "";
+		s_StoreMetaCurrencyShortName = "";
+		s_StoreMetaCurrencyMode = 0;
+		s_StoreMetaCanBuy = false;
+		s_StoreMetaCanSell = false;
+		s_StoreMetaBatchMode = false;
+		s_StoreMetaBuyCoeff = 1.0;
+		s_StoreMetaSellCoeff = 1.0;
+		s_StoreMetaReceived = false;
+	}
+	
+	// ========================================
 	// SISTEMA DE ERROS DE TRANSAÇÃO
 	// ========================================
 	

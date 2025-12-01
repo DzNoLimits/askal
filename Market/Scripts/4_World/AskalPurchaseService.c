@@ -125,7 +125,7 @@ class AskalPurchaseService
 				return false;
 			}
 
-			Print("[AskalPurchase] ORDER_PLACED steamId=" + steamId + " item=" + itemClass + " price=" + price + " qty=" + itemQuantity);
+			Print("[AskalPurchase] ORDER_PLACED steamId=" + steamId + " item=" + itemClass + " price=" + price + " currency=" + currencyId + " qty=" + itemQuantity);
 			return true;
 		}
 		else if (currencyMode == AskalMarketConstants.CURRENCY_MODE_PHYSICAL)
@@ -155,7 +155,7 @@ class AskalPurchaseService
 				return false;
 			}
 
-			Print("[AskalPurchase] ORDER_PLACED steamId=" + steamId + " item=" + itemClass + " price=" + price + " qty=" + itemQuantity);
+			Print("[AskalPurchase] ORDER_PLACED steamId=" + steamId + " item=" + itemClass + " price=" + price + " currency=" + currencyId + " qty=" + itemQuantity);
 			return true;
 		}
 		else

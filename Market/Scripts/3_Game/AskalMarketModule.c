@@ -38,6 +38,9 @@ class AskalMarketModule : CF_ModuleGame
         // RPC para abrir menu do trader
         AddLegacyRPC("OpenTraderMenu", SingleplayerExecutionType.Client);
         
+        // RPC para enviar storeMeta (new)
+        AddLegacyRPC("SendStoreMeta", SingleplayerExecutionType.Client);
+        
         Print("[AskalMarket] ✅ RPCs do Market registrados");
         Print("[AskalMarket] ========================================");
     }
@@ -251,6 +254,37 @@ class AskalMarketModule : CF_ModuleGame
         }
         
         Print("[AskalMarket] ❌ Erro ao ler OpenTraderMenu");
+    }
+    
+    // RPC Handler: Cliente recebe storeMeta
+    void SendStoreMeta(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
+    {
+        if (type != CallType.Client)
+            return;
+        
+        Param11<string, string, string, string, string, int, bool, bool, bool, float, float> data;
+        if (!ctx.Read(data))
+        {
+            Print("[AskalMarket] ❌ Erro ao ler SendStoreMeta");
+            return;
+        }
+        
+        string storeId = data.param1;
+        string storeName = data.param2;
+        string storeType = data.param3;
+        string currencyId = data.param4;
+        string currencyShortName = data.param5;
+        int currencyMode = data.param6;
+        bool canBuy = data.param7;
+        bool canSell = data.param8;
+        bool batchMode = data.param9;
+        float buyCoeff = data.param10;
+        float sellCoeff = data.param11;
+        
+        Print("[AskalMarket] 📥 SendStoreMeta recebido: storeId=" + storeId + " storeName=" + storeName + " currency=" + currencyId + " (" + currencyShortName + ")");
+        
+        // Store in helper for UI to consume
+        AskalNotificationHelper.SetStoreMeta(storeId, storeName, storeType, currencyId, currencyShortName, currencyMode, canBuy, canSell, batchMode, buyCoeff, sellCoeff);
     }
     
     override void OnMissionStart(Class sender, CF_EventArgs args)

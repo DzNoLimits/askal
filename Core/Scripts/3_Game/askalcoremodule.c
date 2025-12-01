@@ -125,6 +125,34 @@ class AskalCoreModule : CF_ModuleGame
 		
 		Param5<string, float, float, ref array<string>, ref array<int>> data = new Param5<string, float, float, ref array<string>, ref array<int>>(currencyId, buyCoeff, sellCoeff, setupKeys, setupValues);
 		GetRPCManager().SendRPC("AskalCoreModule", "VirtualStoreConfigResponse", data, true, sender, NULL);
+		
+		// Also send storeMeta for VirtualStore
+		// Get player from identity (server-side)
+		PlayerBase player = NULL;
+		DayZGame game = DayZGame.Cast(GetGame());
+		if (game && game.GetWorld())
+		{
+			array<Man> players = new array<Man>();
+			game.GetWorld().GetPlayerList(players);
+			foreach (Man man : players)
+			{
+				PlayerBase candidate = PlayerBase.Cast(man);
+				if (candidate && candidate.GetIdentity() == sender)
+				{
+					player = candidate;
+					break;
+				}
+			}
+		}
+		
+		if (player)
+		{
+			AskalStoreMeta storeMeta = AskalStoreMetaBuilder.BuildStoreMetaForVirtualStore(player);
+			if (storeMeta)
+			{
+				AskalStoreMetaBuilder.SendStoreMetaToClient(player, storeMeta);
+			}
+		}
 	}
 	
 	// RPC Handler: Cliente recebe header de dataset
