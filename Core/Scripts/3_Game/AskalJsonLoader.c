@@ -82,7 +82,7 @@ class AskalJsonLoader<Class T>
         return timestamp;
     }
     
-    // Generate UTC ISO timestamp (format: YYYY-MM-DDTHH:MM:SSZ)
+    // Generate UTC ISO timestamp (format: YYYY-MM-DDTHHMMSSZ) - NO COLONS for Windows filename compatibility
     static string GenerateUtcIsoTimestamp()
     {
         int year, month, day, hour, minute, second;
@@ -95,9 +95,9 @@ class AskalJsonLoader<Class T>
         if (day < 10) timestamp += "0";
         timestamp += day.ToString() + "T";
         if (hour < 10) timestamp += "0";
-        timestamp += hour.ToString() + ":";
+        timestamp += hour.ToString();
         if (minute < 10) timestamp += "0";
-        timestamp += minute.ToString() + ":";
+        timestamp += minute.ToString();
         if (second < 10) timestamp += "0";
         timestamp += second.ToString() + "Z";
         

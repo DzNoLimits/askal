@@ -167,8 +167,10 @@ class AskalMarketConfig
 			}
 		}
 		
-		if (fileData.Currencies)
+		// Process currencies (only if present and not empty)
+		if (fileData.Currencies && fileData.Currencies.Count() > 0)
 		{
+			string currencyList = "";
 			foreach (string currencyId, AskalCurrencyConfig currencyCfg : fileData.Currencies)
 			{
 				if (!currencyCfg)
@@ -183,19 +185,53 @@ class AskalMarketConfig
 				// If JSON omits Mode, constructor default (1) is used
 				// No additional logic needed - constructor handles backwards compatibility
 				
+				// Build currency list for logging
+				if (currencyList != "")
+					currencyList += ", ";
+				currencyList += currencyId + "(V:" + currencyCfg.Mode + ")";
+				
 				// Backfill do nome do wallet
 				if (!currencyCfg.WalletId || currencyCfg.WalletId == "")
 					currencyCfg.WalletId = currencyId;
 				
 				Currencies.Insert(currencyId, currencyCfg);
 			}
+			
+			// Log currencies loaded
+			if (currencyList != "")
+				Print("[AskalConfig] Currencies loaded: " + currencyList);
+		}
+		else
+		{
+			// Only log error if this is a real load attempt (not a partial update)
+			// Silently skip if Currencies is missing/empty to avoid spam
+			if (fileData.Currencies)
+			{
+				// Currencies exists but is empty - this is unusual but not necessarily an error
+				// (could be a partial update or intentional empty config)
+			}
 		}
 		
 		// Set DefaultCurrencyId to first currency if not specified
 		if ((!DefaultCurrencyId || DefaultCurrencyId == "") && Currencies.Count() > 0)
 		{
-			DefaultCurrencyId = Currencies.GetKey(0);
-			Print("[AskalMarket] DefaultCurrencyId não especificado, usando primeira moeda: " + DefaultCurrencyId);
+			// Prefer Askal_Money if it exists, otherwise use first currency
+			if (Currencies.Contains("Askal_Money"))
+			{
+				DefaultCurrencyId = "Askal_Money";
+				Print("[AskalMarket] DefaultCurrencyId não especificado, usando Askal_Money (preferência)");
+			}
+			else
+			{
+				DefaultCurrencyId = Currencies.GetKey(0);
+				Print("[AskalMarket] DefaultCurrencyId não especificado, usando primeira moeda: " + DefaultCurrencyId);
+			}
+		}
+		
+		// Log final DefaultCurrencyId value
+		if (DefaultCurrencyId && DefaultCurrencyId != "")
+		{
+			Print("[AskalConfig] DefaultCurrencyId definido: " + DefaultCurrencyId);
 		}
 		
 		// Garante pelo menos uma moeda padrão

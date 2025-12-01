@@ -155,16 +155,54 @@ class AskalPurchaseModule
 			return;
 		}
 		
-		// Resolve currency ID: trader-specific first, then fallback
+		// Resolve currency ID: trader-specific first, then VirtualStore, then fallback
 		AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
 		if (traderName && traderName != "")
 		{
 			// Try to get trader config and use its AcceptedCurrency
+			Print("[AskalPurchase] Attempting to load trader config for: " + traderName);
 			AskalTraderConfig traderConfig = AskalTraderConfig.LoadByTraderName(traderName);
-			if (traderConfig && traderConfig.AcceptedCurrency && traderConfig.AcceptedCurrency != "")
+			if (traderConfig)
 			{
-				currencyId = traderConfig.AcceptedCurrency;
-				Print("[AskalPurchase] Resolved currency from trader " + traderName + ": " + currencyId);
+				Print("[AskalPurchase] Trader config loaded. AcceptedCurrency: " + traderConfig.AcceptedCurrency);
+				if (traderConfig.AcceptedCurrency && traderConfig.AcceptedCurrency != "")
+				{
+					currencyId = traderConfig.AcceptedCurrency;
+					Print("[AskalPurchase] ✅ Resolved currency from trader " + traderName + ": " + currencyId);
+				}
+				else
+				{
+					Print("[AskalPurchase] ⚠️ Trader config loaded but AcceptedCurrency is empty");
+				}
+			}
+			else
+			{
+				Print("[AskalPurchase] ⚠️ Trader config not found for: " + traderName);
+			}
+		}
+		else
+		{
+			// No trader name = VirtualStore context
+			// Try to get VirtualStore config and use its AcceptedCurrency
+			Print("[AskalPurchase] No trader name, attempting VirtualStore currency resolution");
+			AskalVirtualStoreConfig virtualStoreConfig = AskalVirtualStoreSettings.GetConfig();
+			if (virtualStoreConfig)
+			{
+				string virtualCurrency = virtualStoreConfig.GetPrimaryCurrency();
+				Print("[AskalPurchase] VirtualStore config loaded. PrimaryCurrency: " + virtualCurrency);
+				if (virtualCurrency && virtualCurrency != "")
+				{
+					currencyId = virtualCurrency;
+					Print("[AskalPurchase] ✅ Resolved currency from VirtualStore: " + currencyId);
+				}
+				else
+				{
+					Print("[AskalPurchase] ⚠️ VirtualStore config loaded but PrimaryCurrency is empty");
+				}
+			}
+			else
+			{
+				Print("[AskalPurchase] ⚠️ VirtualStore config not found");
 			}
 		}
 		

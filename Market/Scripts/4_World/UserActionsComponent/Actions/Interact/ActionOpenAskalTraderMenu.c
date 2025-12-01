@@ -128,8 +128,21 @@ class ActionOpenAskalTraderMenu: ActionInteractBase
 		
 		Print("[AskalTrader] 📦 SetupItems: " + setupKeys.Count() + " entradas");
 		
-		// Enviar RPC para o cliente abrir o menu (nome + SetupItems)
-		Param3<string, ref array<string>, ref array<int>> params = new Param3<string, ref array<string>, ref array<int>>(trader.GetTraderName(), setupKeys, setupValues);
+		// Obter AcceptedCurrency do trader
+		string acceptedCurrency = trader.GetAcceptedCurrency();
+		if (!acceptedCurrency || acceptedCurrency == "")
+		{
+			// Fallback para DefaultCurrencyId do MarketConfig
+			AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
+			if (marketConfig)
+				acceptedCurrency = marketConfig.GetDefaultCurrencyId();
+			if (!acceptedCurrency || acceptedCurrency == "")
+				acceptedCurrency = "Askal_Money";
+		}
+		Print("[AskalTrader] 💰 AcceptedCurrency: " + acceptedCurrency);
+		
+		// Enviar RPC para o cliente abrir o menu (nome + SetupItems + AcceptedCurrency)
+		Param4<string, ref array<string>, ref array<int>, string> params = new Param4<string, ref array<string>, ref array<int>, string>(trader.GetTraderName(), setupKeys, setupValues, acceptedCurrency);
 		GetRPCManager().SendRPC("AskalMarketModule", "OpenTraderMenu", params, true, player.GetIdentity(), NULL);
 	}
 }

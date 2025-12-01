@@ -160,7 +160,7 @@ class AskalMarketModule : CF_ModuleGame
         if (type != CallType.Client)
             return;
         
-        Param3<string, ref array<string>, ref array<int>> data;
+        Param4<string, ref array<string>, ref array<int>, string> data;
         if (!ctx.Read(data))
         {
             Print("[AskalMarket] ❌ Erro ao ler OpenTraderMenu");
@@ -170,8 +170,9 @@ class AskalMarketModule : CF_ModuleGame
         string traderName = data.param1;
         ref array<string> setupKeys = data.param2;
         ref array<int> setupValues = data.param3;
+        string acceptedCurrency = data.param4;
         
-        Print("[AskalMarket] 📥 OpenTraderMenu recebido para trader: " + traderName);
+        Print("[AskalMarket] 📥 OpenTraderMenu recebido para trader: " + traderName + " | Currency: " + acceptedCurrency);
         
         // Contar entradas do SetupItems
         int setupCount = 0;
@@ -191,8 +192,8 @@ class AskalMarketModule : CF_ModuleGame
             }
         }
         
-        // Armazenar no helper para que o menu possa acessar quando for criado
-        AskalNotificationHelper.RequestOpenTraderMenu(traderName, setupItems);
+        // Armazenar no helper para que o menu possa acessar quando for criado (incluindo AcceptedCurrency)
+        AskalNotificationHelper.RequestOpenTraderMenu(traderName, setupItems, acceptedCurrency);
         
         Print("[AskalMarket] ✅ Trader menu request armazenado, aguardando criação do menu");
     }

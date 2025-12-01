@@ -58,6 +58,8 @@ class AskalTraderConfig
 			return NULL;
 		}
 		
+		Print("[AskalTrader] LoadByTraderName chamado com: " + traderName);
+		
 		// Obter caminho da pasta de traders
 		string tradersPath = AskalTraderConfig.GetTradersPath();
 		if (!FileExist(tradersPath))
@@ -66,6 +68,16 @@ class AskalTraderConfig
 			return NULL;
 		}
 		
+		// Primeiro, tentar carregar diretamente pelo nome do arquivo (caso traderName seja o nome do arquivo)
+		// Não logar erro aqui pois pode ser apenas uma tentativa de busca
+		AskalTraderConfig directConfig = AskalTraderConfig.Load(traderName, false);
+		if (directConfig)
+		{
+			Print("[AskalTrader] ✅ Trader encontrado por nome de arquivo: " + traderName);
+			return directConfig;
+		}
+		
+		// Se não encontrou, procurar por TraderName (nome exibido)
 		// Listar todos os arquivos .json e .jsonc
 		string fileName = "";
 		FileAttr fileAttr = 0;
@@ -93,12 +105,16 @@ class AskalTraderConfig
 					
 					if (nameWithoutExt != "")
 					{
-						// Tentar carregar o arquivo
-						AskalTraderConfig testConfig = AskalTraderConfig.Load(nameWithoutExt);
-						if (testConfig && testConfig.TraderName == traderName)
+						// Tentar carregar o arquivo (não logar erro aqui pois é apenas busca)
+						AskalTraderConfig testConfig = AskalTraderConfig.Load(nameWithoutExt, false);
+						if (testConfig)
 						{
-							Print("[AskalTrader] ✅ Trader encontrado por TraderName: " + traderName + " (arquivo: " + nameWithoutExt + ")");
-							return testConfig;
+							// Comparar tanto pelo TraderName quanto pelo nome do arquivo
+							if (testConfig.TraderName == traderName || nameWithoutExt == traderName)
+							{
+								Print("[AskalTrader] ✅ Trader encontrado: " + traderName + " (arquivo: " + nameWithoutExt + ", TraderName: " + testConfig.TraderName + ")");
+								return testConfig;
+							}
 						}
 					}
 				}
@@ -114,11 +130,12 @@ class AskalTraderConfig
 	}
 	
 	// Carregar config de arquivo JSON
-	static AskalTraderConfig Load(string fileName)
+	static AskalTraderConfig Load(string fileName, bool logError = true)
 	{
 		if (!fileName || fileName == "")
 		{
-			Print("[AskalTrader] ⚠️ Nome de arquivo inválido");
+			if (logError)
+				Print("[AskalTrader] ⚠️ Nome de arquivo inválido");
 			return NULL;
 		}
 		
@@ -139,7 +156,8 @@ class AskalTraderConfig
 		AskalTraderConfig config = new AskalTraderConfig();
 		if (!AskalJsonLoader<AskalTraderConfig>.LoadFromFile(configPath, config, true))
 		{
-			Print("[AskalTrader] ❌ Falha ao carregar trader: " + fileName);
+			if (logError)
+				Print("[AskalTrader] ❌ Falha ao carregar trader: " + fileName);
 			return NULL;
 		}
 		
