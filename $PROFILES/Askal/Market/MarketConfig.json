@@ -1,0 +1,58 @@
+{
+	"Version": "1.0.0",
+	"LogsLevel": 1,
+	"MarketMode": 1,
+	"DelayTimeMS": 1000,
+	"DefaultCurrencyId": "Askal_Money",
+	"Fluids": {
+		"512": {
+			"Name": "Água Potável",
+			"PricePerLiter": 10
+		},
+		"2048": {
+			"Name": "Vodka",
+			"PricePerLiter": 80
+		},
+		"4096": {
+			"Name": "Cerveja",
+			"PricePerLiter": 50
+		},
+		"8192": {
+			"Name": "Gasolina",
+			"PricePerLiter": 100
+		},
+		"16384": {
+			"Name": "Diesel",
+			"PricePerLiter": 100
+		}
+	},
+	"Currencies": {
+		"Askal_Money": {
+			"Mode": 1,
+			"ShortName": "AKC",
+			"Values": [
+				{
+					"Value": 1,
+					"Name": "Askal_Coin"
+				},
+				{
+					"Value": 10,
+					"Name": "Askal_Coin_Gold"
+				}
+			],
+			"StartCurrency": 10000
+		},
+		"VirtualStore_Money": {
+			"Mode": 2,
+			"ShortName": "VST",
+			"Values": [],
+			"StartCurrency": 10
+		},
+		"VirtualChristmas_Money": {
+			"Mode": 2,
+			"ShortName": "VCT",
+			"Values": [],
+			"StartCurrency": 1000
+		}
+	}
+}

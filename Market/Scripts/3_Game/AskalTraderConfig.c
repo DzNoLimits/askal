@@ -190,6 +190,21 @@ class AskalTraderConfig
 		// Normalizar AcceptedCurrency: converter string para map
 		if (config.AcceptedCurrency != "")
 		{
+			// Validate AcceptedCurrency exists in MarketConfig and is not disabled
+			AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
+			if (marketConfig)
+			{
+				AskalCurrencyConfig currencyCfg = marketConfig.GetCurrencyOrNull(config.AcceptedCurrency);
+				if (!currencyCfg || currencyCfg.Mode == AskalMarketConstants.CURRENCY_MODE_DISABLED)
+				{
+					// Invalid or disabled currency, use fallback
+					string fallbackCurrency = marketConfig.GetDefaultCurrencyId();
+					if (!fallbackCurrency || fallbackCurrency == "")
+						fallbackCurrency = "Askal_Money";
+					Print("[AskalTrader] WARNING: Trader " + config.TraderName + " AcceptedCurrency '" + config.AcceptedCurrency + "' not found or disabled, using fallback '" + fallbackCurrency + "'");
+					config.AcceptedCurrency = fallbackCurrency;
+				}
+			}
 			config.AcceptedCurrencyMap.Set(config.AcceptedCurrency, 1); // TransactionMode padrão: 1 (inventário)
 			Print("[AskalTrader] Trader " + config.TraderName + " AcceptedCurrency: " + config.AcceptedCurrency);
 		}

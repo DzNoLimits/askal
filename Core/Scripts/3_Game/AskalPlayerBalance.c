@@ -1250,7 +1250,23 @@ class AskalPlayerBalance
 		playerReservations.Set(currencyId, currentReserved + amount);
 		
 		UnlockPlayer(steamId);
-		Print("[AskalBalance] RESERVE_OK steamId=" + steamId + " amount=" + amount + " currency=" + currencyId + " available_after=" + (available - amount));
+		// Get currency shortname for log
+		string currencyShortName = "";
+		AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
+		if (marketConfig && currencyId != "")
+		{
+			AskalCurrencyConfig currencyCfg = marketConfig.GetCurrencyOrNull(currencyId);
+			if (currencyCfg && currencyCfg.ShortName != "")
+			{
+				currencyShortName = currencyCfg.ShortName;
+				if (currencyShortName.Length() > 0 && currencyShortName.Substring(0, 1) == "@")
+					currencyShortName = currencyShortName.Substring(1, currencyShortName.Length() - 1);
+			}
+		}
+		if (currencyShortName == "")
+			currencyShortName = currencyId;
+		
+		Print("[AskalBalance] RESERVE_OK steamId=" + steamId + " amount=" + amount + " currency=" + currencyId + " (" + currencyShortName + ") available_after=" + (available - amount));
 		return true;
 	}
 	

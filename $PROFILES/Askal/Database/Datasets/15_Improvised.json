@@ -1,0 +1,117 @@
+{
+	"Version": 1,
+	"DatasetName": "DS_15_Improvised",
+	"DisplayName": "IMPROVISADOS",
+	"Icon": "set:dayz_inventory image:cat_fp_kindling",
+	"Categories": {
+		"CAT_1_Insumos_Coletaveis": {
+			"BasePrice": 100,
+			"DisplayName": "Insumos Coletáveis",
+			"Items": {
+				"woodenstick": {},
+				"torch": {},
+				"longtorch": {},
+				"chickenfeather": {},
+				"longwoodenstick": {},
+				"plantmaterial": {},
+				"smallguts": {},
+				"guts": {},
+				"unknownfoodcan": {},
+				"humansteakmeat": {},
+				"deadrooster": {},
+				"deadchicken_white": {},
+				"deadchicken_spotted": {},
+				"deadchicken_brown": {
+					"Variants": [
+						"deadchicken_spotted",
+						"deadchicken_white"
+					]
+				},
+				"deadrabbit": {},
+				"deadfox": {}
+			}
+		},
+		"CAT_2_Confeccionaveis": {
+			"BasePrice": 200,
+			"DisplayName": "Confeccionáveis",
+			"Items": {
+				"sharpwoodenstick": {},
+				"spearbone": {},
+				"spearstone": {},
+				"handdrillkit": {},
+				"spear": {},
+				"rag": {},
+				"burlapstrip": {},
+				"smallstone": {},
+				"salinebagiv": {},
+				"splint": {},
+				"drysackbag_green": {
+					"Variants": [
+						"drysackbag_orange",
+						"drysackbag_yellow"
+					]
+				},
+				"drysackbag_orange": {},
+				"drysackbag_yellow": {},
+				"territoryflagkit": {},
+				"watchtowerkit": {},
+				"shelterkit": {},
+				"fencekit": {},
+				"improvisedfishingrod": {},
+				"bloodbagiv": {},
+				"improvisedsuppressor": {},
+				"ammo_improvisedbolt_1": {},
+				"ammo_improvisedbolt_2": {},
+				"improvisedbag": {},
+				"ropebelt": {},
+				"furimprovisedbag": {},
+				"furcourierbag": {},
+				"headdress_wolf": {},
+				"gasmask_filter_improvised": {},
+				"armband_altis": {
+					"Variants": [
+						"armband_apa",
+						"armband_babydeer",
+						"armband_bear",
+						"armband_black",
+						"armband_blue",
+						"armband_bohemia",
+						"armband_brainz",
+						"armband_cannibals",
+						"armband_cdf",
+						"armband_chedaki",
+						"armband_chel",
+						"armband_chernarus",
+						"armband_cmc",
+						"armband_crook",
+						"armband_dayz",
+						"armband_green",
+						"armband_hunterz",
+						"armband_livonia",
+						"armband_livoniaarmy",
+						"armband_livoniapolice",
+						"armband_napa",
+						"armband_nsahrani",
+						"armband_orange",
+						"armband_pink",
+						"armband_pirates",
+						"armband_red",
+						"armband_refuge",
+						"armband_rex",
+						"armband_rooster",
+						"armband_rsta",
+						"armband_snake",
+						"armband_ssahrani",
+						"armband_tec",
+						"armband_uec",
+						"armband_white",
+						"armband_wolf",
+						"armband_yellow",
+						"armband_zagorky",
+						"armband_zenit"
+					]
+				}
+			}
+		}
+	}
+}

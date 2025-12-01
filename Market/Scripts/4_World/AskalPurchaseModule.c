@@ -99,7 +99,37 @@ class AskalPurchaseModule
 	
 	protected void ProcessPurchaseRequest(PlayerIdentity sender, string steamId, string itemClass, int requestedPrice, string currencyId, float itemQuantity, int quantityType, int contentType, string traderName = "")
 	{
-		Print("[AskalPurchase] Purchase request start for " + steamId + " | trader=" + traderName + " | requestedCurrency=" + currencyId);
+		// Resolve currency first (before logging)
+		AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
+		AskalTraderConfig traderConfig = NULL;
+		
+		if (traderName && traderName != "")
+		{
+			traderConfig = AskalTraderConfig.LoadByTraderName(traderName);
+		}
+		
+		// Use ResolveCurrencyForTrader helper
+		string resolvedCurrencyId = AskalMarketHelpers.ResolveCurrencyForTrader(traderConfig, marketConfig);
+		
+		// Get shortname for log
+		string resolvedShortName = "";
+		if (marketConfig && resolvedCurrencyId != "")
+		{
+			AskalCurrencyConfig currencyCfg = marketConfig.GetCurrencyOrNull(resolvedCurrencyId);
+			if (currencyCfg && currencyCfg.ShortName != "")
+			{
+				resolvedShortName = currencyCfg.ShortName;
+				if (resolvedShortName.Length() > 0 && resolvedShortName.Substring(0, 1) == "@")
+					resolvedShortName = resolvedShortName.Substring(1, resolvedShortName.Length() - 1);
+			}
+		}
+		if (resolvedShortName == "")
+			resolvedShortName = resolvedCurrencyId;
+		
+		Print("[AskalPurchase] Purchase request start for " + steamId + " | trader=" + traderName + " | resolvedCurrency=" + resolvedCurrencyId + " (" + resolvedShortName + ")");
+		
+		// Use resolved currency
+		currencyId = resolvedCurrencyId;
 		
 		// CRITICAL: Check player config validation BEFORE any processing
 		if (!AskalMarketHelpers.IsPlayerConfigValid(steamId))
@@ -155,19 +185,21 @@ class AskalPurchaseModule
 			return;
 		}
 		
-		// Resolve currency ID using helper (prioritizes trader, then VirtualStore, then default)
-		AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
-		AskalTraderConfig traderConfig = NULL;
-		
-		if (traderName && traderName != "")
+		// Currency already resolved above, validate it exists in MarketConfig
+		if (!marketConfig)
 		{
-			traderConfig = AskalTraderConfig.LoadByTraderName(traderName);
+			Print("[AskalPurchase] ❌ Currency not found: " + currencyId + " (MarketConfig not loaded)");
+			SendPurchaseResponse(sender, false, itemClass, 0, "Market configuration error. Please reconnect.");
+			return;
 		}
 		
-		// Use ResolveCurrencyForTrader helper
-		currencyId = AskalMarketHelpers.ResolveCurrencyForTrader(traderConfig, marketConfig);
-		
-		Print("[AskalPurchase] Resolved currency for purchase: " + currencyId + " (trader: " + traderName + ")");
+		AskalCurrencyConfig currencyCfg = marketConfig.GetCurrencyOrNull(currencyId);
+		if (!currencyCfg)
+		{
+			Print("[AskalPurchase] ❌ Currency not found: " + currencyId);
+			SendPurchaseResponse(sender, false, itemClass, 0, "Currency not available. Please reconnect.");
+			return;
+		}
 		
 		// Validate currency exists in player balance
 		if (!AskalPlayerBalance.HasCurrency(steamId, currencyId))

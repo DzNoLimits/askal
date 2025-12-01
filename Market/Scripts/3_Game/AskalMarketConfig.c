@@ -197,9 +197,24 @@ class AskalMarketConfig
 				Currencies.Insert(currencyId, currencyCfg);
 			}
 			
-			// Log currencies loaded
+			// Log currencies loaded in specified format
 			if (currencyList != "")
-				Print("[AskalConfig] Currencies loaded: " + currencyList);
+			{
+				// Format: Askal_Money(mode=1), VirtualStore_Money(mode=2)
+				string formattedList = "";
+				for (int logIdx = 0; logIdx < Currencies.Count(); logIdx++)
+				{
+					string logCurrencyId = Currencies.GetKey(logIdx);
+					AskalCurrencyConfig logCurrencyCfg = Currencies.GetElement(logIdx);
+					if (logCurrencyCfg)
+					{
+						if (formattedList != "")
+							formattedList += ", ";
+						formattedList += logCurrencyId + "(mode=" + logCurrencyCfg.Mode + ")";
+					}
+				}
+				Print("[MarketConfig] Loaded currencies: " + formattedList);
+			}
 		}
 		else
 		{
@@ -372,5 +387,33 @@ class AskalMarketConfig
 			}
 		}
 		return keys;
+	}
+	
+	// Check if MarketConfig has currencies loaded
+	bool HasCurrencies()
+	{
+		return (Currencies && Currencies.Count() > 0);
+	}
+	
+	// Iterate currencies (helper for iteration, skipping disabled)
+	// Returns currency id and config
+	void IterateCurrencies(out array<string> currencyIds, out array<ref AskalCurrencyConfig> currencyConfigs)
+	{
+		currencyIds = new array<string>();
+		currencyConfigs = new array<ref AskalCurrencyConfig>();
+		
+		if (Currencies && Currencies.Count() > 0)
+		{
+			for (int i = 0; i < Currencies.Count(); i++)
+			{
+				string currencyId = Currencies.GetKey(i);
+				AskalCurrencyConfig currencyCfg = Currencies.GetElement(i);
+				if (currencyCfg && currencyCfg.Mode != AskalMarketConstants.CURRENCY_MODE_DISABLED)
+				{
+					currencyIds.Insert(currencyId);
+					currencyConfigs.Insert(currencyCfg);
+				}
+			}
+		}
 	}
 }

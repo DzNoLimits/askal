@@ -1,0 +1,272 @@
+{
+	"Version": 1,
+	"DatasetName": "DS_1_Food",
+	"DisplayName": "ALIMENTOS",
+	"Icon": "set:dayz_inventory image:food",
+	"Categories": {
+		"CAT_1_Industrializados": {
+			"BasePrice": 100,
+			"DisplayName": "Industrializados",
+			"Items": {
+				"boxcerealcrunchin": {
+					"BasePrice": 408
+				},
+				"powderedmilk": {
+					"BasePrice": 408
+				},
+				"rice": {
+					"BasePrice": 103
+				},
+				"marmalade": {
+					"BasePrice": 208
+				},
+				"honey": {
+					"BasePrice": 262
+				},
+				"zagorky": {
+					"BasePrice": 100
+				},
+				"zagorkychocolate": {
+					"BasePrice": 200
+				},
+				"zagorkypeanuts": {
+					"BasePrice": 150
+				},
+				"saltysticks": {
+					"BasePrice": 103
+				},
+				"crackers": {
+					"BasePrice": 154
+				},
+				"chips": {
+					"BasePrice": 206
+				},
+				"candycane_green": {
+					"BasePrice": 4635
+				},
+				"candycane_red": {
+					"BasePrice": 4635
+				},
+				"candycane_redgreen": {
+					"BasePrice": 4635
+				},
+				"candycane_yellow": {
+					"BasePrice": 4635
+				},
+				"bakedbeanscan": {
+					"BasePrice": 230
+				},
+				"peachescan": {
+					"BasePrice": 204
+				},
+				"tacticalbaconcan": {
+					"BasePrice": 332
+				},
+				"spaghettican": {
+					"BasePrice": 217
+				},
+				"sardinescan": {
+					"BasePrice": 280
+				},
+				"tunacan": {
+					"BasePrice": 173
+				},
+				"dogfoodcan": {
+					"BasePrice": 209
+				},
+				"catfoodcan": {
+					"BasePrice": 182
+				},
+				"porkcan": {
+					"BasePrice": 250
+				},
+				"lunchmeat": {
+					"BasePrice": 224
+				},
+				"crabcan": {
+					"BasePrice": 255
+				},
+				"pajka": {
+					"BasePrice": 173
+				},
+				"pate": {
+					"BasePrice": 275
+				},
+				"brisketspread": {
+					"BasePrice": 224
+				}
+			}
+		},
+		"CAT_2_Vegetais": {
+			"BasePrice": 80,
+			"DisplayName": "Vegetais",
+			"Items": {
+				"apple": {
+					"BasePrice": 92
+				},
+				"plum": {
+					"BasePrice": 96
+				},
+				"pear": {
+					"BasePrice": 80
+				},
+				"banana": {
+					"BasePrice": 104
+				},
+				"orange": {
+					"BasePrice": 95
+				},
+				"tomato": {
+					"BasePrice": 84
+				},
+				"greenbellpepper": {
+					"BasePrice": 80
+				},
+				"zucchini": {
+					"BasePrice": 92
+				},
+				"pumpkin": {
+					"BasePrice": 99
+				},
+				"slicedpumpkin": {
+					"BasePrice": 80
+				},
+				"potato": {
+					"BasePrice": 80
+				},
+				"kiwi": {
+					"BasePrice": 106
+				},
+				"sambucusberry": {
+					"BasePrice": 80
+				},
+				"caninaberry": {
+					"BasePrice": 80
+				},
+				"cannabis": {
+					"BasePrice": 80
+				}
+			}
+		},
+		"CAT_3_Animais": {
+			"BasePrice": 300,
+			"DisplayName": "Animal",
+			"Items": {
+				"goatsteakmeat": {
+					"BasePrice": 366
+				},
+				"mouflonsteakmeat": {
+					"BasePrice": 366
+				},
+				"boarsteakmeat": {
+					"BasePrice": 366
+				},
+				"pigsteakmeat": {
+					"BasePrice": 366
+				},
+				"deersteakmeat": {
+					"BasePrice": 366
+				},
+				"reindeersteakmeat": {
+					"BasePrice": 366
+				},
+				"wolfsteakmeat": {
+					"BasePrice": 366
+				},
+				"bearsteakmeat": {
+					"BasePrice": 366
+				},
+				"cowsteakmeat": {
+					"BasePrice": 366
+				},
+				"sheepsteakmeat": {
+					"BasePrice": 366
+				},
+				"foxsteakmeat": {
+					"BasePrice": 366
+				},
+				"chickenbreastmeat": {
+					"BasePrice": 366
+				},
+				"rabbitlegmeat": {
+					"BasePrice": 300
+				},
+				"carpfilletmeat": {
+					"BasePrice": 300
+				},
+				"mackerelfilletmeat": {
+					"BasePrice": 300
+				},
+				"walleyepollockfilletmeat": {
+					"BasePrice": 300
+				},
+				"steelheadtroutfilletmeat": {
+					"BasePrice": 300
+				},
+				"redcaviar": {
+					"BasePrice": 300
+				},
+				"lard": {
+					"BasePrice": 300
+				},
+				"bitterlings": {
+					"BasePrice": 300
+				},
+				"shrimp": {
+					"BasePrice": 300
+				},
+				"carp": {
+					"BasePrice": 300
+				},
+				"sardines": {
+					"BasePrice": 300
+				},
+				"mackerel": {
+					"BasePrice": 300
+				},
+				"walleyepollock": {
+					"BasePrice": 300
+				},
+				"steelheadtrout": {
+					"BasePrice": 300
+				},
+				"worm": {
+					"BasePrice": 300
+				}
+			}
+		},
+		"CAT_4_Cogumelos": {
+			"BasePrice": 20,
+			"DisplayName": "Cogumelos",
+			"Items": {
+				"agaricusmushroom": {
+					"BasePrice": 121
+				},
+				"amanitamushroom": {
+					"BasePrice": 149
+				},
+				"macrolepiotamushroom": {
+					"BasePrice": 20
+				},
+				"lactariusmushroom": {
+					"BasePrice": 20
+				},
+				"psilocybemushroom": {
+					"BasePrice": 20
+				},
+				"auriculariamushroom": {
+					"BasePrice": 20
+				},
+				"boletusmushroom": {
+					"BasePrice": 121
+				},
+				"pleurotusmushroom": {
+					"BasePrice": 20
+				},
+				"craterellusmushroom": {
+					"BasePrice": 20
+				}
+			}
+		}
+	}
+}

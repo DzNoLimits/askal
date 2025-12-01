@@ -1,0 +1,11 @@
+
+{
+    "FirstLogin": "2025-11-30T23:47:19Z",
+    "Balance": {
+        "VirtualStore_Money": 997183,
+        "Askal_Money": 999084
+    },
+    "CreditCard": 0,
+    "PremiumStatusExpireInHours": 0,
+    "Permissions": {}
+}

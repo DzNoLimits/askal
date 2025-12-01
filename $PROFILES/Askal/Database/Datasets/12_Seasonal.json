@@ -1,0 +1,61 @@
+{
+	"Version": 1,
+	"DatasetName": "DS_12_Seasonal",
+	"DisplayName": "TEMPORADA",
+	"Icon": "set:dayz_inventory image:paper",
+	"Categories": {
+		"CAT_1_Halloween": {
+			"BasePrice": 1000,
+			"DisplayName": "Halloween",
+			"Items": {
+				"pumpkinhelmet": {},
+				"witchhood_black": {
+					"Variants": [
+						"witchhood_brown",
+						"witchhood_red"
+					]
+				},
+				"witchhood_brown": {},
+				"witchhood_red": {},
+				"witchhoodcoif_black": {
+					"Variants": [
+						"witchhoodcoif_brown",
+						"witchhoodcoif_red"
+					]
+				},
+				"witchhoodcoif_brown": {},
+				"witchhoodcoif_red": {},
+				"witchhat": {},
+				"crookednose": {}
+			}
+		},
+		"CAT_2_Natal": {
+			"BasePrice": 100,
+			"DisplayName": "Natal",
+			"Items": {
+				"santashat": {},
+				"santasbeard": {},
+				"christmasheadband_antlers": {},
+				"christmasheadband_gingerbread": {},
+				"christmasheadband_trees": {}
+			}
+		},
+		"CAT_3_Aniversario": {
+			"BasePrice": 100,
+			"DisplayName": "Aniversário",
+			"Items": {
+				"tshirt_10thanniversary": {},
+				"anniversary_fireworkslauncher": {},
+				"anniversarybox": {}
+			}
+		},
+		"CAT_4_Outros": {
+			"BasePrice": 100,
+			"DisplayName": "Outros",
+			"Items": {
+				"darkmotohelmet_yellowscarred": {},
+				"ammo_cupidsbolt": {}
+			}
+		}
+	}
+}

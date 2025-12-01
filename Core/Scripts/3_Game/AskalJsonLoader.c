@@ -540,10 +540,18 @@ class AskalPlayerConfigLoader
         
         // Ensure MarketConfig is loaded first (with fallback to disk read)
         AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
+        if (!marketConfig)
+        {
+            reason = "MarketConfig not loaded";
+            Print("[AskalJsonLoader] ERROR: MarketConfig not loaded");
+            ReleaseLoadLock(steamId);
+            return;
+        }
+        
         map<string, ref AskalCurrencyConfig> allCurrencies = new map<string, ref AskalCurrencyConfig>();
         
         // Try in-memory first
-        if (marketConfig && marketConfig.Currencies && marketConfig.Currencies.Count() > 0)
+        if (marketConfig.HasCurrencies())
         {
             allCurrencies = GetAllCurrencies(marketConfig);
         }
@@ -679,9 +687,8 @@ class AskalPlayerConfigLoader
                 seedSummary += seedCurrencyId + "=" + seedValue;
             }
             
-            // Format currency list for log (brackets format)
-            string formattedCurrencyList = "[" + currencyList + "]";
-            Print("[AskalJsonLoader] CREATED player config: " + steamId + " with currencies: " + formattedCurrencyList);
+            // Format currency list for log (comma-separated, no brackets)
+            Print("[AskalJsonLoader] Player config created for: " + steamId + " (currencies added: " + currencyList + ")");
             
             // Save atomically (write to .tmp then rename)
             if (!AskalJsonLoader<AskalPlayerData>.SaveToFile(filePath, playerData))
@@ -766,7 +773,7 @@ class AskalPlayerConfigLoader
                     addedList += ", ";
                 addedList += addedCurrencies.Get(i);
             }
-            Print("[AskalJsonLoader] UPDATED player config: " + steamId + " added currencies: [" + addedList + "]");
+            Print("[AskalJsonLoader] Player config created/updated for: " + steamId + " (currencies added: " + addedList + ")");
         }
         
         // If migration needed, save with backup

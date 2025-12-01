@@ -1,0 +1,684 @@
+{
+	"Version": 1,
+	"DatasetName": "DS_6_Firearms",
+	"DisplayName": "ARMAS",
+	"Icon": "set:dayz_inventory image:shoulderleft",
+	"Categories": {
+		"CAT_1_Pistolas": {
+			"BasePrice": 1000,
+			"DisplayName": "Pistolas",
+			"Items": {
+				"jd_tec9": {
+					"Attachments": [
+						"jd_mag_tec9_32rnd"
+					]
+				},
+				"p1": {
+					"Attachments": [
+						"mag_p1_8rnd"
+					],
+					"BasePrice": 1520
+				},
+				"mkii": {
+					"Attachments": [
+						"mag_mkii_10rnd"
+					],
+					"BasePrice": 1350
+				},
+				"makarovij70": {
+					"Attachments": [
+						"mag_ij70_8rnd"
+					],
+					"BasePrice": 1620
+				},
+				"magnum": {
+					"BasePrice": 1300
+				},
+				"longhorn": {
+					"Attachments": [
+						"pistoloptic"
+					],
+					"BasePrice": 1000
+				},
+				"glock19": {
+					"Attachments": [
+						"mag_glock_15rnd"
+					],
+					"BasePrice": 1500
+				},
+				"fnx45": {
+					"Attachments": [
+						"mag_fnx45_15rnd"
+					],
+					"BasePrice": 1525
+				},
+				"derringer_black": {
+					"Variants": [
+						"derringer_grey",
+						"derringer_pink"
+					],
+					"BasePrice": 2125
+				},
+				"derringer_grey": {
+					"BasePrice": 2125
+				},
+				"derringer_pink": {
+					"BasePrice": 2125
+				},
+				"deagle": {
+					"Attachments": [
+						"mag_deagle_9rnd"
+					],
+					"Variants": [
+						"deagle_gold"
+					],
+					"BasePrice": 1250
+				},
+				"deagle_gold": {
+					"Attachments": [
+						"mag_deagle_9rnd"
+					],
+					"BasePrice": 1250
+				},
+				"cz75": {
+					"Attachments": [
+						"mag_cz75_15rnd"
+					],
+					"BasePrice": 1500
+				},
+				"colt1911": {
+					"Attachments": [
+						"mag_1911_7rnd"
+					],
+					"BasePrice": 1447
+				},
+				"engraved1911": {
+					"Attachments": [
+						"mag_1911_7rnd"
+					],
+					"BasePrice": 1300
+				}
+			}
+		},
+		"CAT_2_Escopetas": {
+			"BasePrice": 3000,
+			"DisplayName": "Escopetas",
+			"Items": {
+				"jd_serbusupershorty": {},
+				"jd_model1887": {},
+				"saiga": {
+					"Attachments": [
+						"mag_saiga_8rnd",
+						"saiga_bttstck"
+					],
+					"BasePrice": 10500
+				},
+				"r12": {
+					"Attachments": [
+						"universallight",
+						"reflexoptic"
+					],
+					"BasePrice": 3000
+				},
+				"mp133shotgun": {
+					"BasePrice": 3000
+				},
+				"izh18shotgun": {
+					"BasePrice": 3000
+				},
+				"izh43shotgun": {
+					"BasePrice": 3000
+				}
+			}
+		},
+		"CAT_3_Submetralhadoras": {
+			"BasePrice": 6000,
+			"DisplayName": "Submetralhadoras",
+			"Items": {
+				"jd_p90": {
+					"Attachments": [
+						"jd_mag_p90_50rnd"
+					]
+				},
+				"jd_bt_mp9": {
+					"Attachments": [
+						"jd_bt_mp9_15rnd_mag",
+						"jd_mp9_suppressor"
+					]
+				},
+				"jd_mp7": {
+					"Attachments": [
+						"jd_mag_mp7_40rnd",
+						"jd_mp7suppressor"
+					]
+				},
+				"jd_cz_evo3a1": {
+					"Attachments": [
+						"jd_cz_mag_evo_35rnd",
+						"universallight",
+						"reflexoptic"
+					],
+					"Variants": [
+						"jd_cz_evo3a1_fde",
+						"jd_cz_evo3a1_grey",
+						"jd_cz_evo3a1_olive"
+					]
+				},
+				"jd_cz_evo3a1_fde": {
+					"Attachments": [
+						"jd_cz_mag_evo_35rnd",
+						"universallight",
+						"reflexoptic"
+					]
+				},
+				"jd_cz_evo3a1_grey": {
+					"Attachments": [
+						"jd_cz_mag_evo_35rnd",
+						"universallight",
+						"reflexoptic"
+					]
+				},
+				"jd_cz_evo3a1_olive": {
+					"Attachments": [
+						"jd_cz_mag_evo_35rnd",
+						"universallight",
+						"reflexoptic"
+					]
+				},
+				"vikhr": {
+					"Attachments": [
+						"mag_vikhr_30rnd",
+						"akol_akmount_noattachment",
+						"reflexoptic"
+					],
+					"BasePrice": 11500
+				},
+				"ump45": {
+					"Attachments": [
+						"mag_ump_25rnd",
+						"reflexoptic",
+						"universallight",
+						"pistolsuppressor"
+					],
+					"BasePrice": 11000
+				},
+				"pp19": {
+					"Attachments": [
+						"mag_pp19_64rnd",
+						"pp19_bttstck",
+						"akol_akmount_noattachment",
+						"reflexoptic"
+					],
+					"BasePrice": 11500
+				},
+				"pm73rak": {
+					"Attachments": [
+						"mag_pm73_25rnd"
+					],
+					"BasePrice": 11200
+				},
+				"mp5k": {
+					"Attachments": [
+						"mp5k_stockbttstck",
+						"mp5_plastichndgrd",
+						"mp5_compensator",
+						"reflexoptic",
+						"mag_mp5_30rnd"
+					],
+					"BasePrice": 11080
+				},
+				"cz61": {
+					"Attachments": [
+						"mag_cz61_20rnd"
+					],
+					"BasePrice": 11360
+				}
+			}
+		},
+		"CAT_4_Rifles_de_Assalto": {
+			"BasePrice": 12000,
+			"DisplayName": "Rifles de Assalto",
+			"Items": {
+				"jd_groza": {
+					"Attachments": [
+						"jd_mag_groza_20rnd",
+						"jd_groza_optic"
+					],
+					"BasePrice": 20000
+				},
+				"m4a1": {
+					"BasePrice": 20000,
+					"Attachments": [
+						"m4_t3nrdsoptic",
+						"mag_cmag_30rnd",
+						"m4_cqbbttstck",
+						"m4_mphndgrd"
+					],
+					"Variants": [
+						"m4a1_black",
+						"m4a1_green"
+					]
+				},
+				"m4a1_black": {
+					"BasePrice": 20000,
+					"Attachments": [
+						"mag_cmag_30rnd_black",
+						"m4_mphndgrd_black",
+						"m4_cqbbttstck_black",
+						"m4_t3nrdsoptic"
+					]
+				},
+				"m4a1_green": {
+					"BasePrice": 20000,
+					"Attachments": [
+						"mag_cmag_30rnd_green",
+						"m4_mphndgrd_green",
+						"m4_cqbbttstck_green",
+						"m4_t3nrdsoptic"
+					]
+				},
+				"m16a2": {
+					"BasePrice": 16000,
+					"Attachments": [
+						"mag_stanag_30rnd"
+					]
+				},
+				"famas": {
+					"BasePrice": 20800,
+					"Attachments": [
+						"mag_famas_25rnd"
+					]
+				},
+				"fal": {
+					"BasePrice": 20000,
+					"Attachments": [
+						"mag_fal_20rnd",
+						"fal_oebttstck",
+						"acogoptic"
+					]
+				},
+				"augshort": {
+					"Attachments": [
+						"mag_aug_30rnd"
+					],
+					"BasePrice": 20000
+				},
+				"aug": {
+					"Attachments": [
+						"mag_aug_30rnd"
+					],
+					"BasePrice": 20000
+				},
+				"akm": {
+					"Attachments": [
+						"mag_akm_30rnd",
+						"ak_woodbttstck",
+						"ak_plastichndgrd"
+					],
+					"BasePrice": 20000
+				},
+				"ak101": {
+					"Attachments": [
+						"ak_plasticbttstck",
+						"ak_railhndgrd",
+						"mag_ak101_30rnd"
+					],
+					"Variants": [
+						"ak101_black",
+						"ak101_green"
+					],
+					"BasePrice": 20000
+				},
+				"ak101_black": {
+					"Attachments": [
+						"ak_plasticbttstck_black",
+						"ak_railhndgrd_black",
+						"mag_ak101_30rnd_black"
+					],
+					"BasePrice": 20000
+				},
+				"ak101_green": {
+					"Attachments": [
+						"ak_plasticbttstck_green",
+						"ak_railhndgrd_green",
+						"mag_ak101_30rnd_green"
+					],
+					"BasePrice": 20000
+				},
+				"ak74_black": {
+					"Attachments": [
+						"ak74_woodbttstck_black",
+						"ak74_hndgrd_black",
+						"mag_ak74_30rnd_black"
+					],
+					"BasePrice": 20000
+				},
+				"ak74": {
+					"Attachments": [
+						"mag_ak74_30rnd",
+						"ak74_woodbttstck",
+						"ak74_hndgrd"
+					],
+					"Variants": [
+						"ak74_black",
+						"ak74_green"
+					],
+					"BasePrice": 20000
+				},
+				"ak74_green": {
+					"Attachments": [
+						"mag_ak74_30rnd_green",
+						"ak74_woodbttstck_camo",
+						"ak74_hndgrd_camo"
+					],
+					"BasePrice": 20000
+				},
+				"aks74u": {
+					"Attachments": [
+						"mag_ak74_30rnd",
+						"aks74u_bttstck"
+					],
+					"Variants": [
+						"aks74u_black",
+						"aks74u_green"
+					],
+					"BasePrice": 21000
+				},
+				"aks74u_black": {
+					"Attachments": [
+						"aks74u_bttstck_black",
+						"mag_ak74_30rnd_black"
+					],
+					"BasePrice": 21000
+				},
+				"aks74u_green": {
+					"Attachments": [
+						"aks74u_bttstck_green",
+						"mag_ak74_30rnd_green"
+					],
+					"BasePrice": 21000
+				}
+			}
+		},
+		"CAT_5_Atirador_Designado": {
+			"BasePrice": 24000,
+			"DisplayName": "Atirador Designado",
+			"Items": {
+				"sks_black": {
+					"Attachments": [
+						"puscopeoptic",
+						"sks_bayonet"
+					],
+					"BasePrice": 24000
+				},
+				"m14": {
+					"Attachments": [
+						"acogoptic_6x",
+						"mag_m14_20rnd"
+					],
+					"BasePrice": 24000
+				},
+				"sks_green": {
+					"Attachments": [
+						"puscopeoptic",
+						"sks_bayonet"
+					],
+					"BasePrice": 24000
+				},
+				"vss": {
+					"Attachments": [
+						"pso1optic",
+						"mag_vikhr_30rnd"
+					],
+					"BasePrice": 24000
+				},
+				"sks": {
+					"Attachments": [
+						"puscopeoptic",
+						"sks_bayonet"
+					],
+					"Variants": [
+						"sks_black",
+						"sks_green"
+					],
+					"BasePrice": 24000
+				},
+				"asval": {
+					"Attachments": [
+						"mag_vikhr_30rnd",
+						"acogoptic"
+					],
+					"BasePrice": 25250
+				}
+			}
+		},
+		"CAT_6_Rifles_Sniper": {
+			"BasePrice": 48000,
+			"DisplayName": "Rifles Sniper",
+			"Items": {
+				"izh18": {
+					"BasePrice": 48000
+				},
+				"scout": {
+					"Attachments": [
+						"mag_scout_5rnd",
+						"acogoptic"
+					],
+					"Variants": [
+						"scout_chernarus",
+						"scout_livonia"
+					],
+					"BasePrice": 48000
+				},
+				"scout_chernarus": {
+					"Attachments": [
+						"mag_scout_5rnd",
+						"acogoptic"
+					],
+					"BasePrice": 48000
+				},
+				"scout_livonia": {
+					"Attachments": [
+						"mag_scout_5rnd",
+						"acogoptic"
+					],
+					"BasePrice": 48000
+				},
+				"b95": {
+					"Attachments": [
+						"huntingoptic"
+					],
+					"BasePrice": 48000
+				},
+				"cz527_black": {
+					"Attachments": [
+						"mag_cz527_5rnd",
+						"huntingoptic"
+					],
+					"BasePrice": 48000
+				},
+				"mosin9130": {
+					"Attachments": [
+						"puscopeoptic",
+						"mosin_compensator"
+					],
+					"Variants": [
+						"mosin9130_camo",
+						"mosin9130_green",
+						"mosin9130_black"
+					],
+					"BasePrice": 49500
+				},
+				"mosin9130_camo": {
+					"Attachments": [
+						"puscopeoptic",
+						"mosin_compensator"
+					],
+					"BasePrice": 49500
+				},
+				"mosin9130_green": {
+					"Attachments": [
+						"puscopeoptic",
+						"mosin_compensator"
+					],
+					"BasePrice": 49500
+				},
+				"mosin9130_black": {
+					"Attachments": [
+						"puscopeoptic",
+						"mosin_compensator"
+					],
+					"BasePrice": 49500
+				},
+				"ssg82": {
+					"Attachments": [
+						"mag_ssg82_5rnd",
+						"ssg82optic"
+					],
+					"BasePrice": 48000
+				},
+				"cz550": {
+					"Attachments": [
+						"mag_cz550_10rnd",
+						"huntingoptic"
+					],
+					"BasePrice": 48000
+				},
+				"winchester70_green": {
+					"Attachments": [
+						"huntingoptic"
+					],
+					"BasePrice": 48000
+				},
+				"winchester70_black": {
+					"Attachments": [
+						"huntingoptic"
+					],
+					"BasePrice": 48000
+				},
+				"winchester70": {
+					"Attachments": [
+						"huntingoptic"
+					],
+					"Variants": [
+						"winchester70_green",
+						"winchester70_black"
+					],
+					"BasePrice": 48000
+				},
+				"sv98": {
+					"Attachments": [
+						"mag_sv98_10rnd",
+						"mk4optic_black"
+					],
+					"BasePrice": 48000
+				},
+				"svd": {
+					"Attachments": [
+						"pso1optic",
+						"ak_suppressor",
+						"mag_svd_10rnd"
+					],
+					"Variants": [
+						"svd_wooden"
+					],
+					"BasePrice": 48000
+				},
+				"svd_wooden": {
+					"Attachments": [
+						"pso1optic",
+						"ak_suppressor",
+						"mag_svd_10rnd"
+					],
+					"BasePrice": 48000
+				},
+				"cz527": {
+					"Attachments": [
+						"mag_cz527_5rnd",
+						"huntingoptic"
+					],
+					"Variants": [
+						"cz527_black",
+						"cz527_green",
+						"cz527_camo"
+					],
+					"BasePrice": 48000
+				},
+				"cz527_green": {
+					"Attachments": [
+						"mag_cz527_5rnd",
+						"huntingoptic"
+					],
+					"BasePrice": 48000
+				},
+				"cz527_camo": {
+					"Attachments": [
+						"mag_cz527_5rnd",
+						"huntingoptic"
+					],
+					"BasePrice": 48000
+				}
+			}
+		},
+		"CAT_7_Metralhadora": {
+			"BasePrice": 96000,
+			"DisplayName": "Metralhadora",
+			"Items": {
+				"jd_m249": {
+					"Attachments": [
+						"jd_mag_m249_box200rnd",
+						"jdm249body",
+						"jdm249cover",
+						"reflexoptic",
+						"m4_suppressor"
+					],
+					"BasePrice": 96000
+				}
+			}
+		},
+		"CAT_8_Outros": {
+			"BasePrice": 10000,
+			"DisplayName": "Outros",
+			"Items": {
+				"jd_rpg": {
+					"BasePrice": 10000
+				},
+				"m79": {
+					"BasePrice": 10000
+				},
+				"flaregun": {
+					"BasePrice": 10000
+				},
+				"crossbow_autumn": {
+					"Attachments": [
+						"reflexoptic"
+					],
+					"Variants": [
+						"crossbow_black",
+						"crossbow_summer",
+						"crossbow_wood"
+					],
+					"BasePrice": 10625
+				},
+				"crossbow_black": {
+					"Attachments": [
+						"reflexoptic"
+					],
+					"BasePrice": 10625
+				},
+				"crossbow_summer": {
+					"Attachments": [
+						"reflexoptic"
+					],
+					"BasePrice": 10625
+				},
+				"crossbow_wood": {
+					"Attachments": [
+						"reflexoptic"
+					],
+					"BasePrice": 10625
+				}
+			}
+		}
+	}
+}

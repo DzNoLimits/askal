@@ -1,0 +1,415 @@
+{
+	"Version": 1,
+	"DatasetName": "DS_8_Attachments",
+	"DisplayName": "ACESSÓRIOS",
+	"Icon": "set:dayz_inventory image:handguard",
+	"Categories": {
+		"CAT_1_Carregadores": {
+			"BasePrice": 350,
+			"DisplayName": "Carregadores",
+			"Items": {
+				"mag_fnx45_15rnd": {},
+				"mag_deagle_9rnd": {},
+				"mag_1911_7rnd": {},
+				"mag_cz75_15rnd": {},
+				"mag_glock_15rnd": {},
+				"mag_p1_8rnd": {},
+				"mag_ij70_8rnd": {},
+				"mag_mp5_15rnd": {},
+				"mag_mp5_30rnd": {},
+				"mag_pm73_15rnd": {},
+				"mag_pm73_25rnd": {},
+				"mag_cz61_20rnd": {},
+				"mag_famas_25rnd": {},
+				"mag_mkii_10rnd": {},
+				"mag_ruger1022_10rnd": {},
+				"mag_ruger1022_15rnd": {},
+				"mag_ruger1022_30rnd": {},
+				"mag_akm_30rnd": {},
+				"mag_akm_drum75rnd": {
+					"Variants": [
+						"mag_akm_drum75rnd_black",
+						"mag_akm_drum75rnd_green"
+					]
+				},
+				"mag_akm_drum75rnd_black": {},
+				"mag_akm_drum75rnd_green": {},
+				"mag_akm_palm30rnd": {
+					"Variants": [
+						"mag_akm_palm30rnd_black",
+						"mag_akm_palm30rnd_green"
+					]
+				},
+				"mag_akm_palm30rnd_black": {},
+				"mag_akm_palm30rnd_green": {},
+				"mag_cz527_5rnd": {},
+				"mag_stanag_30rnd": {},
+				"mag_stanagcoupled_30rnd": {},
+				"mag_stanag_60rnd": {},
+				"mag_cmag_10rnd": {
+					"Variants": [
+						"mag_cmag_10rnd_black",
+						"mag_cmag_10rnd_green"
+					]
+				},
+				"mag_cmag_10rnd_black": {},
+				"mag_cmag_10rnd_green": {},
+				"mag_cmag_20rnd": {
+					"Variants": [
+						"mag_cmag_20rnd_black",
+						"mag_cmag_20rnd_green"
+					]
+				},
+				"mag_cmag_20rnd_black": {},
+				"mag_cmag_20rnd_green": {},
+				"mag_cmag_30rnd": {
+					"Variants": [
+						"mag_cmag_30rnd_black",
+						"mag_cmag_30rnd_green"
+					]
+				},
+				"mag_cmag_30rnd_black": {},
+				"mag_cmag_30rnd_green": {},
+				"mag_cmag_40rnd": {
+					"Variants": [
+						"mag_cmag_40rnd_black",
+						"mag_cmag_40rnd_green"
+					]
+				},
+				"mag_cmag_40rnd_black": {},
+				"mag_cmag_40rnd_green": {},
+				"mag_ak101_30rnd": {
+					"Variants": [
+						"mag_ak101_30rnd_black",
+						"mag_ak101_30rnd_green"
+					]
+				},
+				"mag_aug_30rnd": {},
+				"mag_ak101_30rnd_black": {},
+				"mag_ak101_30rnd_green": {},
+				"mag_ak74_30rnd": {
+					"Variants": [
+						"mag_ak74_30rnd_black",
+						"mag_ak74_30rnd_green"
+					]
+				},
+				"mag_ak74_30rnd_black": {},
+				"mag_ak74_30rnd_green": {},
+				"mag_ak74_45rnd": {},
+				"mag_svd_10rnd": {},
+				"mag_fal_20rnd": {},
+				"mag_scout_5rnd": {},
+				"mag_ump_25rnd": {},
+				"mag_vss_10rnd": {},
+				"mag_val_20rnd": {},
+				"mag_vikhr_30rnd": {},
+				"mag_pp19_64rnd": {},
+				"mag_cz550_4rnd": {},
+				"mag_cz550_10rnd": {},
+				"mag_ssg82_5rnd": {},
+				"mag_saiga_5rnd": {},
+				"mag_saiga_8rnd": {},
+				"mag_saiga_drum20rnd": {},
+				"mag_m14_10rnd": {},
+				"mag_m14_20rnd": {},
+				"mag_sv98_10rnd": {},
+				"jd_mag_groza_20rnd": {},
+				"jd_mag_m249_box200rnd": {},
+				"jd_cz_mag_evo_35rnd": {},
+				"jd_mag_mp7_40rnd": {},
+				"jd_bt_mp9_30rnd_mag": {},
+				"jd_bt_mp9_15rnd_mag": {},
+				"jd_mag_p90_50rnd": {},
+				"jd_mag_tec9_32rnd": {}
+			}
+		},
+		"CAT_2_Ponteiras": {
+			"BasePrice": 600,
+			"DisplayName": "Ponteiras",
+			"Items": {
+				"ak_bayonet": {},
+				"m9a1_bayonet": {},
+				"mosin_bayonet": {},
+				"sks_bayonet": {},
+				"mosin_compensator": {},
+				"mp5_compensator": {},
+				"m4_suppressor": {},
+				"ak_suppressor": {},
+				"pistolsuppressor": {},
+				"jd_mp7suppressor": {},
+				"jd_mp9_suppressor": {}
+			}
+		},
+		"CAT_3_Suportes": {
+			"BasePrice": 460,
+			"DisplayName": "Suportes",
+			"Items": {
+				"m4_oebttstck": {
+					"Variants": [
+						"m4_oebttstck_black",
+						"m4_oebttstck_green"
+					]
+				},
+				"m4_oebttstck_black": {},
+				"m4_oebttstck_green": {},
+				"m4_mpbttstck": {
+					"Variants": [
+						"m4_mpbttstck_black",
+						"m4_mpbttstck_green"
+					]
+				},
+				"m4_mpbttstck_black": {},
+				"m4_mpbttstck_green": {},
+				"m4_cqbbttstck": {
+					"Variants": [
+						"m4_cqbbttstck_black",
+						"m4_cqbbttstck_green"
+					]
+				},
+				"m4_cqbbttstck_black": {},
+				"m4_cqbbttstck_green": {},
+				"ak_woodbttstck": {
+					"Variants": [
+						"ak_woodbttstck_black",
+						"ak_woodbttstck_camo"
+					]
+				},
+				"ak_woodbttstck_black": {},
+				"ak_woodbttstck_camo": {},
+				"ak74_woodbttstck": {
+					"Variants": [
+						"ak74_woodbttstck_black",
+						"ak74_woodbttstck_camo"
+					]
+				},
+				"ak74_woodbttstck_black": {},
+				"ak74_woodbttstck_camo": {},
+				"ak_foldingbttstck": {
+					"Variants": [
+						"ak_foldingbttstck_black",
+						"ak_foldingbttstck_green"
+					]
+				},
+				"ak_foldingbttstck_black": {},
+				"ak_foldingbttstck_green": {},
+				"ak_plasticbttstck": {
+					"Variants": [
+						"ak_plasticbttstck_black",
+						"ak_plasticbttstck_green"
+					]
+				},
+				"ak_plasticbttstck_black": {},
+				"ak_plasticbttstck_green": {},
+				"aks74u_bttstck": {
+					"Variants": [
+						"aks74u_bttstck_black",
+						"aks74u_bttstck_green"
+					]
+				},
+				"aks74u_bttstck_black": {},
+				"aks74u_bttstck_green": {},
+				"mp5k_stockbttstck": {},
+				"fal_oebttstck": {},
+				"fal_foldingbttstck": {},
+				"saiga_bttstck": {},
+				"pp19_bttstck": {},
+				"m4_plastichndgrd": {
+					"Variants": [
+						"m4_plastichndgrd_black",
+						"m4_plastichndgrd_green"
+					]
+				},
+				"m4_plastichndgrd_black": {},
+				"m4_plastichndgrd_green": {},
+				"m4_rishndgrd": {
+					"Variants": [
+						"m4_rishndgrd_black",
+						"m4_rishndgrd_green"
+					]
+				},
+				"m4_rishndgrd_black": {},
+				"m4_rishndgrd_green": {},
+				"m4_mphndgrd": {
+					"Variants": [
+						"m4_mphndgrd_black",
+						"m4_mphndgrd_green"
+					]
+				},
+				"m4_mphndgrd_black": {},
+				"m4_mphndgrd_green": {},
+				"ak_woodhndgrd": {
+					"Variants": [
+						"ak_woodhndgrd_black",
+						"ak_woodhndgrd_camo"
+					]
+				},
+				"ak_woodhndgrd_black": {},
+				"ak_woodhndgrd_camo": {},
+				"ak74_hndgrd": {
+					"Variants": [
+						"ak74_hndgrd_black",
+						"ak74_hndgrd_camo"
+					]
+				},
+				"ak74_hndgrd_black": {},
+				"ak74_hndgrd_camo": {},
+				"ak_railhndgrd": {
+					"Variants": [
+						"ak_railhndgrd_black",
+						"ak_railhndgrd_green"
+					]
+				},
+				"ak_railhndgrd_black": {},
+				"ak_railhndgrd_green": {},
+				"ak_plastichndgrd": {},
+				"mp5_plastichndgrd": {},
+				"mp5_railhndgrd": {}
+			}
+		},
+		"CAT_4_Trilhos": {
+			"BasePrice": 710,
+			"DisplayName": "Trilhos",
+			"Items": {
+				"akol_railhuntingoptic": {},
+				"akol_mosinmount_noattachment": {},
+				"akol_akmount_noattachment": {},
+				"akol_czrail_noattachment": {},
+				"akol_m700rail_noattachment": {},
+				"akol_b95rail_noattachment": {},
+				"akol_pistolmount_noattachment": {}
+			}
+		},
+		"CAT_5_Miras": {
+			"BasePrice": 830,
+			"DisplayName": "Miras",
+			"Items": {
+				"m4_carryhandleoptic": {},
+				"buisoptic": {},
+				"m68optic": {
+					"Attachments": [
+						"battery9v"
+					]
+				},
+				"m4_t3nrdsoptic": {
+					"Attachments": [
+						"battery9v"
+					]
+				},
+				"fnp45_mrdsoptic": {
+					"Attachments": [
+						"battery9v"
+					]
+				},
+				"reflexoptic": {
+					"Attachments": [
+						"battery9v"
+					]
+				},
+				"acogoptic": {
+					"Variants": [
+						"acogoptic_6x"
+					]
+				},
+				"acogoptic_6x": {},
+				"puscopeoptic": {},
+				"kashtanoptic": {},
+				"huntingoptic": {},
+				"pistoloptic": {},
+				"sportingoptic": {
+					"Attachments": [
+						"battery9v"
+					]
+				},
+				"mk4optic_tan": {
+					"Attachments": [
+						"battery9v"
+					]
+				},
+				"mk4optic_green": {
+					"Attachments": [
+						"battery9v"
+					]
+				},
+				"mk4optic_black": {
+					"Attachments": [
+						"battery9v"
+					],
+					"Variants": [
+						"mk4optic_green",
+						"mk4optic_tan"
+					]
+				},
+				"pso1optic": {
+					"Attachments": [
+						"battery9v"
+					]
+				},
+				"pso11optic": {
+					"Attachments": [
+						"battery9v"
+					]
+				},
+				"pso6optic": {
+					"Attachments": [
+						"battery9v"
+					]
+				},
+				"jd_groza_optic": {},
+				"kobraoptic": {
+					"Attachments": [
+						"battery9v"
+					]
+				},
+				"kazuaroptic": {
+					"Attachments": [
+						"battery9v"
+					]
+				},
+				"starlightoptic": {
+					"Attachments": [
+						"battery9v"
+					]
+				},
+				"akol_pilad": {},
+				"akol_exps": {
+					"Attachments": [
+						"battery9v"
+					]
+				},
+				"akol_magnifier": {},
+				"akol_specter6x": {
+					"Attachments": [
+						"battery9v",
+						"fnp45_mrdsoptic"
+					]
+				},
+				"akol_mrdsmount": {
+					"Attachments": [
+						"battery9v"
+					]
+				},
+				"akol_okp77": {
+					"Attachments": [
+						"battery9v"
+					]
+				}
+			}
+		},
+		"CAT_6_Lanternas": {
+			"BasePrice": 160,
+			"DisplayName": "Lanternas",
+			"Items": {
+				"universallight": {
+					"Attachments": [
+						"battery9v"
+					]
+				},
+				"tlrlight": {
+					"Attachments": [
+						"battery9v"
+					]
+				}
+			}
+		}
+	}
+}

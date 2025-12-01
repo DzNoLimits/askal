@@ -1,0 +1,2589 @@
+{
+	"Version": 1,
+	"DatasetName": "DS_4_Clothing",
+	"DisplayName": "ROUPAS, TRAJES E EQUIPAMENTOS",
+	"Icon": "set:dayz_inventory image:body",
+	"Categories": {
+		"CAT_1_Casmisas": {
+			"BasePrice": 350,
+			"DisplayName": "Casmisas",
+			"Items": {
+				"downjacket_blue": {
+					"Variants": [
+						"downjacket_green",
+						"downjacket_orange",
+						"downjacket_red"
+					],
+					"BasePrice": 540
+				},
+				"downjacket_red": {
+					"BasePrice": 540
+				},
+				"downjacket_orange": {
+					"BasePrice": 540
+				},
+				"downjacket_green": {
+					"BasePrice": 540
+				},
+				"sweater_gray": {
+					"BasePrice": 480
+				},
+				"sweater_blue": {
+					"Variants": [
+						"sweater_christmasblue",
+						"sweater_christmasgreen",
+						"sweater_christmasred",
+						"sweater_gray",
+						"sweater_green",
+						"sweater_red"
+					],
+					"BasePrice": 480
+				},
+				"sweater_green": {
+					"BasePrice": 480
+				},
+				"sweater_red": {
+					"BasePrice": 480
+				},
+				"sweater_christmasblue": {
+					"BasePrice": 480
+				},
+				"sweater_christmasgreen": {
+					"BasePrice": 480
+				},
+				"sweater_christmasred": {
+					"BasePrice": 480
+				},
+				"shirt_bluecheck": {
+					"BasePrice": 419
+				},
+				"shirt_bluecheckbright": {
+					"BasePrice": 419
+				},
+				"shirt_greencheck": {
+					"BasePrice": 419
+				},
+				"shirt_redcheck": {
+					"BasePrice": 419
+				},
+				"shirt_whitecheck": {
+					"BasePrice": 419
+				},
+				"shirt_planeblack": {
+					"BasePrice": 419
+				},
+				"tshirt_beige": {
+					"Variants": [
+						"tshirt_black",
+						"tshirt_blue",
+						"tshirt_dyed",
+						"tshirt_green",
+						"tshirt_grey",
+						"tshirt_orangewhitestripes",
+						"tshirt_red",
+						"tshirt_redblackstripes",
+						"tshirt_white"
+					],
+					"BasePrice": 395
+				},
+				"tshirt_black": {
+					"BasePrice": 395
+				},
+				"tshirt_blue": {
+					"BasePrice": 395
+				},
+				"tshirt_dyed": {
+					"BasePrice": 395
+				},
+				"tshirt_green": {
+					"BasePrice": 395
+				},
+				"tshirt_orangewhitestripes": {
+					"BasePrice": 395
+				},
+				"tshirt_red": {
+					"BasePrice": 395
+				},
+				"tshirt_redblackstripes": {
+					"BasePrice": 395
+				},
+				"tshirt_white": {
+					"BasePrice": 395
+				},
+				"tshirt_grey": {
+					"BasePrice": 395
+				},
+				"hoodie_blue": {
+					"BasePrice": 456
+				},
+				"hoodie_black": {
+					"Variants": [
+						"hoodie_blue",
+						"hoodie_brown",
+						"hoodie_green",
+						"hoodie_grey",
+						"hoodie_red"
+					],
+					"BasePrice": 456
+				},
+				"hoodie_brown": {
+					"BasePrice": 456
+				},
+				"hoodie_green": {
+					"BasePrice": 456
+				},
+				"hoodie_grey": {
+					"BasePrice": 456
+				},
+				"hoodie_red": {
+					"BasePrice": 456
+				},
+				"tacticalshirt_grey": {
+					"BasePrice": 456
+				},
+				"tacticalshirt_black": {
+					"Variants": [
+						"tacticalshirt_grey",
+						"tacticalshirt_olive",
+						"tacticalshirt_tan"
+					],
+					"BasePrice": 456
+				},
+				"tacticalshirt_olive": {
+					"BasePrice": 456
+				},
+				"tacticalshirt_tan": {
+					"BasePrice": 456
+				},
+				"hikingjacket_black": {
+					"Variants": [
+						"hikingjacket_blue",
+						"hikingjacket_green",
+						"hikingjacket_red"
+					],
+					"BasePrice": 491
+				},
+				"hikingjacket_blue": {
+					"BasePrice": 491
+				},
+				"hikingjacket_red": {
+					"BasePrice": 491
+				},
+				"hikingjacket_green": {
+					"BasePrice": 491
+				},
+				"raincoat_orange": {
+					"BasePrice": 457
+				},
+				"raincoat_green": {
+					"BasePrice": 457
+				},
+				"raincoat_yellow": {
+					"BasePrice": 457
+				},
+				"raincoat_pink": {
+					"BasePrice": 457
+				},
+				"raincoat_red": {
+					"BasePrice": 457
+				},
+				"raincoat_blue": {
+					"BasePrice": 457
+				},
+				"raincoat_black": {
+					"Variants": [
+						"raincoat_blue",
+						"raincoat_green",
+						"raincoat_orange",
+						"raincoat_pink",
+						"raincoat_red",
+						"raincoat_yellow"
+					],
+					"BasePrice": 457
+				},
+				"m65jacket_black": {
+					"Variants": [
+						"m65jacket_khaki",
+						"m65jacket_olive",
+						"m65jacket_tan"
+					],
+					"BasePrice": 525
+				},
+				"m65jacket_khaki": {
+					"BasePrice": 525
+				},
+				"m65jacket_tan": {
+					"BasePrice": 525
+				},
+				"m65jacket_olive": {
+					"BasePrice": 525
+				},
+				"ttskojacket_camo": {
+					"BasePrice": 509
+				},
+				"gorkaejacket_summer": {
+					"BasePrice": 473
+				},
+				"gorkaejacket_flat": {
+					"BasePrice": 473
+				},
+				"gorkaejacket_autumn": {
+					"Variants": [
+						"gorkaejacket_flat",
+						"gorkaejacket_pautrev",
+						"gorkaejacket_summer",
+						"gorkaejacket_winter"
+					],
+					"BasePrice": 473
+				},
+				"gorkaejacket_pautrev": {
+					"BasePrice": 473
+				},
+				"gorkaejacket_winter": {
+					"BasePrice": 473
+				},
+				"ridersjacket_black": {
+					"BasePrice": 530
+				},
+				"woolcoat_black": {
+					"BasePrice": 529
+				},
+				"woolcoat_red": {
+					"BasePrice": 529
+				},
+				"woolcoat_blue": {
+					"BasePrice": 529
+				},
+				"woolcoat_green": {
+					"BasePrice": 529
+				},
+				"woolcoat_beige": {
+					"Variants": [
+						"woolcoat_black",
+						"woolcoat_blackcheck",
+						"woolcoat_blue",
+						"woolcoat_bluecheck",
+						"woolcoat_browncheck",
+						"woolcoat_green",
+						"woolcoat_greycheck",
+						"woolcoat_red",
+						"woolcoat_redcheck"
+					],
+					"BasePrice": 529
+				},
+				"woolcoat_redcheck": {
+					"BasePrice": 529
+				},
+				"woolcoat_blackcheck": {
+					"BasePrice": 529
+				},
+				"woolcoat_bluecheck": {
+					"BasePrice": 529
+				},
+				"woolcoat_greycheck": {
+					"BasePrice": 529
+				},
+				"woolcoat_browncheck": {
+					"BasePrice": 529
+				},
+				"navyuniformjacket": {
+					"BasePrice": 350
+				},
+				"tracksuitjacket_black": {
+					"Variants": [
+						"tracksuitjacket_blue",
+						"tracksuitjacket_green",
+						"tracksuitjacket_lightblue",
+						"tracksuitjacket_red"
+					],
+					"BasePrice": 446
+				},
+				"tracksuitjacket_blue": {
+					"BasePrice": 446
+				},
+				"tracksuitjacket_green": {
+					"BasePrice": 446
+				},
+				"tracksuitjacket_lightblue": {
+					"BasePrice": 446
+				},
+				"tracksuitjacket_red": {
+					"BasePrice": 446
+				},
+				"policejacket": {
+					"BasePrice": 480
+				},
+				"policejacketorel": {
+					"BasePrice": 480
+				},
+				"bushlatpolicejacket_blue": {
+					"BasePrice": 509
+				},
+				"paramedicjacket_blue": {
+					"Variants": [
+						"paramedicjacket_crimson",
+						"paramedicjacket_green"
+					],
+					"BasePrice": 490
+				},
+				"paramedicjacket_crimson": {
+					"BasePrice": 490
+				},
+				"paramedicjacket_green": {
+					"BasePrice": 490
+				},
+				"firefighterjacket_beige": {
+					"Variants": [
+						"firefighterjacket_black"
+					],
+					"BasePrice": 596
+				},
+				"firefighterjacket_black": {
+					"BasePrice": 596
+				},
+				"prisonuniformjacket": {
+					"BasePrice": 437
+				},
+				"minidress_pink": {
+					"BasePrice": 425
+				},
+				"minidress_pinkchecker": {
+					"BasePrice": 425
+				},
+				"minidress_redchecker": {
+					"BasePrice": 425
+				},
+				"minidress_whitechecker": {
+					"BasePrice": 425
+				},
+				"minidress_greenchecker": {
+					"BasePrice": 425
+				},
+				"minidress_brownchecker": {
+					"BasePrice": 425
+				},
+				"minidress_bluechecker": {
+					"Variants": [
+						"minidress_bluewithdots",
+						"minidress_brownchecker",
+						"minidress_greenchecker",
+						"minidress_pink",
+						"minidress_pinkchecker",
+						"minidress_redchecker",
+						"minidress_whitechecker"
+					],
+					"BasePrice": 425
+				},
+				"minidress_bluewithdots": {
+					"BasePrice": 425
+				},
+				"quiltedjacket_black": {
+					"Variants": [
+						"quiltedjacket_blue",
+						"quiltedjacket_green",
+						"quiltedjacket_grey",
+						"quiltedjacket_orange",
+						"quiltedjacket_red",
+						"quiltedjacket_violet",
+						"quiltedjacket_yellow"
+					],
+					"BasePrice": 507
+				},
+				"quiltedjacket_green": {
+					"BasePrice": 507
+				},
+				"quiltedjacket_blue": {
+					"BasePrice": 507
+				},
+				"quiltedjacket_red": {
+					"BasePrice": 507
+				},
+				"quiltedjacket_grey": {
+					"BasePrice": 507
+				},
+				"quiltedjacket_orange": {
+					"BasePrice": 507
+				},
+				"quiltedjacket_yellow": {
+					"BasePrice": 507
+				},
+				"quiltedjacket_violet": {
+					"BasePrice": 507
+				},
+				"bomberjacket_black": {
+					"Variants": [
+						"bomberjacket_blue",
+						"bomberjacket_brown",
+						"bomberjacket_grey",
+						"bomberjacket_maroon",
+						"bomberjacket_olive",
+						"bomberjacket_skyblue"
+					],
+					"BasePrice": 511
+				},
+				"bomberjacket_brown": {
+					"BasePrice": 511
+				},
+				"bomberjacket_blue": {
+					"BasePrice": 511
+				},
+				"bomberjacket_grey": {
+					"BasePrice": 511
+				},
+				"bomberjacket_maroon": {
+					"BasePrice": 511
+				},
+				"bomberjacket_olive": {
+					"BasePrice": 511
+				},
+				"bomberjacket_skyblue": {
+					"BasePrice": 511
+				},
+				"huntingjacket_autumn": {
+					"Variants": [
+						"huntingjacket_brown",
+						"huntingjacket_spring",
+						"huntingjacket_summer",
+						"huntingjacket_winter"
+					],
+					"BasePrice": 481
+				},
+				"huntingjacket_brown": {
+					"BasePrice": 481
+				},
+				"huntingjacket_spring": {
+					"BasePrice": 481
+				},
+				"huntingjacket_summer": {
+					"BasePrice": 481
+				},
+				"huntingjacket_winter": {
+					"BasePrice": 481
+				},
+				"medicalscrubsshirt_blue": {
+					"Variants": [
+						"medicalscrubsshirt_green",
+						"medicalscrubsshirt_white"
+					],
+					"BasePrice": 409
+				},
+				"medicalscrubsshirt_green": {
+					"BasePrice": 409
+				},
+				"medicalscrubsshirt_white": {
+					"BasePrice": 409
+				},
+				"labcoat": {
+					"BasePrice": 431
+				},
+				"nursedress_white": {
+					"BasePrice": 430
+				},
+				"nursedress_blue": {
+					"Variants": [
+						"nursedress_white"
+					],
+					"BasePrice": 430
+				},
+				"usmcjacket_desert": {
+					"BasePrice": 509
+				},
+				"usmcjacket_woodland": {
+					"BasePrice": 509
+				},
+				"omkjacket_navy": {
+					"BasePrice": 520
+				},
+				"blouse_blue": {
+					"Variants": [
+						"blouse_green",
+						"blouse_violet",
+						"blouse_white"
+					],
+					"BasePrice": 433
+				},
+				"blouse_green": {
+					"BasePrice": 433
+				},
+				"blouse_violet": {
+					"BasePrice": 433
+				},
+				"blouse_white": {
+					"BasePrice": 433
+				},
+				"denimjacket": {
+					"BasePrice": 472
+				},
+				"telnyashkashirt": {
+					"BasePrice": 429
+				},
+				"chernarussportshirt": {
+					"BasePrice": 425
+				},
+				"jumpsuitjacket_blue": {
+					"Variants": [
+						"jumpsuitjacket_gray",
+						"jumpsuitjacket_green",
+						"jumpsuitjacket_red"
+					],
+					"BasePrice": 489
+				},
+				"jumpsuitjacket_gray": {
+					"BasePrice": 489
+				},
+				"jumpsuitjacket_green": {
+					"BasePrice": 489
+				},
+				"jumpsuitjacket_red": {
+					"BasePrice": 489
+				},
+				"bdujacket": {
+					"BasePrice": 511
+				},
+				"mansuit_beige": {
+					"Variants": [
+						"mansuit_black",
+						"mansuit_blue",
+						"mansuit_brown",
+						"mansuit_darkgrey",
+						"mansuit_khaki",
+						"mansuit_lightgrey",
+						"mansuit_white"
+					],
+					"BasePrice": 459
+				},
+				"mansuit_black": {
+					"BasePrice": 459
+				},
+				"mansuit_blue": {
+					"BasePrice": 459
+				},
+				"mansuit_brown": {
+					"BasePrice": 459
+				},
+				"mansuit_darkgrey": {
+					"BasePrice": 459
+				},
+				"mansuit_khaki": {
+					"BasePrice": 459
+				},
+				"mansuit_lightgrey": {
+					"BasePrice": 459
+				},
+				"mansuit_white": {
+					"BasePrice": 459
+				},
+				"womansuit_beige": {
+					"Variants": [
+						"womansuit_black",
+						"womansuit_blue",
+						"womansuit_brown",
+						"womansuit_darkgrey",
+						"womansuit_khaki",
+						"womansuit_lightgrey",
+						"womansuit_white"
+					],
+					"BasePrice": 456
+				},
+				"womansuit_black": {
+					"BasePrice": 456
+				},
+				"womansuit_blue": {
+					"BasePrice": 456
+				},
+				"womansuit_brown": {
+					"BasePrice": 456
+				},
+				"womansuit_darkgrey": {
+					"BasePrice": 456
+				},
+				"womansuit_khaki": {
+					"BasePrice": 456
+				},
+				"womansuit_lightgrey": {
+					"BasePrice": 456
+				},
+				"womansuit_white": {
+					"BasePrice": 456
+				}
+			}
+		},
+		"CAT_2_Calcas": {
+			"BasePrice": 290,
+			"DisplayName": "Calças",
+			"Items": {
+				"jeans_black": {
+					"Variants": [
+						"jeans_blue",
+						"jeans_bluedark",
+						"jeans_brown",
+						"jeans_green",
+						"jeans_grey"
+					],
+					"BasePrice": 406
+				},
+				"jeans_blue": {
+					"BasePrice": 406
+				},
+				"jeans_brown": {
+					"BasePrice": 406
+				},
+				"jeans_green": {
+					"BasePrice": 406
+				},
+				"jeans_grey": {
+					"BasePrice": 406
+				},
+				"jeans_bluedark": {
+					"BasePrice": 406
+				},
+				"cargopants_beige": {
+					"Variants": [
+						"cargopants_black",
+						"cargopants_blue",
+						"cargopants_green",
+						"cargopants_grey"
+					],
+					"BasePrice": 434
+				},
+				"cargopants_black": {
+					"BasePrice": 434
+				},
+				"cargopants_blue": {
+					"BasePrice": 434
+				},
+				"cargopants_green": {
+					"BasePrice": 434
+				},
+				"cargopants_grey": {
+					"BasePrice": 434
+				},
+				"ttskopants": {
+					"BasePrice": 440
+				},
+				"hunterpants_autumn": {
+					"Variants": [
+						"hunterpants_brown",
+						"hunterpants_spring",
+						"hunterpants_summer",
+						"hunterpants_winter"
+					],
+					"BasePrice": 395
+				},
+				"hunterpants_brown": {
+					"BasePrice": 395
+				},
+				"hunterpants_spring": {
+					"BasePrice": 395
+				},
+				"hunterpants_summer": {
+					"BasePrice": 395
+				},
+				"hunterpants_winter": {
+					"BasePrice": 395
+				},
+				"canvaspants_beige": {
+					"Variants": [
+						"canvaspants_blue",
+						"canvaspants_grey",
+						"canvaspants_red",
+						"canvaspants_violet"
+					],
+					"BasePrice": 370
+				},
+				"canvaspants_blue": {
+					"BasePrice": 370
+				},
+				"canvaspants_grey": {
+					"BasePrice": 370
+				},
+				"canvaspants_red": {
+					"BasePrice": 370
+				},
+				"canvaspants_violet": {
+					"BasePrice": 370
+				},
+				"canvaspantsmidi_beige": {
+					"Variants": [
+						"canvaspantsmidi_blue",
+						"canvaspantsmidi_grey",
+						"canvaspantsmidi_red",
+						"canvaspantsmidi_violet"
+					],
+					"BasePrice": 370
+				},
+				"canvaspantsmidi_blue": {
+					"BasePrice": 370
+				},
+				"canvaspantsmidi_grey": {
+					"BasePrice": 370
+				},
+				"canvaspantsmidi_red": {
+					"BasePrice": 370
+				},
+				"canvaspantsmidi_violet": {
+					"BasePrice": 370
+				},
+				"tracksuitpants_black": {
+					"Variants": [
+						"tracksuitpants_blue",
+						"tracksuitpants_green",
+						"tracksuitpants_lightblue",
+						"tracksuitpants_red"
+					],
+					"BasePrice": 381
+				},
+				"tracksuitpants_blue": {
+					"BasePrice": 381
+				},
+				"tracksuitpants_green": {
+					"BasePrice": 381
+				},
+				"tracksuitpants_red": {
+					"BasePrice": 381
+				},
+				"tracksuitpants_lightblue": {
+					"BasePrice": 381
+				},
+				"gorkapants_summer": {
+					"BasePrice": 406
+				},
+				"gorkapants_autumn": {
+					"Variants": [
+						"gorkapants_flat",
+						"gorkapants_pautrev",
+						"gorkapants_summer",
+						"gorkapants_winter"
+					],
+					"BasePrice": 406
+				},
+				"gorkapants_flat": {
+					"BasePrice": 406
+				},
+				"gorkapants_pautrev": {
+					"BasePrice": 406
+				},
+				"gorkapants_winter": {
+					"BasePrice": 406
+				},
+				"policepants": {
+					"BasePrice": 397
+				},
+				"navyuniformpants": {
+					"BasePrice": 290
+				},
+				"policepantsorel": {
+					"BasePrice": 397
+				},
+				"paramedicpants_blue": {
+					"Variants": [
+						"paramedicpants_crimson",
+						"paramedicpants_green"
+					],
+					"BasePrice": 417
+				},
+				"paramedicpants_crimson": {
+					"BasePrice": 417
+				},
+				"paramedicpants_green": {
+					"BasePrice": 417
+				},
+				"firefighterspants_beige": {
+					"Variants": [
+						"firefighterspants_black"
+					],
+					"BasePrice": 487
+				},
+				"firefighterspants_black": {
+					"BasePrice": 487
+				},
+				"prisonuniformpants": {
+					"BasePrice": 370
+				},
+				"medicalscrubspants_blue": {
+					"Variants": [
+						"medicalscrubspants_green",
+						"medicalscrubspants_white"
+					],
+					"BasePrice": 352
+				},
+				"medicalscrubspants_green": {
+					"BasePrice": 352
+				},
+				"medicalscrubspants_white": {
+					"BasePrice": 352
+				},
+				"usmcpants_desert": {
+					"BasePrice": 432
+				},
+				"usmcpants_woodland": {
+					"BasePrice": 432
+				},
+				"omkpants_navy": {
+					"BasePrice": 443
+				},
+				"slackspants_beige": {
+					"Variants": [
+						"slackspants_black",
+						"slackspants_blue",
+						"slackspants_brown",
+						"slackspants_darkgrey",
+						"slackspants_khaki",
+						"slackspants_lightgrey",
+						"slackspants_white"
+					],
+					"BasePrice": 373
+				},
+				"slackspants_black": {
+					"BasePrice": 373
+				},
+				"slackspants_blue": {
+					"BasePrice": 373
+				},
+				"slackspants_brown": {
+					"BasePrice": 373
+				},
+				"slackspants_darkgrey": {
+					"BasePrice": 373
+				},
+				"slackspants_khaki": {
+					"BasePrice": 373
+				},
+				"slackspants_lightgrey": {
+					"BasePrice": 373
+				},
+				"slackspants_white": {
+					"BasePrice": 373
+				},
+				"bdupants": {
+					"BasePrice": 437
+				},
+				"breeches_pink": {
+					"BasePrice": 371
+				},
+				"breeches_red": {
+					"BasePrice": 371
+				},
+				"breeches_white": {
+					"BasePrice": 371
+				},
+				"breeches_green": {
+					"BasePrice": 371
+				},
+				"breeches_browncheck": {
+					"BasePrice": 371
+				},
+				"breeches_blue": {
+					"BasePrice": 371
+				},
+				"breeches_blackcheck": {
+					"BasePrice": 371
+				},
+				"breeches_black": {
+					"BasePrice": 371
+				},
+				"breeches_beige": {
+					"BasePrice": 371
+				},
+				"breeches_beetcheck": {
+					"Variants": [
+						"breeches_beige",
+						"breeches_black",
+						"breeches_blackcheck",
+						"breeches_blue",
+						"breeches_browncheck",
+						"breeches_green",
+						"breeches_pink",
+						"breeches_red",
+						"breeches_white"
+					],
+					"BasePrice": 371
+				},
+				"shortjeans_black": {
+					"Variants": [
+						"shortjeans_blue",
+						"shortjeans_brown",
+						"shortjeans_darkblue",
+						"shortjeans_green",
+						"shortjeans_red"
+					],
+					"BasePrice": 355
+				},
+				"shortjeans_blue": {
+					"BasePrice": 355
+				},
+				"shortjeans_brown": {
+					"BasePrice": 355
+				},
+				"shortjeans_darkblue": {
+					"BasePrice": 355
+				},
+				"shortjeans_green": {
+					"BasePrice": 355
+				},
+				"shortjeans_red": {
+					"BasePrice": 355
+				},
+				"skirt_blue": {
+					"Variants": [
+						"skirt_red",
+						"skirt_white",
+						"skirt_yellow"
+					],
+					"BasePrice": 355
+				},
+				"skirt_red": {
+					"BasePrice": 355
+				},
+				"skirt_white": {
+					"BasePrice": 355
+				},
+				"skirt_yellow": {
+					"BasePrice": 355
+				},
+				"jumpsuitpants_blue": {
+					"Variants": [
+						"jumpsuitpants_green",
+						"jumpsuitpants_grey",
+						"jumpsuitpants_red"
+					],
+					"BasePrice": 407
+				},
+				"jumpsuitpants_green": {
+					"BasePrice": 407
+				},
+				"jumpsuitpants_grey": {
+					"BasePrice": 407
+				},
+				"jumpsuitpants_red": {
+					"BasePrice": 407
+				}
+			}
+		},
+		"CAT_3_Mochilas": {
+			"BasePrice": 600,
+			"DisplayName": "Mochilas",
+			"Items": {
+				"taloonbag_blue": {
+					"Variants": [
+						"taloonbag_green",
+						"taloonbag_orange",
+						"taloonbag_violet"
+					],
+					"BasePrice": 956
+				},
+				"taloonbag_green": {
+					"BasePrice": 956
+				},
+				"taloonbag_orange": {
+					"BasePrice": 956
+				},
+				"taloonbag_violet": {
+					"BasePrice": 956
+				},
+				"tortillabag": {
+					"Variants": [
+						"tortillabag_winter"
+					],
+					"BasePrice": 1251
+				},
+				"tortillabag_winter": {
+					"BasePrice": 1251
+				},
+				"drybag_orange": {
+					"BasePrice": 1078
+				},
+				"drybag_yellow": {
+					"BasePrice": 1078
+				},
+				"drybag_blue": {
+					"BasePrice": 1078
+				},
+				"drybag_green": {
+					"BasePrice": 1078
+				},
+				"drybag_black": {
+					"Variants": [
+						"drybag_blue",
+						"drybag_green",
+						"drybag_orange",
+						"drybag_red",
+						"drybag_yellow"
+					],
+					"BasePrice": 1078
+				},
+				"drybag_red": {
+					"BasePrice": 1078
+				},
+				"huntingbag": {
+					"Variants": [
+						"huntingbag_hannah"
+					],
+					"BasePrice": 1096
+				},
+				"huntingbag_hannah": {
+					"BasePrice": 1096
+				},
+				"mountainbag_red": {
+					"BasePrice": 1251
+				},
+				"mountainbag_blue": {
+					"Variants": [
+						"mountainbag_green",
+						"mountainbag_orange",
+						"mountainbag_red"
+					],
+					"BasePrice": 1251
+				},
+				"mountainbag_orange": {
+					"BasePrice": 1251
+				},
+				"mountainbag_green": {
+					"BasePrice": 1251
+				},
+				"smershbag": {
+					"BasePrice": 889
+				},
+				"childbag_green": {
+					"BasePrice": 896
+				},
+				"childbag_red": {
+					"BasePrice": 896
+				},
+				"childbag_blue": {
+					"Variants": [
+						"childbag_green",
+						"childbag_red"
+					],
+					"BasePrice": 896
+				},
+				"assaultbag_ttsko": {
+					"BasePrice": 1032
+				},
+				"assaultbag_black": {
+					"Variants": [
+						"assaultbag_green",
+						"assaultbag_ttsko",
+						"assaultbag_winter"
+					],
+					"BasePrice": 1032
+				},
+				"assaultbag_green": {
+					"BasePrice": 1032
+				},
+				"assaultbag_winter": {
+					"BasePrice": 1032
+				},
+				"coyotebag_brown": {
+					"Variants": [
+						"coyotebag_green",
+						"coyotebag_winter"
+					],
+					"BasePrice": 1261
+				},
+				"coyotebag_green": {
+					"BasePrice": 1261
+				},
+				"coyotebag_winter": {
+					"BasePrice": 1261
+				},
+				"alicebag_green": {
+					"BasePrice": 1320
+				},
+				"alicebag_black": {
+					"Variants": [
+						"alicebag_camo",
+						"alicebag_green"
+					],
+					"BasePrice": 1320
+				},
+				"alicebag_camo": {
+					"BasePrice": 1320
+				},
+				"slingbag_brown": {
+					"BasePrice": 850
+				},
+				"slingbag_gray": {
+					"BasePrice": 850
+				},
+				"slingbag_black": {
+					"Variants": [
+						"slingbag_brown",
+						"slingbag_gray"
+					],
+					"BasePrice": 850
+				},
+				"armypouch_beige": {
+					"Variants": [
+						"armypouch_black",
+						"armypouch_camo",
+						"armypouch_green"
+					],
+					"BasePrice": 898
+				},
+				"armypouch_black": {
+					"BasePrice": 898
+				},
+				"armypouch_camo": {
+					"BasePrice": 898
+				},
+				"armypouch_green": {
+					"BasePrice": 898
+				},
+				"duffelbagsmall_green": {
+					"BasePrice": 909
+				},
+				"duffelbagsmall_camo": {
+					"Variants": [
+						"duffelbagsmall_green",
+						"duffelbagsmall_medical"
+					],
+					"BasePrice": 909
+				},
+				"duffelbagsmall_medical": {
+					"BasePrice": 909
+				},
+				"canvasbag_olive": {
+					"BasePrice": 864
+				},
+				"canvasbag_medical": {
+					"Variants": [
+						"canvasbag_olive"
+					],
+					"BasePrice": 864
+				}
+			}
+		},
+		"CAT_4_Coletes": {
+			"BasePrice": 4900,
+			"DisplayName": "Coletes",
+			"Items": {
+				"platecarriervest": {
+					"Attachments": [
+						"platecarrierholster",
+						"platecarrierpouches"
+					],
+					"Variants": [
+						"platecarriervest_black",
+						"platecarriervest_green",
+						"platecarriervest_camo",
+						"platecarriervest_winter"
+					],
+					"BasePrice": 5200
+				},
+				"platecarriervest_black": {
+					"Attachments": [
+						"platecarrierholster_black",
+						"platecarrierpouches_black"
+					],
+					"BasePrice": 5200
+				},
+				"platecarriervest_green": {
+					"Attachments": [
+						"platecarrierholster_green",
+						"platecarrierpouches_green"
+					],
+					"BasePrice": 5200
+				},
+				"platecarriervest_camo": {
+					"Attachments": [
+						"platecarrierholster_camo",
+						"platecarrierpouches_camo"
+					],
+					"BasePrice": 5200
+				},
+				"platecarriervest_winter": {
+					"Attachments": [
+						"platecarrierholster_winter",
+						"platecarrierpouches_winter"
+					],
+					"BasePrice": 5200
+				},
+				"platecarrierholster": {
+					"Variants": [
+						"platecarrierholster_black",
+						"platecarrierholster_green",
+						"platecarrierholster_camo",
+						"platecarrierholster_winter"
+					],
+					"BasePrice": 4981
+				},
+				"platecarrierholster_black": {
+					"BasePrice": 4981
+				},
+				"platecarrierholster_green": {
+					"BasePrice": 4981
+				},
+				"platecarrierholster_camo": {
+					"BasePrice": 4981
+				},
+				"platecarrierholster_winter": {
+					"BasePrice": 4981
+				},
+				"platecarrierpouches": {
+					"Variants": [
+						"platecarrierpouches_black",
+						"platecarrierpouches_green",
+						"platecarrierpouches_camo",
+						"platecarrierpouches_winter"
+					],
+					"BasePrice": 4900
+				},
+				"platecarrierpouches_black": {
+					"BasePrice": 4900
+				},
+				"platecarrierpouches_green": {
+					"BasePrice": 4900
+				},
+				"platecarrierpouches_camo": {
+					"BasePrice": 4900
+				},
+				"platecarrierpouches_winter": {
+					"BasePrice": 4900
+				},
+				"smershvest": {
+					"Attachments": [
+						"smershbag"
+					],
+					"BasePrice": 4990
+				},
+				"pressvest_blue": {
+					"Variants": [
+						"pressvest_lightblue"
+					],
+					"BasePrice": 5106
+				},
+				"pressvest_lightblue": {
+					"BasePrice": 5106
+				},
+				"ukassvest_black": {
+					"Variants": [
+						"ukassvest_camo",
+						"ukassvest_khaki",
+						"ukassvest_olive",
+						"ukassvest_winter"
+					],
+					"BasePrice": 5015
+				},
+				"ukassvest_camo": {
+					"BasePrice": 5015
+				},
+				"ukassvest_khaki": {
+					"BasePrice": 5015
+				},
+				"ukassvest_olive": {
+					"BasePrice": 5015
+				},
+				"ukassvest_winter": {
+					"BasePrice": 5015
+				},
+				"policevest": {
+					"BasePrice": 5019
+				},
+				"highcapacityvest_black": {
+					"Variants": [
+						"highcapacityvest_olive"
+					],
+					"BasePrice": 5020
+				},
+				"highcapacityvest_olive": {
+					"BasePrice": 5020
+				},
+				"huntingvest": {
+					"Variants": [
+						"huntingvest_winter"
+					],
+					"BasePrice": 5007
+				},
+				"huntingvest_winter": {
+					"BasePrice": 5007
+				},
+				"reflexvest": {
+					"BasePrice": 4942
+				}
+			}
+		},
+		"CAT_5_Cintos": {
+			"BasePrice": 300,
+			"DisplayName": "Cintos",
+			"Items": {
+				"civilianbelt": {
+					"BasePrice": 309
+				},
+				"militarybelt": {
+					"BasePrice": 309
+				},
+				"nylonknifesheath": {
+					"BasePrice": 311
+				},
+				"hippack_black": {
+					"Variants": [
+						"hippack_green",
+						"hippack_medical",
+						"hippack_party"
+					],
+					"BasePrice": 334
+				}
+			}
+		},
+		"CAT_6_Protetores_de_Cabeca": {
+			"BasePrice": 350,
+			"DisplayName": "Protetores de Cabeça",
+			"Items": {
+				"zsh3pilothelmet": {
+					"Variants": [
+						"zsh3pilothelmet_green",
+						"zsh3pilothelmet_black"
+					],
+					"BasePrice": 463
+				},
+				"zsh3pilothelmet_green": {
+					"BasePrice": 463
+				},
+				"zsh3pilothelmet_black": {
+					"BasePrice": 463
+				},
+				"constructionhelmet_blue": {
+					"Variants": [
+						"constructionhelmet_lime",
+						"constructionhelmet_orange",
+						"constructionhelmet_red",
+						"constructionhelmet_white",
+						"constructionhelmet_yellow"
+					],
+					"BasePrice": 418
+				},
+				"constructionhelmet_lime": {
+					"BasePrice": 418
+				},
+				"constructionhelmet_orange": {
+					"BasePrice": 418
+				},
+				"constructionhelmet_red": {
+					"BasePrice": 418
+				},
+				"constructionhelmet_white": {
+					"BasePrice": 418
+				},
+				"constructionhelmet_yellow": {
+					"BasePrice": 418
+				},
+				"motohelmet_black": {
+					"Variants": [
+						"motohelmet_blue",
+						"motohelmet_green",
+						"motohelmet_grey",
+						"motohelmet_lime",
+						"motohelmet_red",
+						"motohelmet_white",
+						"motohelmet_yellow"
+					],
+					"BasePrice": 448
+				},
+				"motohelmet_grey": {
+					"BasePrice": 448
+				},
+				"motohelmet_green": {
+					"BasePrice": 448
+				},
+				"motohelmet_lime": {
+					"BasePrice": 448
+				},
+				"motohelmet_blue": {
+					"BasePrice": 448
+				},
+				"motohelmet_red": {
+					"BasePrice": 448
+				},
+				"motohelmet_white": {
+					"BasePrice": 448
+				},
+				"motohelmet_yellow": {
+					"BasePrice": 448
+				},
+				"darkmotohelmet_black": {
+					"Variants": [
+						"darkmotohelmet_blue",
+						"darkmotohelmet_green",
+						"darkmotohelmet_grey",
+						"darkmotohelmet_lime",
+						"darkmotohelmet_red",
+						"darkmotohelmet_white",
+						"darkmotohelmet_yellow"
+					],
+					"BasePrice": 448
+				},
+				"darkmotohelmet_grey": {
+					"BasePrice": 448
+				},
+				"darkmotohelmet_green": {
+					"BasePrice": 448
+				},
+				"darkmotohelmet_lime": {
+					"BasePrice": 448
+				},
+				"darkmotohelmet_blue": {
+					"BasePrice": 448
+				},
+				"darkmotohelmet_red": {
+					"BasePrice": 448
+				},
+				"darkmotohelmet_white": {
+					"BasePrice": 448
+				},
+				"darkmotohelmet_yellow": {
+					"BasePrice": 448
+				},
+				"firefightershelmet_red": {
+					"Variants": [
+						"firefightershelmet_white",
+						"firefightershelmet_yellow"
+					],
+					"BasePrice": 435
+				},
+				"firefightershelmet_white": {
+					"BasePrice": 435
+				},
+				"firefightershelmet_yellow": {
+					"BasePrice": 435
+				},
+				"skatehelmet_black": {
+					"Variants": [
+						"skatehelmet_blue",
+						"skatehelmet_gray",
+						"skatehelmet_green",
+						"skatehelmet_red"
+					],
+					"BasePrice": 447
+				},
+				"skatehelmet_blue": {
+					"BasePrice": 447
+				},
+				"skatehelmet_gray": {
+					"BasePrice": 447
+				},
+				"skatehelmet_green": {
+					"BasePrice": 447
+				},
+				"skatehelmet_red": {
+					"BasePrice": 447
+				},
+				"weldingmask": {
+					"BasePrice": 505
+				},
+				"dirtbikehelmet_green": {
+					"BasePrice": 459
+				},
+				"dirtbikehelmet_chernarus": {
+					"BasePrice": 459
+				},
+				"dirtbikehelmet_khaki": {
+					"BasePrice": 459
+				},
+				"dirtbikehelmet_police": {
+					"BasePrice": 459
+				},
+				"dirtbikehelmet_red": {
+					"BasePrice": 459
+				},
+				"dirtbikehelmet_black": {
+					"Variants": [
+						"dirtbikehelmet_blue",
+						"dirtbikehelmet_chernarus",
+						"dirtbikehelmet_green",
+						"dirtbikehelmet_khaki",
+						"dirtbikehelmet_mouthguard",
+						"dirtbikehelmet_police",
+						"dirtbikehelmet_red",
+						"dirtbikehelmet_visor"
+					],
+					"BasePrice": 459
+				},
+				"dirtbikehelmet_blue": {
+					"BasePrice": 459
+				},
+				"dirtbikehelmet_visor": {
+					"BasePrice": 459
+				},
+				"dirtbikehelmet_mouthguard": {
+					"BasePrice": 459
+				},
+				"hockeyhelmet_black": {
+					"Variants": [
+						"hockeyhelmet_blue",
+						"hockeyhelmet_red",
+						"hockeyhelmet_white"
+					],
+					"BasePrice": 457
+				},
+				"hockeyhelmet_blue": {
+					"BasePrice": 457
+				},
+				"hockeyhelmet_red": {
+					"BasePrice": 457
+				},
+				"hockeyhelmet_white": {
+					"BasePrice": 457
+				}
+			}
+		},
+		"CAT_7_Capacetes": {
+			"BasePrice": 2500,
+			"DisplayName": "Capacetes",
+			"Items": {
+				"ballistichelmet_green": {
+					"BasePrice": 2585
+				},
+				"ballistichelmet_black": {
+					"BasePrice": 2585
+				},
+				"ballistichelmet_un": {
+					"BasePrice": 2585
+				},
+				"ballistichelmet_bdu": {
+					"Variants": [
+						"ballistichelmet_black",
+						"ballistichelmet_desert",
+						"ballistichelmet_green",
+						"ballistichelmet_navy",
+						"ballistichelmet_un",
+						"ballistichelmet_winter",
+						"ballistichelmet_woodland"
+					],
+					"BasePrice": 2585
+				},
+				"ballistichelmet_desert": {
+					"BasePrice": 2585
+				},
+				"ballistichelmet_woodland": {
+					"BasePrice": 2585
+				},
+				"ballistichelmet_winter": {
+					"BasePrice": 2585
+				},
+				"ballistichelmet_navy": {
+					"BasePrice": 2585
+				},
+				"gorkahelmet": {
+					"Attachments": [
+						"gorkahelmetvisor"
+					],
+					"Variants": [
+						"gorkahelmet_green",
+						"gorkahelmet_black"
+					],
+					"BasePrice": 2611
+				},
+				"gorkahelmet_green": {
+					"Attachments": [
+						"gorkahelmetvisor"
+					],
+					"BasePrice": 2611
+				},
+				"gorkahelmet_black": {
+					"Attachments": [
+						"gorkahelmetvisor"
+					],
+					"BasePrice": 2611
+				},
+				"gorkahelmetvisor": {
+					"BasePrice": 2611
+				},
+				"ssh68helmet": {
+					"BasePrice": 2600
+				},
+				"mich2001helmet": {
+					"Attachments": [
+						"universallight"
+					],
+					"BasePrice": 2592
+				}
+			}
+		},
+		"CAT_8_Chapeus_e_Bones": {
+			"BasePrice": 30,
+			"DisplayName": "Chapéus e Bonés",
+			"Items": {
+				"baseballcap_beige": {
+					"Variants": [
+						"baseballcap_black",
+						"baseballcap_blue",
+						"baseballcap_camo",
+						"baseballcap_cmmg_black",
+						"baseballcap_cmmg_pink",
+						"baseballcap_olive",
+						"baseballcap_pink",
+						"baseballcap_red"
+					],
+					"BasePrice": 71
+				},
+				"baseballcap_black": {
+					"BasePrice": 71
+				},
+				"baseballcap_olive": {
+					"BasePrice": 71
+				},
+				"baseballcap_pink": {
+					"BasePrice": 71
+				},
+				"baseballcap_red": {
+					"BasePrice": 71
+				},
+				"baseballcap_camo": {
+					"BasePrice": 71
+				},
+				"baseballcap_cmmg_black": {
+					"Variants": [
+						"baseballcap_cmmg_pink"
+					],
+					"BasePrice": 71
+				},
+				"baseballcap_cmmg_pink": {
+					"BasePrice": 71
+				},
+				"beaniehat_beige": {
+					"Variants": [
+						"beaniehat_black",
+						"beaniehat_blue",
+						"beaniehat_brown",
+						"beaniehat_green",
+						"beaniehat_grey",
+						"beaniehat_pink",
+						"beaniehat_red"
+					],
+					"BasePrice": 70
+				},
+				"beaniehat_black": {
+					"BasePrice": 70
+				},
+				"beaniehat_blue": {
+					"BasePrice": 70
+				},
+				"beaniehat_brown": {
+					"BasePrice": 70
+				},
+				"beaniehat_green": {
+					"BasePrice": 70
+				},
+				"beaniehat_grey": {
+					"BasePrice": 70
+				},
+				"beaniehat_pink": {
+					"BasePrice": 70
+				},
+				"beaniehat_red": {
+					"BasePrice": 70
+				},
+				"ushanka_black": {
+					"Variants": [
+						"ushanka_blue",
+						"ushanka_green"
+					],
+					"BasePrice": 88
+				},
+				"ushanka_blue": {
+					"BasePrice": 88
+				},
+				"ushanka_green": {
+					"BasePrice": 88
+				},
+				"radarcap_black": {
+					"Variants": [
+						"radarcap_blue",
+						"radarcap_brown",
+						"radarcap_green",
+						"radarcap_red"
+					],
+					"BasePrice": 80
+				},
+				"radarcap_blue": {
+					"BasePrice": 80
+				},
+				"radarcap_brown": {
+					"BasePrice": 80
+				},
+				"radarcap_green": {
+					"BasePrice": 80
+				},
+				"radarcap_red": {
+					"BasePrice": 80
+				},
+				"militaryberet_red": {
+					"BasePrice": 74
+				},
+				"militaryberet_un": {
+					"BasePrice": 74
+				},
+				"militaryberet_nz": {
+					"BasePrice": 74
+				},
+				"militaryberet_chdkz": {
+					"BasePrice": 74
+				},
+				"militaryberet_cdf": {
+					"Variants": [
+						"militaryberet_chdkz",
+						"militaryberet_nz",
+						"militaryberet_red",
+						"militaryberet_un"
+					],
+					"BasePrice": 74
+				},
+				"flatcap_black": {
+					"Variants": [
+						"flatcap_blackcheck",
+						"flatcap_blue",
+						"flatcap_brown",
+						"flatcap_browncheck",
+						"flatcap_grey",
+						"flatcap_greycheck",
+						"flatcap_red"
+					],
+					"BasePrice": 61
+				},
+				"flatcap_blue": {
+					"BasePrice": 61
+				},
+				"flatcap_red": {
+					"BasePrice": 61
+				},
+				"flatcap_brown": {
+					"BasePrice": 61
+				},
+				"flatcap_grey": {
+					"BasePrice": 61
+				},
+				"flatcap_browncheck": {
+					"BasePrice": 61
+				},
+				"flatcap_greycheck": {
+					"BasePrice": 61
+				},
+				"flatcap_blackcheck": {
+					"BasePrice": 61
+				},
+				"zmijovkacap_black": {
+					"Variants": [
+						"zmijovkacap_blue",
+						"zmijovkacap_brown",
+						"zmijovkacap_green",
+						"zmijovkacap_red"
+					],
+					"BasePrice": 77
+				},
+				"zmijovkacap_blue": {
+					"BasePrice": 77
+				},
+				"zmijovkacap_brown": {
+					"BasePrice": 77
+				},
+				"zmijovkacap_green": {
+					"BasePrice": 77
+				},
+				"zmijovkacap_red": {
+					"BasePrice": 77
+				},
+				"cowboyhat_brown": {
+					"BasePrice": 84
+				},
+				"cowboyhat_black": {
+					"Variants": [
+						"cowboyhat_brown",
+						"cowboyhat_darkbrown",
+						"cowboyhat_green"
+					],
+					"BasePrice": 84
+				},
+				"cowboyhat_darkbrown": {
+					"BasePrice": 84
+				},
+				"cowboyhat_green": {
+					"BasePrice": 84
+				},
+				"booniehat_black": {
+					"Variants": [
+						"booniehat_blue",
+						"booniehat_dpm",
+						"booniehat_dubok",
+						"booniehat_flecktran",
+						"booniehat_navyblue",
+						"booniehat_olive",
+						"booniehat_orange",
+						"booniehat_red",
+						"booniehat_tan",
+						"booniehat_winter"
+					],
+					"BasePrice": 74
+				},
+				"booniehat_blue": {
+					"BasePrice": 74
+				},
+				"booniehat_dpm": {
+					"BasePrice": 74
+				},
+				"booniehat_dubok": {
+					"BasePrice": 74
+				},
+				"booniehat_flecktran": {
+					"BasePrice": 74
+				},
+				"booniehat_navyblue": {
+					"BasePrice": 74
+				},
+				"booniehat_olive": {
+					"BasePrice": 74
+				},
+				"booniehat_orange": {
+					"BasePrice": 74
+				},
+				"booniehat_red": {
+					"BasePrice": 74
+				},
+				"booniehat_tan": {
+					"BasePrice": 74
+				},
+				"booniehat_winter": {
+					"BasePrice": 74
+				},
+				"officerhat": {
+					"BasePrice": 63
+				},
+				"policecap": {
+					"BasePrice": 61
+				},
+				"pilotkacap": {
+					"BasePrice": 64
+				},
+				"tankerhelmet": {
+					"BasePrice": 109
+				},
+				"prisonercap": {
+					"BasePrice": 55
+				},
+				"medicalscrubshat_blue": {
+					"Variants": [
+						"medicalscrubshat_green",
+						"medicalscrubshat_white"
+					],
+					"BasePrice": 63
+				},
+				"medicalscrubshat_white": {
+					"BasePrice": 63
+				},
+				"medicalscrubshat_green": {
+					"BasePrice": 63
+				},
+				"morozkohat": {
+					"BasePrice": 133
+				},
+				"wintercoif_black": {
+					"Variants": [
+						"wintercoif_blue",
+						"wintercoif_green",
+						"wintercoif_skull"
+					],
+					"BasePrice": 70
+				},
+				"wintercoif_blue": {
+					"BasePrice": 70
+				},
+				"wintercoif_green": {
+					"BasePrice": 70
+				},
+				"wintercoif_skull": {
+					"BasePrice": 70
+				},
+				"okzkcap_beige": {
+					"Variants": [
+						"okzkcap_green"
+					],
+					"BasePrice": 92
+				},
+				"okzkcap_green": {
+					"BasePrice": 92
+				},
+				"petushokhat_black": {
+					"Variants": [
+						"petushokhat_green",
+						"petushokhat_yellow"
+					],
+					"BasePrice": 50
+				},
+				"petushokhat_yellow": {
+					"BasePrice": 50
+				},
+				"petushokhat_green": {
+					"BasePrice": 50
+				},
+				"snowstormushanka_brown": {
+					"Variants": [
+						"snowstormushanka_navy",
+						"snowstormushanka_olive",
+						"snowstormushanka_white"
+					],
+					"BasePrice": 89
+				},
+				"snowstormushanka_navy": {
+					"BasePrice": 89
+				},
+				"snowstormushanka_olive": {
+					"BasePrice": 89
+				},
+				"snowstormushanka_white": {
+					"BasePrice": 89
+				},
+				"budenovkahat_gray": {
+					"BasePrice": 91
+				},
+				"sherpahat_red": {
+					"BasePrice": 87
+				},
+				"sherpahat_black": {
+					"Variants": [
+						"sherpahat_blue",
+						"sherpahat_red"
+					],
+					"BasePrice": 87
+				},
+				"sherpahat_blue": {
+					"BasePrice": 87
+				}
+			}
+		},
+		"CAT_9_Mascaras": {
+			"BasePrice": 100,
+			"DisplayName": "Máscaras",
+			"Items": {
+				"nioshfacemask": {
+					"BasePrice": 137
+				},
+				"balaclavamask_black": {
+					"BasePrice": 146
+				},
+				"balaclavamask_blackskull": {
+					"BasePrice": 146
+				},
+				"balaclavamask_beige": {
+					"BasePrice": 146
+				},
+				"balaclavamask_blue": {
+					"BasePrice": 146
+				},
+				"balaclavamask_green": {
+					"BasePrice": 146
+				},
+				"balaclavamask_pink": {
+					"BasePrice": 146
+				},
+				"balaclavamask_white": {
+					"BasePrice": 146
+				},
+				"balaclavamask_pig": {
+					"BasePrice": 146
+				},
+				"balaclavamask_chain": {
+					"BasePrice": 146
+				},
+				"balaclavamask_bdu": {
+					"Variants": [
+						"balaclavamask_beige",
+						"balaclavamask_black",
+						"balaclavamask_blackskull",
+						"balaclavamask_blue",
+						"balaclavamask_chain",
+						"balaclavamask_green",
+						"balaclavamask_pig",
+						"balaclavamask_pink",
+						"balaclavamask_white"
+					],
+					"BasePrice": 146
+				},
+				"paydaymask_dallas": {
+					"BasePrice": 105
+				},
+				"paydaymask_hoxton": {
+					"BasePrice": 105
+				},
+				"paydaymask_wolf": {
+					"BasePrice": 105
+				},
+				"paydaymask_chains": {
+					"BasePrice": 105
+				},
+				"airbornemask": {
+					"BasePrice": 175
+				},
+				"balaclava3holes_beige": {
+					"Variants": [
+						"balaclava3holes_black",
+						"balaclava3holes_blue",
+						"balaclava3holes_green",
+						"balaclava3holes_white"
+					],
+					"BasePrice": 155
+				},
+				"balaclava3holes_blue": {
+					"BasePrice": 155
+				},
+				"balaclava3holes_black": {
+					"BasePrice": 155
+				},
+				"balaclava3holes_green": {
+					"BasePrice": 155
+				},
+				"balaclava3holes_white": {
+					"BasePrice": 155
+				},
+				"surgicalmask": {
+					"BasePrice": 137
+				},
+				"hockeymask": {
+					"BasePrice": 163
+				}
+			}
+		},
+		"CAT_10_MultiSlot": {
+			"BasePrice": 270,
+			"DisplayName": "MultiSlot",
+			"Items": {
+				"bandana_redpattern": {
+					"BasePrice": 287
+				},
+				"bandana_blackpattern": {
+					"Variants": [
+						"bandana_blue",
+						"bandana_camopattern",
+						"bandana_greenpattern",
+						"bandana_pink",
+						"bandana_polkapattern",
+						"bandana_redpattern",
+						"bandana_yellow"
+					],
+					"BasePrice": 287
+				},
+				"bandana_polkapattern": {
+					"BasePrice": 287
+				},
+				"bandana_greenpattern": {
+					"BasePrice": 287
+				},
+				"bandana_camopattern": {
+					"BasePrice": 287
+				},
+				"bandana_blue": {
+					"BasePrice": 287
+				},
+				"bandana_pink": {
+					"BasePrice": 287
+				},
+				"bandana_yellow": {
+					"BasePrice": 287
+				},
+				"shemag_brown": {
+					"Variants": [
+						"shemag_green",
+						"shemag_red",
+						"shemag_white"
+					],
+					"BasePrice": 324
+				},
+				"shemag_green": {
+					"BasePrice": 324
+				},
+				"shemag_red": {
+					"BasePrice": 324
+				},
+				"shemag_white": {
+					"BasePrice": 324
+				}
+			}
+		},
+		"CAT_11_Oculos": {
+			"BasePrice": 90,
+			"DisplayName": "Óculos",
+			"Items": {
+				"sportglasses_black": {
+					"Variants": [
+						"sportglasses_blue",
+						"sportglasses_green",
+						"sportglasses_orange"
+					],
+					"BasePrice": 95
+				},
+				"sportglasses_blue": {
+					"BasePrice": 95
+				},
+				"sportglasses_green": {
+					"BasePrice": 95
+				},
+				"sportglasses_orange": {
+					"BasePrice": 95
+				},
+				"aviatorglasses": {
+					"BasePrice": 95
+				},
+				"designerglasses": {
+					"BasePrice": 96
+				},
+				"thickframesglasses": {
+					"BasePrice": 97
+				},
+				"thinframesglasses": {
+					"BasePrice": 95
+				},
+				"tacticalgoggles": {
+					"BasePrice": 102
+				},
+				"eyemask_valentines": {
+					"BasePrice": 94
+				},
+				"eyemask_newyears": {
+					"BasePrice": 94
+				},
+				"eyemask_christmas": {
+					"BasePrice": 94
+				},
+				"eyemask_dead": {
+					"BasePrice": 94
+				},
+				"eyemask_black": {
+					"Variants": [
+						"eyemask_blue",
+						"eyemask_christmas",
+						"eyemask_dead",
+						"eyemask_newyears",
+						"eyemask_red",
+						"eyemask_valentines",
+						"eyemask_yellow"
+					],
+					"BasePrice": 94
+				},
+				"eyemask_blue": {
+					"BasePrice": 94
+				},
+				"eyemask_red": {
+					"BasePrice": 94
+				},
+				"eyemask_yellow": {
+					"BasePrice": 94
+				},
+				"skigoggles_whiteclear": {
+					"BasePrice": 103
+				},
+				"skigoggles_whitedark": {
+					"BasePrice": 103
+				},
+				"skigoggles_blackyellow": {
+					"BasePrice": 103
+				}
+			}
+		},
+		"CAT_12_Luvas": {
+			"BasePrice": 50,
+			"DisplayName": "Luvas",
+			"Items": {
+				"workinggloves_black": {
+					"BasePrice": 120
+				},
+				"workinggloves_beige": {
+					"Variants": [
+						"workinggloves_black",
+						"workinggloves_brown",
+						"workinggloves_yellow"
+					],
+					"BasePrice": 120
+				},
+				"workinggloves_brown": {
+					"BasePrice": 120
+				},
+				"workinggloves_yellow": {
+					"BasePrice": 120
+				},
+				"tacticalgloves_black": {
+					"BasePrice": 142
+				},
+				"tacticalgloves_beige": {
+					"Variants": [
+						"tacticalgloves_black",
+						"tacticalgloves_green"
+					],
+					"BasePrice": 142
+				},
+				"tacticalgloves_green": {
+					"BasePrice": 142
+				},
+				"surgicalgloves_blue": {
+					"Variants": [
+						"surgicalgloves_green",
+						"surgicalgloves_lightblue",
+						"surgicalgloves_white"
+					],
+					"BasePrice": 76
+				},
+				"surgicalgloves_lightblue": {
+					"BasePrice": 76
+				},
+				"surgicalgloves_green": {
+					"BasePrice": 76
+				},
+				"surgicalgloves_white": {
+					"BasePrice": 76
+				},
+				"omnogloves_gray": {
+					"BasePrice": 148
+				},
+				"omnogloves_brown": {
+					"Variants": [
+						"omnogloves_gray"
+					],
+					"BasePrice": 148
+				},
+				"woolgloves_green": {
+					"BasePrice": 104
+				},
+				"woolgloves_black": {
+					"Variants": [
+						"woolgloves_christmasblue",
+						"woolgloves_christmasred",
+						"woolgloves_green",
+						"woolgloves_tan",
+						"woolgloves_white"
+					],
+					"BasePrice": 104
+				},
+				"woolgloves_tan": {
+					"BasePrice": 104
+				},
+				"woolgloves_white": {
+					"BasePrice": 104
+				},
+				"woolgloves_christmasblue": {
+					"BasePrice": 104
+				},
+				"woolgloves_christmasred": {
+					"BasePrice": 104
+				},
+				"woolglovesfingerless_green": {
+					"BasePrice": 104
+				},
+				"woolglovesfingerless_black": {
+					"Variants": [
+						"woolglovesfingerless_christmasblue",
+						"woolglovesfingerless_christmasred",
+						"woolglovesfingerless_green",
+						"woolglovesfingerless_tan",
+						"woolglovesfingerless_white"
+					],
+					"BasePrice": 104
+				},
+				"woolglovesfingerless_tan": {
+					"BasePrice": 104
+				},
+				"woolglovesfingerless_white": {
+					"BasePrice": 104
+				},
+				"woolglovesfingerless_christmasblue": {
+					"BasePrice": 104
+				},
+				"woolglovesfingerless_christmasred": {
+					"BasePrice": 104
+				},
+				"paddedgloves_brown": {
+					"BasePrice": 142
+				},
+				"paddedgloves_beige": {
+					"Variants": [
+						"paddedgloves_brown",
+						"paddedgloves_threat"
+					],
+					"BasePrice": 142
+				},
+				"paddedgloves_threat": {
+					"BasePrice": 142
+				},
+				"skigloves_blue": {
+					"BasePrice": 107
+				},
+				"skigloves_red": {
+					"BasePrice": 107
+				},
+				"skigloves_90s": {
+					"Variants": [
+						"skigloves_blue",
+						"skigloves_red"
+					],
+					"BasePrice": 107
+				}
+			}
+		},
+		"CAT_13_Calcados": {
+			"BasePrice": 250,
+			"DisplayName": "Calçados",
+			"Items": {
+				"athleticshoes_blue": {
+					"BasePrice": 313
+				},
+				"athleticshoes_black": {
+					"Variants": [
+						"athleticshoes_blue",
+						"athleticshoes_brown",
+						"athleticshoes_green",
+						"athleticshoes_grey"
+					],
+					"BasePrice": 313
+				},
+				"athleticshoes_brown": {
+					"BasePrice": 313
+				},
+				"athleticshoes_green": {
+					"BasePrice": 313
+				},
+				"athleticshoes_grey": {
+					"BasePrice": 313
+				},
+				"hikingboots_brown": {
+					"BasePrice": 368
+				},
+				"hikingboots_black": {
+					"Variants": [
+						"hikingboots_brown"
+					],
+					"BasePrice": 368
+				},
+				"hikingbootslow_black": {
+					"BasePrice": 368
+				},
+				"hikingbootslow_blue": {
+					"BasePrice": 368
+				},
+				"hikingbootslow_beige": {
+					"Variants": [
+						"hikingbootslow_black",
+						"hikingbootslow_blue",
+						"hikingbootslow_grey"
+					],
+					"BasePrice": 368
+				},
+				"hikingbootslow_grey": {
+					"BasePrice": 368
+				},
+				"wellies_black": {
+					"Variants": [
+						"wellies_brown",
+						"wellies_green",
+						"wellies_grey"
+					],
+					"BasePrice": 341
+				},
+				"wellies_brown": {
+					"BasePrice": 341
+				},
+				"wellies_green": {
+					"BasePrice": 341
+				},
+				"wellies_grey": {
+					"BasePrice": 341
+				},
+				"workingboots_grey": {
+					"BasePrice": 357
+				},
+				"workingboots_brown": {
+					"BasePrice": 357
+				},
+				"workingboots_green": {
+					"BasePrice": 357
+				},
+				"workingboots_yellow": {
+					"BasePrice": 357
+				},
+				"workingboots_beige": {
+					"Variants": [
+						"workingboots_brown",
+						"workingboots_green",
+						"workingboots_grey",
+						"workingboots_yellow"
+					],
+					"BasePrice": 357
+				},
+				"jungleboots_beige": {
+					"Variants": [
+						"jungleboots_black",
+						"jungleboots_brown",
+						"jungleboots_green",
+						"jungleboots_olive"
+					],
+					"BasePrice": 394
+				},
+				"jungleboots_black": {
+					"BasePrice": 394
+				},
+				"jungleboots_brown": {
+					"BasePrice": 394
+				},
+				"jungleboots_green": {
+					"BasePrice": 394
+				},
+				"jungleboots_olive": {
+					"BasePrice": 394
+				},
+				"dressshoes_beige": {
+					"Variants": [
+						"dressshoes_black",
+						"dressshoes_brown",
+						"dressshoes_sunburst",
+						"dressshoes_white"
+					],
+					"BasePrice": 317
+				},
+				"dressshoes_black": {
+					"BasePrice": 317
+				},
+				"dressshoes_brown": {
+					"BasePrice": 317
+				},
+				"dressshoes_sunburst": {
+					"BasePrice": 317
+				},
+				"dressshoes_white": {
+					"BasePrice": 317
+				},
+				"militaryboots_beige": {
+					"Variants": [
+						"militaryboots_black",
+						"militaryboots_bluerock",
+						"militaryboots_brown",
+						"militaryboots_redpunk"
+					],
+					"BasePrice": 393
+				},
+				"militaryboots_black": {
+					"BasePrice": 393
+				},
+				"militaryboots_bluerock": {
+					"BasePrice": 393
+				},
+				"militaryboots_brown": {
+					"BasePrice": 393
+				},
+				"militaryboots_redpunk": {
+					"BasePrice": 393
+				},
+				"combatboots_beige": {
+					"Variants": [
+						"combatboots_black",
+						"combatboots_brown",
+						"combatboots_green",
+						"combatboots_grey"
+					],
+					"BasePrice": 383
+				},
+				"combatboots_black": {
+					"BasePrice": 383
+				},
+				"combatboots_brown": {
+					"BasePrice": 383
+				},
+				"combatboots_green": {
+					"BasePrice": 383
+				},
+				"combatboots_grey": {
+					"BasePrice": 383
+				},
+				"joggingshoes_black": {
+					"Variants": [
+						"joggingshoes_blue",
+						"joggingshoes_red",
+						"joggingshoes_violet",
+						"joggingshoes_white"
+					],
+					"BasePrice": 325
+				},
+				"joggingshoes_blue": {
+					"BasePrice": 325
+				},
+				"joggingshoes_red": {
+					"BasePrice": 325
+				},
+				"joggingshoes_violet": {
+					"BasePrice": 325
+				},
+				"joggingshoes_white": {
+					"BasePrice": 325
+				},
+				"sneakers_black": {
+					"Variants": [
+						"sneakers_gray",
+						"sneakers_green",
+						"sneakers_red",
+						"sneakers_white"
+					],
+					"BasePrice": 317
+				},
+				"sneakers_gray": {
+					"BasePrice": 317
+				},
+				"sneakers_green": {
+					"BasePrice": 317
+				},
+				"sneakers_red": {
+					"BasePrice": 317
+				},
+				"sneakers_white": {
+					"BasePrice": 317
+				},
+				"ballerinas_blue": {
+					"Variants": [
+						"ballerinas_red",
+						"ballerinas_white",
+						"ballerinas_yellow"
+					],
+					"BasePrice": 315
+				},
+				"ballerinas_red": {
+					"BasePrice": 315
+				},
+				"ballerinas_white": {
+					"BasePrice": 315
+				},
+				"ballerinas_yellow": {
+					"BasePrice": 315
+				},
+				"ttskoboots": {
+					"BasePrice": 388
+				}
+			}
+		},
+		"CAT_14_Variedades": {
+			"BasePrice": 100,
+			"DisplayName": "Variedades",
+			"Items": {
+				"chestholster": {
+					"BasePrice": 145
+				},
+				"leafcrown_spring": {
+					"BasePrice": 105
+				},
+				"leafcrown_summer": {
+					"BasePrice": 105
+				},
+				"leafcrown_autumn": {
+					"Variants": [
+						"leafcrown_spring",
+						"leafcrown_summer",
+						"leafcrown_winter"
+					],
+					"BasePrice": 105
+				},
+				"leafcrown_winter": {
+					"BasePrice": 105
+				},
+				"mimemask_male": {
+					"BasePrice": 123
+				},
+				"mimemask_female": {
+					"BasePrice": 100
+				}
+			}
+		}
+	}
+}

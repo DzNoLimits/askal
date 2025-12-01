@@ -1,0 +1,54 @@
+{
+	"Version": "1.0.0",
+	"TraderName": "MÁQUINA DE VENDAS",
+	"TraderObject": "AskalTraderVendingMachine",
+	"TraderPosition": [
+		13049.9,
+		5.732,
+		8186.76
+	],
+	"TraderOrientation": [
+		-90,
+		0,
+		0
+	],
+	"AcceptedCurrency": "Askal_Money",
+	"BuyCoefficient": 1.0,
+	"SellCoefficient": 0.3,
+	"SetupItems": {
+		"ALL": 3,
+		"DS_2_Drinks": 1,
+		"CAT_1_Industrializados": 1,
+		"fal": 1
+	},
+	"VehicleSpawnPoints": {
+		"Land": [
+			{
+				"Position": [
+					13034.3,
+					5.20752,
+					8181.56
+				],
+				"Rotation": [
+					0,
+					0,
+					0
+				]
+			}
+		],
+		"Water": [
+			{
+				"Position": [
+					13050.9,
+					4.59196,
+					8174.57
+				],
+				"Rotation": [
+					0,
+					0,
+					0
+				]
+			}
+		]
+	}
+}

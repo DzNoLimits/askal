@@ -1,0 +1,1018 @@
+{
+	"Version": 1,
+	"DatasetName": "DS_14_Vehicles",
+	"DisplayName": "VEÍCULOS",
+	"Icon": "set:dayz_inventory image:cat_vehicle_body",
+	"Categories": {
+		"CAT_1_Terrestres": {
+			"BasePrice": 50000,
+			"DisplayName": "Terrestres",
+			"Items": {
+				"offroadhatchback": {
+					"Variants": [
+						"offroadhatchback_white",
+						"offroadhatchback_blue"
+					],
+					"Attachments": [
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"hatchbackwheel",
+						"hatchbackwheel",
+						"hatchbackwheel",
+						"hatchbackwheel",
+						"hatchbackdoors_driver",
+						"hatchbackdoors_codriver",
+						"hatchbackhood",
+						"hatchbacktrunk",
+						"hatchbackwheel",
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"wrench",
+						"lugwrench",
+						"screwdriver",
+						"epoxyputty",
+						"canistergasoline",
+						"canistergasoline",
+						"blowtorch",
+						"blowtorch",
+						"hatchbackwheel"
+					]
+				},
+				"offroadhatchback_white": {
+					"Attachments": [
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"hatchbackwheel",
+						"hatchbackwheel",
+						"hatchbackwheel",
+						"hatchbackwheel",
+						"hatchbackdoors_driver_white",
+						"hatchbackdoors_codriver_white",
+						"hatchbackhood_white",
+						"hatchbacktrunk_white",
+						"hatchbackwheel",
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"wrench",
+						"lugwrench",
+						"screwdriver",
+						"epoxyputty",
+						"canistergasoline",
+						"canistergasoline",
+						"blowtorch",
+						"blowtorch",
+						"hatchbackwheel"
+					]
+				},
+				"offroadhatchback_blue": {
+					"Attachments": [
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"hatchbackwheel",
+						"hatchbackwheel",
+						"hatchbackwheel",
+						"hatchbackwheel",
+						"hatchbackdoors_driver_blue",
+						"hatchbackdoors_codriver_blue",
+						"hatchbackhood_blue",
+						"hatchbacktrunk_blue",
+						"hatchbackwheel",
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"wrench",
+						"lugwrench",
+						"screwdriver",
+						"epoxyputty",
+						"canistergasoline",
+						"canistergasoline",
+						"blowtorch",
+						"blowtorch",
+						"hatchbackwheel"
+					]
+				},
+				"civiliansedan": {
+					"Variants": [
+						"civiliansedan_wine",
+						"civiliansedan_black"
+					],
+					"Attachments": [
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"civsedanwheel",
+						"civsedanwheel",
+						"civsedanwheel",
+						"civsedanwheel",
+						"civsedandoors_driver",
+						"civsedandoors_codriver",
+						"civsedandoors_backleft",
+						"civsedandoors_backright",
+						"civsedanhood",
+						"civsedantrunk",
+						"civsedanwheel",
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"wrench",
+						"lugwrench",
+						"screwdriver",
+						"epoxyputty",
+						"canistergasoline",
+						"canistergasoline",
+						"blowtorch",
+						"blowtorch",
+						"civsedanwheel"
+					]
+				},
+				"civiliansedan_wine": {
+					"Attachments": [
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"civsedanwheel",
+						"civsedanwheel",
+						"civsedanwheel",
+						"civsedanwheel",
+						"civsedandoors_driver_wine",
+						"civsedandoors_codriver_wine",
+						"civsedandoors_backleft_wine",
+						"civsedandoors_backright_wine",
+						"civsedanhood_wine",
+						"civsedantrunk_wine",
+						"civsedanwheel",
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"wrench",
+						"lugwrench",
+						"screwdriver",
+						"epoxyputty",
+						"canistergasoline",
+						"canistergasoline",
+						"blowtorch",
+						"blowtorch",
+						"civsedanwheel"
+					]
+				},
+				"civiliansedan_black": {
+					"Attachments": [
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"civsedanwheel",
+						"civsedanwheel",
+						"civsedanwheel",
+						"civsedanwheel",
+						"civsedandoors_driver_black",
+						"civsedandoors_codriver_black",
+						"civsedandoors_backleft_black",
+						"civsedandoors_backright_black",
+						"civsedanhood_black",
+						"civsedantrunk_black",
+						"civsedanwheel",
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"wrench",
+						"lugwrench",
+						"screwdriver",
+						"epoxyputty",
+						"canistergasoline",
+						"canistergasoline",
+						"blowtorch",
+						"blowtorch",
+						"civsedanwheel"
+					]
+				},
+				"hatchback_02": {
+					"Variants": [
+						"hatchback_02_black",
+						"hatchback_02_blue"
+					],
+					"Attachments": [
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"hatchback_02_wheel",
+						"hatchback_02_wheel",
+						"hatchback_02_wheel",
+						"hatchback_02_wheel",
+						"hatchback_02_door_1_1",
+						"hatchback_02_door_1_2",
+						"hatchback_02_door_2_1",
+						"hatchback_02_door_2_2",
+						"hatchback_02_hood",
+						"hatchback_02_trunk",
+						"hatchback_02_wheel",
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"wrench",
+						"lugwrench",
+						"screwdriver",
+						"epoxyputty",
+						"canistergasoline",
+						"canistergasoline",
+						"blowtorch",
+						"blowtorch",
+						"hatchback_02_wheel"
+					]
+				},
+				"hatchback_02_black": {
+					"Attachments": [
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"hatchback_02_wheel",
+						"hatchback_02_wheel",
+						"hatchback_02_wheel",
+						"hatchback_02_wheel",
+						"hatchback_02_door_1_1_black",
+						"hatchback_02_door_1_2_black",
+						"hatchback_02_door_2_1_black",
+						"hatchback_02_door_2_2_black",
+						"hatchback_02_hood_black",
+						"hatchback_02_trunk_black",
+						"hatchback_02_wheel",
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"wrench",
+						"lugwrench",
+						"screwdriver",
+						"epoxyputty",
+						"canistergasoline",
+						"canistergasoline",
+						"blowtorch",
+						"blowtorch",
+						"hatchback_02_wheel"
+					]
+				},
+				"hatchback_02_blue": {
+					"Attachments": [
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"hatchback_02_wheel",
+						"hatchback_02_wheel",
+						"hatchback_02_wheel",
+						"hatchback_02_wheel",
+						"hatchback_02_door_1_1_blue",
+						"hatchback_02_door_1_2_blue",
+						"hatchback_02_door_2_1_blue",
+						"hatchback_02_door_2_2_blue",
+						"hatchback_02_hood_blue",
+						"hatchback_02_trunk_blue",
+						"hatchback_02_wheel",
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"wrench",
+						"lugwrench",
+						"screwdriver",
+						"epoxyputty",
+						"canistergasoline",
+						"canistergasoline",
+						"blowtorch",
+						"blowtorch",
+						"hatchback_02_wheel"
+					]
+				},
+				"sedan_02": {
+					"Variants": [
+						"sedan_02_red",
+						"sedan_02_grey"
+					],
+					"Attachments": [
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"sedan_02_wheel",
+						"sedan_02_wheel",
+						"sedan_02_wheel",
+						"sedan_02_wheel",
+						"sedan_02_door_1_1",
+						"sedan_02_door_1_2",
+						"sedan_02_door_2_1",
+						"sedan_02_door_2_2",
+						"sedan_02_hood",
+						"sedan_02_trunk",
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"wrench",
+						"lugwrench",
+						"screwdriver",
+						"epoxyputty",
+						"canistergasoline",
+						"canistergasoline",
+						"blowtorch",
+						"blowtorch",
+						"sedan_02_wheel",
+						"sedan_02_wheel"
+					]
+				},
+				"sedan_02_red": {
+					"Attachments": [
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"sedan_02_wheel",
+						"sedan_02_wheel",
+						"sedan_02_wheel",
+						"sedan_02_wheel",
+						"sedan_02_door_1_1_red",
+						"sedan_02_door_1_2_red",
+						"sedan_02_door_2_1_red",
+						"sedan_02_door_2_2_red",
+						"sedan_02_hood_red",
+						"sedan_02_trunk_red",
+						"sedan_02_wheel",
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"wrench",
+						"lugwrench",
+						"screwdriver",
+						"epoxyputty",
+						"canistergasoline",
+						"canistergasoline",
+						"blowtorch",
+						"blowtorch",
+						"sedan_02_wheel",
+						"sedan_02_wheel"
+					]
+				},
+				"sedan_02_grey": {
+					"Attachments": [
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"sedan_02_wheel",
+						"sedan_02_wheel",
+						"sedan_02_wheel",
+						"sedan_02_wheel",
+						"sedan_02_door_1_1_grey",
+						"sedan_02_door_1_2_grey",
+						"sedan_02_door_2_1_grey",
+						"sedan_02_door_2_2_grey",
+						"sedan_02_hood_grey",
+						"sedan_02_trunk_grey",
+						"sedan_02_wheel",
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"carradiator",
+						"sparkplug",
+						"wrench",
+						"lugwrench",
+						"screwdriver",
+						"epoxyputty",
+						"canistergasoline",
+						"canistergasoline",
+						"blowtorch",
+						"blowtorch",
+						"sedan_02_wheel",
+						"sedan_02_wheel"
+					]
+				},
+				"truck_01_covered": {
+					"Variants": [
+						"truck_01_covered_blue",
+						"truck_01_covered_orange",
+						"truck_01_covered_grey"
+					],
+					"Attachments": [
+						"headlighth7",
+						"headlighth7",
+						"truckbattery",
+						"truck_01_wheel",
+						"truck_01_wheel",
+						"truck_01_wheeldouble",
+						"truck_01_wheeldouble",
+						"truck_01_wheeldouble",
+						"truck_01_wheeldouble",
+						"truck_01_door_1_1",
+						"truck_01_door_2_1",
+						"truck_01_hood",
+						"truck_01_wheel",
+						"truck_01_wheel",
+						"headlighth7",
+						"headlighth7",
+						"truckbattery",
+						"wrench",
+						"lugwrench",
+						"screwdriver",
+						"epoxyputty",
+						"canistergasoline",
+						"canistergasoline",
+						"blowtorch",
+						"blowtorch",
+						"truck_01_wheeldouble",
+						"truck_01_wheeldouble"
+					]
+				},
+				"truck_01_covered_blue": {},
+				"truck_01_covered_orange": {},
+				"truck_01_covered_grey": {},
+				"offroad_02": {
+					"Attachments": [
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"glowplug",
+						"offroad_02_wheel",
+						"offroad_02_wheel",
+						"offroad_02_wheel",
+						"offroad_02_wheel",
+						"offroad_02_door_1_1",
+						"offroad_02_door_1_2",
+						"offroad_02_door_2_1",
+						"offroad_02_door_2_2",
+						"offroad_02_hood",
+						"offroad_02_trunk",
+						"offroad_02_wheel",
+						"headlighth7",
+						"headlighth7",
+						"carbattery",
+						"glowplug",
+						"wrench",
+						"lugwrench",
+						"screwdriver",
+						"epoxyputty",
+						"canistergasoline",
+						"canistergasoline",
+						"blowtorch",
+						"blowtorch",
+						"offroad_02_wheel"
+					]
+				}
+			}
+		},
+		"CAT_2_Aquaticos": {
+			"BasePrice": 35000,
+			"DisplayName": "Aquáticos",
+			"Items": {
+				"boat_01_orange": {},
+				"boat_01_blue": {},
+				"boat_01_black": {
+					"Variants": [
+						"boat_01_blue",
+						"boat_01_camo",
+						"boat_01_orange"
+					]
+				},
+				"boat_01_camo": {}
+			}
+		},
+		"CAT_3_Pneus": {
+			"BasePrice": 1000,
+			"DisplayName": "Pneus",
+			"Items": {
+				"hatchbackwheel": {},
+				"civsedanwheel": {},
+				"hatchback_02_wheel": {},
+				"sedan_02_wheel": {},
+				"truck_01_wheel": {},
+				"truck_01_wheeldouble": {},
+				"offroad_02_wheel": {}
+			}
+		},
+		"CAT_4_Ferramentas": {
+			"BasePrice": 1000,
+			"DisplayName": "Ferramentas",
+			"Items": {
+				"truckbattery": {},
+				"carbattery": {},
+				"brakefluid": {},
+				"engineoil": {},
+				"carradiator": {},
+				"headlighth7": {
+					"Variants": [
+						"headlighth7_box"
+					]
+				},
+				"headlighth7_box": {},
+				"sparkplug": {},
+				"glowplug": {},
+				"tirerepairkit": {},
+				"canistergasoline": {}
+			}
+		},
+		"CAT_5_Portas_e_Capos": {
+			"BasePrice": 1000,
+			"DisplayName": "Portas e Capôs",
+			"Items": {
+				"hatchbackdoors_driver": {
+					"Variants": [
+						"hatchbackdoors_driver_blue",
+						"hatchbackdoors_driver_white",
+						"hatchbackdoors_driver_greenrust",
+						"hatchbackdoors_driver_bluerust",
+						"hatchbackdoors_driver_whiterust"
+					]
+				},
+				"hatchbackdoors_codriver": {
+					"Variants": [
+						"hatchbackdoors_codriver_blue",
+						"hatchbackdoors_codriver_white",
+						"hatchbackdoors_codriver_greenrust",
+						"hatchbackdoors_codriver_bluerust",
+						"hatchbackdoors_codriver_whiterust"
+					]
+				},
+				"hatchbackhood": {
+					"Variants": [
+						"hatchbackhood_blue",
+						"hatchbackhood_white",
+						"hatchbackhood_greenrust",
+						"hatchbackhood_bluerust",
+						"hatchbackhood_whiterust"
+					]
+				},
+				"hatchbacktrunk": {
+					"Variants": [
+						"hatchbacktrunk_blue",
+						"hatchbacktrunk_white",
+						"hatchbacktrunk_greenrust",
+						"hatchbacktrunk_bluerust",
+						"hatchbacktrunk_whiterust"
+					]
+				},
+				"hatchbackdoors_driver_blue": {},
+				"hatchbackdoors_codriver_blue": {},
+				"hatchbackhood_blue": {},
+				"hatchbacktrunk_blue": {},
+				"hatchbackdoors_driver_white": {},
+				"hatchbackdoors_codriver_white": {},
+				"hatchbackhood_white": {},
+				"hatchbacktrunk_white": {},
+				"hatchbackdoors_driver_greenrust": {},
+				"hatchbackdoors_codriver_greenrust": {},
+				"hatchbackhood_greenrust": {},
+				"hatchbacktrunk_greenrust": {},
+				"hatchbackdoors_driver_bluerust": {},
+				"hatchbackdoors_codriver_bluerust": {},
+				"hatchbackhood_bluerust": {},
+				"hatchbacktrunk_bluerust": {},
+				"hatchbackdoors_driver_whiterust": {},
+				"hatchbackdoors_codriver_whiterust": {},
+				"hatchbackhood_whiterust": {},
+				"hatchbacktrunk_whiterust": {},
+				"civsedandoors_driver": {
+					"Variants": [
+						"civsedandoors_driver_wine",
+						"civsedandoors_driver_black",
+						"civsedandoors_driver_whiterust",
+						"civsedandoors_driver_winerust",
+						"civsedandoors_driver_blackrust"
+					]
+				},
+				"civsedandoors_codriver": {
+					"Variants": [
+						"civsedandoors_codriver_wine",
+						"civsedandoors_codriver_black",
+						"civsedandoors_codriver_whiterust",
+						"civsedandoors_codriver_winerust",
+						"civsedandoors_codriver_blackrust"
+					]
+				},
+				"civsedandoors_backleft": {
+					"Variants": [
+						"civsedandoors_backleft_wine",
+						"civsedandoors_backleft_black",
+						"civsedandoors_backleft_whiterust",
+						"civsedandoors_backleft_winerust",
+						"civsedandoors_backleft_blackrust"
+					]
+				},
+				"civsedandoors_backright": {
+					"Variants": [
+						"civsedandoors_backright_wine",
+						"civsedandoors_backright_black",
+						"civsedandoors_backright_whiterust",
+						"civsedandoors_backright_winerust",
+						"civsedandoors_backright_blackrust"
+					]
+				},
+				"civsedanhood": {
+					"Variants": [
+						"civsedanhood_wine",
+						"civsedanhood_black",
+						"civsedanhood_whiterust",
+						"civsedanhood_winerust",
+						"civsedanhood_blackrust"
+					]
+				},
+				"civsedantrunk": {
+					"Variants": [
+						"civsedantrunk_wine",
+						"civsedantrunk_black",
+						"civsedantrunk_whiterust",
+						"civsedantrunk_winerust",
+						"civsedantrunk_blackrust"
+					]
+				},
+				"civsedandoors_driver_wine": {},
+				"civsedandoors_codriver_wine": {},
+				"civsedandoors_backleft_wine": {},
+				"civsedandoors_backright_wine": {},
+				"civsedanhood_wine": {},
+				"civsedantrunk_wine": {},
+				"civsedandoors_driver_black": {},
+				"civsedandoors_codriver_black": {},
+				"civsedandoors_backleft_black": {},
+				"civsedandoors_backright_black": {},
+				"civsedanhood_black": {},
+				"civsedantrunk_black": {},
+				"civsedandoors_driver_whiterust": {},
+				"civsedandoors_codriver_whiterust": {},
+				"civsedandoors_backleft_whiterust": {},
+				"civsedandoors_backright_whiterust": {},
+				"civsedanhood_whiterust": {},
+				"civsedantrunk_whiterust": {},
+				"civsedandoors_driver_winerust": {},
+				"civsedandoors_codriver_winerust": {},
+				"civsedandoors_backleft_winerust": {},
+				"civsedandoors_backright_winerust": {},
+				"civsedanhood_winerust": {},
+				"civsedantrunk_winerust": {},
+				"civsedandoors_driver_blackrust": {},
+				"civsedandoors_codriver_blackrust": {},
+				"civsedandoors_backleft_blackrust": {},
+				"civsedandoors_backright_blackrust": {},
+				"civsedanhood_blackrust": {},
+				"civsedantrunk_blackrust": {},
+				"hatchback_02_door_1_1": {
+					"Variants": [
+						"hatchback_02_door_1_1_black",
+						"hatchback_02_door_1_1_blue",
+						"hatchback_02_door_1_1_redrust",
+						"hatchback_02_door_1_1_blackrust",
+						"hatchback_02_door_1_1_bluerust"
+					]
+				},
+				"hatchback_02_door_2_1": {
+					"Variants": [
+						"hatchback_02_door_2_1_black",
+						"hatchback_02_door_2_1_blue",
+						"hatchback_02_door_2_1_redrust",
+						"hatchback_02_door_2_1_blackrust",
+						"hatchback_02_door_2_1_bluerust"
+					]
+				},
+				"hatchback_02_door_1_2": {
+					"Variants": [
+						"hatchback_02_door_1_2_black",
+						"hatchback_02_door_1_2_blue",
+						"hatchback_02_door_1_2_redrust",
+						"hatchback_02_door_1_2_blackrust",
+						"hatchback_02_door_1_2_bluerust"
+					]
+				},
+				"hatchback_02_door_2_2": {
+					"Variants": [
+						"hatchback_02_door_2_2_black",
+						"hatchback_02_door_2_2_blue",
+						"hatchback_02_door_2_2_redrust",
+						"hatchback_02_door_2_2_blackrust",
+						"hatchback_02_door_2_2_bluerust"
+					]
+				},
+				"hatchback_02_hood": {
+					"Variants": [
+						"hatchback_02_hood_black",
+						"hatchback_02_hood_blue",
+						"hatchback_02_hood_redrust",
+						"hatchback_02_hood_blackrust",
+						"hatchback_02_hood_bluerust"
+					]
+				},
+				"hatchback_02_trunk": {
+					"Variants": [
+						"hatchback_02_trunk_black",
+						"hatchback_02_trunk_blue",
+						"hatchback_02_trunk_redrust",
+						"hatchback_02_trunk_blackrust",
+						"hatchback_02_trunk_bluerust"
+					]
+				},
+				"hatchback_02_door_1_1_black": {},
+				"hatchback_02_door_2_1_black": {},
+				"hatchback_02_door_1_2_black": {},
+				"hatchback_02_door_2_2_black": {},
+				"hatchback_02_hood_black": {},
+				"hatchback_02_trunk_black": {},
+				"hatchback_02_door_1_1_blue": {},
+				"hatchback_02_door_2_1_blue": {},
+				"hatchback_02_door_1_2_blue": {},
+				"hatchback_02_door_2_2_blue": {},
+				"hatchback_02_hood_blue": {},
+				"hatchback_02_trunk_blue": {},
+				"hatchback_02_door_1_1_redrust": {},
+				"hatchback_02_door_2_1_redrust": {},
+				"hatchback_02_door_1_2_redrust": {},
+				"hatchback_02_door_2_2_redrust": {},
+				"hatchback_02_hood_redrust": {},
+				"hatchback_02_trunk_redrust": {},
+				"hatchback_02_door_1_1_blackrust": {},
+				"hatchback_02_door_2_1_blackrust": {},
+				"hatchback_02_door_1_2_blackrust": {},
+				"hatchback_02_door_2_2_blackrust": {},
+				"hatchback_02_hood_blackrust": {},
+				"hatchback_02_trunk_blackrust": {},
+				"hatchback_02_door_1_1_bluerust": {},
+				"hatchback_02_door_2_1_bluerust": {},
+				"hatchback_02_door_1_2_bluerust": {},
+				"hatchback_02_door_2_2_bluerust": {},
+				"hatchback_02_hood_bluerust": {},
+				"hatchback_02_trunk_bluerust": {},
+				"sedan_02_door_1_1": {
+					"Variants": [
+						"sedan_02_door_1_1_red",
+						"sedan_02_door_1_1_grey",
+						"sedan_02_door_1_1_yellowrust",
+						"sedan_02_door_1_1_redrust",
+						"sedan_02_door_1_1_greyrust"
+					]
+				},
+				"sedan_02_door_2_1": {
+					"Variants": [
+						"sedan_02_door_2_1_red",
+						"sedan_02_door_2_1_grey",
+						"sedan_02_door_2_1_yellowrust",
+						"sedan_02_door_2_1_redrust",
+						"sedan_02_door_2_1_greyrust"
+					]
+				},
+				"sedan_02_door_1_2": {
+					"Variants": [
+						"sedan_02_door_1_2_red",
+						"sedan_02_door_1_2_grey",
+						"sedan_02_door_1_2_yellowrust",
+						"sedan_02_door_1_2_redrust",
+						"sedan_02_door_1_2_greyrust"
+					]
+				},
+				"sedan_02_door_2_2": {
+					"Variants": [
+						"sedan_02_door_2_2_red",
+						"sedan_02_door_2_2_grey",
+						"sedan_02_door_2_2_yellowrust",
+						"sedan_02_door_2_2_redrust",
+						"sedan_02_door_2_2_greyrust"
+					]
+				},
+				"sedan_02_hood": {
+					"Variants": [
+						"sedan_02_hood_red",
+						"sedan_02_hood_grey",
+						"sedan_02_hood_yellowrust",
+						"sedan_02_hood_redrust",
+						"sedan_02_hood_greyrust"
+					]
+				},
+				"sedan_02_trunk": {
+					"Variants": [
+						"sedan_02_trunk_red",
+						"sedan_02_trunk_grey",
+						"sedan_02_trunk_yellowrust",
+						"sedan_02_trunk_redrust",
+						"sedan_02_trunk_greyrust"
+					]
+				},
+				"sedan_02_door_1_1_red": {},
+				"sedan_02_door_2_1_red": {},
+				"sedan_02_door_1_2_red": {},
+				"sedan_02_door_2_2_red": {},
+				"sedan_02_hood_red": {},
+				"sedan_02_trunk_red": {},
+				"sedan_02_door_1_1_grey": {},
+				"sedan_02_door_2_1_grey": {},
+				"sedan_02_door_1_2_grey": {},
+				"sedan_02_door_2_2_grey": {},
+				"sedan_02_hood_grey": {},
+				"sedan_02_trunk_grey": {},
+				"sedan_02_door_1_1_yellowrust": {},
+				"sedan_02_door_2_1_yellowrust": {},
+				"sedan_02_door_1_2_yellowrust": {},
+				"sedan_02_door_2_2_yellowrust": {},
+				"sedan_02_hood_yellowrust": {},
+				"sedan_02_trunk_yellowrust": {},
+				"sedan_02_door_1_1_redrust": {},
+				"sedan_02_door_2_1_redrust": {},
+				"sedan_02_door_1_2_redrust": {},
+				"sedan_02_door_2_2_redrust": {},
+				"sedan_02_hood_redrust": {},
+				"sedan_02_trunk_redrust": {},
+				"sedan_02_door_1_1_greyrust": {},
+				"sedan_02_door_2_1_greyrust": {},
+				"sedan_02_door_1_2_greyrust": {},
+				"sedan_02_door_2_2_greyrust": {},
+				"sedan_02_hood_greyrust": {},
+				"sedan_02_trunk_greyrust": {},
+				"truck_01_door_1_1": {
+					"Variants": [
+						"truck_01_door_1_1_blue",
+						"truck_01_door_1_1_orange",
+						"truck_01_door_1_1_greenrust",
+						"truck_01_door_1_1_bluerust",
+						"truck_01_door_1_1_orangerust"
+					]
+				},
+				"truck_01_door_2_1": {
+					"Variants": [
+						"truck_01_door_2_1_blue",
+						"truck_01_door_2_1_orange",
+						"truck_01_door_2_1_greenrust",
+						"truck_01_door_2_1_bluerust",
+						"truck_01_door_2_1_orangerust"
+					]
+				},
+				"truck_01_hood": {
+					"Variants": [
+						"truck_01_hood_blue",
+						"truck_01_hood_orange",
+						"truck_01_hood_greenrust",
+						"truck_01_hood_bluerust",
+						"truck_01_hood_orangerust"
+					]
+				},
+				"truck_01_covered": {
+					"Variants": [
+						"truck_01_covered_blue",
+						"truck_01_covered_orange"
+					]
+				},
+				"truck_01_covered_blue": {
+					"Attachments": [
+						"headlighth7",
+						"headlighth7",
+						"truckbattery",
+						"truck_01_wheel",
+						"truck_01_wheel",
+						"truck_01_wheeldouble",
+						"truck_01_wheeldouble",
+						"truck_01_wheeldouble",
+						"truck_01_wheeldouble",
+						"truck_01_door_1_1_blue",
+						"truck_01_door_2_1_blue",
+						"truck_01_hood_blue",
+						"truck_01_wheel",
+						"truck_01_wheel",
+						"headlighth7",
+						"headlighth7",
+						"truckbattery",
+						"wrench",
+						"lugwrench",
+						"screwdriver",
+						"epoxyputty",
+						"canistergasoline",
+						"canistergasoline",
+						"blowtorch",
+						"blowtorch",
+						"truck_01_wheeldouble",
+						"truck_01_wheeldouble"
+					]
+				},
+				"truck_01_door_1_1_blue": {},
+				"truck_01_door_2_1_blue": {},
+				"truck_01_hood_blue": {},
+				"truck_01_covered_orange": {
+					"Attachments": [
+						"headlighth7",
+						"headlighth7",
+						"truckbattery",
+						"truck_01_wheel",
+						"truck_01_wheel",
+						"truck_01_wheeldouble",
+						"truck_01_wheeldouble",
+						"truck_01_wheeldouble",
+						"truck_01_wheeldouble",
+						"truck_01_door_1_1_orange",
+						"truck_01_door_2_1_orange",
+						"truck_01_hood_orange",
+						"truck_01_wheel",
+						"truck_01_wheel",
+						"headlighth7",
+						"headlighth7",
+						"truckbattery",
+						"wrench",
+						"lugwrench",
+						"screwdriver",
+						"epoxyputty",
+						"canistergasoline",
+						"canistergasoline",
+						"blowtorch",
+						"blowtorch",
+						"truck_01_wheeldouble",
+						"truck_01_wheeldouble"
+					]
+				},
+				"truck_01_door_1_1_orange": {},
+				"truck_01_door_2_1_orange": {},
+				"truck_01_hood_orange": {},
+				"truck_01_door_1_1_greenrust": {},
+				"truck_01_door_2_1_greenrust": {},
+				"truck_01_hood_greenrust": {},
+				"truck_01_door_1_1_bluerust": {},
+				"truck_01_door_2_1_bluerust": {},
+				"truck_01_hood_bluerust": {},
+				"truck_01_door_1_1_orangerust": {},
+				"truck_01_door_2_1_orangerust": {},
+				"truck_01_hood_orangerust": {},
+				"truck_01_chassis_blue": {
+					"Variants": [
+						"truck_01_chassis_grey",
+						"truck_01_chassis_orange"
+					]
+				},
+				"truck_01_chassis_orange": {},
+				"truck_01_chassis_grey": {},
+				"offroad_02_door_1_1": {
+					"Variants": [
+						"offroad_02_door_1_1_rust"
+					]
+				},
+				"offroad_02_door_2_1": {
+					"Variants": [
+						"offroad_02_door_2_1_rust"
+					]
+				},
+				"offroad_02_door_1_2": {
+					"Variants": [
+						"offroad_02_door_1_2_rust"
+					]
+				},
+				"offroad_02_door_2_2": {
+					"Variants": [
+						"offroad_02_door_2_2_rust"
+					]
+				},
+				"offroad_02_hood": {},
+				"offroad_02_trunk": {
+					"Variants": [
+						"offroad_02_trunk_rust"
+					]
+				},
+				"offroad_02_door_1_1_rust": {},
+				"offroad_02_door_1_2_rust": {},
+				"offroad_02_door_2_1_rust": {},
+				"offroad_02_door_2_2_rust": {},
+				"offroad_02_trunk_rust": {}
+			}
+		}
+	}
+}
