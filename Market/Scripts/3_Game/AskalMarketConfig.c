@@ -353,4 +353,24 @@ class AskalMarketConfig
 		
 		return GetDefaultCurrencyId();
 	}
+	
+	// Get currency config or null (helper for validation)
+	AskalCurrencyConfig GetCurrencyOrNull(string currencyId)
+	{
+		return GetCurrencyConfig(currencyId);
+	}
+	
+	// Get all currency keys (helper for iteration)
+	array<string> GetAllCurrencyKeys()
+	{
+		array<string> keys = new array<string>();
+		if (Currencies && Currencies.Count() > 0)
+		{
+			for (int i = 0; i < Currencies.Count(); i++)
+			{
+				keys.Insert(Currencies.GetKey(i));
+			}
+		}
+		return keys;
+	}
 }

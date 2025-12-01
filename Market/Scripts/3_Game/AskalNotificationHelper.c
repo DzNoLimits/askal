@@ -116,8 +116,9 @@ class AskalNotificationHelper
 	protected static string s_PendingTraderMenu;
 	protected static ref map<string, int> s_PendingTraderSetupItems;
 	protected static string s_PendingTraderAcceptedCurrency;
+	protected static string s_PendingTraderCurrencyShortName;
 	
-	static void RequestOpenTraderMenu(string traderName, map<string, int> setupItems = NULL, string acceptedCurrency = "")
+	static void RequestOpenTraderMenu(string traderName, map<string, int> setupItems = NULL, string acceptedCurrency = "", string currencyShortName = "")
 	{
 		s_PendingTraderMenu = traderName;
 		if (setupItems)
@@ -129,7 +130,8 @@ class AskalNotificationHelper
 			s_PendingTraderSetupItems = new map<string, int>();
 		}
 		s_PendingTraderAcceptedCurrency = acceptedCurrency;
-		Print("[AskalNotification] 🏪 Solicitação de abertura de menu do trader: " + traderName + " | Currency: " + acceptedCurrency);
+		s_PendingTraderCurrencyShortName = currencyShortName;
+		Print("[AskalNotification] 🏪 Solicitação de abertura de menu do trader: " + traderName + " | Currency: " + acceptedCurrency + " | ShortName: " + currencyShortName);
 		
 		// Contar entradas do SetupItems (evitar operador ternário)
 		int setupCount = 0;
@@ -155,10 +157,16 @@ class AskalNotificationHelper
 		return s_PendingTraderAcceptedCurrency;
 	}
 	
+	static string GetPendingTraderCurrencyShortName()
+	{
+		return s_PendingTraderCurrencyShortName;
+	}
+	
 	static void ClearPendingTraderMenu()
 	{
 		s_PendingTraderMenu = "";
 		s_PendingTraderAcceptedCurrency = "";
+		s_PendingTraderCurrencyShortName = "";
 		if (s_PendingTraderSetupItems)
 			s_PendingTraderSetupItems.Clear();
 	}

@@ -128,21 +128,33 @@ class ActionOpenAskalTraderMenu: ActionInteractBase
 		
 		Print("[AskalTrader] 📦 SetupItems: " + setupKeys.Count() + " entradas");
 		
-		// Obter AcceptedCurrency do trader
-		string acceptedCurrency = trader.GetAcceptedCurrency();
-		if (!acceptedCurrency || acceptedCurrency == "")
-		{
-			// Fallback para DefaultCurrencyId do MarketConfig
-			AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
-			if (marketConfig)
-				acceptedCurrency = marketConfig.GetDefaultCurrencyId();
-			if (!acceptedCurrency || acceptedCurrency == "")
-				acceptedCurrency = "Askal_Money";
-		}
-		Print("[AskalTrader] 💰 AcceptedCurrency: " + acceptedCurrency);
+		// Resolve currency using helper (validates against MarketConfig)
+		AskalTraderConfig traderConfig = trader.GetConfig();
+		AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
+		string acceptedCurrency = AskalMarketHelpers.ResolveCurrencyForTrader(traderConfig, marketConfig);
 		
-		// Enviar RPC para o cliente abrir o menu (nome + SetupItems + AcceptedCurrency)
-		Param4<string, ref array<string>, ref array<int>, string> params = new Param4<string, ref array<string>, ref array<int>, string>(trader.GetTraderName(), setupKeys, setupValues, acceptedCurrency);
+		// Get currency shortname
+		string currencyShortName = "";
+		if (marketConfig && acceptedCurrency != "")
+		{
+			AskalCurrencyConfig currencyCfg = marketConfig.GetCurrencyOrNull(acceptedCurrency);
+			if (currencyCfg && currencyCfg.ShortName != "")
+			{
+				currencyShortName = currencyCfg.ShortName;
+				// Remove @ prefix if present
+				if (currencyShortName.Length() > 0 && currencyShortName.Substring(0, 1) == "@")
+					currencyShortName = currencyShortName.Substring(1, currencyShortName.Length() - 1);
+			}
+		}
+		
+		// Fallback to currencyId if shortname not found
+		if (currencyShortName == "")
+			currencyShortName = acceptedCurrency;
+		
+		Print("[AskalTrader] 💰 AcceptedCurrency: " + acceptedCurrency + " (shortname: " + currencyShortName + ")");
+		
+		// Enviar RPC para o cliente abrir o menu (nome + SetupItems + AcceptedCurrency + ShortName)
+		Param5<string, ref array<string>, ref array<int>, string, string> params = new Param5<string, ref array<string>, ref array<int>, string, string>(trader.GetTraderName(), setupKeys, setupValues, acceptedCurrency, currencyShortName);
 		GetRPCManager().SendRPC("AskalMarketModule", "OpenTraderMenu", params, true, player.GetIdentity(), NULL);
 	}
 }

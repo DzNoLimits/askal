@@ -458,7 +458,22 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		m_VirtualStoreCurrencyId = currencyId;
 		m_ActiveCurrencyId = currencyId;
 		
-		Print("[AskalStore] 💰 VirtualStore configurado: Currency=" + currencyId + " | m_CurrentTraderName limpo");
+		// Resolve shortname for VirtualStore
+		AskalMarketConfig config = AskalMarketConfig.GetInstance();
+		if (config && currencyId != "")
+		{
+			AskalCurrencyConfig currencyCfg = config.GetCurrencyOrNull(currencyId);
+			if (currencyCfg && currencyCfg.ShortName != "")
+			{
+				m_CurrentCurrencyShortName = currencyCfg.ShortName;
+				if (m_CurrentCurrencyShortName.Length() > 0 && m_CurrentCurrencyShortName.Substring(0, 1) == "@")
+					m_CurrentCurrencyShortName = m_CurrentCurrencyShortName.Substring(1, m_CurrentCurrencyShortName.Length() - 1);
+			}
+		}
+		if (m_CurrentCurrencyShortName == "")
+			m_CurrentCurrencyShortName = currencyId;
+		
+		Print("[AskalStore] 💰 VirtualStore configurado: Currency=" + currencyId + " (shortname: " + m_CurrentCurrencyShortName + ") | m_CurrentTraderName limpo");
 		
 		RefreshCurrencyShortname();
 		UpdateTransactionSummary();
@@ -5021,16 +5036,54 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		
 		m_SelectedItemUnitPrice = price;
 		
-		// Para compras únicas (não batch), m_TransactionQuantity deve ser sempre 1
-		// O preço já foi ajustado por CalculateAdjustedPrice que incorpora a quantidade do slider
-		int transactionQty = 1;
-		if (m_TransactionQuantity > 0 && m_TransactionQuantity <= 9999)
-			transactionQty = m_TransactionQuantity;
-		else
-			transactionQty = 1;
+		// Determine quantity based on slider type
+		float itemQuantity = 1.0;
+		int quantityType = 0;
+		int contentType = 0;
 		
-		int totalPrice = price * transactionQty;
-		Print("[AskalStore] 💰 Tentando comprar: " + itemClass + " | TransactionQty: " + transactionQty + " | Total: " + totalPrice + " " + currencyId);
+		if (m_SliderQuantityType != AskalItemQuantityType.NONE)
+		{
+			quantityType = m_SliderQuantityType;
+			switch (m_SliderQuantityType)
+			{
+				case AskalItemQuantityType.MAGAZINE:
+				{
+					itemQuantity = m_CurrentAmmoCount;
+					break;
+				}
+				case AskalItemQuantityType.STACKABLE:
+				{
+					// For stackables, use slider quantity directly (not number of stacks)
+					itemQuantity = m_TransactionQuantity;
+					if (itemQuantity <= 0)
+						itemQuantity = 1.0;
+					break;
+				}
+				case AskalItemQuantityType.QUANTIFIABLE:
+				{
+					itemQuantity = m_CurrentQuantityPercent;
+					contentType = m_CurrentSelectedContent.ToInt();
+					break;
+				}
+			}
+		}
+		
+		// Calculate total price: unitPrice * quantity for stackables, unitPrice for others
+		int unitPrice = price;
+		int totalPrice = unitPrice;
+		if (quantityType == 2) // STACKABLE
+		{
+			totalPrice = Math.Round(unitPrice * itemQuantity);
+			if (totalPrice <= 0)
+				totalPrice = unitPrice;
+		}
+		
+		// Get currency shortname for log
+		string currencyShortName = m_CurrentCurrencyShortName;
+		if (!currencyShortName || currencyShortName == "")
+			currencyShortName = currencyId;
+		
+		Print("[AskalStore] 📤 RPC purchase sent: item=" + itemClass + " qty=" + itemQuantity + " unitPrice=" + unitPrice + " total=" + totalPrice + " currency=" + currencyShortName);
 		
 		if (GetGame().IsClient())
 		{
@@ -5054,37 +5107,11 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			if (!steamId || steamId == "")
 				steamId = identity.GetId();
 			
-			float itemQuantity = -1;
-			int itemContent = 0;
-			
-			if (m_SliderQuantityType != AskalItemQuantityType.NONE)
-			{
-				switch (m_SliderQuantityType)
-				{
-					case AskalItemQuantityType.MAGAZINE:
-					{
-						itemQuantity = m_CurrentAmmoCount;
-						break;
-					}
-					case AskalItemQuantityType.STACKABLE:
-					{
-						itemQuantity = m_CurrentAmmoCount;
-						break;
-					}
-					case AskalItemQuantityType.QUANTIFIABLE:
-					{
-						itemQuantity = m_CurrentQuantityPercent;
-						itemContent = m_CurrentSelectedContent.ToInt();
-						break;
-					}
-				}
-			}
-			
 			string traderName = m_CurrentTraderName;
 			if (!traderName || traderName == "")
 				traderName = "";
 			
-			Param8<string, string, int, string, float, int, int, string> params = new Param8<string, string, int, string, float, int, int, string>(steamId, itemClass, totalPrice, currencyId, itemQuantity, m_SliderQuantityType, itemContent, traderName);
+			Param8<string, string, int, string, float, int, int, string> params = new Param8<string, string, int, string, float, int, int, string>(steamId, itemClass, totalPrice, currencyId, itemQuantity, quantityType, contentType, traderName);
 			GetRPCManager().SendRPC("AskalMarketModule", "PurchaseItemRequest", params, true, identity, NULL);
 			Print("[AskalStore] 📤 RPC de compra enviado | ItemQty: " + itemQuantity + " | QtyType: " + m_SliderQuantityType + " | Content: " + itemContent + " | Trader: " + traderName);
 		}
@@ -5820,14 +5847,39 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			// Obter SetupItems do helper
 			m_TraderSetupItems = AskalNotificationHelper.GetPendingTraderSetupItems();
 			
-			// Obter AcceptedCurrency do helper e definir como moeda ativa
+			// Obter AcceptedCurrency e ShortName do helper
 			string acceptedCurrency = AskalNotificationHelper.GetPendingTraderAcceptedCurrency();
-			Print("[AskalStore] 🔍 OpenTraderMenu: acceptedCurrency do helper = " + acceptedCurrency + " | traderName=" + traderName);
+			string currencyShortName = AskalNotificationHelper.GetPendingTraderCurrencyShortName();
+			Print("[AskalStore] 🔍 OpenTraderMenu: acceptedCurrency=" + acceptedCurrency + " currencyShortName=" + currencyShortName + " | traderName=" + traderName);
 			
 			if (acceptedCurrency && acceptedCurrency != "")
 			{
 				m_ActiveCurrencyId = acceptedCurrency;
-				Print("[AskalStore] ✅ AcceptedCurrency DEFINIDO: " + acceptedCurrency + " | m_CurrentTraderName=" + traderName);
+				
+				// Use received shortname or resolve from MarketConfig
+				if (currencyShortName && currencyShortName != "")
+				{
+					m_CurrentCurrencyShortName = currencyShortName;
+				}
+				else
+				{
+					// Resolve from MarketConfig
+					AskalMarketConfig config = AskalMarketConfig.GetInstance();
+					if (config)
+					{
+						AskalCurrencyConfig currencyCfg = config.GetCurrencyOrNull(acceptedCurrency);
+						if (currencyCfg && currencyCfg.ShortName != "")
+						{
+							m_CurrentCurrencyShortName = currencyCfg.ShortName;
+							if (m_CurrentCurrencyShortName.Length() > 0 && m_CurrentCurrencyShortName.Substring(0, 1) == "@")
+								m_CurrentCurrencyShortName = m_CurrentCurrencyShortName.Substring(1, m_CurrentCurrencyShortName.Length() - 1);
+						}
+					}
+					if (m_CurrentCurrencyShortName == "")
+						m_CurrentCurrencyShortName = acceptedCurrency;
+				}
+				
+				Print("[AskalStore] ✅ AcceptedCurrency DEFINIDO: " + acceptedCurrency + " (shortname: " + m_CurrentCurrencyShortName + ") | m_CurrentTraderName=" + traderName);
 			}
 			else
 			{
@@ -5837,19 +5889,32 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 				{
 					string defaultCurrency = config.GetDefaultCurrencyId();
 					if (defaultCurrency && defaultCurrency != "")
+					{
 						m_ActiveCurrencyId = defaultCurrency;
+						AskalCurrencyConfig currencyCfg = config.GetCurrencyOrNull(defaultCurrency);
+						if (currencyCfg && currencyCfg.ShortName != "")
+						{
+							m_CurrentCurrencyShortName = currencyCfg.ShortName;
+							if (m_CurrentCurrencyShortName.Length() > 0 && m_CurrentCurrencyShortName.Substring(0, 1) == "@")
+								m_CurrentCurrencyShortName = m_CurrentCurrencyShortName.Substring(1, m_CurrentCurrencyShortName.Length() - 1);
+						}
+					}
 					else
+					{
 						m_ActiveCurrencyId = "Askal_Money";
+						m_CurrentCurrencyShortName = "AKC";
+					}
 				}
 				else
 				{
 					m_ActiveCurrencyId = "Askal_Money";
+					m_CurrentCurrencyShortName = "AKC";
 				}
-				Print("[AskalStore] ⚠️ AcceptedCurrency não recebido, usando fallback: " + m_ActiveCurrencyId + " | m_CurrentTraderName=" + traderName);
+				Print("[AskalStore] ⚠️ AcceptedCurrency não recebido, usando fallback: " + m_ActiveCurrencyId + " (shortname: " + m_CurrentCurrencyShortName + ") | m_CurrentTraderName=" + traderName);
 			}
 			
 			// CRITICAL: Log final state to debug
-			Print("[AskalStore] 🔍 Estado final OpenTraderMenu: m_CurrentTraderName=" + m_CurrentTraderName + " m_ActiveCurrencyId=" + m_ActiveCurrencyId + " m_VirtualStoreCurrencyId=" + m_VirtualStoreCurrencyId);
+			Print("[AskalStore] 🔍 Estado final OpenTraderMenu: m_CurrentTraderName=" + m_CurrentTraderName + " m_ActiveCurrencyId=" + m_ActiveCurrencyId + " m_CurrentCurrencyShortName=" + m_CurrentCurrencyShortName);
 			
 			// Atualizar título do menu
 			if (m_HeaderTitleText)
@@ -5904,14 +5969,39 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			// Obter SetupItems do helper
 			m_TraderSetupItems = AskalNotificationHelper.GetPendingTraderSetupItems();
 			
-			// Obter AcceptedCurrency do helper e definir como moeda ativa
+			// Obter AcceptedCurrency e ShortName do helper
 			string acceptedCurrency = AskalNotificationHelper.GetPendingTraderAcceptedCurrency();
-			Print("[AskalStore] 🔍 OnShow: acceptedCurrency do helper = " + acceptedCurrency + " | pendingTraderMenu=" + pendingTraderMenu);
+			string currencyShortName = AskalNotificationHelper.GetPendingTraderCurrencyShortName();
+			Print("[AskalStore] 🔍 OnShow: acceptedCurrency=" + acceptedCurrency + " currencyShortName=" + currencyShortName + " | pendingTraderMenu=" + pendingTraderMenu);
 			
 			if (acceptedCurrency && acceptedCurrency != "")
 			{
 				m_ActiveCurrencyId = acceptedCurrency;
-				Print("[AskalStore] ✅ AcceptedCurrency DEFINIDO: " + acceptedCurrency + " | m_CurrentTraderName=" + pendingTraderMenu);
+				
+				// Use received shortname or resolve from MarketConfig
+				if (currencyShortName && currencyShortName != "")
+				{
+					m_CurrentCurrencyShortName = currencyShortName;
+				}
+				else
+				{
+					// Resolve from MarketConfig
+					AskalMarketConfig config = AskalMarketConfig.GetInstance();
+					if (config)
+					{
+						AskalCurrencyConfig currencyCfg = config.GetCurrencyOrNull(acceptedCurrency);
+						if (currencyCfg && currencyCfg.ShortName != "")
+						{
+							m_CurrentCurrencyShortName = currencyCfg.ShortName;
+							if (m_CurrentCurrencyShortName.Length() > 0 && m_CurrentCurrencyShortName.Substring(0, 1) == "@")
+								m_CurrentCurrencyShortName = m_CurrentCurrencyShortName.Substring(1, m_CurrentCurrencyShortName.Length() - 1);
+						}
+					}
+					if (m_CurrentCurrencyShortName == "")
+						m_CurrentCurrencyShortName = acceptedCurrency;
+				}
+				
+				Print("[AskalStore] ✅ AcceptedCurrency DEFINIDO: " + acceptedCurrency + " (shortname: " + m_CurrentCurrencyShortName + ") | m_CurrentTraderName=" + pendingTraderMenu);
 			}
 			else
 			{
@@ -5921,15 +6011,28 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 				{
 					string defaultCurrency = config.GetDefaultCurrencyId();
 					if (defaultCurrency && defaultCurrency != "")
+					{
 						m_ActiveCurrencyId = defaultCurrency;
+						AskalCurrencyConfig currencyCfg = config.GetCurrencyOrNull(defaultCurrency);
+						if (currencyCfg && currencyCfg.ShortName != "")
+						{
+							m_CurrentCurrencyShortName = currencyCfg.ShortName;
+							if (m_CurrentCurrencyShortName.Length() > 0 && m_CurrentCurrencyShortName.Substring(0, 1) == "@")
+								m_CurrentCurrencyShortName = m_CurrentCurrencyShortName.Substring(1, m_CurrentCurrencyShortName.Length() - 1);
+						}
+					}
 					else
+					{
 						m_ActiveCurrencyId = "Askal_Money";
+						m_CurrentCurrencyShortName = "AKC";
+					}
 				}
 				else
 				{
 					m_ActiveCurrencyId = "Askal_Money";
+					m_CurrentCurrencyShortName = "AKC";
 				}
-				Print("[AskalStore] ⚠️ AcceptedCurrency não recebido, usando fallback: " + m_ActiveCurrencyId + " | m_CurrentTraderName=" + pendingTraderMenu);
+				Print("[AskalStore] ⚠️ AcceptedCurrency não recebido, usando fallback: " + m_ActiveCurrencyId + " (shortname: " + m_CurrentCurrencyShortName + ") | m_CurrentTraderName=" + pendingTraderMenu);
 			}
 			
 			// CRITICAL: Log final state to debug
@@ -6096,22 +6199,29 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			}
 		}
 		
-		// Get shortname - this MUST return the shortname, not the currencyId
-		// GetCurrencyShortName now has hardcoded fallbacks, so it should never return currencyId
-		string shortName = GetCurrencyShortName(currencyId);
-		
-		// Final validation: ensure shortName is valid
-		if (!shortName || shortName == "" || shortName == currencyId)
+		// Get shortname - prefer m_CurrentCurrencyShortName if set, otherwise resolve
+		string shortName = "";
+		if (m_CurrentCurrencyShortName && m_CurrentCurrencyShortName != "")
 		{
-			Print("[AskalStore] CRITICAL: GetCurrencyShortName failed for " + currencyId + " (returned: " + shortName + ")");
-			// Use hardcoded fallbacks as absolute last resort
-			if (currencyId == "Askal_Money")
-				shortName = "AKC";
-			else if (currencyId == "VirtualStore_Money")
-				shortName = "VST";
-			else
-				shortName = "???";
-			Print("[AskalStore] Using fallback shortname: " + shortName);
+			shortName = m_CurrentCurrencyShortName;
+		}
+		else
+		{
+			shortName = GetCurrencyShortName(currencyId);
+			
+			// Final validation: ensure shortName is valid
+			if (!shortName || shortName == "" || shortName == currencyId)
+			{
+				Print("[AskalStore] CRITICAL: GetCurrencyShortName failed for " + currencyId + " (returned: " + shortName + ")");
+				// Use hardcoded fallbacks as absolute last resort
+				if (currencyId == "Askal_Money")
+					shortName = "AKC";
+				else if (currencyId == "VirtualStore_Money")
+					shortName = "VST";
+				else
+					shortName = "???";
+				Print("[AskalStore] Using fallback shortname: " + shortName);
+			}
 		}
 		
 		// Determine permissions based on item mode
@@ -6186,6 +6296,7 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 				m_SellButtonSolo.Show(false);
 			
 			ResetButtonTotals();
+			Print("[AskalStore] WARN - no valid actions for current item");
 		}
 		
 		// Zero values for buttons that shouldn't be displayed

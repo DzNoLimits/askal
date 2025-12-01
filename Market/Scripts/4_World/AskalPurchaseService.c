@@ -87,7 +87,7 @@ class AskalPurchaseService
 		int currencyMode = currencyConfig.Mode;
 		if (currencyMode == AskalMarketConstants.CURRENCY_MODE_DISABLED)
 		{
-			Print("[AskalPurchase] ERROR: Currency disabled: " + currencyId);
+			Print("[AskalPurchase] ❌ Currency disabled: " + currencyId);
 			return false;
 		}
 
@@ -100,7 +100,7 @@ class AskalPurchaseService
 		}
 		if (price != authoritativePrice)
 		{
-			Print("[AskalPurchase] ⚠️ Ajustando preço informado pelo cliente. Recebido: " + price + " | Autoritativo: " + authoritativePrice);
+			Print("[AskalPurchase] ⚠️ Adjusted price: received " + price + " -> authoritative " + authoritativePrice);
 			price = authoritativePrice;
 		}
 
@@ -125,9 +125,7 @@ class AskalPurchaseService
 				return false;
 			}
 
-			Print("[AskalPurchase] ORDER_PLACED steamId=" + steamId + " item=" + itemClass + " price=" + price + " currency=" + currencyId);
-			Print("[AskalPurchase] ✅ Compra realizada (virtual currency)!");
-			Print("[AskalPurchase]   Item: " + itemClass + " | Qty: " + itemQuantity + " | Tipo: " + quantityType);
+			Print("[AskalPurchase] ORDER_PLACED steamId=" + steamId + " item=" + itemClass + " price=" + price + " qty=" + itemQuantity);
 			return true;
 		}
 		else if (currencyMode == AskalMarketConstants.CURRENCY_MODE_PHYSICAL)
@@ -157,9 +155,7 @@ class AskalPurchaseService
 				return false;
 			}
 
-			Print("[AskalPurchase] ORDER_PLACED steamId=" + steamId + " item=" + itemClass + " price=" + price + " currency=" + currencyId);
-			Print("[AskalPurchase] ✅ Compra realizada!");
-			Print("[AskalPurchase]   Item: " + itemClass + " | Qty: " + itemQuantity + " | Tipo: " + quantityType);
+			Print("[AskalPurchase] ORDER_PLACED steamId=" + steamId + " item=" + itemClass + " price=" + price + " qty=" + itemQuantity);
 			return true;
 		}
 		else
@@ -289,6 +285,12 @@ class AskalPurchaseService
 
 			Print("[AskalPurchase] [STACKABLE] Preço: " + unitPrice + " x " + quantity + " = " + totalPrice);
 			return totalPrice;
+		}
+		
+		// Para quantifiable (líquidos), usar unitPrice (não multiplicar)
+		if (quantityType == 3) // QUANTIFIABLE
+		{
+			return unitPrice;
 		}
 
 		return unitPrice;

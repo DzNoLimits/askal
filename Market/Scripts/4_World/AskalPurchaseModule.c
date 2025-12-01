@@ -155,68 +155,48 @@ class AskalPurchaseModule
 			return;
 		}
 		
-		// Resolve currency ID: trader-specific first, then VirtualStore, then fallback
+		// Resolve currency ID using helper (prioritizes trader, then VirtualStore, then default)
 		AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
+		AskalTraderConfig traderConfig = NULL;
+		
 		if (traderName && traderName != "")
 		{
-			// Try to get trader config and use its AcceptedCurrency
-			Print("[AskalPurchase] Attempting to load trader config for: " + traderName);
-			AskalTraderConfig traderConfig = AskalTraderConfig.LoadByTraderName(traderName);
-			if (traderConfig)
-			{
-				Print("[AskalPurchase] Trader config loaded. AcceptedCurrency: " + traderConfig.AcceptedCurrency);
-				if (traderConfig.AcceptedCurrency && traderConfig.AcceptedCurrency != "")
-				{
-					currencyId = traderConfig.AcceptedCurrency;
-					Print("[AskalPurchase] ✅ Resolved currency from trader " + traderName + ": " + currencyId);
-				}
-				else
-				{
-					Print("[AskalPurchase] ⚠️ Trader config loaded but AcceptedCurrency is empty");
-				}
-			}
-			else
-			{
-				Print("[AskalPurchase] ⚠️ Trader config not found for: " + traderName);
-			}
-		}
-		else
-		{
-			// No trader name = VirtualStore context
-			// Try to get VirtualStore config and use its AcceptedCurrency
-			Print("[AskalPurchase] No trader name, attempting VirtualStore currency resolution");
-			AskalVirtualStoreConfig virtualStoreConfig = AskalVirtualStoreSettings.GetConfig();
-			if (virtualStoreConfig)
-			{
-				string virtualCurrency = virtualStoreConfig.GetPrimaryCurrency();
-				Print("[AskalPurchase] VirtualStore config loaded. PrimaryCurrency: " + virtualCurrency);
-				if (virtualCurrency && virtualCurrency != "")
-				{
-					currencyId = virtualCurrency;
-					Print("[AskalPurchase] ✅ Resolved currency from VirtualStore: " + currencyId);
-				}
-				else
-				{
-					Print("[AskalPurchase] ⚠️ VirtualStore config loaded but PrimaryCurrency is empty");
-				}
-			}
-			else
-			{
-				Print("[AskalPurchase] ⚠️ VirtualStore config not found");
-			}
+			traderConfig = AskalTraderConfig.LoadByTraderName(traderName);
 		}
 		
-		// Fallback to provided currencyId, then default
-		if (!currencyId || currencyId == "")
-		{
-			if (marketConfig)
-				currencyId = marketConfig.GetDefaultCurrencyId();
-			else
-				currencyId = "Askal_Money";
-			Print("[AskalPurchase] Resolved currency using default: " + currencyId);
-		}
+		// Use ResolveCurrencyForTrader helper
+		currencyId = AskalMarketHelpers.ResolveCurrencyForTrader(traderConfig, marketConfig);
 		
 		Print("[AskalPurchase] Resolved currency for purchase: " + currencyId + " (trader: " + traderName + ")");
+		
+		// Validate currency exists in player balance
+		if (!AskalPlayerBalance.HasCurrency(steamId, currencyId))
+		{
+			// Attempt to refresh player config
+			Print("[AskalPurchase] Currency not found in player balance, attempting refresh: " + currencyId);
+			AskalPlayerData refreshData;
+			bool refreshSuccess;
+			string refreshReason;
+			AskalPlayerConfigLoader.LoadOrCreatePlayerConfigSync(steamId, refreshData, refreshSuccess, refreshReason);
+			
+			if (refreshSuccess && refreshData)
+			{
+				AskalPlayerBalance.InitializePlayerBalances(steamId, refreshData);
+				// Check again
+				if (!AskalPlayerBalance.HasCurrency(steamId, currencyId))
+				{
+					Print("[AskalPurchase] ❌ Currency not found in player balance: " + currencyId);
+					SendPurchaseResponse(sender, false, itemClass, 0, "Currency not available. Please reconnect.");
+					return;
+				}
+			}
+			else
+			{
+				Print("[AskalPurchase] ❌ Currency not found in player balance: " + currencyId + " (refresh failed)");
+				SendPurchaseResponse(sender, false, itemClass, 0, "Currency not available. Please reconnect.");
+				return;
+			}
+		}
 		
 		// VALIDAÇÃO: Verificar se item pode ser comprado neste trader
 		if (traderName && traderName != "")
@@ -229,13 +209,13 @@ class AskalPurchaseModule
 			}
 		}
 		
-		Print("[AskalPurchase] [COMPRA] Solicitação de compra recebida:");
-		Print("[AskalPurchase]   Player: " + steamId);
-		Print("[AskalPurchase]   Item: " + itemClass);
-		Print("[AskalPurchase]   Preço solicitado: " + requestedPrice);
-		Print("[AskalPurchase]   Moeda: " + currencyId);
-		Print("[AskalPurchase]   Trader: " + traderName);
-		Print("[AskalPurchase]   Quantidade: " + itemQuantity + " | Tipo: " + quantityType + " | Conteúdo: " + contentType);
+		Print("[AskalPurchase] [COMPRA] Solicitação de compra recebida: Player: " + steamId + " Item: " + itemClass + " Preço solicitado: " + requestedPrice + " Moeda: " + currencyId + " Quantidade (raw): " + itemQuantity + " | Tipo: " + quantityType);
+		
+		// Log quantity acceptance for stackable items
+		if (quantityType == 2) // STACKABLE
+		{
+			Print("[AskalPurchase] [INFO] Quantity accepted: " + itemQuantity + " for " + itemClass + " (type: 2, stackable: true, ammo: false)");
+		}
 		
 		// Processar compra (cálculo de preço autoritativo e validações são feitas dentro do serviço)
 		Print("[AskalPurchase] [PROCESSAR] Chamando AskalPurchaseService.ProcessPurchaseWithQuantity...");
@@ -350,4 +330,5 @@ class AskalPurchaseModule
 		GetRPCManager().SendRPC("AskalMarketModule", "PurchaseItemResponse", params, true, identity, NULL);
 	}
 }
+
 

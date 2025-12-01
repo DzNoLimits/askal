@@ -160,42 +160,97 @@ class AskalMarketModule : CF_ModuleGame
         if (type != CallType.Client)
             return;
         
-        Param4<string, ref array<string>, ref array<int>, string> data;
-        if (!ctx.Read(data))
+        // Try Param5 first (with shortname), fallback to Param4 for compatibility
+        Param5<string, ref array<string>, ref array<int>, string, string> data5;
+        if (ctx.Read(data5))
         {
-            Print("[AskalMarket] ❌ Erro ao ler OpenTraderMenu");
+            string traderName = data5.param1;
+            ref array<string> setupKeys = data5.param2;
+            ref array<int> setupValues = data5.param3;
+            string acceptedCurrency = data5.param4;
+            string currencyShortName = data5.param5;
+            
+            Print("[AskalMarket] 📥 OpenTraderMenu recebido para trader: " + traderName + " | Currency: " + acceptedCurrency + " | ShortName: " + currencyShortName);
+            
+            // Contar entradas do SetupItems
+            int setupCount = 0;
+            if (setupKeys)
+                setupCount = setupKeys.Count();
+            Print("[AskalMarket] 📦 SetupItems: " + setupCount.ToString() + " entradas");
+            
+            // Converter arrays de volta para map
+            ref map<string, int> setupItems = new map<string, int>();
+            if (setupKeys && setupValues && setupKeys.Count() == setupValues.Count())
+            {
+                for (int i = 0; i < setupKeys.Count(); i++)
+                {
+                    string key = setupKeys.Get(i);
+                    int value = setupValues.Get(i);
+                    setupItems.Set(key, value);
+                }
+            }
+            
+            // Armazenar no helper para que o menu possa acessar quando for criado (incluindo AcceptedCurrency e ShortName)
+            AskalNotificationHelper.RequestOpenTraderMenu(traderName, setupItems, acceptedCurrency, currencyShortName);
+            
+            Print("[AskalMarket] ✅ Trader menu request armazenado, aguardando criação do menu");
             return;
         }
         
-        string traderName = data.param1;
-        ref array<string> setupKeys = data.param2;
-        ref array<int> setupValues = data.param3;
-        string acceptedCurrency = data.param4;
-        
-        Print("[AskalMarket] 📥 OpenTraderMenu recebido para trader: " + traderName + " | Currency: " + acceptedCurrency);
-        
-        // Contar entradas do SetupItems
-        int setupCount = 0;
-        if (setupKeys)
-            setupCount = setupKeys.Count();
-        Print("[AskalMarket] 📦 SetupItems: " + setupCount.ToString() + " entradas");
-        
-        // Converter arrays de volta para map
-        ref map<string, int> setupItems = new map<string, int>();
-        if (setupKeys && setupValues && setupKeys.Count() == setupValues.Count())
+        // Fallback: Try Param4 (old format without shortname)
+        ctx.Rewind();
+        Param4<string, ref array<string>, ref array<int>, string> data4;
+        if (ctx.Read(data4))
         {
-            for (int i = 0; i < setupKeys.Count(); i++)
+            string traderName = data4.param1;
+            ref array<string> setupKeys = data4.param2;
+            ref array<int> setupValues = data4.param3;
+            string acceptedCurrency = data4.param4;
+            
+            Print("[AskalMarket] 📥 OpenTraderMenu recebido (legacy format) para trader: " + traderName + " | Currency: " + acceptedCurrency);
+            
+            // Resolve shortname from MarketConfig
+            string currencyShortName = "";
+            AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
+            if (marketConfig && acceptedCurrency != "")
             {
-                string key = setupKeys.Get(i);
-                int value = setupValues.Get(i);
-                setupItems.Set(key, value);
+                AskalCurrencyConfig currencyCfg = marketConfig.GetCurrencyOrNull(acceptedCurrency);
+                if (currencyCfg && currencyCfg.ShortName != "")
+                {
+                    currencyShortName = currencyCfg.ShortName;
+                    if (currencyShortName.Length() > 0 && currencyShortName.Substring(0, 1) == "@")
+                        currencyShortName = currencyShortName.Substring(1, currencyShortName.Length() - 1);
+                }
             }
+            if (currencyShortName == "")
+                currencyShortName = acceptedCurrency;
+            
+            // Contar entradas do SetupItems
+            int setupCount = 0;
+            if (setupKeys)
+                setupCount = setupKeys.Count();
+            Print("[AskalMarket] 📦 SetupItems: " + setupCount.ToString() + " entradas");
+            
+            // Converter arrays de volta para map
+            ref map<string, int> setupItems = new map<string, int>();
+            if (setupKeys && setupValues && setupKeys.Count() == setupValues.Count())
+            {
+                for (int i = 0; i < setupKeys.Count(); i++)
+                {
+                    string key = setupKeys.Get(i);
+                    int value = setupValues.Get(i);
+                    setupItems.Set(key, value);
+                }
+            }
+            
+            // Armazenar no helper
+            AskalNotificationHelper.RequestOpenTraderMenu(traderName, setupItems, acceptedCurrency, currencyShortName);
+            
+            Print("[AskalMarket] ✅ Trader menu request armazenado, aguardando criação do menu");
+            return;
         }
         
-        // Armazenar no helper para que o menu possa acessar quando for criado (incluindo AcceptedCurrency)
-        AskalNotificationHelper.RequestOpenTraderMenu(traderName, setupItems, acceptedCurrency);
-        
-        Print("[AskalMarket] ✅ Trader menu request armazenado, aguardando criação do menu");
+        Print("[AskalMarket] ❌ Erro ao ler OpenTraderMenu");
     }
     
     override void OnMissionStart(Class sender, CF_EventArgs args)

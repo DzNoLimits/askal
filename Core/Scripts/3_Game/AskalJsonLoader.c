@@ -679,8 +679,9 @@ class AskalPlayerConfigLoader
                 seedSummary += seedCurrencyId + "=" + seedValue;
             }
             
-            Print("[AskalJsonLoader] Created new player JSON for " + steamId + " with currencies: " + currencyList);
-            Print("[AskalJsonLoader] Player " + steamId + " Balance seeded: " + seedSummary);
+            // Format currency list for log (brackets format)
+            string formattedCurrencyList = "[" + currencyList + "]";
+            Print("[AskalJsonLoader] CREATED player config: " + steamId + " with currencies: " + formattedCurrencyList);
             
             // Save atomically (write to .tmp then rename)
             if (!AskalJsonLoader<AskalPlayerData>.SaveToFile(filePath, playerData))
@@ -716,6 +717,7 @@ class AskalPlayerConfigLoader
         
         // File exists and parsed successfully, migrate if needed
         bool needsMigration = false;
+        array<string> addedCurrencies = new array<string>();
         
         // Check for missing currencies - NEVER overwrite existing balances
         // Use union of Currencies + VirtualCurrencies
@@ -749,8 +751,22 @@ class AskalPlayerConfigLoader
                 
                 // Only insert missing currency - never overwrite
                 playerData.Balance.Set(migrateCurrencyId, migrateSeedValue);
+                addedCurrencies.Insert(migrateCurrencyId);
                 Print("[AskalJsonLoader] MIGRATE: Added missing currency \"" + migrateCurrencyId + "\"=" + migrateSeedValue + " to player " + steamId);
             }
+        }
+        
+        // Log update if currencies were added
+        if (needsMigration && addedCurrencies.Count() > 0)
+        {
+            string addedList = "";
+            for (int i = 0; i < addedCurrencies.Count(); i++)
+            {
+                if (i > 0)
+                    addedList += ", ";
+                addedList += addedCurrencies.Get(i);
+            }
+            Print("[AskalJsonLoader] UPDATED player config: " + steamId + " added currencies: [" + addedList + "]");
         }
         
         // If migration needed, save with backup

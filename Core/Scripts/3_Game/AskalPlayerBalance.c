@@ -1115,6 +1115,27 @@ class AskalPlayerBalance
 	}
 	
 	// Obter balance de uma moeda específica (usando currency ID)
+	// Check if player has a specific currency in balance
+	static bool HasCurrency(string steamId, string currencyId)
+	{
+		if (!steamId || steamId == "" || !currencyId || currencyId == "")
+			return false;
+		
+		// Validate player config first
+		if (!ValidateAndLoadPlayerConfig(steamId))
+			return false;
+		
+		// Check in-memory cache
+		if (s_Cache.Contains(steamId))
+		{
+			AskalPlayerData playerData = s_Cache.Get(steamId);
+			if (playerData && playerData.Balance && playerData.Balance.Contains(currencyId))
+				return true;
+		}
+		
+		return false;
+	}
+	
 	static int GetBalance(string steamId, string currencyId = "")
 	{
 		Print("[AskalBalance] 🔍 GetBalance: Chamado para steamId=" + steamId + " currencyId=" + currencyId);

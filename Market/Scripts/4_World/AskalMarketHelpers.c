@@ -194,6 +194,96 @@ class AskalMarketHelpers
 		return marketConfig.GetDefaultCurrencyId();
 	}
 	
+	// Resolve currency for trader/VirtualStore (prioritizes trader-specific, then VirtualStore, then default)
+	// Returns currency ID and logs resolution
+	static string ResolveCurrencyForTrader(AskalTraderConfig traderConfig, AskalMarketConfig fallbackMarketConfig)
+	{
+		AskalMarketConfig marketConfig = fallbackMarketConfig;
+		if (!marketConfig)
+			marketConfig = AskalMarketConfig.GetInstance();
+		
+		if (!marketConfig)
+		{
+			Print("[AskalMarketHelpers] ERROR: MarketConfig not available");
+			return AskalMarketConstants.DEFAULT_CURRENCY_ID;
+		}
+		
+		string resolvedCurrency = "";
+		string traderName = "";
+		int currencyMode = -1;
+		
+		// PRIORITY 1: Trader-specific AcceptedCurrency
+		if (traderConfig && traderConfig.AcceptedCurrency && traderConfig.AcceptedCurrency != "")
+		{
+			string traderCurrency = traderConfig.AcceptedCurrency;
+			traderName = traderConfig.TraderName;
+			
+			// Validate currency exists in MarketConfig
+			AskalCurrencyConfig currencyCfg = marketConfig.GetCurrencyOrNull(traderCurrency);
+			if (currencyCfg)
+			{
+				resolvedCurrency = traderCurrency;
+				currencyMode = currencyCfg.Mode;
+				Print("[AskalMarketHelpers] Resolved currency for trader " + traderName + " => " + resolvedCurrency + " (mode=" + currencyMode + ")");
+				return resolvedCurrency;
+			}
+			else
+			{
+				Print("[AskalMarketHelpers] ERROR: Currency " + traderCurrency + " not defined in MarketConfig for trader " + traderName);
+			}
+		}
+		
+		// PRIORITY 2: VirtualStore AcceptedCurrency
+		AskalVirtualStoreConfig virtualStoreConfig = AskalVirtualStoreSettings.GetConfig();
+		if (virtualStoreConfig)
+		{
+			string virtualCurrency = virtualStoreConfig.GetPrimaryCurrency();
+			if (virtualCurrency && virtualCurrency != "")
+			{
+				// Validate currency exists in MarketConfig
+				AskalCurrencyConfig currencyCfg = marketConfig.GetCurrencyOrNull(virtualCurrency);
+				if (currencyCfg)
+				{
+					resolvedCurrency = virtualCurrency;
+					currencyMode = currencyCfg.Mode;
+					Print("[AskalMarketHelpers] Resolved currency for VirtualStore => " + resolvedCurrency + " (mode=" + currencyMode + ")");
+					return resolvedCurrency;
+				}
+				else
+				{
+					Print("[AskalMarketHelpers] ERROR: Currency " + virtualCurrency + " not defined in MarketConfig for VirtualStore");
+				}
+			}
+		}
+		
+		// PRIORITY 3: MarketConfig default
+		resolvedCurrency = marketConfig.GetDefaultCurrencyId();
+		if (resolvedCurrency && resolvedCurrency != "")
+		{
+			AskalCurrencyConfig currencyCfg = marketConfig.GetCurrencyOrNull(resolvedCurrency);
+			if (currencyCfg)
+				currencyMode = currencyCfg.Mode;
+			Print("[AskalMarketHelpers] Resolved currency using default => " + resolvedCurrency + " (mode=" + currencyMode + ")");
+			return resolvedCurrency;
+		}
+		
+		// FALLBACK: First available currency
+		array<string> allKeys = marketConfig.GetAllCurrencyKeys();
+		if (allKeys.Count() > 0)
+		{
+			resolvedCurrency = allKeys.Get(0);
+			AskalCurrencyConfig currencyCfg = marketConfig.GetCurrencyOrNull(resolvedCurrency);
+			if (currencyCfg)
+				currencyMode = currencyCfg.Mode;
+			Print("[AskalMarketHelpers] Resolved currency using first available => " + resolvedCurrency + " (mode=" + currencyMode + ")");
+			return resolvedCurrency;
+		}
+		
+		// LAST RESORT: Hardcoded default
+		Print("[AskalMarketHelpers] ERROR: No currencies available, using hardcoded default");
+		return AskalMarketConstants.DEFAULT_CURRENCY_ID;
+	}
+	
 	// Call this on player connect/OnStoreLoad to load/create/migrate player config
 	// This should be called from 4_World context (has access to PlayerMeta)
 	static void OnPlayerConnect(string steamId)
