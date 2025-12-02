@@ -434,10 +434,26 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		m_BuyCoefficient = buyCoeff;
 		m_SellCoefficient = sellCoeff;
 		
+		// Resolve currency for virtual store
+		AskalCurrencyConfig resolvedCurrencyCfg = NULL;
+		string resolvedCurrencyId = "";
 		if (!currencyId || currencyId == "")
-			currencyId = "Askal_Money";
-		m_VirtualStoreCurrencyId = currencyId;
-		m_ActiveCurrencyId = currencyId;
+			currencyId = "";
+		if (AskalMarketConfig.ResolveAcceptedCurrency("", currencyId, resolvedCurrencyId, resolvedCurrencyCfg))
+		{
+			m_VirtualStoreCurrencyId = resolvedCurrencyId;
+			m_ActiveCurrencyId = resolvedCurrencyId;
+			Print("[AskalStore] 💰 Currency resolvida para virtual store: " + resolvedCurrencyId);
+		}
+		else
+		{
+			// Fallback
+			if (!currencyId || currencyId == "")
+				currencyId = "Askal_Money";
+			m_VirtualStoreCurrencyId = currencyId;
+			m_ActiveCurrencyId = currencyId;
+			Print("[AskalStore] ⚠️ Usando currency padrão: " + currencyId);
+		}
 		
 		RefreshCurrencyShortname();
 		UpdateTransactionSummary();
@@ -2700,11 +2716,18 @@ protected string m_LastVirtualStoreConfigSignature = "";
 	protected string ResolveCurrencyShortName(string currencyId)
 	{
 		if (!currencyId || currencyId == "")
-			return "";
+		{
+			// Fallback to default
+			AskalMarketConfig config = AskalMarketConfig.GetInstance();
+			if (config)
+				currencyId = config.GetDefaultCurrencyId();
+			if (!currencyId || currencyId == "")
+				return "???";
+		}
 		
 		AskalMarketConfig config = AskalMarketConfig.GetInstance();
 		if (!config)
-			return "";
+			return "???";
 		
 		AskalCurrencyConfig currencyCfg = config.GetCurrencyConfig(currencyId);
 		if (!currencyCfg && config.Currencies && config.Currencies.Contains(currencyId))
@@ -2713,7 +2736,8 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		if (currencyCfg && currencyCfg.ShortName != "")
 			return currencyCfg.ShortName;
 		
-		return "";
+		// Fallback
+		return "???";
 	}
 	
 	protected void SetCurrencyShortNameText(TextWidget widget, string shortName)
@@ -5239,6 +5263,24 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			
 			// Obter SetupItems do helper
 			m_TraderSetupItems = AskalNotificationHelper.GetPendingTraderSetupItems();
+			
+			// Resolve currency for trader
+			AskalCurrencyConfig resolvedCurrencyCfg = NULL;
+			string resolvedCurrencyId = "";
+			if (AskalMarketConfig.ResolveAcceptedCurrency(traderName, "", resolvedCurrencyId, resolvedCurrencyCfg))
+			{
+				m_ActiveCurrencyId = resolvedCurrencyId;
+				Print("[AskalStore] 💰 Currency resolvida para trader " + traderName + ": " + resolvedCurrencyId);
+			}
+			else
+			{
+				// Fallback to default
+				AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
+				if (marketConfig)
+					m_ActiveCurrencyId = marketConfig.GetDefaultCurrencyId();
+				Print("[AskalStore] ⚠️ Usando currency padrão: " + m_ActiveCurrencyId);
+			}
+			RefreshCurrencyShortname();
 			
 			// Atualizar título do menu
 			if (m_HeaderTitleText)

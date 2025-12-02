@@ -29,8 +29,21 @@ class AskalPurchaseService
 			return false;
 		}
 		
-		if (!currencyId || currencyId == "")
-			currencyId = "Askal_Coin";
+		// Resolve balance key from currencyId
+		string balanceKey = AskalPlayerBalance.ResolveBalanceKey(currencyId);
+		if (!balanceKey || balanceKey == "")
+		{
+			Print("[AskalPurchase] ❌ Failed to resolve balance key for currency: " + currencyId);
+			return false;
+		}
+		
+		// Validate currency exists in player balance
+		AskalPlayerData playerData = AskalPlayerBalance.LoadPlayerData(steamId);
+		if (!playerData || !playerData.Balance || !playerData.Balance.Contains(balanceKey))
+		{
+			Print("[AskalPurchase] ❌ Player balance missing currency key: " + balanceKey + " (currencyId: " + currencyId + ")");
+			return false;
+		}
 
 		int authoritativePrice = ComputeItemTotalPrice(itemClass);
 		Print("[AskalPurchase] [DEBUG] Preço calculado para " + itemClass + ": " + authoritativePrice);
@@ -46,8 +59,8 @@ class AskalPurchaseService
 		}
 
 		// Verificar balance
-		int currentBalance = AskalPlayerBalance.GetBalance(steamId, currencyId);
-		Print("[AskalPurchase] [DEBUG] Balance atual: " + currentBalance + " | Preço necessário: " + price);
+		int currentBalance = playerData.Balance.Get(balanceKey);
+		Print("[AskalPurchase] [DEBUG] Balance atual: " + currentBalance + " (" + balanceKey + ") | Preço necessário: " + price);
 		if (currentBalance < price)
 		{
 			Print("[AskalPurchase] âŒ Balance insuficiente: " + currentBalance + " < " + price);
@@ -65,7 +78,7 @@ class AskalPurchaseService
 		AttachDefaultAttachments(createdItem, itemClass);
 		
 		// Remover balance
-		if (!AskalPlayerBalance.RemoveBalance(steamId, price, currencyId))
+		if (!AskalPlayerBalance.RemoveBalance(steamId, price, balanceKey))
 		{
 			Print("[AskalPurchase] âŒ Erro ao remover balance");
 			// Rollback: deletar item criado
@@ -73,7 +86,7 @@ class AskalPurchaseService
 			return false;
 		}
 		
-		int newBalance = AskalPlayerBalance.GetBalance(steamId, currencyId);
+		int newBalance = AskalPlayerBalance.GetBalance(steamId, balanceKey);
 	Print("[AskalPurchase] âœ… Compra realizada com sucesso!");
 	Print("[AskalPurchase]   Item criado: " + itemClass);
 	Print("[AskalPurchase]   Balance atualizado: " + newBalance);
@@ -111,8 +124,21 @@ class AskalPurchaseService
 			return false;
 		}
 		
-		if (!currencyId || currencyId == "")
-			currencyId = "Askal_Coin";
+		// Resolve balance key from currencyId
+		string balanceKey = AskalPlayerBalance.ResolveBalanceKey(currencyId);
+		if (!balanceKey || balanceKey == "")
+		{
+			Print("[AskalPurchase] ❌ Failed to resolve balance key for currency: " + currencyId);
+			return false;
+		}
+		
+		// Validate currency exists in player balance
+		AskalPlayerData playerData = AskalPlayerBalance.LoadPlayerData(steamId);
+		if (!playerData || !playerData.Balance || !playerData.Balance.Contains(balanceKey))
+		{
+			Print("[AskalPurchase] ❌ Player balance missing currency key: " + balanceKey + " (currencyId: " + currencyId + ")");
+			return false;
+		}
 
 		int authoritativePrice = ComputeItemTotalPrice(itemClass);
 		Print("[AskalPurchase] [DEBUG] Preço calculado para " + itemClass + ": " + authoritativePrice);
@@ -128,8 +154,8 @@ class AskalPurchaseService
 		}
 
 		// Verificar balance
-		int currentBalance = AskalPlayerBalance.GetBalance(steamId, currencyId);
-		Print("[AskalPurchase] [DEBUG] Balance atual: " + currentBalance + " | Preço necessário: " + price);
+		int currentBalance = playerData.Balance.Get(balanceKey);
+		Print("[AskalPurchase] [DEBUG] Balance atual: " + currentBalance + " (" + balanceKey + ") | Preço necessário: " + price);
 		if (currentBalance < price)
 		{
 			Print("[AskalPurchase] âŒ Balance insuficiente: " + currentBalance + " < " + price);
@@ -151,14 +177,14 @@ class AskalPurchaseService
 		AttachDefaultAttachments(createdItem, itemClass);
 		
 		// Remover balance
-		if (!AskalPlayerBalance.RemoveBalance(steamId, price, currencyId))
+		if (!AskalPlayerBalance.RemoveBalance(steamId, price, balanceKey))
 		{
 			Print("[AskalPurchase] âŒ Erro ao remover balance");
 			GetGame().ObjectDelete(createdItem);
 			return false;
 		}
 		
-		int newBalance = AskalPlayerBalance.GetBalance(steamId, currencyId);
+		int newBalance = AskalPlayerBalance.GetBalance(steamId, balanceKey);
 		Print("[AskalPurchase] âœ… Compra com quantidade customizada realizada!");
 		Print("[AskalPurchase]   Item: " + itemClass + " | Qty: " + itemQuantity + " | Content: " + contentType);
 		Print("[AskalPurchase]   Balance atualizado: " + newBalance);

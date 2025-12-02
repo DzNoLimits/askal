@@ -60,8 +60,17 @@ class AskalPurchaseModule
 			return;
 		}
 		
-		if (!currencyId || currencyId == "")
-			currencyId = "Askal_Coin";
+		// Resolve accepted currency (trader -> virtual store -> default)
+		AskalCurrencyConfig resolvedCurrencyCfg = NULL;
+		string resolvedCurrencyId = "";
+		if (!AskalMarketConfig.ResolveAcceptedCurrency(traderName, "", resolvedCurrencyId, resolvedCurrencyCfg))
+		{
+			Print("[AskalPurchase] [ERRO] Falha ao resolver currency para trader: " + traderName);
+			SendPurchaseResponse(sender, false, itemClass, 0);
+			return;
+		}
+		
+		currencyId = resolvedCurrencyId;
 		
 		// VALIDAÇÃO: Verificar se item pode ser comprado neste trader
 		if (traderName && traderName != "")

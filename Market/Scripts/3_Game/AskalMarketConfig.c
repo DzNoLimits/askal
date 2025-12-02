@@ -19,6 +19,7 @@ class AskalCurrencyConfig
 {
 	string WalletId;
 	string ShortName;
+	int Mode; // 0=disabled, 1=physical (item-based), 2=virtual
 	int StartCurrency;
 	ref array<ref AskalCurrencyValueConfig> Values;
 	
@@ -26,6 +27,7 @@ class AskalCurrencyConfig
 	{
 		WalletId = "";
 		ShortName = "";
+		Mode = 0;
 		StartCurrency = 0;
 		Values = new array<ref AskalCurrencyValueConfig>();
 	}
@@ -37,6 +39,7 @@ class AskalMarketConfigFile
 	string Description;
 	string WarnText;
 	int DelayTimeMS;
+	string DefaultCurrencyId;
 	ref map<string, ref AskalCurrencyConfig> Currencies;
 	ref map<string, float> Liquids;
 	ref map<string, string> LiquidNames;
@@ -45,6 +48,7 @@ class AskalMarketConfigFile
 	{
 		WarnText = "";
 		DelayTimeMS = 500;
+		DefaultCurrencyId = "";
 		Currencies = new map<string, ref AskalCurrencyConfig>();
 		Liquids = new map<string, float>();
 		LiquidNames = new map<string, string>();
@@ -59,6 +63,7 @@ class AskalMarketConfig
 	protected ref map<int, float> m_LiquidPrices; // liquidType -> price per mL
 	protected ref map<int, string> m_LiquidNames; // liquidType -> display
 	ref map<string, ref AskalCurrencyConfig> Currencies; // walletId -> config
+	string DefaultCurrencyId;
 	string WarnText;
 	int DelayTimeMS;
 	
@@ -130,6 +135,9 @@ class AskalMarketConfig
 		DelayTimeMS = fileData.DelayTimeMS;
 		if (DelayTimeMS <= 0)
 			DelayTimeMS = 500; // Fallback
+		DefaultCurrencyId = fileData.DefaultCurrencyId;
+		if (!DefaultCurrencyId || DefaultCurrencyId == "")
+			DefaultCurrencyId = "Askal_Money";
 		
 		if (fileData.Liquids)
 		{
@@ -170,6 +178,9 @@ class AskalMarketConfig
 			}
 		}
 		
+		// Log currency count
+		Print("[AskalMarket] ✅ MarketConfig loaded with " + Currencies.Count() + " currencies");
+		
 		// Garante pelo menos uma moeda padrão
 		if (Currencies.Count() == 0)
 		{
@@ -204,6 +215,7 @@ class AskalMarketConfig
 		AskalCurrencyConfig defaultCurrency = new AskalCurrencyConfig();
 		defaultCurrency.WalletId = "Askal_DefaultWallet";
 		defaultCurrency.ShortName = "AKC";
+		defaultCurrency.Mode = 1;
 		defaultCurrency.StartCurrency = 0;
 		
 		AskalCurrencyValueConfig defaultValue = new AskalCurrencyValueConfig();
@@ -264,5 +276,72 @@ class AskalMarketConfig
 		if (Currencies.Find(currencyId, config))
 			return config;
 		return NULL;
+	}
+	
+	string GetDefaultCurrencyId()
+	{
+		return DefaultCurrencyId;
+	}
+	
+	// Resolve accepted currency for trader or virtual store
+	// Returns currencyId and currency config via out params
+	// Returns true if valid currency found, false otherwise
+	static bool ResolveAcceptedCurrency(string traderName, string virtualStoreCurrency, out string currencyId, out AskalCurrencyConfig currencyCfg)
+	{
+		currencyId = "";
+		currencyCfg = NULL;
+		
+		AskalMarketConfig config = GetInstance();
+		if (!config)
+		{
+			Print("[AskalMarket] ❌ MarketConfig not loaded");
+			return false;
+		}
+		
+		// Priority 1: Check trader AcceptedCurrency
+		if (traderName && traderName != "")
+		{
+			AskalTraderConfig traderConfig = AskalTraderConfig.LoadByTraderName(traderName);
+			if (traderConfig && traderConfig.AcceptedCurrency != "")
+			{
+				currencyId = traderConfig.AcceptedCurrency;
+				Print("[AskalMarket] 💰 Resolved currency for trader " + traderName + ": " + currencyId);
+			}
+		}
+		
+		// Priority 2: Check virtual store AcceptedCurrency
+		if ((!currencyId || currencyId == "") && virtualStoreCurrency && virtualStoreCurrency != "")
+		{
+			currencyId = virtualStoreCurrency;
+			Print("[AskalMarket] 💰 Resolved currency for virtual store: " + currencyId);
+		}
+		
+		// Priority 3: Fallback to DefaultCurrencyId
+		if (!currencyId || currencyId == "")
+		{
+			currencyId = config.GetDefaultCurrencyId();
+			Print("[AskalMarket] 💰 Using default currency: " + currencyId);
+		}
+		
+		// Validate currency exists and is enabled
+		if (currencyId && currencyId != "")
+		{
+			currencyCfg = config.GetCurrencyConfig(currencyId);
+			if (!currencyCfg)
+			{
+				Print("[AskalMarket] ❌ Currency not found in MarketConfig: " + currencyId);
+				return false;
+			}
+			
+			if (currencyCfg.Mode == 0)
+			{
+				Print("[AskalMarket] ❌ Currency is disabled (Mode=0): " + currencyId);
+				return false;
+			}
+			
+			return true;
+		}
+		
+		return false;
 	}
 }

@@ -79,6 +79,7 @@ class AskalPlayerBalance
 
 		string filePath = GetPlayerFilePath(steamId);
 		AskalPlayerData playerData = new AskalPlayerData();
+		bool isNewFile = false;
 
 		if (FileExist(filePath))
 		{
@@ -89,6 +90,9 @@ class AskalPlayerBalance
 					playerData.Balance = new map<string, int>;
 				if (!playerData.Permissions)
 					playerData.Permissions = new map<string, int>;
+				
+				// Patch balance with missing currencies
+				PatchPlayerBalance(steamId, playerData);
 				return playerData;
 			}
 			Print("[AskalBalance] ⚠️ Erro ao carregar dados do player, recriando: " + steamId);
@@ -96,46 +100,113 @@ class AskalPlayerBalance
 		else
 		{
 			Print("[AskalBalance] ⚠️ Arquivo do player não encontrado, criando novo: " + steamId);
+			isNewFile = true;
 		}
 
 		playerData = CreateDefaultPlayerData();
+		if (isNewFile)
+		{
+			// Set FirstLogin to current UTC time
+			playerData.FirstLogin = GetDateString();
+			Print("[AskalBalance] 📝 Player JSON criado: " + steamId + " | FirstLogin: " + playerData.FirstLogin);
+		}
 		SavePlayerData(steamId, playerData);
 		return playerData;
+	}
+	
+	// Patch player balance to ensure all currencies from MarketConfig are present
+	static void PatchPlayerBalance(string steamId, AskalPlayerData playerData)
+	{
+		if (!steamId || steamId == "" || !playerData)
+			return;
+		
+		EnsureMarketConfigLoaded();
+		if (!s_MarketConfig || !s_MarketConfig.Currencies)
+			return;
+		
+		if (!playerData.Balance)
+			playerData.Balance = new map<string, int>;
+		
+		bool balancePatched = false;
+		array<string> addedCurrencies = new array<string>();
+		
+		// For each currency in MarketConfig, ensure it exists in player Balance
+		for (int currencyIdx = 0; currencyIdx < s_MarketConfig.Currencies.Count(); currencyIdx++)
+		{
+			string currencyId = s_MarketConfig.Currencies.GetKey(currencyIdx);
+			AskalCurrencyConfig currencyCfg = s_MarketConfig.Currencies.GetElement(currencyIdx);
+			if (!currencyCfg)
+				continue;
+			
+			// For virtual currencies (Mode=2), use currencyId directly
+			// For physical currencies (Mode=1), use the first Value.Name if available
+			string balanceKey = currencyId;
+			if (currencyCfg.Mode == 1 && currencyCfg.Values && currencyCfg.Values.Count() > 0)
+			{
+				AskalCurrencyValueConfig firstValue = currencyCfg.Values.Get(0);
+				if (firstValue && firstValue.Name != "")
+					balanceKey = firstValue.Name;
+			}
+			
+			// Only add if it doesn't exist (preserve existing balance)
+			if (!playerData.Balance.Contains(balanceKey))
+			{
+				int startAmount = currencyCfg.StartCurrency;
+				playerData.Balance.Set(balanceKey, startAmount);
+				addedCurrencies.Insert(balanceKey);
+				balancePatched = true;
+				Print("[AskalBalance] 💰 Currency adicionada ao balance: " + balanceKey + " = " + startAmount);
+			}
+		}
+		
+		if (balancePatched)
+		{
+			SavePlayerData(steamId, playerData);
+			Print("[AskalBalance] ✅ Balance atualizado para player " + steamId + " | " + addedCurrencies.Count() + " currencies adicionadas");
+		}
+	}
+	
+	// Get current UTC date as ISO string
+	static string GetDateString()
+	{
+		int year, month, day, hour, minute, second;
+		GetYearMonthDay(year, month, day);
+		GetHourMinuteSecond(hour, minute, second);
+		return string.Format("%1-%2-%3T%4:%5:%6Z", year.ToString(), month.ToString(), day.ToString(), hour.ToString(), minute.ToString(), second.ToString());
 	}
 
 	static AskalPlayerData CreateDefaultPlayerData()
 	{
 		AskalPlayerData playerData = new AskalPlayerData();
-		playerData.FirstLogin = "0";
+		playerData.FirstLogin = "";
 		EnsureMarketConfigLoaded();
 
 		if (s_MarketConfig && s_MarketConfig.Currencies)
 		{
 			for (int currencyIdx = 0; currencyIdx < s_MarketConfig.Currencies.Count(); currencyIdx++)
 			{
-				string walletId = s_MarketConfig.Currencies.GetKey(currencyIdx);
+				string currencyId = s_MarketConfig.Currencies.GetKey(currencyIdx);
 				AskalCurrencyConfig currencyConfig = s_MarketConfig.Currencies.GetElement(currencyIdx);
 				if (!currencyConfig)
 					continue;
 
 				int startAmount = currencyConfig.StartCurrency;
-				if (startAmount <= 0)
-					continue;
+				
+				// For virtual currencies (Mode=2), use currencyId directly
+				// For physical currencies (Mode=1), use the first Value.Name if available
+				string balanceKey = currencyId;
+				if (currencyConfig.Mode == 1 && currencyConfig.Values && currencyConfig.Values.Count() > 0)
+				{
+					AskalCurrencyValueConfig firstValue = currencyConfig.Values.Get(0);
+					if (firstValue && firstValue.Name != "")
+						balanceKey = firstValue.Name;
+				}
 
-				if (!currencyConfig.Values || currencyConfig.Values.Count() == 0)
-					continue;
-
-				AskalCurrencyValueConfig defaultValue = currencyConfig.Values.Get(0);
-				if (!defaultValue || !defaultValue.Name || defaultValue.Name == "")
-					continue;
-
-				playerData.Balance.Set(defaultValue.Name, startAmount);
-				Print("[AskalBalance] 💰 StartCurrency aplicado: " + defaultValue.Name + " = " + startAmount);
+				playerData.Balance.Set(balanceKey, startAmount);
+				Print("[AskalBalance] 💰 StartCurrency aplicado: " + balanceKey + " = " + startAmount);
 			}
 		}
 
-		if (!playerData.Balance.Contains("Askal_Coin"))
-			playerData.Balance.Set("Askal_Coin", 0);
 		return playerData;
 	}
 	
@@ -232,6 +303,37 @@ class AskalPlayerBalance
 	{
 		int balance = GetBalance(steamId, currency);
 		return balance >= amount;
+	}
+	
+	// Resolve balance key from currencyId
+	// For virtual currencies (Mode=2), returns currencyId
+	// For physical currencies (Mode=1), returns first Value.Name
+	static string ResolveBalanceKey(string currencyId)
+	{
+		if (!currencyId || currencyId == "")
+			return "";
+		
+		EnsureMarketConfigLoaded();
+		if (!s_MarketConfig)
+			return currencyId; // Fallback
+		
+		AskalCurrencyConfig currencyCfg = s_MarketConfig.GetCurrencyConfig(currencyId);
+		if (!currencyCfg)
+			return currencyId; // Fallback
+		
+		// For virtual currencies, use currencyId directly
+		if (currencyCfg.Mode == 2)
+			return currencyId;
+		
+		// For physical currencies, use first Value.Name
+		if (currencyCfg.Mode == 1 && currencyCfg.Values && currencyCfg.Values.Count() > 0)
+		{
+			AskalCurrencyValueConfig firstValue = currencyCfg.Values.Get(0);
+			if (firstValue && firstValue.Name != "")
+				return firstValue.Name;
+		}
+		
+		return currencyId; // Fallback
 	}
 	
 	// Limpar cache (útil para reload)

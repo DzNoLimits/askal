@@ -29,6 +29,9 @@ class AskalCoreModule : CF_ModuleGame
 			
 			// Inicializar sistema de balance (apenas servidor)
 			AskalPlayerBalance.Init();
+			
+			// Ensure MarketConfig is loaded early
+			AskalMarketConfig.GetInstance();
 		}
 		else
 		{
