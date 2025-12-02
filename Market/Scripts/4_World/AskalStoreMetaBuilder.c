@@ -77,7 +77,7 @@ class AskalStoreMetaBuilder
 		if (storeMeta.currency.shortName == "")
 			storeMeta.currency.shortName = acceptedCurrency;
 		
-		Print("[AskalStoreMetaBuilder] Using currency " + acceptedCurrency + " for trader " + traderConfig.TraderName);
+		Print("[AskalStoreMetaBuilder] Using currency " + acceptedCurrency + " (ShortName=" + storeMeta.currency.shortName + ") for store " + traderConfig.TraderName);
 		
 		// Permissions (default: both buy and sell allowed for traders)
 		storeMeta.permissions = new AskalStorePermissions();
@@ -151,7 +151,7 @@ class AskalStoreMetaBuilder
 		if (storeMeta.currency.shortName == "")
 			storeMeta.currency.shortName = acceptedCurrency;
 		
-		Print("[AskalStoreMetaBuilder] Using currency " + acceptedCurrency + " for VirtualStore");
+		Print("[AskalStoreMetaBuilder] Using currency " + acceptedCurrency + " (ShortName=" + storeMeta.currency.shortName + ") for store VirtualStore");
 		
 		// Permissions
 		storeMeta.permissions = new AskalStorePermissions();

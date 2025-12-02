@@ -660,21 +660,18 @@ class AskalPlayerConfigLoader
                 if (!seedCurrencyConfig)
                     continue;
                 
-                // Determine seed value based on Mode
-                int seedValue = 0;
+                // Only add currencies with Mode != 0 (respect Mode flag)
                 int seedCurrencyMode = seedCurrencyConfig.Mode;
-                // If Mode is missing (defaults to 1 in constructor), treat as Mode == 1
                 if (seedCurrencyMode == AskalMarketConstants.CURRENCY_MODE_DISABLED)
                 {
+                    // Skip disabled currencies - do not add to Balance
+                    continue;
+                }
+                
+                // Mode == 1 or Mode == 2: add to Balance with StartCurrency
+                int seedValue = seedCurrencyConfig.StartCurrency;
+                if (seedValue < 0)
                     seedValue = 0;
-                }
-                else
-                {
-                    // Mode == 1 or Mode == 2: use StartCurrency if present, else 0
-                    seedValue = seedCurrencyConfig.StartCurrency;
-                    if (seedValue < 0)
-                        seedValue = 0;
-                }
                 
                 playerData.Balance.Set(seedCurrencyId, seedValue);
                 
@@ -741,20 +738,18 @@ class AskalPlayerConfigLoader
                 needsMigration = true;
                 int migrateSeedValue = 0;
                 
-                // Determine seed value based on Mode
+                // Only add currencies with Mode != 0 (respect Mode flag)
                 int migrateCurrencyMode = migrateCurrencyConfig.Mode;
-                // If Mode is missing (defaults to 1 in constructor), treat as Mode == 1
                 if (migrateCurrencyMode == AskalMarketConstants.CURRENCY_MODE_DISABLED)
                 {
+                    // Skip disabled currencies - do not add to Balance
+                    continue;
+                }
+                
+                // Mode == 1 or Mode == 2: add to Balance with StartCurrency
+                int migrateSeedValue = migrateCurrencyConfig.StartCurrency;
+                if (migrateSeedValue < 0)
                     migrateSeedValue = 0;
-                }
-                else
-                {
-                    // Mode == 1 or Mode == 2: use StartCurrency if present, else 0
-                    migrateSeedValue = migrateCurrencyConfig.StartCurrency;
-                    if (migrateSeedValue < 0)
-                        migrateSeedValue = 0;
-                }
                 
                 // Only insert missing currency - never overwrite
                 playerData.Balance.Set(migrateCurrencyId, migrateSeedValue);
@@ -773,7 +768,7 @@ class AskalPlayerConfigLoader
                     addedList += ", ";
                 addedList += addedCurrencies.Get(i);
             }
-            Print("[AskalJsonLoader] Player config created/updated for: " + steamId + " (currencies added: " + addedList + ")");
+            Print("[AskalJsonLoader] Added missing currencies for " + steamId + ": [" + addedList + "]");
         }
         
         // If migration needed, save with backup

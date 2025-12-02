@@ -5111,7 +5111,19 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			if (!traderName || traderName == "")
 				traderName = "";
 			
-			Param8<string, string, int, string, float, int, int, string> params = new Param8<string, string, int, string, float, int, int, string>(steamId, itemClass, totalPrice, currencyId, itemQuantity, quantityType, contentType, traderName);
+			// Use currency from storeMeta if available, otherwise use resolved currency
+			string purchaseCurrencyId = currencyId;
+			if (AskalNotificationHelper.HasStoreMeta())
+			{
+				string storeMetaCurrency = AskalNotificationHelper.GetStoreMetaCurrencyId();
+				if (storeMetaCurrency && storeMetaCurrency != "")
+				{
+					purchaseCurrencyId = storeMetaCurrency;
+					Print("[AskalStore] Using currency from storeMeta: " + purchaseCurrencyId);
+				}
+			}
+			
+			Param8<string, string, int, string, float, int, int, string> params = new Param8<string, string, int, string, float, int, int, string>(steamId, itemClass, totalPrice, purchaseCurrencyId, itemQuantity, quantityType, contentType, traderName);
 			GetRPCManager().SendRPC("AskalMarketModule", "PurchaseItemRequest", params, true, identity, NULL);
 			Print("[AskalStore] 📤 RPC de compra enviado | ItemQty: " + itemQuantity + " | QtyType: " + m_SliderQuantityType + " | Content: " + itemContent + " | Trader: " + traderName);
 		}
@@ -5964,21 +5976,30 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			string storeMetaCurrencyShortName = AskalNotificationHelper.GetStoreMetaCurrencyShortName();
 			bool storeMetaCanBuy = AskalNotificationHelper.GetStoreMetaCanBuy();
 			bool storeMetaCanSell = AskalNotificationHelper.GetStoreMetaCanSell();
+			bool storeMetaBatchMode = AskalNotificationHelper.GetStoreMetaBatchMode();
 			
-			Print("[AskalStore] 🏪 OnShow: StoreMeta recebido - currency=" + storeMetaCurrencyId + " (" + storeMetaCurrencyShortName + ") canBuy=" + storeMetaCanBuy + " canSell=" + storeMetaCanSell);
+			Print("[AskalStore] 🏪 OnShow: StoreMeta recebido - currency=" + storeMetaCurrencyId + " (" + storeMetaCurrencyShortName + ") canBuy=" + storeMetaCanBuy + " canSell=" + storeMetaCanSell + " batchMode=" + storeMetaBatchMode);
 			
-			// Use storeMeta currency info
+			// Use storeMeta currency info (authoritative - do not resolve on client)
 			m_ActiveCurrencyId = storeMetaCurrencyId;
 			m_CurrentCurrencyShortName = storeMetaCurrencyShortName;
 			
-			// Update currency shortname widgets
+			// Update currency shortname widgets (all three widgets with same shortname)
 			if (m_CurrentCurrencyShortName && m_CurrentCurrencyShortName != "")
 			{
-				UpdateCurrencyShortnameWidgets(m_CurrentCurrencyShortName, storeMetaCanBuy && storeMetaCanSell, storeMetaCanBuy && !storeMetaCanSell, storeMetaCanSell && !storeMetaCanBuy);
+				// Write to all three widgets directly
+				if (m_BuyCurrencyShortDual)
+					SetCurrencyShortNameText(m_BuyCurrencyShortDual, m_CurrentCurrencyShortName);
+				if (m_SellCurrencyShortDual)
+					SetCurrencyShortNameText(m_SellCurrencyShortDual, m_CurrentCurrencyShortName);
+				if (m_BuyCurrencyShortWide)
+					SetCurrencyShortNameText(m_BuyCurrencyShortWide, m_CurrentCurrencyShortName);
+				if (m_SellCurrencyShortWide)
+					SetCurrencyShortNameText(m_SellCurrencyShortWide, m_CurrentCurrencyShortName);
 			}
 			
-			// Update button visibility based on permissions
-			UpdateActionButtonsFromStoreMeta(storeMetaCanBuy, storeMetaCanSell);
+			// Update button visibility based on permissions (centralized, called once)
+			UpdateActionButtonsFromStoreMeta(storeMetaCanBuy, storeMetaCanSell, storeMetaBatchMode);
 			
 			// Clear storeMeta after use
 			AskalNotificationHelper.ClearStoreMeta();
@@ -6348,13 +6369,16 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		Print("[AskalStore] UI RefreshButtonsForItem called: item=" + itemClassName + " canBuy=" + canBuy + " canSell=" + canSell + " isBatch=" + isBatchMode + " currency=" + currencyId + " shortName=" + shortName);
 	}
 	
-	// Update button visibility from storeMeta permissions
-	protected void UpdateActionButtonsFromStoreMeta(bool canBuy, bool canSell)
+	// Update button visibility from storeMeta permissions (centralized, called once on store open)
+	protected void UpdateActionButtonsFromStoreMeta(bool canBuy, bool canSell, bool batchMode = false)
 	{
 		// Update button visibility based on storeMeta permissions
-		bool showDual = canBuy && canSell;
-		bool showBuySolo = canBuy && !canSell;
-		bool showSellSolo = canSell && !canBuy;
+		// If batchMode, show batch-specific buttons; otherwise show single/batch buttons based on permissions
+		bool showDual = canBuy && canSell && !batchMode;
+		bool showBuySolo = canBuy && !canSell && !batchMode;
+		bool showSellSolo = canSell && !canBuy && !batchMode;
+		bool showBatchBuy = canBuy && batchMode;
+		bool showBatchSell = canSell && batchMode;
 		bool showSinglePanel = (!showDual) && (showBuySolo || showSellSolo);
 		
 		// Update button visibility

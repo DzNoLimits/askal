@@ -196,8 +196,16 @@ class AskalPurchaseModule
 		AskalCurrencyConfig currencyCfg = marketConfig.GetCurrencyOrNull(currencyId);
 		if (!currencyCfg)
 		{
-			Print("[AskalPurchase] ❌ Currency not found: " + currencyId);
+			Print("[AskalPurchase] Purchase rejected: missing/disabled currency " + currencyId + " for player " + steamId);
 			SendPurchaseResponse(sender, false, itemClass, 0, "Currency not available. Please reconnect.");
+			return;
+		}
+		
+		// Check currency Mode (0=disabled)
+		if (currencyCfg.Mode == AskalMarketConstants.CURRENCY_MODE_DISABLED)
+		{
+			Print("[AskalPurchase] Purchase rejected: missing/disabled currency " + currencyId + " (Mode=0) for player " + steamId);
+			SendPurchaseResponse(sender, false, itemClass, 0, "Currency disabled. Please use a different currency.");
 			return;
 		}
 		
