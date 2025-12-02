@@ -128,41 +128,9 @@ class ActionOpenAskalTraderMenu: ActionInteractBase
 		
 		Print("[AskalTrader] 📦 SetupItems: " + setupKeys.Count() + " entradas");
 		
-		// Resolve currency using helper (validates against MarketConfig)
-		AskalTraderConfig traderConfig = trader.GetConfig();
-		AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
-		string acceptedCurrency = AskalMarketHelpers.ResolveCurrencyForTrader(traderConfig, marketConfig);
-		
-		// Get currency shortname
-		string currencyShortName = "";
-		if (marketConfig && acceptedCurrency != "")
-		{
-			AskalCurrencyConfig currencyCfg = marketConfig.GetCurrencyOrNull(acceptedCurrency);
-			if (currencyCfg && currencyCfg.ShortName != "")
-			{
-				currencyShortName = currencyCfg.ShortName;
-				// Remove @ prefix if present
-				if (currencyShortName.Length() > 0 && currencyShortName.Substring(0, 1) == "@")
-					currencyShortName = currencyShortName.Substring(1, currencyShortName.Length() - 1);
-			}
-		}
-		
-		// Fallback to currencyId if shortname not found
-		if (currencyShortName == "")
-			currencyShortName = acceptedCurrency;
-		
-		Print("[AskalTrader] 💰 AcceptedCurrency: " + acceptedCurrency + " (shortname: " + currencyShortName + ")");
-		
-		// Build and send storeMeta (new RPC)
-		AskalStoreMeta storeMeta = AskalStoreMetaBuilder.BuildStoreMetaForTrader(trader, player);
-		if (storeMeta)
-		{
-			AskalStoreMetaBuilder.SendStoreMetaToClient(player, storeMeta);
-		}
-		
-		// Also send legacy RPC for backwards compatibility
-		Param5<string, ref array<string>, ref array<int>, string, string> params = new Param5<string, ref array<string>, ref array<int>, string, string>(trader.GetTraderName(), setupKeys, setupValues, acceptedCurrency, currencyShortName);
-		GetRPCManager().SendRPC("AskalMarketModule", "OpenTraderMenu", params, true, player.GetIdentity(), NULL);
+		// Enviar RPC para o cliente abrir o menu (nome + SetupItems)
+		Param3<string, ref array<string>, ref array<int>> params = new Param3<string, ref array<string>, ref array<int>>(trader.GetTraderName(), setupKeys, setupValues);
+		GetRPCManager().SendRPC("AskalCoreModule", "OpenTraderMenu", params, true, player.GetIdentity(), NULL);
 	}
 }
 

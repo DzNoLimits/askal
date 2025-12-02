@@ -74,14 +74,14 @@ class ItemData {
         if (jsonItem.BasePrice > 0)
             itemPrice = jsonItem.BasePrice;
         if (itemPrice <= 0)
-            itemPrice = AskalCoreDefaults.DEFAULT_BUY_PRICE;
+            itemPrice = AskalMarketDefaults.DEFAULT_BUY_PRICE;
         
         itemData.Price = itemPrice;
         itemData.SellPercent = defaultSellPercent;
         if (jsonItem.SellPercent > 0)
             itemData.SellPercent = jsonItem.SellPercent;
         if (itemData.SellPercent <= 0)
-            itemData.SellPercent = AskalCoreDefaults.DEFAULT_SELL_PERCENT;
+            itemData.SellPercent = AskalMarketDefaults.DEFAULT_SELL_PERCENT;
         itemData.variants = jsonItem.Variants;
         if (jsonItem.Attachments)
         {
@@ -130,10 +130,10 @@ class AskalCategory {
         
         // Fallback apenas se não foi definido (não deveria acontecer)
         if (category.BasePrice <= 0)
-            category.BasePrice = AskalCoreDefaults.DEFAULT_BUY_PRICE;
+            category.BasePrice = AskalMarketDefaults.DEFAULT_BUY_PRICE;
         
         if (category.SellPercent <= 0)
-            category.SellPercent = AskalCoreDefaults.DEFAULT_SELL_PERCENT;
+            category.SellPercent = AskalMarketDefaults.DEFAULT_SELL_PERCENT;
         
         // Fallback para DisplayName (usa o ID removendo prefixo CAT_)
         if (!category.DisplayName || category.DisplayName == "")
@@ -199,7 +199,7 @@ class AskalCategory {
                             ItemData variantData = new ItemData();
                     variantData.Price = varItemData.Price; // Variantes herdam o preço se não tiverem declaração própria
                     if (variantData.Price <= 0)
-                        variantData.Price = AskalCoreDefaults.DEFAULT_BUY_PRICE;
+                        variantData.Price = AskalMarketDefaults.DEFAULT_BUY_PRICE;
                     variantData.SellPercent = varItemData.SellPercent;
                     if (variantData.SellPercent <= 0)
                         variantData.SellPercent = category.SellPercent;
@@ -252,8 +252,8 @@ class Dataset {
         if (!dataset.Icon || dataset.Icon == "")
             dataset.Icon = "set:dayz_inventory image:missing";
         
-        // Preço padrão do dataset não é mais usado - categorias têm BasePrice obrigatório
-        dataset.DefaultPrice = 0;
+        // Preço padrão do dataset (removido - agora usa apenas BasePrice das categorias)
+        dataset.DefaultPrice = 0; // Não usado mais, categorias têm BasePrice obrigatório
         
         // Processa cada categoria
         if (jsonDataset.Categories)
@@ -318,15 +318,6 @@ class AskalDatabase
     
     // Armazena datasets por ID (ex: "DS_Firearms")
     static ref map<string, ref Dataset> m_Datasets = new map<string, ref Dataset>();
-    
-    // Ordem de carregamento dos datasets (preserva ordem de registro)
-    static ref array<string> m_DatasetOrder = new array<string>();
-    
-    // Índice reverso para busca rápida de itens: itemName -> ItemData (O(1) lookup)
-    static ref map<string, ref ItemData> m_ItemIndex = new map<string, ref ItemData>();
-    
-    // Índice case-insensitive: itemName.toLowerCase() -> ItemData
-    static ref map<string, ref ItemData> m_ItemIndexLower = new map<string, ref ItemData>();
 
     // getters / setters simples (sem I/O)
     static void SetDatabasePath(string p)
@@ -343,53 +334,11 @@ class AskalDatabase
     // REGISTRO DE DATASETS
     // ========================================
     
-    // Registra um dataset hierárquico (preserva ordem de registro)
+    // Registra um dataset hierárquico
     static void RegisterDataset(Dataset dataset)
     {
         if (!dataset || !dataset.DatasetID || dataset.DatasetID == "") return;
-        
-        // Adicionar à ordem se ainda não estiver
-        if (!m_DatasetOrder)
-            m_DatasetOrder = new array<string>();
-        
-        if (m_DatasetOrder.Find(dataset.DatasetID) == -1)
-        {
-            m_DatasetOrder.Insert(dataset.DatasetID);
-        }
-        
         m_Datasets.Set(dataset.DatasetID, dataset);
-        
-        // Atualizar índice reverso de itens
-        UpdateItemIndex(dataset);
-    }
-    
-    // Atualiza índice reverso quando um dataset é registrado
-    static void UpdateItemIndex(Dataset dataset)
-    {
-        if (!dataset || !dataset.Categories) return;
-        
-        for (int c = 0; c < dataset.Categories.Count(); c++)
-        {
-            AskalCategory category = dataset.Categories.GetElement(c);
-            if (!category || !category.Items) continue;
-            
-            for (int i = 0; i < category.Items.Count(); i++)
-            {
-                string itemKey = category.Items.GetKey(i);
-                ItemData itemData = category.Items.GetElement(i);
-                
-                if (itemKey && itemData)
-                {
-                    // Índice case-sensitive
-                    m_ItemIndex.Set(itemKey, itemData);
-                    
-                    // Índice case-insensitive
-                    string keyLower = itemKey;
-                    keyLower.ToLower();
-                    m_ItemIndexLower.Set(keyLower, itemData);
-                }
-            }
-        }
     }
 
     // ========================================
@@ -405,35 +354,17 @@ class AskalDatabase
         return null;
     }
     
-    // Obtém todos os datasets (na ordem de registro)
+    // Obtém todos os datasets
     static array<string> GetAllDatasetIDs()
     {
         array<string> ids = new array<string>();
         if (!m_Datasets) return ids;
         
-        string id;
-        
-        // Usar ordem de registro se disponível
-        if (m_DatasetOrder && m_DatasetOrder.Count() > 0)
+        for (int i = 0; i < m_Datasets.Count(); i++)
         {
-            for (int i = 0; i < m_DatasetOrder.Count(); i++)
-            {
-                id = m_DatasetOrder.Get(i);
-                if (id && id != "" && m_Datasets.Contains(id))
-                {
-                    ids.Insert(id);
-                }
-            }
-        }
-        else
-        {
-            // Fallback: ordem do map (caso DatasetOrder não esteja disponível)
-            for (int j = 0; j < m_Datasets.Count(); j++)
-            {
-                id = m_Datasets.GetKey(j);
-                if (id && id != "") ids.Insert(id);
-            }
-        }
+            string id = m_Datasets.GetKey(i);
+            if (id && id != "") ids.Insert(id);
+    }
 
         return ids;
     }
@@ -452,36 +383,17 @@ class AskalDatabase
         return null;
     }
 
-    // Obtém todas as categorias de um dataset (na ordem definida por CategoryOrder)
+    // Obtém todas as categorias de um dataset
     static array<string> GetCategoryIDs(string datasetID)
     {
         array<string> ids = new array<string>();
         Dataset dataset = GetDataset(datasetID);
         if (!dataset || !dataset.Categories) return ids;
         
-        int i;
-        string id;
-        
-        // Usar CategoryOrder se disponível
-        if (dataset.CategoryOrder && dataset.CategoryOrder.Count() > 0)
+        for (int i = 0; i < dataset.Categories.Count(); i++)
         {
-            for (i = 0; i < dataset.CategoryOrder.Count(); i++)
-            {
-                id = dataset.CategoryOrder.Get(i);
-                if (id && id != "" && dataset.Categories.Contains(id))
-                {
-                    ids.Insert(id);
-                }
-            }
-        }
-        else
-        {
-            // Fallback: ordem do map (caso CategoryOrder não esteja disponível)
-            for (i = 0; i < dataset.Categories.Count(); i++)
-            {
-                id = dataset.Categories.GetKey(i);
-                if (id && id != "") ids.Insert(id);
-            }
+            string id = dataset.Categories.GetKey(i);
+            if (id && id != "") ids.Insert(id);
         }
         
         return ids;
@@ -509,49 +421,87 @@ class AskalDatabase
     // ACESSO A ITENS
     // ========================================
     
-    // Obtém preço de um item (busca otimizada usando índice reverso)
+    // Obtém preço de um item (busca em todos os datasets/categorias)
     static int GetPrice(string itemName)
     {
-        if (!itemName || itemName == "") return -1;
+        if (!m_Datasets) return -1;
         
-        // Busca rápida usando índice reverso (O(1))
-        if (m_ItemIndex && m_ItemIndex.Contains(itemName))
+        for (int d = 0; d < m_Datasets.Count(); d++)
         {
-            ItemData itemData = m_ItemIndex.Get(itemName);
-            if (itemData)
-                return itemData.Price;
+            Dataset dataset = m_Datasets.GetElement(d);
+            if (!dataset || !dataset.Categories) continue;
+            
+            // Busca em cada categoria do dataset
+            for (int c = 0; c < dataset.Categories.Count(); c++)
+        {
+                AskalCategory category = dataset.Categories.GetElement(c);
+                if (!category || !category.Items) continue;
+                
+                if (category.Items.Contains(itemName))
+                    return category.Items.Get(itemName).Price;
+        }
         }
         
         return -1;
     }
 
-    // Obtém ItemData de um item (case-sensitive, busca otimizada)
+    // Obtém ItemData de um item (case-sensitive)
     static ItemData GetItem(string itemName)
     {
-        if (!itemName || itemName == "") return null;
+        if (!m_Datasets) return null;
         
-        // Busca rápida usando índice reverso (O(1))
-        if (m_ItemIndex && m_ItemIndex.Contains(itemName))
-            return m_ItemIndex.Get(itemName);
+        for (int d = 0; d < m_Datasets.Count(); d++)
+        {
+            Dataset dataset = m_Datasets.GetElement(d);
+            if (!dataset || !dataset.Categories) continue;
+            
+            for (int c = 0; c < dataset.Categories.Count(); c++)
+        {
+                AskalCategory category = dataset.Categories.GetElement(c);
+                if (!category || !category.Items) continue;
+                
+                if (category.Items.Contains(itemName))
+                    return category.Items.Get(itemName);
+            }
+        }
         
         return null;
     }
     
-    // Obtém ItemData de um item (case-insensitive, busca otimizada)
+    // Obtém ItemData de um item (case-insensitive)
     static ItemData GetItemCaseInsensitive(string itemName)
     {
-        if (!itemName || itemName == "") return null;
+        if (!m_Datasets || !itemName || itemName == "") return null;
         
-        // Primeiro tenta busca case-sensitive (mais rápida)
-        if (m_ItemIndex && m_ItemIndex.Contains(itemName))
-            return m_ItemIndex.Get(itemName);
-        
-        // Busca case-insensitive usando índice lowercase (O(1))
         string searchLower = itemName;
         searchLower.ToLower();
         
-        if (m_ItemIndexLower && m_ItemIndexLower.Contains(searchLower))
-            return m_ItemIndexLower.Get(searchLower);
+        for (int d = 0; d < m_Datasets.Count(); d++)
+        {
+            Dataset dataset = m_Datasets.GetElement(d);
+            if (!dataset || !dataset.Categories) continue;
+            
+            for (int c = 0; c < dataset.Categories.Count(); c++)
+            {
+                AskalCategory category = dataset.Categories.GetElement(c);
+                if (!category || !category.Items) continue;
+                
+                // Primeiro tenta busca exata (mais rápida)
+                if (category.Items.Contains(itemName))
+                    return category.Items.Get(itemName);
+                
+                // Se não encontrou, busca case-insensitive
+                for (int i = 0; i < category.Items.Count(); i++)
+                {
+                    string key = category.Items.GetKey(i);
+                    string keyLower = key;
+                    keyLower.ToLower();
+                    
+                    if (keyLower == searchLower)
+                        return category.Items.Get(key);
+                }
+            }
+        }
         
         return null;
     }

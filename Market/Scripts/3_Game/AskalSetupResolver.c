@@ -263,8 +263,7 @@ class AskalSetupResolver
         Print("[AskalSetupResolver] ✅ Setup encontrado em: " + path);
         
         AskalSetupConfig setup = new AskalSetupConfig();
-        // JsonFileLoader is a forward-declared type - use AskalJsonLoader instead
-        AskalJsonLoader<AskalSetupConfig>.LoadFromFile(path, setup, false);
+        JsonFileLoader<AskalSetupConfig>.JsonLoadFile(path, setup);
         
         if (setup)
         {

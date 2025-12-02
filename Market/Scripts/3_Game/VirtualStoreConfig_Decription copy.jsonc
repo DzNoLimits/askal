@@ -1,0 +1,28 @@
+{
+	"Version": "1.0.0", // Version of the config file - Used to check if the config file is compatible with the script
+	"LogsLevel": 1, // Level of the logs - 0: Disable All Logs, 1: Basic Log, 2: Debug Log, 3: Detailed Log
+	"VirtualStoreMode": 1, // Mode of the virtual store - 0: Disabled, 1: Enabled
+	"AcceptedCurrency": { //Currencies accepted in the trader - Used to buy and sell items (Physical money or Volatile money)
+		"Askal_Money": 2 //Currency ID : Transaction Mode (1: Use currency In inventory, 2: Use currency In wallet)
+	},
+	"SetupItems": {
+		// "ALL":3 //Set all items In dataset to Everyone who acess this trader can buy and sell
+		"DS_Firearms": 1, // Dataset ID, Category ID Or Item Classname: ItemMode (-1: Disable Item, 0: Everyone can see only, 1: Everyone can buy only, 2: Everyone can sell only, 3: Everyone can buy and sell, (Future) 4: Only premium active status can buy, 5: Only premium active status can sell, 6: Only premium active status can buy and sell)
+		"DS_Ammunition": 1, //Set to Everyone Buy Only
+		"DS_Attachments": 2, // Set to Everyone Sell Only
+		"DS_Bags": 3, // Set to Everyone Buy and Sell
+		"CAT_Ammunition": 2, // Set to Everyone Sell Only - Overrides the Dataset ItemMode for this Category - If the Category is not set, the Dataset ItemMode will be used
+		"M249": 0,// Set to Everyone See Only -
+		"M249_Mag": 0,// Set to Everyone See Only
+		"AWM_Test": -1// Set to Disabled
+
+		/* 
+		Setup Items Priority Mode:
+		1- Item Classsname
+		2 - Category (Containns itens classnames)
+		3 - Dataset (Containns categories)
+		*/
+	}
+}
+
+

@@ -2,15 +2,6 @@
 // ESTRUTURAS DE DADOS PARA O DATABASE ASKAL
 // ==========================================
 
-/// Enum para tipos de quantidade de itens
-enum AskalItemQuantityType
-{
-	NONE = 0,        // Item normal (sem quantidade variável)
-	MAGAZINE = 1,    // Carregador de arma (munição)
-	STACKABLE = 2,   // Itens empilháveis (pregos, balas, etc)
-	QUANTIFIABLE = 3 // Itens com quantidade fracionária (bandagens, meat, water, etc)
-}
-
 // Representa um item individual no database
 class AskalItemData
 {
@@ -80,7 +71,7 @@ class AskalItemData
 		}
 	}
 	
-	// Verifica se item está disponível na loja/mercado
+	// Verifica se item está disponível na loja
 	bool IsAvailableInStore()
 	{
 		if (m_Flags.Contains("Market"))
@@ -88,14 +79,20 @@ class AskalItemData
 		return false;
 	}
 	
+	// Verifica se item está disponível no mercado
+	bool IsAvailableInMarket()
+	{
+		if (m_Flags.Contains("Market"))
+			return m_Flags.Get("Market");
+		return false;
+	}
+	
 	// Preço de venda (50% do preço de compra)
-	// NOTA: Este método usa valor hardcoded. Considere usar configuração do sistema.
 	int GetSellPrice()
 	{
-		const int SELL_PERCENT = 50; // 50% do preço de compra
-		int sellPrice = m_Price * SELL_PERCENT / 100;
+		int sellPrice = m_Price / 2;
 		if (sellPrice < 1)
-			sellPrice = 1; // Garantir mínimo de 1 para evitar preço zero
+			sellPrice = 1;
 		return sellPrice;
 	}
 	
@@ -125,4 +122,141 @@ class AskalItemData
 		Print("[AskalStore] ========================");
 	}
 }
+
+// Representa uma categoria de items
+class AskalCategoryData
+{
+	protected string m_CategoryName;
+	protected string m_DisplayName;
+	protected ref map<string, ref AskalItemData> m_Items;
+	
+	void AskalCategoryData()
+	{
+		m_Items = new map<string, ref AskalItemData>;
+	}
+	
+	string GetCategoryName() { return m_CategoryName; }
+	string GetDisplayName() 
+	{ 
+		if (m_DisplayName == "" || !m_DisplayName)
+			return m_CategoryName;
+		return m_DisplayName; 
+	}
+	map<string, ref AskalItemData> GetItems() { return m_Items; }
+	
+	void SetCategoryName(string name) { m_CategoryName = name; }
+	void SetDisplayName(string name) { m_DisplayName = name; }
+	
+	// Alias para compatibilidade
+	void SetName(string name) { m_CategoryName = name; }
+	
+	void AddItem(string className, AskalItemData itemData)
+	{
+		m_Items.Set(className, itemData);
+	}
+	
+	void DebugPrint()
+	{
+		Print("[AskalCategoryData] Name: " + m_CategoryName);
+		Print("[AskalCategoryData] DisplayName: " + m_DisplayName);
+		Print("[AskalCategoryData] Items: " + m_Items.Count());
+	}
+	
+	array<ref AskalItemData> GetStoreItems()
+	{
+		array<ref AskalItemData> storeItems = new array<ref AskalItemData>;
+		
+		for (int i = 0; i < m_Items.Count(); i++)
+		{
+			AskalItemData item = m_Items.GetElement(i);
+			if (item && item.IsAvailableInStore())
+			{
+				storeItems.Insert(item);
+			}
+		}
+		
+		return storeItems;
+	}
+}
+
+// Representa um dataset completo (um arquivo JSON)
+class AskalDatasetData
+{
+	protected string m_DatasetName;
+	protected string m_DisplayName;
+	protected string m_Description;
+	protected string m_FilePath;
+    protected string m_Icon;
+	protected ref map<string, ref AskalCategoryData> m_Categories;
+	
+	void AskalDatasetData()
+	{
+		m_Categories = new map<string, ref AskalCategoryData>;
+        m_Icon = "set:dayz_inventory image:missing";
+	}
+	
+	string GetDatasetName() { return m_DatasetName; }
+	string GetDisplayName() 
+	{ 
+		if (m_DisplayName == "" || !m_DisplayName)
+			return m_DatasetName;
+		return m_DisplayName; 
+	}
+	string GetDescription() { return m_Description; }
+	string GetFilePath() { return m_FilePath; }
+    string GetIcon()
+    {
+        if (!m_Icon || m_Icon == "")
+            return "set:dayz_inventory image:missing";
+        return m_Icon;
+    }
+	map<string, ref AskalCategoryData> GetCategories() { return m_Categories; }
+	
+	void SetDatasetName(string name) { m_DatasetName = name; }
+	void SetDisplayName(string name) { m_DisplayName = name; }
+	void SetDescription(string desc) { m_Description = desc; }
+	void SetFilePath(string path) { m_FilePath = path; }
+    void SetIcon(string path) { m_Icon = path; }
+	
+	void AddCategory(string categoryName, AskalCategoryData categoryData)
+	{
+		m_Categories.Set(categoryName, categoryData);
+	}
+	
+	AskalCategoryData GetCategory(string categoryName)
+	{
+		if (m_Categories.Contains(categoryName))
+			return m_Categories.Get(categoryName);
+		return null;
+	}
+	
+	// Retorna todos os items do dataset disponíveis na loja
+	array<ref AskalItemData> GetAllStoreItems()
+	{
+		array<ref AskalItemData> allItems = new array<ref AskalItemData>;
+		
+		for (int i = 0; i < m_Categories.Count(); i++)
+		{
+			AskalCategoryData category = m_Categories.GetElement(i);
+			if (category)
+			{
+				array<ref AskalItemData> categoryItems = category.GetStoreItems();
+				for (int j = 0; j < categoryItems.Count(); j++)
+				{
+					allItems.Insert(categoryItems.Get(j));
+				}
+			}
+		}
+		
+		return allItems;
+	}
+	
+	void DebugPrint()
+	{
+		Print("[AskalDatasetData] Name: " + m_DatasetName);
+		Print("[AskalDatasetData] DisplayName: " + m_DisplayName);
+		Print("[AskalDatasetData] Categories: " + m_Categories.Count());
+	}
+}
+
 

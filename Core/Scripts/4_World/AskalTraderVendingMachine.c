@@ -31,7 +31,7 @@ class AskalTraderVendingMachine extends House
 	// Carregar configuração do trader
 	void LoadTraderConfig(string fileName)
 	{
-		if (!AskalMarketHelpers.IsServerSafe())
+		if (!GetGame().IsServer())
 			return;
 		
 		// Carregar configuração

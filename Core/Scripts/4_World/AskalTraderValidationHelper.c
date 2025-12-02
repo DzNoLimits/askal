@@ -32,7 +32,7 @@ class AskalTraderValidationHelper
 	}
 	
 	// Obter modo de um dataset
-	static int GetDatasetMode(map<string, int> setupItems, string datasetID)
+	static int GetDatasetMode(ref map<string, int> setupItems, string datasetID)
 	{
 		if (!setupItems || setupItems.Count() == 0)
 			return 3; // Sem filtros, tudo disponível
@@ -64,7 +64,7 @@ class AskalTraderValidationHelper
 	}
 	
 	// Obter modo de uma categoria
-	static int GetCategoryMode(map<string, int> setupItems, string datasetID, string categoryID)
+	static int GetCategoryMode(ref map<string, int> setupItems, string datasetID, string categoryID)
 	{
 		if (!setupItems || setupItems.Count() == 0)
 			return 3; // Sem filtros, tudo disponível
@@ -96,7 +96,7 @@ class AskalTraderValidationHelper
 	}
 	
 	// Obter modo de um item (respeitando hierarquia: Item > Category > Dataset > ALL)
-	static int GetItemMode(map<string, int> setupItems, string datasetID, string categoryID, string itemClassName)
+	static int GetItemMode(ref map<string, int> setupItems, string datasetID, string categoryID, string itemClassName)
 	{
 		if (!setupItems || setupItems.Count() == 0)
 			return 3; // Sem filtros, tudo disponível

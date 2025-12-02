@@ -8,10 +8,10 @@ class AskalSellModule
 	
 	void AskalSellModule()
 	{
-		if (AskalMarketHelpers.IsServerSafe())
+		if (GetGame().IsServer())
 		{
-			GetRPCManager().AddRPC("AskalMarketModule", "SellItemRequest", this, SingleplayerExecutionType.Server);
-			GetRPCManager().AddRPC("AskalMarketModule", "RequestInventoryHealth", this, SingleplayerExecutionType.Server);
+			GetRPCManager().AddRPC("AskalSellModule", "SellItemRequest", this, SingleplayerExecutionType.Server);
+			GetRPCManager().AddRPC("AskalCoreModule", "RequestInventoryHealth", this, SingleplayerExecutionType.Server);
 		}
 	}
 	
@@ -60,12 +60,8 @@ class AskalSellModule
 				steamId = sender.GetId();
 		}
 		
-		// Resolve currency ID using config default if not set
 		if (!currencyId || currencyId == "")
-		{
-			AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
-			currencyId = marketConfig.GetDefaultCurrencyId();
-		}
+			currencyId = "Askal_Coin";
 		
 		// VALIDAÇÃO: Verificar se item pode ser vendido neste trader
 		if (traderName && traderName != "" && traderName != "Trader_Default")
@@ -100,7 +96,15 @@ class AskalSellModule
 		}
 		Print("[AskalSell] [RPC] Item encontrado: " + itemToSell.GetType());
 		
-		// Processa venda (verificação de cargo é feita dentro de ProcessSell)
+		// Verificar se item tem cargo ANTES de processar venda
+		if (AskalSellService.HasCargoItemsRecursive(itemToSell))
+		{
+			Print("[AskalSell] [ERRO] Item tem cargo - venda bloqueada");
+			SendSellResponse(sender, false, "Item ocupado, esvazie para vender", itemClassName, 0);
+			return;
+		}
+		
+		// Processa venda
 		Print("[AskalSell] [RPC] Processando venda...");
 		int sellPrice = 0;
 		bool success = AskalSellService.ProcessSell(sender, steamId, itemToSell, currencyId, transactionMode, sellPrice);
@@ -112,12 +116,16 @@ class AskalSellModule
 		}
 		else
 		{
-			Print("[AskalSell] [ERRO] Falha ao processar venda");
-			// ProcessSell já valida cargo e retorna mensagem apropriada via outPrice=0
-			string errorMessage = "Falha ao processar venda";
-			if (sellPrice == 0)
-				errorMessage = "Item ocupado, esvazie para vender";
-			SendSellResponse(sender, false, errorMessage, itemClassName, 0);
+			Print("[AskalSell] [ERRO] Falha ao processar venda (ver ProcessSell)");
+			// Verificar se foi por causa de cargo (pode ter sido detectado no ProcessSell também)
+			if (AskalSellService.HasCargoItemsRecursive(itemToSell))
+			{
+				SendSellResponse(sender, false, "Item ocupado, esvazie para vender", itemClassName, 0);
+			}
+			else
+			{
+				SendSellResponse(sender, false, "Falha ao processar venda", itemClassName, 0);
+			}
 		}
 	}
 	
@@ -186,7 +194,7 @@ class AskalSellModule
 		}
 		
 		Param4<bool, string, string, int> params = new Param4<bool, string, string, int>(success, message, itemClass, price);
-		GetRPCManager().SendRPC("AskalMarketModule", "SellItemResponse", params, true, identity, NULL);
+		GetRPCManager().SendRPC("AskalCoreModule", "SellItemResponse", params, true, identity, NULL);
 	}
 	
 	// RPC Handler: Servidor processa requisição de health dos itens do inventário
@@ -244,7 +252,7 @@ class AskalSellModule
 	}
 	
 	// Enviar resposta de health para o cliente
-	void SendInventoryHealthResponse(PlayerIdentity identity, map<string, float> healthMap)
+	void SendInventoryHealthResponse(PlayerIdentity identity, ref map<string, float> healthMap)
 	{
 		if (!identity || !healthMap)
 			return;
@@ -260,7 +268,7 @@ class AskalSellModule
 		}
 		
 		Param1<ref array<ref Param2<string, float>>> params = new Param1<ref array<ref Param2<string, float>>>(healthArray);
-		GetRPCManager().SendRPC("AskalMarketModule", "InventoryHealthResponse", params, true, identity, NULL);
+		GetRPCManager().SendRPC("AskalCoreModule", "InventoryHealthResponse", params, true, identity, NULL);
 		
 		Print("[AskalSell] [RPC] InventoryHealthResponse enviado com " + healthArray.Count() + " itens");
 	}

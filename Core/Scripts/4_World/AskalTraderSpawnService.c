@@ -16,7 +16,7 @@ class AskalTraderSpawnService
 	// Spawnar todos os traders
 	static void SpawnAllTraders()
 	{
-		if (!AskalMarketHelpers.IsServerSafe())
+		if (!GetGame().IsServer())
 		{
 			Print("[AskalTrader] ⚠️ SpawnAllTraders só pode ser chamado no servidor");
 			return;
@@ -112,7 +112,7 @@ class AskalTraderSpawnService
 	// Spawnar um trader específico (apenas objetos estáticos)
 	static bool SpawnTrader(string fileName)
 	{
-		if (!AskalMarketHelpers.IsServerSafe())
+		if (!GetGame().IsServer())
 			return false;
 		
 		// Carregar configuração

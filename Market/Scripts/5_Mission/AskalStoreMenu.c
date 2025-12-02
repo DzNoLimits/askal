@@ -1,7 +1,15 @@
 ﻿// ========================================
 // ENUMS - DEFINIDOS FORA DA CLASSE
 // ========================================
-// NOTA: AskalItemQuantityType está definido em AskalDatabaseStructures.c
+
+/// Enum para tipos de quantidade de itens
+enum AskalItemQuantityType
+{
+	NONE = 0,        // Item normal (sem quantidade variável)
+	MAGAZINE = 1,    // Carregador de arma (munição)
+	STACKABLE = 2,   // Itens empilháveis (pregos, balas, etc)
+	QUANTIFIABLE = 3 // Itens com quantidade fracionária (bandagens, meat, water, etc)
+}
 
 // Informações auxiliares para cards de inventário no modo de venda em lote
 class AskalInventoryDisplayInfo
@@ -20,10 +28,7 @@ class AskalInventoryDisplayInfo
 class AskalStoreMenu extends UIScriptedMenu
 {
 	protected static const string DEFAULT_DATASET_ICON = "set:dayz_inventory image:missing";
-	// Preço padrão hardcoded usado como fallback quando item não tem preço configurado
-	// Valor escolhido arbitrariamente para evitar preço zero (que causaria problemas)
 	protected static const int DEFAULT_HARDCODED_BUY_PRICE = 123;
-	// Percentual padrão de venda (50% = item vendido por metade do preço de compra)
 	protected static const int DEFAULT_HARDCODED_SELL_PERCENT = 50;
 	protected static AskalStoreMenu s_Instance;
 	
@@ -215,9 +220,6 @@ class AskalStoreMenu extends UIScriptedMenu
 	protected int m_CurrentActionLayout = 0; // 0=hidden, 1=buy wide, 2=sell wide, 3=dual
 	protected bool m_VirtualStoreConfigLoaded = false;
 	protected string m_VirtualStoreCurrencyId = "";
-	
-	// Currency shortname cache (populated from MarketConfig)
-	protected static ref map<string, string> s_CurrencyShortNameCache;
 	protected ref map<string, int> m_VirtualStoreSetupModes;
 	protected float m_BuyCoefficient = 1.0;
 	protected float m_SellCoefficient = 1.0;
@@ -409,13 +411,6 @@ protected string m_LastVirtualStoreConfigSignature = "";
 	
 	protected void ApplyVirtualStoreConfig(string currencyId, float buyCoeff, float sellCoeff, array<string> setupKeys, array<int> setupValues)
 	{
-		// Clear trader name when VirtualStore is configured
-		m_CurrentTraderName = "";
-		
-		// Ensure cache is populated
-		if (!s_CurrencyShortNameCache || s_CurrencyShortNameCache.Count() == 0)
-			PopulateCurrencyShortNameCache();
-		
 		if (!m_VirtualStoreSetupModes)
 			m_VirtualStoreSetupModes = new map<string, int>();
 		else
@@ -428,22 +423,8 @@ protected string m_LastVirtualStoreConfigSignature = "";
 				string key = setupKeys.Get(i);
 				int mode = setupValues.Get(i);
 				if (key && key != "")
-				{
 					m_VirtualStoreSetupModes.Set(key, mode);
-					Print("[AskalStore] ✅ VirtualStore SetupItem adicionado: " + key + " = " + mode);
-				}
 			}
-			Print("[AskalStore] ✅ VirtualStore SetupItems total: " + m_VirtualStoreSetupModes.Count() + " entradas");
-		}
-		else
-		{
-			string setupKeysStr = "NULL";
-			string setupValuesStr = "NULL";
-			if (setupKeys)
-				setupKeysStr = setupKeys.Count().ToString();
-			if (setupValues)
-				setupValuesStr = setupValues.Count().ToString();
-			Print("[AskalStore] ⚠️ VirtualStore SetupItems vazio ou inválido! setupKeys=" + setupKeysStr + " setupValues=" + setupValuesStr);
 		}
 		
 		if (buyCoeff <= 0)
@@ -458,58 +439,8 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		m_VirtualStoreCurrencyId = currencyId;
 		m_ActiveCurrencyId = currencyId;
 		
-		// Resolve shortname for VirtualStore
-		AskalMarketConfig config = AskalMarketConfig.GetInstance();
-		if (config && currencyId != "")
-		{
-			AskalCurrencyConfig currencyCfg = config.GetCurrencyOrNull(currencyId);
-			if (currencyCfg && currencyCfg.ShortName != "")
-			{
-				m_CurrentCurrencyShortName = currencyCfg.ShortName;
-				if (m_CurrentCurrencyShortName.Length() > 0 && m_CurrentCurrencyShortName.Substring(0, 1) == "@")
-					m_CurrentCurrencyShortName = m_CurrentCurrencyShortName.Substring(1, m_CurrentCurrencyShortName.Length() - 1);
-			}
-		}
-		if (m_CurrentCurrencyShortName == "")
-			m_CurrentCurrencyShortName = currencyId;
-		
-		Print("[AskalStore] 💰 VirtualStore configurado: Currency=" + currencyId + " (shortname: " + m_CurrentCurrencyShortName + ") | m_CurrentTraderName limpo");
-		
 		RefreshCurrencyShortname();
 		UpdateTransactionSummary();
-	}
-	
-	// Populate currency shortname cache from MarketConfig
-	protected static void PopulateCurrencyShortNameCache()
-	{
-		if (!s_CurrencyShortNameCache)
-			s_CurrencyShortNameCache = new map<string, string>();
-		else
-			s_CurrencyShortNameCache.Clear();
-		
-		AskalMarketConfig config = AskalMarketConfig.GetInstance();
-		if (!config || !config.Currencies)
-		{
-			Print("[AskalStore] WARN: MarketConfig not available for cache population");
-			return;
-		}
-		
-		for (int i = 0; i < config.Currencies.Count(); i++)
-		{
-			string currencyId = config.Currencies.GetKey(i);
-			AskalCurrencyConfig currencyCfg = config.Currencies.GetElement(i);
-			if (currencyCfg && currencyCfg.ShortName && currencyCfg.ShortName != "")
-			{
-				string shortName = currencyCfg.ShortName;
-				// Sanitize @ prefix
-				if (shortName.Length() > 0 && shortName.Substring(0, 1) == "@")
-					shortName = shortName.Substring(1, shortName.Length() - 1);
-				s_CurrencyShortNameCache.Set(currencyId, shortName);
-				Print("[AskalStore] ✅ Cached shortname: " + currencyId + " -> " + shortName);
-			}
-		}
-		
-		Print("[AskalStore] ✅ Currency shortname cache populated: " + s_CurrencyShortNameCache.Count() + " entries");
 	}
 	
 	override Widget Init()
@@ -517,9 +448,6 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		Print("[AskalStore] ========================================");
 		Print("[AskalStore] Init() - VERSÃO DINÂMICA (lê do Core Database)");
 		Print("[AskalStore] ========================================");
-		
-		// Populate currency shortname cache
-		PopulateCurrencyShortNameCache();
 		
 		// Carregar layout principal (NOVO LAYOUT)
 		m_RootWidget = GetGame().GetWorkspace().CreateWidgets("askal/market/gui/new_layouts/askal_store_window.layout");
@@ -1007,245 +935,118 @@ protected string m_LastVirtualStoreConfigSignature = "";
 	
 	int GetDatasetMode(string datasetID)
 	{
-		// Declarar normalizedID uma única vez no início da função
+		if (!m_TraderSetupItems || m_TraderSetupItems.Count() == 0)
+		{
+			// Sem filtros, tudo disponível (modo 3 = buy and sell)
+			return 3;
+		}
+		
+		// Normalizar ID
 		string normalizedID = NormalizeDatasetID(datasetID);
 		
-		// PRIORIDADE 1: Se há trader ativo, usar m_TraderSetupItems
-		if (m_CurrentTraderName && m_CurrentTraderName != "" && m_TraderSetupItems && m_TraderSetupItems.Count() > 0)
+		// Verificar se há "ALL": 3 (todos os datasets disponíveis)
+		int allMode = -1;
+		if (m_TraderSetupItems.Contains("ALL"))
 		{
-			// Verificar se há "ALL": 3 (todos os datasets disponíveis)
-			int allMode = -1;
-			if (m_TraderSetupItems.Contains("ALL"))
-			{
-				allMode = m_TraderSetupItems.Get("ALL");
-			}
-			
-			// Verificar se há configuração específica para este dataset (DS_*)
-			if (m_TraderSetupItems.Contains(normalizedID))
-			{
-				return m_TraderSetupItems.Get(normalizedID);
-			}
-			
-			// Se "ALL" está definido, usar esse modo
-			if (allMode >= 0)
-			{
-				return allMode;
-			}
-			
-			// Sem configuração, não disponível
-			return -1;
+			allMode = m_TraderSetupItems.Get("ALL");
 		}
 		
-		// PRIORIDADE 2: Se é VirtualStore, usar m_VirtualStoreSetupModes
-		if ((!m_CurrentTraderName || m_CurrentTraderName == "") && m_VirtualStoreSetupModes && m_VirtualStoreSetupModes.Count() > 0)
+		// Verificar se há configuração específica para este dataset (DS_*)
+		if (m_TraderSetupItems.Contains(normalizedID))
 		{
-			string dsKey = "DS_" + normalizedID;
-			
-			int foundMode = -1;
-			// Verificar dataset específico (DS_*)
-			if (m_VirtualStoreSetupModes.Find(dsKey, foundMode))
-			{
-				return foundMode;
-			}
-			
-			// Verificar "ALL"
-			if (m_VirtualStoreSetupModes.Find("ALL", foundMode))
-			{
-				return foundMode;
-			}
-			
-			// Sem configuração, não disponível
-			return -1;
+			return m_TraderSetupItems.Get(normalizedID);
 		}
 		
-		// FALLBACK: Sem configuração
-		if (!m_CurrentTraderName || m_CurrentTraderName == "")
+		// Se "ALL" está definido, usar esse modo
+		if (allMode >= 0)
 		{
-			return -1; // VirtualStore sem config = nada disponível
+			return allMode;
 		}
-		else
-		{
-			return 3; // Trader sem config = tudo disponível (compatibilidade)
-		}
+		
+		// Sem configuração, não disponível
+		return -1;
 	}
 	
 	// Verificar se uma categoria está disponível e retornar o modo
 	int GetCategoryMode(string datasetID, string categoryID)
 	{
-		// Declarar variáveis uma única vez no início da função
+		if (!m_TraderSetupItems || m_TraderSetupItems.Count() == 0)
+		{
+			return 3; // Sem filtros, tudo disponível
+		}
+		
+		// Normalizar IDs
 		string normalizedDatasetID = NormalizeDatasetID(datasetID);
 		string normalizedCategoryID = NormalizeCategoryID(categoryID);
-		int datasetMode = -1;
-		int foundMode = -1;
 		
-		// PRIORIDADE 1: Se há trader ativo, usar m_TraderSetupItems
-		if (m_CurrentTraderName && m_CurrentTraderName != "" && m_TraderSetupItems && m_TraderSetupItems.Count() > 0)
+		// Verificar categoria específica (CAT_*)
+		if (m_TraderSetupItems.Contains(normalizedCategoryID))
 		{
-			// Verificar categoria específica (CAT_*)
-			if (m_TraderSetupItems.Contains(normalizedCategoryID))
-			{
-				return m_TraderSetupItems.Get(normalizedCategoryID);
-			}
-			
-			// Verificar dataset (DS_*)
-			datasetMode = GetDatasetMode(normalizedDatasetID);
-			if (datasetMode >= 0)
-			{
-				return datasetMode;
-			}
-			
-			// Verificar "ALL"
-			if (m_TraderSetupItems.Contains("ALL"))
-			{
-				return m_TraderSetupItems.Get("ALL");
-			}
-			
-			return -1;
+			return m_TraderSetupItems.Get(normalizedCategoryID);
 		}
 		
-		// PRIORIDADE 2: Se é VirtualStore, usar m_VirtualStoreSetupModes
-		if ((!m_CurrentTraderName || m_CurrentTraderName == "") && m_VirtualStoreSetupModes && m_VirtualStoreSetupModes.Count() > 0)
+		// Verificar dataset (DS_*)
+		int datasetMode = GetDatasetMode(normalizedDatasetID);
+		if (datasetMode >= 0)
 		{
-			string catKey = "CAT_" + normalizedCategoryID;
-			
-			// Verificar categoria específica (CAT_*)
-			if (m_VirtualStoreSetupModes.Find(catKey, foundMode))
-			{
-				return foundMode;
-			}
-			
-			// Verificar dataset (DS_*)
-			datasetMode = GetDatasetMode(datasetID);
-			if (datasetMode >= 0)
-			{
-				return datasetMode;
-			}
-			
-			// Verificar "ALL"
-			if (m_VirtualStoreSetupModes.Find("ALL", foundMode))
-			{
-				return foundMode;
-			}
-			
-			return -1;
+			return datasetMode;
 		}
 		
-		// FALLBACK: Sem configuração
-		if (!m_CurrentTraderName || m_CurrentTraderName == "")
+		// Verificar "ALL"
+		if (m_TraderSetupItems.Contains("ALL"))
 		{
-			return -1; // VirtualStore sem config = nada disponível
+			return m_TraderSetupItems.Get("ALL");
 		}
-		else
-		{
-			return 3; // Trader sem config = tudo disponível (compatibilidade)
-		}
+		
+		return -1;
 	}
 	
 	// Verificar se um item está disponível e retornar o modo
 	int GetItemMode(string datasetID, string categoryID, string itemClassName)
 	{
-		// Declarar variáveis uma única vez no início da função
+		if (!m_TraderSetupItems || m_TraderSetupItems.Count() == 0)
+		{
+			return 3; // Sem filtros, tudo disponível
+		}
+		
+		// Normalizar IDs
 		string normalizedDatasetID = NormalizeDatasetID(datasetID);
 		string normalizedCategoryID = NormalizeCategoryID(categoryID);
-		int foundMode = -1;
-		int categoryMode = -1;
-		int datasetMode = -1;
 		
-		// PRIORIDADE 1: Se há trader ativo, usar m_TraderSetupItems
-		if (m_CurrentTraderName && m_CurrentTraderName != "" && m_TraderSetupItems && m_TraderSetupItems.Count() > 0)
+		// Verificar item específico (className exato) - PRIORIDADE 1
+		if (m_TraderSetupItems.Contains(itemClassName))
 		{
-			// Verificar item específico (className exato) - PRIORIDADE 1
-			if (m_TraderSetupItems.Contains(itemClassName))
-			{
-				int itemMode = m_TraderSetupItems.Get(itemClassName);
-				Print("[AskalStore] 🔍 GetItemMode (TRADER): Item específico encontrado - " + itemClassName + " = " + itemMode);
-				return itemMode;
-			}
-			
-			// Verificar categoria (CAT_*) - PRIORIDADE 2
-			categoryMode = GetCategoryMode(normalizedDatasetID, normalizedCategoryID);
-			if (categoryMode >= 0)
-			{
-				Print("[AskalStore] 🔍 GetItemMode (TRADER): Categoria encontrada - " + normalizedCategoryID + " = " + categoryMode);
-				return categoryMode;
-			}
-			
-			// Verificar dataset (DS_*) - PRIORIDADE 3
-			datasetMode = GetDatasetMode(normalizedDatasetID);
-			if (datasetMode >= 0)
-			{
-				Print("[AskalStore] 🔍 GetItemMode (TRADER): Dataset encontrado - " + normalizedDatasetID + " = " + datasetMode);
-				return datasetMode;
-			}
-			
-			// Verificar "ALL" - PRIORIDADE 4
-			if (m_TraderSetupItems.Contains("ALL"))
-			{
-				int allMode = m_TraderSetupItems.Get("ALL");
-				Print("[AskalStore] 🔍 GetItemMode (TRADER): ALL encontrado = " + allMode);
-				return allMode;
-			}
-			
-			Print("[AskalStore] 🔍 GetItemMode (TRADER): Nenhuma configuração encontrada para " + itemClassName + " (DS: " + normalizedDatasetID + ", CAT: " + normalizedCategoryID + ")");
-			return -1;
+			int itemMode = m_TraderSetupItems.Get(itemClassName);
+			Print("[AskalStore] 🔍 GetItemMode: Item específico encontrado - " + itemClassName + " = " + itemMode);
+			return itemMode;
 		}
 		
-		// PRIORIDADE 2: Se é VirtualStore (sem trader ativo), usar m_VirtualStoreSetupModes
-		if (!m_CurrentTraderName || m_CurrentTraderName == "")
+		// Verificar categoria (CAT_*) - PRIORIDADE 2
+		int categoryMode = GetCategoryMode(normalizedDatasetID, normalizedCategoryID);
+		if (categoryMode >= 0)
 		{
-			if (!m_VirtualStoreSetupModes || m_VirtualStoreSetupModes.Count() == 0)
-			{
-				Print("[AskalStore] ⚠️ GetItemMode (VIRTUALSTORE): m_VirtualStoreSetupModes está vazio! Retornando -1 (disabled)");
-				return -1; // VirtualStore sem config = nada disponível
-			}
-			
-			Print("[AskalStore] 🔍 GetItemMode (VIRTUALSTORE): Verificando item=" + itemClassName + " | m_VirtualStoreSetupModes tem " + m_VirtualStoreSetupModes.Count() + " entradas");
-			
-			// Verificar item específico (className exato) - PRIORIDADE 1
-			if (m_VirtualStoreSetupModes.Find(itemClassName, foundMode))
-			{
-				Print("[AskalStore] ✅ GetItemMode (VIRTUALSTORE): Item específico encontrado - " + itemClassName + " = " + foundMode);
-				return foundMode;
-			}
-			
-			// Verificar dataset (DS_*) - PRIORIDADE 2
-			string dsKey = "DS_" + normalizedDatasetID;
-			if (m_VirtualStoreSetupModes.Find(dsKey, foundMode))
-			{
-				Print("[AskalStore] ✅ GetItemMode (VIRTUALSTORE): Dataset encontrado - " + dsKey + " = " + foundMode);
-				return foundMode;
-			}
-			
-			// Verificar categoria (CAT_*) - PRIORIDADE 3
-			string catKey = "CAT_" + normalizedCategoryID;
-			if (m_VirtualStoreSetupModes.Find(catKey, foundMode))
-			{
-				Print("[AskalStore] ✅ GetItemMode (VIRTUALSTORE): Categoria encontrada - " + catKey + " = " + foundMode);
-				return foundMode;
-			}
-			
-			// Verificar "ALL" - PRIORIDADE 4
-			if (m_VirtualStoreSetupModes.Find("ALL", foundMode))
-			{
-				Print("[AskalStore] ✅ GetItemMode (VIRTUALSTORE): ALL encontrado = " + foundMode);
-				return foundMode;
-			}
-			
-			Print("[AskalStore] ❌ GetItemMode (VIRTUALSTORE): Item NÃO configurado - " + itemClassName + " (DS: " + normalizedDatasetID + ", CAT: " + normalizedCategoryID + ") - retornando -1 (disabled)");
-			return -1; // VirtualStore: se não está configurado, não aparece
+			Print("[AskalStore] 🔍 GetItemMode: Categoria encontrada - " + normalizedCategoryID + " = " + categoryMode);
+			return categoryMode;
 		}
 		
-		// FALLBACK: Sem configuração, retornar -1 (disabled) para VirtualStore ou 3 (tudo disponível) para trader sem config
-		if (!m_CurrentTraderName || m_CurrentTraderName == "")
+		// Verificar dataset (DS_*) - PRIORIDADE 3
+		int datasetMode = GetDatasetMode(normalizedDatasetID);
+		if (datasetMode >= 0)
 		{
-			Print("[AskalStore] ⚠️ GetItemMode: VirtualStore sem SetupItems configurado - retornando -1 (disabled)");
-			return -1; // VirtualStore sem config = nada disponível
+			Print("[AskalStore] 🔍 GetItemMode: Dataset encontrado - " + normalizedDatasetID + " = " + datasetMode);
+			return datasetMode;
 		}
-		else
+		
+		// Verificar "ALL" - PRIORIDADE 4
+		if (m_TraderSetupItems.Contains("ALL"))
 		{
-			Print("[AskalStore] ⚠️ GetItemMode: Trader sem SetupItems configurado - retornando 3 (tudo disponível)");
-			return 3; // Trader sem config = tudo disponível (compatibilidade)
+			int allMode = m_TraderSetupItems.Get("ALL");
+			Print("[AskalStore] 🔍 GetItemMode: ALL encontrado = " + allMode);
+			return allMode;
 		}
+		
+		Print("[AskalStore] 🔍 GetItemMode: Nenhuma configuração encontrada para " + itemClassName + " (DS: " + normalizedDatasetID + ", CAT: " + normalizedCategoryID + ")");
+		return -1;
 	}
 	
 	// Verificar se um dataset está disponível (não disabled)
@@ -1301,55 +1102,22 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		Print("[AskalStore] ✅ Cache tem " + datasets.Count() + " datasets");
 		
 		// Adicionar datasets à lista (FILTRADOS pelo SetupItems do trader)
-		// Usar ordem de recebimento do cache para preservar ordem original
-		array<string> datasetOrder = cache.GetDatasetOrder();
 		int filteredCount = 0;
-		int i;
-		string datasetID;
-		int mode;
-		
-		// Se há ordem definida, usar ela
-		if (datasetOrder && datasetOrder.Count() > 0)
+		for (int i = 0; i < datasets.Count(); i++)
 		{
-			for (i = 0; i < datasetOrder.Count(); i++)
+			string datasetID = datasets.GetKey(i);
+			
+			// Filtrar baseado no SetupItems do trader
+			if (IsDatasetAvailable(datasetID))
 			{
-				datasetID = datasetOrder.Get(i);
-				if (!datasetID || datasetID == "" || !datasets.Contains(datasetID))
-					continue;
-				
-				// Filtrar baseado no SetupItems do trader
-				if (IsDatasetAvailable(datasetID))
-				{
-					m_Datasets.Insert(datasetID);
-					mode = GetDatasetMode(datasetID);
-					Print("[AskalStore]   ✅ " + datasetID + " (modo: " + mode + ")");
-				}
-				else
-				{
-					filteredCount++;
-					Print("[AskalStore]   ❌ " + datasetID + " (filtrado - não disponível)");
-				}
+				m_Datasets.Insert(datasetID);
+				int mode = GetDatasetMode(datasetID);
+				Print("[AskalStore]   ✅ " + datasetID + " (modo: " + mode + ")");
 			}
-		}
-		else
-		{
-			// Fallback: ordem do map (caso DatasetOrder não esteja disponível)
-			for (i = 0; i < datasets.Count(); i++)
+			else
 			{
-				datasetID = datasets.GetKey(i);
-				
-				// Filtrar baseado no SetupItems do trader
-				if (IsDatasetAvailable(datasetID))
-				{
-					m_Datasets.Insert(datasetID);
-					mode = GetDatasetMode(datasetID);
-					Print("[AskalStore]   ✅ " + datasetID + " (modo: " + mode + ")");
-				}
-				else
-				{
-					filteredCount++;
-					Print("[AskalStore]   ❌ " + datasetID + " (filtrado - não disponível)");
-				}
+				filteredCount++;
+				Print("[AskalStore]   ❌ " + datasetID + " (filtrado - não disponível)");
 			}
 		}
 		
@@ -1480,31 +1248,6 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		if (m_ItemCategoryIds)
 			m_ItemCategoryIds.Clear();
 		
-		// DEBUG: Verificar estado do VirtualStore antes de filtrar itens
-		if (!m_CurrentTraderName || m_CurrentTraderName == "")
-		{
-			Print("[AskalStore] 🔍 DEBUG VirtualStore: m_CurrentTraderName está vazio (VirtualStore ativo)");
-			string setupModesStatus = "NULL";
-			if (m_VirtualStoreSetupModes)
-				setupModesStatus = "EXISTS";
-			Print("[AskalStore] 🔍 DEBUG VirtualStore: m_VirtualStoreSetupModes=" + setupModesStatus);
-			if (m_VirtualStoreSetupModes)
-			{
-				Print("[AskalStore] 🔍 DEBUG VirtualStore: m_VirtualStoreSetupModes.Count()=" + m_VirtualStoreSetupModes.Count());
-				// Listar todas as chaves para debug
-				for (int debugIdx = 0; debugIdx < m_VirtualStoreSetupModes.Count(); debugIdx++)
-				{
-					string debugKey = m_VirtualStoreSetupModes.GetKey(debugIdx);
-					int debugMode = m_VirtualStoreSetupModes.GetElement(debugIdx);
-					Print("[AskalStore] 🔍 DEBUG VirtualStore SetupItem[" + debugIdx + "]: " + debugKey + " = " + debugMode);
-				}
-			}
-		}
-		else
-		{
-			Print("[AskalStore] 🔍 DEBUG Trader: m_CurrentTraderName=" + m_CurrentTraderName);
-		}
-		
 		ref map<string, bool> processedClasses = new map<string, bool>();
 		ref map<string, bool> variantClassLookup = new map<string, bool>();
 		for (int variantIdx = 0; variantIdx < category.Items.Count(); variantIdx++)
@@ -1538,20 +1281,14 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		{
 			string classNameLoop = orderedItemIDs.Get(orderedIdx);
 			
-			// Verificar se o item está disponível para este trader/VirtualStore
+			// Verificar se o item está disponível para este trader
 			// Modo -1 = disabled (não aparece), modo 0+ = aparece (mas botões podem estar desabilitados)
-			string setupModesCountStr = "NULL";
-			if (m_VirtualStoreSetupModes)
-				setupModesCountStr = m_VirtualStoreSetupModes.Count().ToString();
-			Print("[AskalStore] 🔍 Verificando item: " + classNameLoop + " | m_CurrentTraderName=" + m_CurrentTraderName + " | m_VirtualStoreSetupModes.Count()=" + setupModesCountStr);
 			int itemMode = GetItemMode(datasetID, categoryID, classNameLoop);
-			Print("[AskalStore] 🔍 GetItemMode retornou: " + itemMode + " para item: " + classNameLoop);
 			if (itemMode < 0) // Modo -1 = disabled, não aparece na lista
 			{
-				Print("[AskalStore] 🔒 Item filtrado (disabled, mode=" + itemMode + "): " + classNameLoop);
+				Print("[AskalStore] 🔒 Item filtrado (disabled): " + classNameLoop);
 				continue;
 			}
-			Print("[AskalStore] ✅ Item aprovado (mode=" + itemMode + "): " + classNameLoop);
 			
 			AskalItemSyncData syncItemLoop = category.Items.Get(classNameLoop);
 			AddItemEntryForCategory(datasetID, categoryID, category, classNameLoop, syncItemLoop, processedClasses, cache, true);
@@ -2033,12 +1770,11 @@ protected string m_LastVirtualStoreConfigSignature = "";
 					nameWidget.SetText(displayName);
 				}
 				
-				// Configurar preço (unitário para stackables, completo para outros)
+				// Configurar preço
 			TextWidget priceWidget = TextWidget.Cast(itemCard.FindAnyWidget("item_card_price_text"));
 				if (priceWidget)
 			{
-				int displayPrice = GetDisplayPriceForItem(itemData.GetClassName(), itemData.GetPrice());
-				string formattedPrice = FormatCurrencyValue(displayPrice);
+				string formattedPrice = FormatCurrencyValue(itemData.GetPrice());
 				priceWidget.SetText(formattedPrice);
 			}
 			
@@ -2961,153 +2697,23 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		DisplayTransactionMessageColored(message, ARGB(255, 255, 64, 64));
 	}
 
-	// Resolve currency ID for an item based on trader's AcceptedCurrency (deterministic order)
-	protected string ResolveCurrencyForItem(string itemClassName, string traderName = "")
-	{
-		string shortName = ""; // Declare once for the entire function
-		
-		// Use m_CurrentTraderName if traderName parameter is empty (more reliable)
-		if (!traderName || traderName == "")
-			traderName = m_CurrentTraderName;
-		
-		Print("[AskalStore] 🔍 ResolveCurrencyForItem: item=" + itemClassName + " traderName=" + traderName + " m_CurrentTraderName=" + m_CurrentTraderName + " m_ActiveCurrencyId=" + m_ActiveCurrencyId + " m_VirtualStoreCurrencyId=" + m_VirtualStoreCurrencyId);
-		
-		// CRITICAL: Priority 1: If trader is active (m_CurrentTraderName is set), use m_ActiveCurrencyId
-		// This MUST be checked FIRST to avoid using VirtualStore currency when trader is open
-		if (m_CurrentTraderName && m_CurrentTraderName != "")
-		{
-			if (m_ActiveCurrencyId && m_ActiveCurrencyId != "")
-			{
-				shortName = GetCurrencyShortName(m_ActiveCurrencyId);
-				Print("[AskalStore] ✅ UI Currency resolved: TRADER=" + m_CurrentTraderName + " -> " + m_ActiveCurrencyId + " (shortName=" + shortName + ")");
-				return m_ActiveCurrencyId;
-			}
-			else
-			{
-				Print("[AskalStore] ⚠️ Trader ativo mas m_ActiveCurrencyId vazio! Trader=" + m_CurrentTraderName);
-			}
-		}
-		
-		// Priority 2: If VirtualStore (no trader name), use VirtualStore currency
-		if (!m_CurrentTraderName || m_CurrentTraderName == "")
-		{
-			if (m_VirtualStoreCurrencyId && m_VirtualStoreCurrencyId != "")
-			{
-				shortName = GetCurrencyShortName(m_VirtualStoreCurrencyId);
-				Print("[AskalStore] ✅ UI Currency resolved: VirtualStore -> " + m_VirtualStoreCurrencyId + " (shortName=" + shortName + ")");
-				return m_VirtualStoreCurrencyId;
-			}
-		}
-		
-		// Priority 3: Fallback to MarketConfig default currency
-		AskalMarketConfig config = AskalMarketConfig.GetInstance();
-		if (config)
-		{
-			string defaultCurrencyId = config.GetDefaultCurrencyId();
-			if (defaultCurrencyId && defaultCurrencyId != "")
-			{
-				shortName = GetCurrencyShortName(defaultCurrencyId);
-				Print("[AskalStore] UI Currency resolved: Default -> " + defaultCurrencyId + " (shortName=" + shortName + ")");
-				return defaultCurrencyId;
-			}
-			
-			// If no default, use first currency in Currencies map
-			if (config.Currencies && config.Currencies.Count() > 0)
-			{
-				string firstCurrencyId = config.Currencies.GetKey(0);
-				shortName = GetCurrencyShortName(firstCurrencyId);
-				Print("[AskalStore] UI Currency resolved: First -> " + firstCurrencyId + " (shortName=" + shortName + ")");
-				return firstCurrencyId;
-			}
-		}
-		
-		// Final fallback
-		shortName = GetCurrencyShortName("Askal_Money");
-		Print("[AskalStore] UI Currency resolved: Fallback -> Askal_Money (shortName=" + shortName + ")");
-		return "Askal_Money";
-	}
-	
-	// Get currency shortname from currency ID (centralized helper)
-	// PRIORITY: Use cache first, then MarketConfig, then fallback
-	protected string GetCurrencyShortName(string currencyId)
-	{
-		if (!currencyId || currencyId == "")
-		{
-			Print("[AskalStore] ERROR: GetCurrencyShortName called with empty currencyId");
-			return "";
-		}
-		
-		// PRIORITY 1: Check cache first (fastest and most reliable)
-		if (s_CurrencyShortNameCache && s_CurrencyShortNameCache.Contains(currencyId))
-		{
-			string cachedShortName = s_CurrencyShortNameCache.Get(currencyId);
-			if (cachedShortName && cachedShortName != "")
-			{
-				Print("[AskalStore] ✅ GetCurrencyShortName (CACHE): " + currencyId + " -> " + cachedShortName);
-				return cachedShortName;
-			}
-		}
-		
-		// PRIORITY 2: Try to populate cache if empty and get from MarketConfig
-		if (!s_CurrencyShortNameCache || s_CurrencyShortNameCache.Count() == 0)
-		{
-			Print("[AskalStore] Cache empty, populating...");
-			PopulateCurrencyShortNameCache();
-			
-			// Try cache again after population
-			if (s_CurrencyShortNameCache && s_CurrencyShortNameCache.Contains(currencyId))
-			{
-				string cachedShortNameAfterPop = s_CurrencyShortNameCache.Get(currencyId);
-				if (cachedShortNameAfterPop && cachedShortNameAfterPop != "")
-				{
-					Print("[AskalStore] ✅ GetCurrencyShortName (CACHE after populate): " + currencyId + " -> " + cachedShortNameAfterPop);
-					return cachedShortNameAfterPop;
-				}
-			}
-		}
-		
-		// PRIORITY 3: Direct MarketConfig access (fallback)
-		AskalMarketConfig config = AskalMarketConfig.GetInstance();
-		if (config && config.Currencies && config.Currencies.Contains(currencyId))
-		{
-			AskalCurrencyConfig currencyCfg = config.Currencies.Get(currencyId);
-			if (currencyCfg && currencyCfg.ShortName && currencyCfg.ShortName != "")
-			{
-				string shortName = currencyCfg.ShortName;
-				// Sanitize @ prefix
-				if (shortName.Length() > 0 && shortName.Substring(0, 1) == "@")
-					shortName = shortName.Substring(1, shortName.Length() - 1);
-				
-				// Cache it for next time
-				if (!s_CurrencyShortNameCache)
-					s_CurrencyShortNameCache = new map<string, string>();
-				s_CurrencyShortNameCache.Set(currencyId, shortName);
-				
-				Print("[AskalStore] ✅ GetCurrencyShortName (DIRECT): " + currencyId + " -> " + shortName);
-				return shortName;
-			}
-		}
-		
-		// PRIORITY 4: Hardcoded fallbacks for known currencies
-		if (currencyId == "Askal_Money")
-		{
-			Print("[AskalStore] WARN: Using hardcoded fallback for Askal_Money -> AKC");
-			return "AKC";
-		}
-		if (currencyId == "VirtualStore_Money")
-		{
-			Print("[AskalStore] WARN: Using hardcoded fallback for VirtualStore_Money -> VST");
-			return "VST";
-		}
-		
-		// FINAL FALLBACK: Return currencyId (but log error)
-		Print("[AskalStore] ERROR: GetCurrencyShortName FAILED for " + currencyId + " - using currencyId as fallback");
-		return currencyId;
-	}
-	
 	protected string ResolveCurrencyShortName(string currencyId)
 	{
-		return GetCurrencyShortName(currencyId);
+		if (!currencyId || currencyId == "")
+			return "";
+		
+		AskalMarketConfig config = AskalMarketConfig.GetInstance();
+		if (!config)
+			return "";
+		
+		AskalCurrencyConfig currencyCfg = config.GetCurrencyConfig(currencyId);
+		if (!currencyCfg && config.Currencies && config.Currencies.Contains(currencyId))
+			currencyCfg = config.Currencies.Get(currencyId);
+		
+		if (currencyCfg && currencyCfg.ShortName != "")
+			return currencyCfg.ShortName;
+		
+		return "";
 	}
 	
 	protected void SetCurrencyShortNameText(TextWidget widget, string shortName)
@@ -3115,27 +2721,14 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		if (!widget)
 			return;
 		
-		// Sanitize shortName: ensure it never starts with @ (localization key indicator)
-		if (shortName && shortName != "")
+		if (!shortName || shortName == "")
 		{
-			if (shortName.Length() > 0)
-			{
-				string firstChar = shortName.Substring(0, 1);
-				if (firstChar == "@")
-				{
-					shortName = shortName.Substring(1, shortName.Length() - 1);
-					Print("[AskalStore] WARN: Sanitized shortname starting with @: " + shortName);
-				}
-			}
-			
-			// Use SetText directly (not SetTextLocalized) to avoid localization lookup
+			widget.SetText("");
+			widget.Show(false);
+					}
+					else
+					{
 			widget.SetText(shortName);
-			widget.Show(true);
-		}
-		else
-		{
-			// Empty shortname: show "---" as placeholder
-			widget.SetText("---");
 			widget.Show(true);
 		}
 	}
@@ -3147,77 +2740,6 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		SetCurrencyShortNameText(m_SellCurrencyShortDual, m_CurrentCurrencyShortName);
 		SetCurrencyShortNameText(m_BuyCurrencyShortWide, m_CurrentCurrencyShortName);
 		SetCurrencyShortNameText(m_SellCurrencyShortWide, m_CurrentCurrencyShortName);
-	}
-	
-	// Update currency shortname widgets based on button visibility mode
-	protected void UpdateCurrencyShortnameWidgets(string shortName, bool showDual, bool showBuySolo, bool showSellSolo)
-	{
-		// currency_shortname_0 -> Primary BUY button (grouped)
-		// currency_shortname_1 -> Primary SELL button (grouped)
-		// currency_shortname_2 -> Single-action button (buy-only or sell-only)
-		
-		if (showDual)
-		{
-			// Both buttons visible - use _0 for buy, _1 for sell
-			SetCurrencyShortNameText(m_BuyCurrencyShortDual, shortName);
-			SetCurrencyShortNameText(m_SellCurrencyShortDual, shortName);
-			// Hide _2 (single action)
-			if (m_BuyCurrencyShortWide)
-				m_BuyCurrencyShortWide.Show(false);
-			if (m_SellCurrencyShortWide)
-				m_SellCurrencyShortWide.Show(false);
-		}
-		else if (showBuySolo)
-		{
-			// Only buy button visible - use _2 for single action
-			SetCurrencyShortNameText(m_BuyCurrencyShortWide, shortName);
-			// Hide grouped buttons
-			if (m_BuyCurrencyShortDual)
-				m_BuyCurrencyShortDual.Show(false);
-			if (m_SellCurrencyShortDual)
-				m_SellCurrencyShortDual.Show(false);
-			if (m_SellCurrencyShortWide)
-				m_SellCurrencyShortWide.Show(false);
-		}
-		else if (showSellSolo)
-		{
-			// Only sell button visible - use _2 for single action
-			SetCurrencyShortNameText(m_SellCurrencyShortWide, shortName);
-			// Hide grouped buttons
-			if (m_BuyCurrencyShortDual)
-				m_BuyCurrencyShortDual.Show(false);
-			if (m_SellCurrencyShortDual)
-				m_SellCurrencyShortDual.Show(false);
-			if (m_BuyCurrencyShortWide)
-				m_BuyCurrencyShortWide.Show(false);
-		}
-		else
-		{
-			// No buttons visible - hide all
-			if (m_BuyCurrencyShortDual)
-				m_BuyCurrencyShortDual.Show(false);
-			if (m_SellCurrencyShortDual)
-				m_SellCurrencyShortDual.Show(false);
-			if (m_BuyCurrencyShortWide)
-				m_BuyCurrencyShortWide.Show(false);
-			if (m_SellCurrencyShortWide)
-				m_SellCurrencyShortWide.Show(false);
-		}
-		
-		// Build log message
-		string widget0Text = "";
-		string widget1Text = "";
-		string widget2Text = "";
-		if (showDual)
-		{
-			widget0Text = shortName;
-			widget1Text = shortName;
-		}
-		if (showBuySolo || showSellSolo)
-		{
-			widget2Text = shortName;
-		}
-		Print("[AskalStore] Currency shortname set: widget0=" + widget0Text + " widget1=" + widget1Text + " widget2=" + widget2Text);
 	}
 	
 	protected string FormatCurrencyValue(int amount)
@@ -3463,44 +2985,18 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		breakdown += " + " + m_CurrentQuantityPercent.ToString() + "% " + liquidName;
 	}
 	
-	// Obter preço base unitário (antes de aplicar quantidade do slider)
-	// Para stackables, o preço na config já é por unidade
-	int baseUnitPrice = itemData.GetPrice();
+	int baseUnitPrice = m_SelectedItemUnitPrice;
+	if (baseUnitPrice <= 0)
+		baseUnitPrice = itemData.GetPrice();
 	if (baseUnitPrice <= 0)
 		baseUnitPrice = DEFAULT_HARDCODED_BUY_PRICE;
 	
-	// Recalcular preço base se necessário (garantir que é unitário)
-	AskalDatabaseClientCache cache = AskalDatabaseClientCache.GetInstance();
-	if (cache)
-	{
-		AskalItemSyncData syncData = cache.FindItem(effectiveClassName);
-		if (syncData && syncData.BasePrice > 0)
-		{
-			// Calcular preço total com attachments e coeficiente
-			array<string> calculatedAttachments = BuildAttachmentList(syncData, cache, effectiveClassName);
-			int calculatedBasePrice = syncData.BasePrice;
-			calculatedBasePrice = NormalizeBuyPrice(calculatedBasePrice, DEFAULT_HARDCODED_BUY_PRICE);
-			int calculatedTotalPrice = ComputeTotalItemPrice(calculatedBasePrice, calculatedAttachments, cache);
-			calculatedTotalPrice = NormalizeBuyPrice(calculatedTotalPrice, calculatedBasePrice);
-			baseUnitPrice = ApplyBuyCoefficient(calculatedTotalPrice);
-		}
-	}
-	
-	// CalculateAdjustedPrice recebe o preço unitário e retorna o preço total (unitário * quantidade)
-	int adjustedTotalPrice = CalculateAdjustedPrice(baseUnitPrice, effectiveClassName);
-	if (adjustedTotalPrice < 0)
-		adjustedTotalPrice = 0;
+	int adjustedUnitPrice = CalculateAdjustedPrice(baseUnitPrice, effectiveClassName);
+	if (adjustedUnitPrice < 0)
+		adjustedUnitPrice = 0;
 	
 	int totalQuantity = Math.Max(m_TransactionQuantity, 1);
-	int totalPrice = adjustedTotalPrice * totalQuantity;
-	
-	// Para stackables, mostrar preço unitário na descrição
-	AskalItemQuantityType qtyType = DetectItemQuantityType(effectiveClassName);
-	if (qtyType == AskalItemQuantityType.STACKABLE && m_CurrentAmmoCount > 0)
-	{
-		// baseUnitPrice já é o preço unitário, então apenas exibir
-		breakdown += " (" + FormatCurrencyValue(baseUnitPrice) + " por unidade)";
-	}
+	int totalPrice = adjustedUnitPrice * totalQuantity;
 	
 	string totalString = FormatCurrencyValue(totalPrice);
 	if (m_CurrentCurrencyShortName && m_CurrentCurrencyShortName != "")
@@ -4406,16 +3902,59 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 	// SISTEMA DE QUANTIDADE VARIÁVEL
 	// ========================================
 	
-	/// Detecta o tipo de quantidade do item (usa helper centralizado)
+	/// Detecta o tipo de quantidade do item
 	AskalItemQuantityType DetectItemQuantityType(string className)
 	{
-		Print("[AskalStore] 🔍 DetectItemQuantityType para: " + className);
-		AskalItemQuantityType result = AskalItemQuantityHelper.DetectQuantityType(className);
-		Print("[AskalStore] ✅ Tipo detectado: " + result);
+		// Cria uma instância temporária para detectar o tipo
+		Object obj = SpawnTemporaryObject(className);
+		if (!obj)
+			return AskalItemQuantityType.NONE;
+		
+		AskalItemQuantityType result = AskalItemQuantityType.NONE;
+		
+		// Verifica se é um Magazine
+		Magazine mag = Magazine.Cast(obj);
+		if (mag)
+		{
+			result = AskalItemQuantityType.MAGAZINE;
+			if (obj)
+				GetGame().ObjectDelete(obj);
+			return result;
+		}
+		
+	// Verifica se é um item com quantidade
+	ItemBase item = ItemBase.Cast(obj);
+	if (item && item.HasQuantity())
+	{
+		// Verifica se tem range de quantidade válido
+		if (item.GetQuantityMax() - item.GetQuantityMin() > 0)
+		{
+			// STACKABLE: Itens que podem ser divididos (split)
+			// Inclui munição, pregos, tábuas, etc automaticamente
+			if (item.IsSplitable())
+			{
+				result = AskalItemQuantityType.STACKABLE;
+			}
+			// QUANTIFIABLE: APENAS Bottle_Base (containers de líquido)
+			// Outros fracionáveis (bandagens, carnes, etc) ficam como NONE (sempre 100%)
+			else if (item.IsLiquidContainer())
+			{
+				result = AskalItemQuantityType.QUANTIFIABLE;
+			}
+			// Fracionáveis genéricos ficam como NONE (sem slider, sempre 100%)
+			else
+			{
+				result = AskalItemQuantityType.NONE;
+			}
+		}
+	}
+		
+		if (obj)
+			GetGame().ObjectDelete(obj);
 		return result;
 	}
 	
-	/// Obtém os valores min/max para o slider baseado no tipo de item (usa helper centralizado)
+	/// Obtém os valores min/max para o slider baseado no tipo de item
 	void GetQuantityRangeForItem(string className, out int minValue, out int maxValue, out string unit, out float stepValue)
 	{
 		minValue = 0;
@@ -4425,43 +3964,72 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		
 		AskalItemQuantityType qtyType = DetectItemQuantityType(className);
 		if (qtyType == AskalItemQuantityType.NONE)
-			return;
+				return;
+		
+		Object tempObj = NULL;
+		ItemBase item = NULL;
+		Magazine mag = NULL;
 		
 		switch (qtyType)
 		{
 			case AskalItemQuantityType.MAGAZINE:
 			{
-				AskalItemQuantityHelper.GetMagazineRange(className, minValue, maxValue, stepValue);
-				unit = " balas";
+				tempObj = SpawnTemporaryObject(className);
+				mag = Magazine.Cast(tempObj);
+				if (mag)
+				{
+				int ammoMax = mag.GetAmmoMax();
+				if (ammoMax <= 0)
+					ammoMax = 1;
+				
+				if (mag.IsAmmoPile() && ammoMax > 1)
+					minValue = 1;
+				else
+					minValue = 0;
+				
+				maxValue = ammoMax;
+				stepValue = 1.0;
+				}
 				break;
 			}
 			
 			case AskalItemQuantityType.STACKABLE:
 			{
-				AskalItemQuantityHelper.GetStackableRange(className, minValue, maxValue, stepValue);
-				unit = " unidades";
+				tempObj = SpawnTemporaryObject(className);
+				item = ItemBase.Cast(tempObj);
+				if (item)
+				{
+					int qtyMin = item.GetQuantityMin();
+					int qtyMax = item.GetQuantityMax();
+					if (qtyMax <= 0)
+						qtyMax = 1;
+					
+					minValue = Math.Max(qtyMin, 1);
+					maxValue = Math.Max(qtyMax, minValue);
+					stepValue = 1.0;
+				}
 				break;
 			}
 			
 			case AskalItemQuantityType.QUANTIFIABLE:
 			{
-				AskalItemQuantityHelper.GetQuantifiableRange(className, minValue, maxValue, stepValue);
-				unit = "%";
+				// Representamos quantidades fracionárias como percentual
+				minValue = 0;
+				maxValue = 100;
+				stepValue = 1.0;
 				break;
 			}
 		}
+		
+		if (tempObj)
+			GetGame().ObjectDelete(tempObj);
 	}
 	
 	/// Configura o slider de quantidade e a seleção de conteúdo para o item selecionado
 	void ConfigureQuantitySliderForItem(string className)
 	{
-		Print("[AskalStore] 🎚️ ConfigureQuantitySliderForItem chamado para: " + className);
-		
 		if (!m_TransactionQuantitySlider)
-		{
-			Print("[AskalStore] ❌ m_TransactionQuantitySlider é NULL!");
-			return;
-		}
+				return;
 		
 		// Limpa seleções anteriores
 		if (m_AvailableContentTypes)
@@ -4480,12 +4048,9 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		m_SliderQuantityType = qtyType;
 		m_SliderCurrentClassName = className;
 		
-		Print("[AskalStore] 🎚️ Tipo detectado: " + qtyType + " para " + className);
-		
 		// Se o item não suporta quantidade variável, oculta o slider e o seletor
 		if (qtyType == AskalItemQuantityType.NONE)
 		{
-			Print("[AskalStore] ⚠️ Tipo NONE, ocultando slider para: " + className);
 			m_TransactionQuantitySlider.Show(false);
 			if (m_TransactionContentPanel)
 				m_TransactionContentPanel.Show(false);
@@ -4508,95 +4073,16 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		float stepVal;
 		GetQuantityRangeForItem(className, minVal, maxVal, unit, stepVal);
 		
-		// Declarar configPath e configCount uma vez para uso em múltiplos blocos
-		string configPath;
-		int configCount;
-		
-		// Validação crítica: garantir que o slider tenha um range válido
-		// Para munições, tentar ler do config antes de usar fallback
-		if (maxVal <= 1)
-		{
-			Print("[AskalStore] ⚠️ maxVal <= 1 para " + className + ", tentando ler do config...");
-			
-			// Tentar ler do config CfgMagazines primeiro
-			configPath = "CfgMagazines " + className + " count";
-			if (GetGame().ConfigIsExisting(configPath))
-			{
-				configCount = GetGame().ConfigGetInt(configPath);
-				if (configCount > 1)
-				{
-					maxVal = configCount;
-					Print("[AskalStore] 📦 maxVal ajustado do config: " + maxVal);
-				}
-			}
-			
-			// Se ainda não encontrou, usar fallback baseado no tipo
-			if (maxVal <= 1)
-			{
-				if (className.IndexOf("Ammo_") == 0 || className.IndexOf("Bullet_") == 0)
-				{
-					maxVal = 100; // Fallback comum para munições
-					Print("[AskalStore] ⚠️ Usando fallback para munições: maxVal = " + maxVal);
-				}
-				else
-				{
-					maxVal = 10; // Fallback padrão para outros stackables
-					Print("[AskalStore] ⚠️ Usando fallback genérico: maxVal = " + maxVal);
-				}
-				minVal = 1;
-			}
-		}
-		
-		if (minVal >= maxVal)
-		{
-			Print("[AskalStore] ⚠️ minVal >= maxVal para " + className + ", ajustando valores");
-			minVal = 1;
-			if (maxVal <= 1)
-			{
-				// Tentar ler do config novamente
-				configPath = "CfgMagazines " + className + " count";
-				if (GetGame().ConfigIsExisting(configPath))
-				{
-					configCount = GetGame().ConfigGetInt(configPath);
-					if (configCount > 1)
-						maxVal = configCount;
-					else
-						maxVal = 10;
-				}
-				else
-					maxVal = 10;
-			}
-		}
-		
 		m_SliderMinValue = minVal;
 		m_SliderMaxValue = maxVal;
 		m_SliderStepValue = stepVal;
 		m_SliderUnitLabel = unit;
 		
 		// Configura o slider
-		Print("[AskalStore] 🎚️ Configurando slider - minVal: " + minVal + " | maxVal: " + maxVal + " | stepVal: " + stepVal + " | qtyType: " + qtyType);
-		
-		// Verificar se o widget do slider existe e está acessível
-		if (!m_TransactionQuantitySlider)
-		{
-			Print("[AskalStore] ❌ CRÍTICO: m_TransactionQuantitySlider é NULL antes de mostrar!");
-			return;
-		}
-		
 		m_TransactionQuantitySlider.Show(true);
 		m_TransactionQuantitySlider.SetStep(stepVal);
 		m_TransactionQuantitySlider.SetMinMax(minVal, maxVal);
 		m_TransactionQuantitySlider.SetCurrent(maxVal); // Sempre inicia no máximo
-		m_TransactionQuantitySlider.Enable(true); // Garantir que está habilitado
-		
-		// Verificar se o slider está realmente visível após configurar
-		bool askalSliderVisible = m_TransactionQuantitySlider.IsVisible();
-		Print("[AskalStore] ✅ Slider configurado - minVal: " + minVal + " | maxVal: " + maxVal + " | qtyType: " + qtyType + " | IsVisible: " + askalSliderVisible);
-		
-		if (!askalSliderVisible)
-		{
-			Print("[AskalStore] ⚠️ AVISO: Slider foi configurado mas IsVisible() retorna false! Verificar widget pai.");
-		}
 		
 		// Configurações específicas por tipo
 		switch (qtyType)
@@ -4650,8 +4136,6 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			{
 				m_CurrentAmmoCount = maxVal;
 				m_CurrentQuantityPercent = 100;
-				
-				Print("[AskalStore] 📦 STACKABLE configurado - Range: " + minVal + "-" + maxVal + " | Inicial: " + maxVal);
 				
 				if (m_TransactionContentPanel)
 					m_TransactionContentPanel.Show(false);
@@ -4770,16 +4254,8 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 	/// Calcula o preço ajustado baseado na quantidade selecionada
 	int CalculateAdjustedPrice(int basePrice, string className)
 	{
-		Print("[AskalStore] 💰 CalculateAdjustedPrice chamado");
-		Print("[AskalStore]    Classe: " + className);
-		Print("[AskalStore]    basePrice: " + basePrice);
-		Print("[AskalStore]    Tipo: " + m_SliderQuantityType);
-		
 		if (m_SliderQuantityType == AskalItemQuantityType.NONE)
-		{
-			Print("[AskalStore]    ✅ Preço final: " + basePrice + " (NONE - sem multiplicação)");
 			return basePrice;
-		}
 		
 		switch (m_SliderQuantityType)
 		{
@@ -4793,28 +4269,15 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 				if (unitPrice <= 0)
 					unitPrice = Math.Max(1, basePrice * 0.02); // Fallback: 2% do preço do carregador
 				
-				int ammoCost = Math.Round(ammoCount * unitPrice);
-				int finalPrice = Math.Round(basePrice + ammoCost);
-				
-				Print("[AskalStore]    [MAGAZINE] Preço carregador vazio: " + basePrice);
-				Print("[AskalStore]    [MAGAZINE] Quantidade munição: " + ammoCount);
-				Print("[AskalStore]    [MAGAZINE] Preço unitário munição: " + unitPrice);
-				Print("[AskalStore]    [MAGAZINE] Custo munição: " + ammoCost);
-				Print("[AskalStore]    ✅ Preço final: " + finalPrice + " (container vazio + munição)");
-				return finalPrice;
+				return Math.Round(basePrice + (ammoCount * unitPrice));
 			}
 			
 		case AskalItemQuantityType.STACKABLE:
 		{
 			int quantity = Math.Clamp(m_CurrentAmmoCount, m_SliderMinValue, m_SliderMaxValue);
-			// CORREÇÃO: basePrice já é o preço por unidade (não do stack completo)
-			// Então apenas multiplicamos pela quantidade
-			int adjustedPrice = Math.Round(basePrice * quantity);
-			
-			Print("[AskalStore]    [STACKABLE] Preço unitário: " + basePrice);
-			Print("[AskalStore]    [STACKABLE] Quantidade: " + quantity);
-			Print("[AskalStore]    ✅ Preço final: " + adjustedPrice + " (unitário × quantidade)");
-			return adjustedPrice;
+			int maxQty = Math.Max(m_SliderMaxValue, 1);
+			float pricePerUnit = basePrice / Math.Max(maxQty, 1);
+			return Math.Round(pricePerUnit * quantity);
 		}
 			
 			case AskalItemQuantityType.QUANTIFIABLE:
@@ -4831,29 +4294,14 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 					if (pricePerML < 0)
 						pricePerML = 0;
 					float capacity = Math.Max(m_CurrentLiquidCapacity, 0.0);
-					float liquidAmount = capacity * percent;
-					float liquidCost = liquidAmount * pricePerML;
-					int finalPriceLiquid = Math.Round(basePrice + liquidCost);
-					
-					Print("[AskalStore]    [QUANTIFIABLE] Preço container vazio: " + basePrice);
-					Print("[AskalStore]    [QUANTIFIABLE] Capacidade máxima: " + capacity + " mL");
-					Print("[AskalStore]    [QUANTIFIABLE] Percentual: " + (percent * 100) + "%");
-					Print("[AskalStore]    [QUANTIFIABLE] Quantidade líquido: " + liquidAmount + " mL");
-					Print("[AskalStore]    [QUANTIFIABLE] Preço por mL: " + pricePerML);
-					Print("[AskalStore]    [QUANTIFIABLE] Custo líquido: " + liquidCost);
-					Print("[AskalStore]    ✅ Preço final: " + finalPriceLiquid + " (container vazio + líquido)");
-					return finalPriceLiquid;
+					float liquidCost = capacity * percent * pricePerML;
+					return Math.Round(basePrice + liquidCost);
 				}
 				
-				int finalPricePercent = Math.Round(basePrice * percent);
-				Print("[AskalStore]    [QUANTIFIABLE] Preço base: " + basePrice);
-				Print("[AskalStore]    [QUANTIFIABLE] Percentual: " + (percent * 100) + "%");
-				Print("[AskalStore]    ✅ Preço final: " + finalPricePercent + " (base × percentual)");
-				return finalPricePercent;
+				return Math.Round(basePrice * percent);
 			}
 		}
 		
-		Print("[AskalStore]    ⚠️ Tipo desconhecido, retornando basePrice: " + basePrice);
 		return basePrice;
 	}
 	
@@ -4977,12 +4425,8 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		int price = itemData.GetPrice();
 		AskalDatabaseClientCache cache = AskalDatabaseClientCache.GetInstance();
 		string currencyId = m_ActiveCurrencyId;
-		// Resolve currency ID using config default if not set
 		if (!currencyId || currencyId == "")
-		{
-			AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
-			currencyId = marketConfig.GetDefaultCurrencyId();
-		}
+			currencyId = "Askal_Coin";
 		
 		if (m_SelectedVariantClass != "")
 		{
@@ -5007,83 +4451,14 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			if (variantTotalPrice > 0)
 				price = variantTotalPrice;
 		}
-		else
-		{
-			// Recalcular preço do item base antes de enviar (garantir sincronização com servidor)
-			AskalItemSyncData syncData = NULL;
-			if (cache)
-			{
-				syncData = cache.FindItem(itemClass);
-			}
-			array<string> attachments = BuildAttachmentList(syncData, cache, itemClass);
-			int basePrice = itemData.GetBasePrice();
-			if (basePrice <= 0 && syncData)
-				basePrice = syncData.BasePrice;
-			if (basePrice <= 0)
-				basePrice = DEFAULT_HARDCODED_BUY_PRICE;
-			basePrice = NormalizeBuyPrice(basePrice, DEFAULT_HARDCODED_BUY_PRICE);
-			int totalItemPrice = ComputeTotalItemPrice(basePrice, attachments, cache);
-			totalItemPrice = NormalizeBuyPrice(totalItemPrice, basePrice);
-			price = ApplyBuyCoefficient(totalItemPrice);
-		}
-		
-		// Aplicar ajuste de quantidade (slider de munição, stackable, etc)
-		price = CalculateAdjustedPrice(price, itemClass);
 		
 		string displayName = itemData.GetDisplayName();
 		if (displayName == "")
 			displayName = itemClass;
 		
 		m_SelectedItemUnitPrice = price;
-		
-		// Determine quantity based on slider type
-		float itemQuantity = 1.0;
-		int quantityType = 0;
-		int contentType = 0;
-		
-		if (m_SliderQuantityType != AskalItemQuantityType.NONE)
-		{
-			quantityType = m_SliderQuantityType;
-			switch (m_SliderQuantityType)
-			{
-				case AskalItemQuantityType.MAGAZINE:
-				{
-					itemQuantity = m_CurrentAmmoCount;
-					break;
-				}
-				case AskalItemQuantityType.STACKABLE:
-				{
-					// For stackables, use slider quantity directly (not number of stacks)
-					itemQuantity = m_TransactionQuantity;
-					if (itemQuantity <= 0)
-						itemQuantity = 1.0;
-					break;
-				}
-				case AskalItemQuantityType.QUANTIFIABLE:
-				{
-					itemQuantity = m_CurrentQuantityPercent;
-					contentType = m_CurrentSelectedContent.ToInt();
-					break;
-				}
-			}
-		}
-		
-		// Calculate total price: unitPrice * quantity for stackables, unitPrice for others
-		int unitPrice = price;
-		int totalPrice = unitPrice;
-		if (quantityType == 2) // STACKABLE
-		{
-			totalPrice = Math.Round(unitPrice * itemQuantity);
-			if (totalPrice <= 0)
-				totalPrice = unitPrice;
-		}
-		
-		// Get currency shortname for log
-		string currencyShortName = m_CurrentCurrencyShortName;
-		if (!currencyShortName || currencyShortName == "")
-			currencyShortName = currencyId;
-		
-		Print("[AskalStore] 📤 RPC purchase sent: item=" + itemClass + " qty=" + itemQuantity + " unitPrice=" + unitPrice + " total=" + totalPrice + " currency=" + currencyShortName);
+		int totalPrice = price * m_TransactionQuantity;
+		Print("[AskalStore] 💰 Tentando comprar: " + itemClass + " | Quantidade: " + m_TransactionQuantity + " | Total: " + totalPrice + " " + currencyId);
 		
 		if (GetGame().IsClient())
 		{
@@ -5107,25 +4482,39 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			if (!steamId || steamId == "")
 				steamId = identity.GetId();
 			
+			float itemQuantity = -1;
+			int itemContent = 0;
+			
+			if (m_SliderQuantityType != AskalItemQuantityType.NONE)
+			{
+				switch (m_SliderQuantityType)
+				{
+					case AskalItemQuantityType.MAGAZINE:
+					{
+						itemQuantity = m_CurrentAmmoCount;
+						break;
+					}
+					case AskalItemQuantityType.STACKABLE:
+					{
+						itemQuantity = m_CurrentAmmoCount;
+						break;
+					}
+					case AskalItemQuantityType.QUANTIFIABLE:
+					{
+						itemQuantity = m_CurrentQuantityPercent;
+						itemContent = m_CurrentSelectedContent.ToInt();
+						break;
+					}
+				}
+			}
+			
 			string traderName = m_CurrentTraderName;
 			if (!traderName || traderName == "")
 				traderName = "";
 			
-			// Use currency from storeMeta if available, otherwise use resolved currency
-			string purchaseCurrencyId = currencyId;
-			if (AskalNotificationHelper.HasStoreMeta())
-			{
-				string storeMetaCurrency = AskalNotificationHelper.GetStoreMetaCurrencyId();
-				if (storeMetaCurrency && storeMetaCurrency != "")
-				{
-					purchaseCurrencyId = storeMetaCurrency;
-					Print("[AskalStore] Using currency from storeMeta: " + purchaseCurrencyId);
-				}
-			}
-			
-			Param8<string, string, int, string, float, int, int, string> params = new Param8<string, string, int, string, float, int, int, string>(steamId, itemClass, totalPrice, purchaseCurrencyId, itemQuantity, quantityType, contentType, traderName);
-			GetRPCManager().SendRPC("AskalMarketModule", "PurchaseItemRequest", params, true, identity, NULL);
-			Print("[AskalStore] 📤 RPC de compra enviado | ItemQty: " + itemQuantity + " | QtyType: " + m_SliderQuantityType + " | Content: " + itemContent + " | Trader: " + traderName);
+			Param8<string, string, int, string, float, int, int, string> params = new Param8<string, string, int, string, float, int, int, string>(steamId, itemClass, totalPrice, currencyId, itemQuantity, m_SliderQuantityType, itemContent, traderName);
+			GetRPCManager().SendRPC("AskalPurchaseModule", "PurchaseItemRequest", params, true, identity, NULL);
+			Print("[AskalStore] 📤 RPC de compra enviado | Qty: " + m_TransactionQuantity + " | QtyType: " + m_SliderQuantityType + " | Content: " + itemContent + " | Trader: " + traderName);
 		}
 		
 		StartButtonCooldown(actionButton);
@@ -5167,12 +4556,8 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			steamId = identity.GetId();
 		
 		string currencyId = m_ActiveCurrencyId;
-		// Resolve currency ID using config default if not set
 		if (!currencyId || currencyId == "")
-		{
-			AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
-			currencyId = marketConfig.GetDefaultCurrencyId();
-		}
+			currencyId = "Askal_Coin";
 		
 		ref array<ref AskalPurchaseRequestData> requests = new array<ref AskalPurchaseRequestData>();
 		for (int idx = 0; idx < m_BatchBuySelectedIndexes.Count(); idx++)
@@ -5205,7 +4590,7 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		}
 		
 		Param3<string, string, ref array<ref AskalPurchaseRequestData>> batchParams = new Param3<string, string, ref array<ref AskalPurchaseRequestData>>(steamId, currencyId, requests);
-		GetRPCManager().SendRPC("AskalMarketModule", "PurchaseBatchRequest", batchParams, true, identity, NULL);
+		GetRPCManager().SendRPC("AskalPurchaseModule", "PurchaseBatchRequest", batchParams, true, identity, NULL);
 		Print("[AskalStore] 📤 RPC de compra em lote enviado com " + requests.Count() + " itens");
 		
 		ClearBatchSelections(true);
@@ -5392,12 +4777,8 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			steamId = identity.GetId();
 		
 		string currencyId = m_ActiveCurrencyId;
-		// Resolve currency ID using config default if not set
 		if (!currencyId || currencyId == "")
-		{
-			AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
-			currencyId = marketConfig.GetDefaultCurrencyId();
-		}
+			currencyId = "Askal_Coin";
 		
 		int transactionMode = 1;
 		string traderName = m_CurrentTraderName;
@@ -5429,7 +4810,7 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		
 		Param5<string, string, string, int, string> sellParams = new Param5<string, string, string, int, string>(steamId, itemClassName, currencyId, transactionMode, traderName);
 		
-		GetRPCManager().SendRPC("AskalMarketModule", "SellItemRequest", sellParams, true, identity, NULL);
+		GetRPCManager().SendRPC("AskalSellModule", "SellItemRequest", sellParams, true, identity, NULL);
 		Print("[AskalStore] [VENDA] RPC de venda enviado para: " + itemClassName);
 		
 		DisplayTransactionMessage("Solicitação de venda enviada para " + itemClassName);
@@ -5859,75 +5240,6 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			// Obter SetupItems do helper
 			m_TraderSetupItems = AskalNotificationHelper.GetPendingTraderSetupItems();
 			
-			// Obter AcceptedCurrency e ShortName do helper
-			string acceptedCurrency = AskalNotificationHelper.GetPendingTraderAcceptedCurrency();
-			string currencyShortName = AskalNotificationHelper.GetPendingTraderCurrencyShortName();
-			Print("[AskalStore] 🔍 OpenTraderMenu: acceptedCurrency=" + acceptedCurrency + " currencyShortName=" + currencyShortName + " | traderName=" + traderName);
-			
-			if (acceptedCurrency && acceptedCurrency != "")
-			{
-				m_ActiveCurrencyId = acceptedCurrency;
-				
-				// Use received shortname or resolve from MarketConfig
-				if (currencyShortName && currencyShortName != "")
-				{
-					m_CurrentCurrencyShortName = currencyShortName;
-				}
-				else
-				{
-					// Resolve from MarketConfig
-					AskalMarketConfig config = AskalMarketConfig.GetInstance();
-					if (config)
-					{
-						AskalCurrencyConfig currencyCfg = config.GetCurrencyOrNull(acceptedCurrency);
-						if (currencyCfg && currencyCfg.ShortName != "")
-						{
-							m_CurrentCurrencyShortName = currencyCfg.ShortName;
-							if (m_CurrentCurrencyShortName.Length() > 0 && m_CurrentCurrencyShortName.Substring(0, 1) == "@")
-								m_CurrentCurrencyShortName = m_CurrentCurrencyShortName.Substring(1, m_CurrentCurrencyShortName.Length() - 1);
-						}
-					}
-					if (m_CurrentCurrencyShortName == "")
-						m_CurrentCurrencyShortName = acceptedCurrency;
-				}
-				
-				Print("[AskalStore] ✅ AcceptedCurrency DEFINIDO: " + acceptedCurrency + " (shortname: " + m_CurrentCurrencyShortName + ") | m_CurrentTraderName=" + traderName);
-			}
-			else
-			{
-				// Fallback: tentar resolver do MarketConfig
-				AskalMarketConfig config = AskalMarketConfig.GetInstance();
-				if (config)
-				{
-					string defaultCurrency = config.GetDefaultCurrencyId();
-					if (defaultCurrency && defaultCurrency != "")
-					{
-						m_ActiveCurrencyId = defaultCurrency;
-						AskalCurrencyConfig currencyCfg = config.GetCurrencyOrNull(defaultCurrency);
-						if (currencyCfg && currencyCfg.ShortName != "")
-						{
-							m_CurrentCurrencyShortName = currencyCfg.ShortName;
-							if (m_CurrentCurrencyShortName.Length() > 0 && m_CurrentCurrencyShortName.Substring(0, 1) == "@")
-								m_CurrentCurrencyShortName = m_CurrentCurrencyShortName.Substring(1, m_CurrentCurrencyShortName.Length() - 1);
-						}
-					}
-					else
-					{
-						m_ActiveCurrencyId = "Askal_Money";
-						m_CurrentCurrencyShortName = "AKC";
-					}
-				}
-				else
-				{
-					m_ActiveCurrencyId = "Askal_Money";
-					m_CurrentCurrencyShortName = "AKC";
-				}
-				Print("[AskalStore] ⚠️ AcceptedCurrency não recebido, usando fallback: " + m_ActiveCurrencyId + " (shortname: " + m_CurrentCurrencyShortName + ") | m_CurrentTraderName=" + traderName);
-			}
-			
-			// CRITICAL: Log final state to debug
-			Print("[AskalStore] 🔍 Estado final OpenTraderMenu: m_CurrentTraderName=" + m_CurrentTraderName + " m_ActiveCurrencyId=" + m_ActiveCurrencyId + " m_CurrentCurrencyShortName=" + m_CurrentCurrencyShortName);
-			
 			// Atualizar título do menu
 			if (m_HeaderTitleText)
 			{
@@ -5969,122 +5281,17 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 	{
 		super.OnShow();
 		
-		// Check for storeMeta first (new RPC)
-		if (AskalNotificationHelper.HasStoreMeta())
-		{
-			string storeMetaCurrencyId = AskalNotificationHelper.GetStoreMetaCurrencyId();
-			string storeMetaCurrencyShortName = AskalNotificationHelper.GetStoreMetaCurrencyShortName();
-			bool storeMetaCanBuy = AskalNotificationHelper.GetStoreMetaCanBuy();
-			bool storeMetaCanSell = AskalNotificationHelper.GetStoreMetaCanSell();
-			bool storeMetaBatchMode = AskalNotificationHelper.GetStoreMetaBatchMode();
-			
-			Print("[AskalStore] 🏪 OnShow: StoreMeta recebido - currency=" + storeMetaCurrencyId + " (" + storeMetaCurrencyShortName + ") canBuy=" + storeMetaCanBuy + " canSell=" + storeMetaCanSell + " batchMode=" + storeMetaBatchMode);
-			
-			// Use storeMeta currency info (authoritative - do not resolve on client)
-			m_ActiveCurrencyId = storeMetaCurrencyId;
-			m_CurrentCurrencyShortName = storeMetaCurrencyShortName;
-			
-			// Update currency shortname widgets (all three widgets with same shortname)
-			if (m_CurrentCurrencyShortName && m_CurrentCurrencyShortName != "")
-			{
-				// Write to all three widgets directly
-				if (m_BuyCurrencyShortDual)
-					SetCurrencyShortNameText(m_BuyCurrencyShortDual, m_CurrentCurrencyShortName);
-				if (m_SellCurrencyShortDual)
-					SetCurrencyShortNameText(m_SellCurrencyShortDual, m_CurrentCurrencyShortName);
-				if (m_BuyCurrencyShortWide)
-					SetCurrencyShortNameText(m_BuyCurrencyShortWide, m_CurrentCurrencyShortName);
-				if (m_SellCurrencyShortWide)
-					SetCurrencyShortNameText(m_SellCurrencyShortWide, m_CurrentCurrencyShortName);
-			}
-			
-			// Update button visibility based on permissions (centralized, called once)
-			UpdateActionButtonsFromStoreMeta(storeMetaCanBuy, storeMetaCanSell, storeMetaBatchMode);
-			
-			// Clear storeMeta after use
-			AskalNotificationHelper.ClearStoreMeta();
-		}
-		
-		// Verificar se há solicitação de abertura de menu do trader pendente (legacy fallback)
+		// Verificar se há solicitação de abertura de menu do trader pendente
 		string pendingTraderMenu = AskalNotificationHelper.GetPendingTraderMenu();
 		if (pendingTraderMenu && pendingTraderMenu != "")
 		{
-			Print("[AskalStore] 🏪 OnShow: Processando trader pendente (legacy): " + pendingTraderMenu);
+			Print("[AskalStore] 🏪 OnShow: Processando trader pendente: " + pendingTraderMenu);
 			
 			// Armazenar nome do trader
 			m_CurrentTraderName = pendingTraderMenu;
 			
 			// Obter SetupItems do helper
 			m_TraderSetupItems = AskalNotificationHelper.GetPendingTraderSetupItems();
-			
-			// Obter AcceptedCurrency e ShortName do helper
-			string acceptedCurrency = AskalNotificationHelper.GetPendingTraderAcceptedCurrency();
-			string currencyShortName = AskalNotificationHelper.GetPendingTraderCurrencyShortName();
-			Print("[AskalStore] 🔍 OnShow: acceptedCurrency=" + acceptedCurrency + " currencyShortName=" + currencyShortName + " | pendingTraderMenu=" + pendingTraderMenu);
-			
-			if (acceptedCurrency && acceptedCurrency != "")
-			{
-				m_ActiveCurrencyId = acceptedCurrency;
-				
-				// Use received shortname or resolve from MarketConfig
-				if (currencyShortName && currencyShortName != "")
-				{
-					m_CurrentCurrencyShortName = currencyShortName;
-				}
-				else
-				{
-					// Resolve from MarketConfig
-					AskalMarketConfig config = AskalMarketConfig.GetInstance();
-					if (config)
-					{
-						AskalCurrencyConfig currencyCfg = config.GetCurrencyOrNull(acceptedCurrency);
-						if (currencyCfg && currencyCfg.ShortName != "")
-						{
-							m_CurrentCurrencyShortName = currencyCfg.ShortName;
-							if (m_CurrentCurrencyShortName.Length() > 0 && m_CurrentCurrencyShortName.Substring(0, 1) == "@")
-								m_CurrentCurrencyShortName = m_CurrentCurrencyShortName.Substring(1, m_CurrentCurrencyShortName.Length() - 1);
-						}
-					}
-					if (m_CurrentCurrencyShortName == "")
-						m_CurrentCurrencyShortName = acceptedCurrency;
-				}
-				
-				Print("[AskalStore] ✅ AcceptedCurrency DEFINIDO: " + acceptedCurrency + " (shortname: " + m_CurrentCurrencyShortName + ") | m_CurrentTraderName=" + pendingTraderMenu);
-			}
-			else
-			{
-				// Fallback: tentar resolver do MarketConfig
-				AskalMarketConfig config = AskalMarketConfig.GetInstance();
-				if (config)
-				{
-					string defaultCurrency = config.GetDefaultCurrencyId();
-					if (defaultCurrency && defaultCurrency != "")
-					{
-						m_ActiveCurrencyId = defaultCurrency;
-						AskalCurrencyConfig currencyCfg = config.GetCurrencyOrNull(defaultCurrency);
-						if (currencyCfg && currencyCfg.ShortName != "")
-						{
-							m_CurrentCurrencyShortName = currencyCfg.ShortName;
-							if (m_CurrentCurrencyShortName.Length() > 0 && m_CurrentCurrencyShortName.Substring(0, 1) == "@")
-								m_CurrentCurrencyShortName = m_CurrentCurrencyShortName.Substring(1, m_CurrentCurrencyShortName.Length() - 1);
-						}
-					}
-					else
-					{
-						m_ActiveCurrencyId = "Askal_Money";
-						m_CurrentCurrencyShortName = "AKC";
-					}
-				}
-				else
-				{
-					m_ActiveCurrencyId = "Askal_Money";
-					m_CurrentCurrencyShortName = "AKC";
-				}
-				Print("[AskalStore] ⚠️ AcceptedCurrency não recebido, usando fallback: " + m_ActiveCurrencyId + " (shortname: " + m_CurrentCurrencyShortName + ") | m_CurrentTraderName=" + pendingTraderMenu);
-			}
-			
-			// CRITICAL: Log final state to debug
-			Print("[AskalStore] 🔍 Estado final OnShow: m_CurrentTraderName=" + m_CurrentTraderName + " m_ActiveCurrencyId=" + m_ActiveCurrencyId + " m_VirtualStoreCurrencyId=" + m_VirtualStoreCurrencyId);
 			
 			// Atualizar título do menu
 			if (m_HeaderTitleText)
@@ -6214,105 +5421,40 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 	// SISTEMA DE COOLDOWN E BOTÕES DE AÇÃO
 	// ========================================
 	
-	// Centralized function to refresh buttons for current item
-	protected void RefreshButtonsForItem(string itemClassName, int itemMode)
+	/// Atualiza visibilidade dos botões de ação baseado no item mode
+	void UpdateActionButtons(int itemMode)
 	{
-		// Resolve currency for this item
-		string currencyId = ResolveCurrencyForItem(itemClassName, m_CurrentTraderName);
+		// itemMode: -1=Disabled, 0=See Only, 1=Buy Only, 2=Sell Only, 3=Buy+Sell
+		m_CurrentItemMode = itemMode;
 		
-		// CRITICAL: Only update m_ActiveCurrencyId if there's NO active trader
-		// If trader is active, m_ActiveCurrencyId was already set correctly when trader was opened
-		// Updating it here would overwrite the trader's currency with VirtualStore currency
-		if (!m_CurrentTraderName || m_CurrentTraderName == "")
-		{
-			// No trader active - safe to update m_ActiveCurrencyId
-			if (currencyId != m_ActiveCurrencyId)
-			{
-				m_ActiveCurrencyId = currencyId;
-				Print("[AskalStore] 🔄 m_ActiveCurrencyId atualizado (sem trader): " + currencyId);
-			}
-		}
-		else
-		{
-			// Trader is active - FORCE use of m_ActiveCurrencyId (don't trust ResolveCurrencyForItem result)
-			// This ensures trader currency is always used when trader is open
-			if (m_ActiveCurrencyId && m_ActiveCurrencyId != "")
-			{
-				currencyId = m_ActiveCurrencyId;
-				Print("[AskalStore] 🔒 Trader ativo - FORÇANDO uso de m_ActiveCurrencyId: " + currencyId);
-			}
-			else
-			{
-				Print("[AskalStore] ⚠️ Trader ativo mas m_ActiveCurrencyId vazio! Usando resolved: " + currencyId);
-			}
-		}
-		
-		// Get shortname - prefer m_CurrentCurrencyShortName if set, otherwise resolve
-		string shortName = "";
-		if (m_CurrentCurrencyShortName && m_CurrentCurrencyShortName != "")
-		{
-			shortName = m_CurrentCurrencyShortName;
-		}
-		else
-		{
-			shortName = GetCurrencyShortName(currencyId);
-			
-			// Final validation: ensure shortName is valid
-			if (!shortName || shortName == "" || shortName == currencyId)
-			{
-				Print("[AskalStore] CRITICAL: GetCurrencyShortName failed for " + currencyId + " (returned: " + shortName + ")");
-				// Use hardcoded fallbacks as absolute last resort
-				if (currencyId == "Askal_Money")
-					shortName = "AKC";
-				else if (currencyId == "VirtualStore_Money")
-					shortName = "VST";
-				else
-					shortName = "???";
-				Print("[AskalStore] Using fallback shortname: " + shortName);
-			}
-		}
-		
-		// Determine permissions based on item mode
 		bool canBuy = (itemMode == 1 || itemMode == 3);
 		bool canSell = (itemMode == 2 || itemMode == 3);
 		
-		// Check if player has item (for sell)
 		bool playerHasItem = false;
 		if (m_BatchSellEnabled)
 			playerHasItem = true;
 		else if (m_SelectedInventoryItem)
 			playerHasItem = true;
-		else if (itemClassName && itemClassName != "")
-			playerHasItem = IsItemInInventory(itemClassName);
+		else if (m_CurrentSelectedClassName && m_CurrentSelectedClassName != "")
+			playerHasItem = IsItemInInventory(m_CurrentSelectedClassName);
 		
-		// Check if batch mode (stackable or batch purchase mode)
-		bool isBatchMode = (m_SliderQuantityType != AskalItemQuantityType.NONE) || m_BatchBuyEnabled || m_BatchSellEnabled;
-		
-		// Apply mode restrictions
-		if (itemMode == 1)
-			canSell = false; // Buy Only
-		if (itemMode == 2)
-			canBuy = false; // Sell Only
+		if (canSell && !playerHasItem)
+			canSell = false;
 		if (itemMode <= 0)
 		{
 			canBuy = false;
-			canSell = false;
+			if (itemMode <= 0)
+				canSell = false;
 		}
-		
-		// If mode allows sell but player doesn't have item, disable sell
-		if (canSell && !playerHasItem)
-			canSell = false;
 		
 		m_CurrentCanBuy = canBuy;
 		m_CurrentCanSell = canSell;
 		
-		// Determine button visibility
 		bool showDual = canBuy && canSell;
 		bool showBuySolo = canBuy && !canSell;
 		bool showSellSolo = canSell && !canBuy;
 		bool showSinglePanel = (!showDual) && (showBuySolo || showSellSolo);
 		
-		// Update button visibility
 		if (m_BuySellDualPanel)
 			m_BuySellDualPanel.Show(showDual);
 		if (m_BuyButton)
@@ -6342,21 +5484,8 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 				m_BuyButtonSolo.Show(false);
 			if (m_SellButtonSolo)
 				m_SellButtonSolo.Show(false);
-			
-			ResetButtonTotals();
-			Print("[AskalStore] WARN - no valid actions for current item");
 		}
 		
-		// Zero values for buttons that shouldn't be displayed
-		if (!canBuy)
-			UpdateBuyTotalForLayout(0);
-		if (!canSell)
-			UpdateSellTotalForLayout(0);
-		
-		// Update currency shortname widgets
-		UpdateCurrencyShortnameWidgets(shortName, showDual, showBuySolo, showSellSolo);
-		
-		// Update layout
 		int resolvedLayout = 0;
 		if (showDual)
 			resolvedLayout = 3;
@@ -6366,174 +5495,48 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			resolvedLayout = 2;
 		m_CurrentActionLayout = resolvedLayout;
 		
-		Print("[AskalStore] UI RefreshButtonsForItem called: item=" + itemClassName + " canBuy=" + canBuy + " canSell=" + canSell + " isBatch=" + isBatchMode + " currency=" + currencyId + " shortName=" + shortName);
-	}
-	
-	// Update button visibility from storeMeta permissions (centralized, called once on store open)
-	protected void UpdateActionButtonsFromStoreMeta(bool canBuy, bool canSell, bool batchMode = false)
-	{
-		// Update button visibility based on storeMeta permissions
-		// If batchMode, show batch-specific buttons; otherwise show single/batch buttons based on permissions
-		bool showDual = canBuy && canSell && !batchMode;
-		bool showBuySolo = canBuy && !canSell && !batchMode;
-		bool showSellSolo = canSell && !canBuy && !batchMode;
-		bool showBatchBuy = canBuy && batchMode;
-		bool showBatchSell = canSell && batchMode;
-		bool showSinglePanel = (!showDual) && (showBuySolo || showSellSolo);
-		
-		// Update button visibility
-		if (m_BuySellDualPanel)
-			m_BuySellDualPanel.Show(showDual);
-		if (m_BuyButton)
-			m_BuyButton.Show(showDual);
-		if (m_SellButton)
-			m_SellButton.Show(showDual);
-		
-		if (m_BuySellSinglePanel)
-			m_BuySellSinglePanel.Show(showSinglePanel);
-		
-		if (m_BuyButtonSolo)
-			m_BuyButtonSolo.Show(showBuySolo);
-		if (m_SellButtonSolo)
-			m_SellButtonSolo.Show(showSellSolo);
-		
-		if (!showDual && !showSinglePanel)
-		{
-			if (m_BuySellDualPanel)
-				m_BuySellDualPanel.Show(false);
-			if (m_BuySellSinglePanel)
-				m_BuySellSinglePanel.Show(false);
-			if (m_BuyButton)
-				m_BuyButton.Show(false);
-			if (m_SellButton)
-				m_SellButton.Show(false);
-			if (m_BuyButtonSolo)
-				m_BuyButtonSolo.Show(false);
-			if (m_SellButtonSolo)
-				m_SellButtonSolo.Show(false);
-			
-			ResetButtonTotals();
-			Print("[AskalStore] WARN - no valid actions for current store");
-		}
-		
-		Print("[AskalStore] UI UpdateActionButtonsFromStoreMeta: canBuy=" + canBuy + " canSell=" + canSell + " showDual=" + showDual + " showSingle=" + showSinglePanel);
-	}
-	
-	/// Atualiza visibilidade dos botões de ação baseado no item mode
-	void UpdateActionButtons(int itemMode)
-	{
-		// itemMode: -1=Disabled, 0=See Only, 1=Buy Only, 2=Sell Only, 3=Buy+Sell
-		m_CurrentItemMode = itemMode;
-		
-		// Get current item class name
-		string itemClassName = "";
-		if (m_SelectedItemIndex >= 0 && m_SelectedItemIndex < m_Items.Count())
-		{
-			AskalItemData itemData = m_Items.Get(m_SelectedItemIndex);
-			if (itemData)
-			{
-				itemClassName = itemData.GetClassName();
-				if (m_SelectedVariantClass && m_SelectedVariantClass != "")
-					itemClassName = m_SelectedVariantClass;
-			}
-		}
-		else if (m_CurrentSelectedClassName && m_CurrentSelectedClassName != "")
-		{
-			itemClassName = m_CurrentSelectedClassName;
-		}
-		else if (m_SelectedInventoryItem)
-		{
-			itemClassName = m_SelectedInventoryItem.GetType();
-		}
-		
-		// Use centralized refresh function
-		RefreshButtonsForItem(itemClassName, itemMode);
+		Print("[AskalStore] 🔘 Botões atualizados | Mode: " + itemMode + " | Buy: " + canBuy + " | Sell: " + canSell + " | HasItem: " + playerHasItem);
 	}
 	
 	protected void UpdateActionButtonsForBatch(bool isBuyBatch)
 	{
-		// Get current item class name
-		string itemClassName = "";
-		if (m_SelectedItemIndex >= 0 && m_SelectedItemIndex < m_Items.Count())
-		{
-			AskalItemData itemData = m_Items.Get(m_SelectedItemIndex);
-			if (itemData)
-			{
-				itemClassName = itemData.GetClassName();
-				if (m_SelectedVariantClass && m_SelectedVariantClass != "")
-					itemClassName = m_SelectedVariantClass;
-			}
-		}
-		else if (m_CurrentSelectedClassName && m_CurrentSelectedClassName != "")
-		{
-			itemClassName = m_CurrentSelectedClassName;
-		}
-		else if (m_SelectedInventoryItem)
-		{
-			itemClassName = m_SelectedInventoryItem.GetType();
-		}
-		
-		// Use mode 1 for buy batch, mode 2 for sell batch
-		int itemMode;
 		if (isBuyBatch)
-			itemMode = 1;
+		{
+			m_CurrentSelectedClassName = "";
+			UpdateActionButtons(1);
+		}
 		else
-			itemMode = 2;
-		RefreshButtonsForItem(itemClassName, itemMode);
+		{
+			m_CurrentSelectedClassName = "";
+			UpdateActionButtons(2);
+		}
 	}
 	
 	protected void RefreshActionButtonsForSelection()
 	{
-		// Get current item class name and mode
-		string itemClassName = "";
-		int itemMode = 0;
-		AskalItemData itemData = NULL;
-		
 		if (m_BatchBuyEnabled || m_BatchSellEnabled)
-		{
-			if (m_SelectedItemIndex >= 0 && m_SelectedItemIndex < m_Items.Count())
-			{
-				itemData = m_Items.Get(m_SelectedItemIndex);
-				if (itemData)
-				{
-					itemClassName = itemData.GetClassName();
-					if (m_SelectedVariantClass && m_SelectedVariantClass != "")
-						itemClassName = m_SelectedVariantClass;
-					itemMode = ResolveItemModeForClass(itemClassName, m_SelectedItemIndex);
-				}
-			}
-			else if (m_SelectedInventoryItem)
-			{
-				itemClassName = m_SelectedInventoryItem.GetType();
-				itemMode = ResolveItemModeForClass(itemClassName, -1);
-			}
-			
-			// Refresh buttons with current mode (batch mode affects canBuy/canSell logic)
-			RefreshButtonsForItem(itemClassName, itemMode);
 			return;
-		}
 		
 		if (m_SelectedItemIndex >= 0 && m_SelectedItemIndex < m_Items.Count())
 		{
-			itemData = m_Items.Get(m_SelectedItemIndex);
-			if (itemData)
-			{
-				itemClassName = itemData.GetClassName();
-				if (m_SelectedVariantClass && m_SelectedVariantClass != "")
-					itemClassName = m_SelectedVariantClass;
-				itemMode = ResolveItemModeForClass(itemClassName, m_SelectedItemIndex);
-			}
-			RefreshButtonsForItem(itemClassName, itemMode);
+			string className = m_Items.Get(m_SelectedItemIndex).GetClassName();
+			if (m_SelectedVariantClass && m_SelectedVariantClass != "")
+				className = m_SelectedVariantClass;
+			m_CurrentSelectedClassName = className;
+			int mode = ResolveItemModeForClass(className, m_SelectedItemIndex);
+			UpdateActionButtons(mode);
 		}
 		else if (m_SelectedInventoryItem)
 		{
-			itemClassName = m_SelectedInventoryItem.GetType();
-			itemMode = ResolveItemModeForClass(itemClassName, -1);
-			RefreshButtonsForItem(itemClassName, itemMode);
-		}
-		else
-		{
-			RefreshButtonsForItem("", 0);
+			string invClass = m_SelectedInventoryItem.GetType();
+			m_CurrentSelectedClassName = invClass;
+			int invMode = ResolveItemModeForClass(invClass, -1);
+			UpdateActionButtons(invMode);
+			}
+			else
+			{
+			m_CurrentSelectedClassName = "";
+			UpdateActionButtons(0);
 		}
 	}
 	
@@ -6656,7 +5659,43 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		string datasetId = "";
 		string categoryId = "";
 		
-		// Tentar obter dataset e categoria do item
+		// PRIORIDADE 1: Usar SetupItems do trader atual (se houver)
+		if (m_TraderSetupItems && m_TraderSetupItems.Count() > 0)
+		{
+			// Tentar obter dataset e categoria do item
+			if (itemIndex >= 0)
+			{
+				if (m_ItemDatasetIds && itemIndex < m_ItemDatasetIds.Count())
+					datasetId = m_ItemDatasetIds.Get(itemIndex);
+				if (m_ItemCategoryIds && itemIndex < m_ItemCategoryIds.Count())
+					categoryId = m_ItemCategoryIds.Get(itemIndex);
+			}
+			
+			// Se não encontrou, tentar resolver
+			if (datasetId == "" || categoryId == "")
+				ResolveDatasetAndCategoryForClass(className, datasetId, categoryId);
+			
+			// Usar GetItemMode() que respeita a hierarquia correta
+			int traderMode = GetItemMode(datasetId, categoryId, className);
+			if (traderMode >= 0) // Se encontrou configuração (incluindo modo 0)
+				return traderMode;
+			
+			// Se não encontrou no trader, retornar -1 (disabled) para itens não configurados
+			// Mas se "ALL" está definido, já foi considerado em GetItemMode()
+			return -1;
+		}
+		
+		// FALLBACK: Sistema antigo de VirtualStore (se não há trader configurado)
+		if (!m_VirtualStoreSetupModes || m_VirtualStoreSetupModes.Count() == 0)
+			return 3;
+		
+		int mode;
+		if (TryGetModeFromKey(className, mode))
+			return mode;
+		
+		string normalized = NormalizeClassName(className);
+		if (normalized != className && TryGetModeFromKey(normalized, mode))
+			return mode;
 		if (itemIndex >= 0)
 		{
 			if (m_ItemDatasetIds && itemIndex < m_ItemDatasetIds.Count())
@@ -6665,13 +5704,16 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 				categoryId = m_ItemCategoryIds.Get(itemIndex);
 		}
 		
-		// Se não encontrou, tentar resolver
 		if (datasetId == "" || categoryId == "")
 			ResolveDatasetAndCategoryForClass(className, datasetId, categoryId);
 		
-		// Usar GetItemMode() que já verifica trader vs VirtualStore corretamente
-		int itemMode = GetItemMode(datasetId, categoryId, className);
-		return itemMode;
+		if (TryGetModeFromKey(categoryId, mode))
+			return mode;
+		
+		if (TryGetModeFromKey(datasetId, mode))
+			return mode;
+		
+		return 3;
 	}
 	
 	override void Update(float timeslice)
@@ -6689,9 +5731,6 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		
 		// Verificar health pendente do helper (3_Game)
 		ProcessPendingHealth();
-		
-		// Verificar erros pendentes do helper (3_Game)
-		ProcessPendingErrors();
 		
 		// Verificar se há solicitação de abertura de menu do trader
 		string pendingTraderMenu = AskalNotificationHelper.GetPendingTraderMenu();
@@ -7162,44 +6201,27 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			AskalItemSyncData ammoData = cache.FindItem(ammoClassName);
 			if (ammoData && ammoData.BasePrice > 0)
 			{
-				// Ler stack máximo do config para calcular preço unitário
-				int ammoMaxQty = 1;
-				string configPath = "CfgMagazines " + ammoClassName + " count";
-				if (GetGame().ConfigIsExisting(configPath))
+				float quantityMax = 1.0;
+				Object tempAmmoObj = SpawnTemporaryObject(ammoClassName);
+				ItemBase ammoItem = ItemBase.Cast(tempAmmoObj);
+				
+				if (ammoItem && ammoItem.HasQuantity())
 				{
-					ammoMaxQty = GetGame().ConfigGetInt(configPath);
+					quantityMax = ammoItem.GetQuantityMax();
+					if (quantityMax <= 0)
+						quantityMax = ammoItem.GetQuantity();
+					if (quantityMax <= 0)
+						quantityMax = 1.0;
 				}
 				
-				if (ammoMaxQty > 1)
-				{
-					// É stackable: preço é por unidade = BasePrice / maxQty
-					unitPrice = ammoData.BasePrice / ammoMaxQty;
-				}
-				else
-				{
-					// Não é stackable ou maxQty = 1: preço já é por unidade
-					unitPrice = ammoData.BasePrice;
-				}
+				if (tempAmmoObj)
+					GetGame().ObjectDelete(tempAmmoObj);
+				
+				unitPrice = ammoData.BasePrice / Math.Max(quantityMax, 1.0);
 			}
 		}
 		
 		return unitPrice;
-	}
-	
-	/// Calcula o preço de exibição para um item (unitário para stackables, completo para outros)
-	protected int GetDisplayPriceForItem(string className, int fullStackPrice)
-	{
-		if (!className || fullStackPrice <= 0)
-			return fullStackPrice;
-		
-		// Verificar se é stackable
-		AskalItemQuantityType qtyType = DetectItemQuantityType(className);
-		if (qtyType != AskalItemQuantityType.STACKABLE)
-			return fullStackPrice; // Não é stackable, retornar preço completo
-		
-		// CORREÇÃO: Para stackables, o preço na config já é por unidade
-		// Então apenas retornamos o preço diretamente (sem dividir por maxQty)
-		return fullStackPrice;
 	}
 	
 	/// Obtém o preço por mL de um tipo de líquido
@@ -7389,7 +6411,7 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			return;
 		
 		Print("[AskalStore] 📤 Solicitando health dos itens do inventário ao servidor...");
-		GetRPCManager().SendRPC("AskalMarketModule", "RequestInventoryHealth", NULL, true, NULL, NULL);
+		GetRPCManager().SendRPC("AskalCoreModule", "RequestInventoryHealth", NULL, true, NULL, NULL);
 	}
 	
 	/// Processa health pendente do helper (3_Game)
@@ -7436,27 +6458,6 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		if (m_ShowingInventoryForSale || m_BatchSellEnabled)
 		{
 			RenderInventoryItemsForSale();
-		}
-	}
-	
-	/// Processa erros pendentes do helper (3_Game)
-	protected void ProcessPendingErrors()
-	{
-		array<string> errors = AskalNotificationHelper.GetPendingErrors();
-		if (!errors || errors.Count() == 0)
-			return;
-		
-		Print("[AskalStore] 📥 Processando " + errors.Count() + " erros pendentes do helper");
-		
-		// Processar todos os erros pendentes
-		for (int i = errors.Count() - 1; i >= 0; i--)
-		{
-			string errorMessage = errors.Get(i);
-			if (errorMessage && errorMessage != "")
-			{
-				DisplayTransactionError(errorMessage);
-				AskalNotificationHelper.RemoveError(i);
-			}
 		}
 	}
 	

@@ -92,8 +92,7 @@ class AskalMarketLoader
         if (!FileExist(path)) return false;
 
         if (!config) config = new AskalVirtualStoreConfig();
-        // JsonFileLoader is a forward-declared type - use AskalJsonLoader instead
-        AskalJsonLoader<AskalVirtualStoreConfig>.LoadFromFile(path, config, false);
+        JsonFileLoader<AskalVirtualStoreConfig>.JsonLoadFile(path, config);
         if (config)
         {
             config.NormalizeAcceptedCurrency();

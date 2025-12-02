@@ -119,17 +119,20 @@ class AskalSellService
 						if (ammoData && ammoData.Price > 0)
 						{
 							// Calcular preço por unidade de munição
-							// Ler stack máximo do config para calcular preço unitário
+							// Assumir que o preço do item Ammo_XXX é para 1 unidade
+							// Se o item tem quantidade, dividir pelo máximo
 							float ammoUnitPrice = ammoData.Price;
-							int ammoMaxQty = 1;
 							
-							string configPath = "CfgMagazines " + ammoItemClass + " count";
-							if (GetGame().ConfigIsExisting(configPath))
+							// Verificar se é stackable e tem quantidade máxima
+							ItemBase tempAmmo = ItemBase.Cast(GetGame().CreateObjectEx(ammoItemClass, vector.Zero, ECE_PLACE_ON_SURFACE, RF_DEFAULT));
+							if (tempAmmo && tempAmmo.HasQuantity())
 							{
-								ammoMaxQty = GetGame().ConfigGetInt(configPath);
+								float ammoMaxQty = tempAmmo.GetQuantityMax();
 								if (ammoMaxQty > 0)
 									ammoUnitPrice = ammoData.Price / ammoMaxQty;
 							}
+							if (tempAmmo)
+								GetGame().ObjectDelete(tempAmmo);
 							
 							// Calcular preço total da munição: quantidade * preço unitário * sellPercent * health
 							float ammoBasePrice = ammoCount * ammoUnitPrice;
@@ -157,23 +160,15 @@ class AskalSellService
 			
 			if (maxQty > 0 && currentQty > 0)
 			{
-				// CORREÇÃO: Calcular preço unitário primeiro
-				// basePrice é o preço de uma pilha completa (maxQty unidades)
-				// Preço unitário = basePrice / maxQty
-				float unitPrice = basePrice / maxQty;
-				
-				// Preço base de venda por unidade = unitPrice * sellPercent
-				float unitSellPrice = unitPrice * (sellPercent / 100.0);
-				
-				// Preço total = quantidade atual * preço unitário de venda * health * sellCoeff
-				float totalUnitPrice = currentQty * unitSellPrice;
-				quantityPrice = totalUnitPrice * (healthPercent / 100.0);
+				// Calcular preço proporcional à quantidade
+				float quantityPercent = (currentQty / maxQty) * 100.0;
+				quantityPrice = baseSellPrice * (quantityPercent / 100.0);
 				
 				// Aplicar coeficiente de venda
 				if (sellCoeff > 0)
 					quantityPrice = quantityPrice * sellCoeff;
 				
-				Print("[AskalSell] [QUANTIDADE] Item stackable: " + currentQty + "/" + maxQty + " unidades | Preço unitário: " + Math.Round(unitPrice) + " | Preço total: $" + Math.Round(quantityPrice));
+				Print("[AskalSell] [QUANTIDADE] Item com " + currentQty + "/" + maxQty + " (" + quantityPercent + "%) = $" + Math.Round(quantityPrice));
 			}
 		}
 		
@@ -198,20 +193,17 @@ class AskalSellService
 		
 		Print("[AskalSell] [PRECO] Preco calculado: " + totalPrice + " (item: " + Math.Round(priceWithHealth) + ", municao: " + Math.Round(ammoPrice) + ", base: " + basePrice + ", sell%: " + sellPercent + ", health%: " + healthPercent + ", coeff: " + sellCoeff + ")");
 		
+		// Retornar preço via parâmetro de saída
+		outPrice = totalPrice;
+		
 		// VERIFICAR: Se item tem cargo, NÃO permitir venda (deve estar vazio) - ANTES de processar pagamento
 		Print("[AskalSell] [VALIDACAO] Verificando se item tem cargo...");
-		bool hasCargo = HasCargoItemsRecursive(itemToSell);
-		Print("[AskalSell] [VALIDACAO] Resultado da verificação de cargo: " + hasCargo);
-		if (hasCargo)
+		if (HasCargoItemsRecursive(itemToSell))
 		{
 			Print("[AskalSell] [ERRO] Item tem cargo - venda bloqueada");
 			outPrice = 0;
-			return false;
-		}
-		Print("[AskalSell] [VALIDACAO] ✅ Item não tem cargo - venda permitida");
-		
-		// Retornar preço via parâmetro de saída
-		outPrice = totalPrice;
+		return false;
+	}
 	
 		// Adiciona dinheiro ANTES de remover item
 		Print("[AskalSell] [PAGAMENTO] Adicionando dinheiro (Mode: " + transactionMode + ")...");
@@ -254,10 +246,28 @@ class AskalSellService
 		return true;
 	}
 	
-	// Obter PlayerBase de PlayerIdentity (usando helper compartilhado)
+	// Obter PlayerBase de PlayerIdentity
 	static PlayerBase GetPlayerFromIdentity(PlayerIdentity identity)
 	{
-		return AskalMarketHelpers.GetPlayerFromIdentity(identity);
+		if (!identity)
+			return NULL;
+		
+		array<Man> players = new array<Man>;
+		GetGame().GetWorld().GetPlayerList(players);
+		
+		string senderId = identity.GetId();
+		for (int playerIdx = 0; playerIdx < players.Count(); playerIdx++)
+		{
+			PlayerBase player = PlayerBase.Cast(players.Get(playerIdx));
+			if (!player)
+				continue;
+			
+			PlayerIdentity playerIdentity = player.GetIdentity();
+			if (playerIdentity && playerIdentity.GetId() == senderId)
+				return player;
+		}
+		
+		return NULL;
 	}
 	
 	// Verificar recursivamente se item tem cargo (itens dentro de containers)
@@ -265,7 +275,7 @@ class AskalSellService
 	static bool HasCargoItemsRecursiveInternal(EntityAI item, array<EntityAI> checkedItems)
 	{
 		if (!item || !item.GetInventory())
-			return false; // Sem inventory = sem cargo
+			return false;
 		
 		// Proteção contra loops infinitos: verificar se já foi checado
 		if (checkedItems.Find(item) != -1)
@@ -273,7 +283,7 @@ class AskalSellService
 		
 		checkedItems.Insert(item);
 		
-		// Obter lista de attachments para excluí-los
+		// Primeiro, verificar attachments para excluí-los
 		array<EntityAI> attachments = new array<EntityAI>();
 		int attCount = item.GetInventory().AttachmentCount();
 		for (int attIdx = 0; attIdx < attCount; attIdx++)
@@ -283,46 +293,40 @@ class AskalSellService
 				attachments.Insert(attachment);
 		}
 		
-		// Enumerar todos os itens no inventário
+		// Agora enumerar todos os itens
 		array<EntityAI> allItems = new array<EntityAI>();
 		item.GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, allItems);
 		
-		// Verificar cada item para ver se está no cargo (não é attachment e não é o próprio item)
+		// Filtrar apenas itens que estão no cargo (não attachments, não o próprio item)
 		foreach (EntityAI cargoItem : allItems)
 		{
-			if (!cargoItem || cargoItem == item)
+			if (!cargoItem)
 				continue;
 			
-			// Ignorar attachments (verificação dupla para garantir)
+			// Ignorar o próprio item
+			if (cargoItem == item)
+				continue;
+			
+			// Verificar se é attachment
 			if (attachments.Find(cargoItem) != -1)
-				continue;
+				continue; // É attachment, não conta como cargo
 			
-			// Verificar se o item está realmente no cargo deste container
-			// Usar GetCurrentInventoryLocation para verificar o parent
+			// Verificar usando InventoryLocation se o item está realmente dentro deste container
 			InventoryLocation itemLoc = new InventoryLocation();
-			if (cargoItem.GetInventory() && cargoItem.GetInventory().GetCurrentInventoryLocation(itemLoc))
-			{
-				EntityAI parent = itemLoc.GetParent();
-				// Se o parent é o item sendo verificado, então está no cargo
-				if (parent == item)
-				{
-					// Verificar o tipo de slot - attachments geralmente têm slots negativos
-					int slot = itemLoc.GetSlot();
-					// Slots negativos são geralmente attachments ou slots especiais
-					// Slots normais de cargo são >= 0
-					// Mas alguns containers podem ter slots negativos válidos, então não confiar apenas nisso
-					
-					// Verificação adicional: se já foi identificado como attachment acima, não considerar
-					// Se chegou aqui e não é attachment, então está no cargo
-					
-					// Item encontrado no cargo - verificar recursivamente se ele também tem cargo
-					if (HasCargoItemsRecursiveInternal(cargoItem, checkedItems))
-						return true; // Container dentro de container com itens
-					
-					// Item no cargo encontrado
-					return true;
-				}
-			}
+			if (!cargoItem.GetInventory().GetCurrentInventoryLocation(itemLoc))
+				continue; // Não conseguiu obter location, pular
+			
+			// Se o parent não é o item sendo verificado, não é cargo deste item
+			EntityAI parent = itemLoc.GetParent();
+			if (parent != item)
+				continue; // Item não está dentro deste container
+			
+			// Item está no cargo - verificar recursivamente se ele também tem cargo
+			if (HasCargoItemsRecursiveInternal(cargoItem, checkedItems))
+				return true; // Container dentro de container com itens
+			
+			// Item no cargo encontrado
+			return true;
 		}
 		
 		return false; // Sem itens no cargo
@@ -374,10 +378,28 @@ class AskalSellService
 		return description;
 	}
 	
-	// Obter display name do item (usando helper compartilhado)
+	// Obter display name do item
 	static string GetItemDisplayName(string className)
 	{
-		return AskalMarketHelpers.GetItemDisplayName(className);
+		string displayName = "";
+		
+		GetGame().ConfigGetText("CfgVehicles " + className + " displayName", displayName);
+		if (displayName && displayName != "")
+			return displayName;
+		
+		GetGame().ConfigGetText("CfgWeapons " + className + " displayName", displayName);
+		if (displayName && displayName != "")
+			return displayName;
+		
+		GetGame().ConfigGetText("CfgMagazines " + className + " displayName", displayName);
+		if (displayName && displayName != "")
+			return displayName;
+		
+		GetGame().ConfigGetText("CfgAmmo " + className + " displayName", displayName);
+		if (displayName && displayName != "")
+			return displayName;
+		
+		return className; // Fallback
 	}
 	
 	// Esta função não é mais usada - validação de cargo agora bloqueia venda

@@ -75,7 +75,7 @@ class AskalNotificationHelper
 	
 	protected static ref array<ref Param2<string, float>> s_InventoryHealth;
 	
-	static void SetInventoryHealth(array<ref Param2<string, float>> healthArray)
+	static void SetInventoryHealth(ref array<ref Param2<string, float>> healthArray)
 	{
 		if (!s_InventoryHealth)
 			s_InventoryHealth = new array<ref Param2<string, float>>();
@@ -115,10 +115,8 @@ class AskalNotificationHelper
 	
 	protected static string s_PendingTraderMenu;
 	protected static ref map<string, int> s_PendingTraderSetupItems;
-	protected static string s_PendingTraderAcceptedCurrency;
-	protected static string s_PendingTraderCurrencyShortName;
 	
-	static void RequestOpenTraderMenu(string traderName, map<string, int> setupItems = NULL, string acceptedCurrency = "", string currencyShortName = "")
+	static void RequestOpenTraderMenu(string traderName, ref map<string, int> setupItems = NULL)
 	{
 		s_PendingTraderMenu = traderName;
 		if (setupItems)
@@ -129,9 +127,7 @@ class AskalNotificationHelper
 		{
 			s_PendingTraderSetupItems = new map<string, int>();
 		}
-		s_PendingTraderAcceptedCurrency = acceptedCurrency;
-		s_PendingTraderCurrencyShortName = currencyShortName;
-		Print("[AskalNotification] 🏪 Solicitação de abertura de menu do trader: " + traderName + " | Currency: " + acceptedCurrency + " | ShortName: " + currencyShortName);
+		Print("[AskalNotification] 🏪 Solicitação de abertura de menu do trader: " + traderName);
 		
 		// Contar entradas do SetupItems (evitar operador ternário)
 		int setupCount = 0;
@@ -152,142 +148,11 @@ class AskalNotificationHelper
 		return s_PendingTraderSetupItems;
 	}
 	
-	static string GetPendingTraderAcceptedCurrency()
-	{
-		return s_PendingTraderAcceptedCurrency;
-	}
-	
-	static string GetPendingTraderCurrencyShortName()
-	{
-		return s_PendingTraderCurrencyShortName;
-	}
-	
 	static void ClearPendingTraderMenu()
 	{
 		s_PendingTraderMenu = "";
-		s_PendingTraderAcceptedCurrency = "";
-		s_PendingTraderCurrencyShortName = "";
 		if (s_PendingTraderSetupItems)
 			s_PendingTraderSetupItems.Clear();
-	}
-	
-	// ========================================
-	// SISTEMA DE STORE META (NEW)
-	// ========================================
-	
-	protected static string s_StoreMetaId;
-	protected static string s_StoreMetaName;
-	protected static string s_StoreMetaType;
-	protected static string s_StoreMetaCurrencyId;
-	protected static string s_StoreMetaCurrencyShortName;
-	protected static int s_StoreMetaCurrencyMode;
-	protected static bool s_StoreMetaCanBuy;
-	protected static bool s_StoreMetaCanSell;
-	protected static bool s_StoreMetaBatchMode;
-	protected static float s_StoreMetaBuyCoeff;
-	protected static float s_StoreMetaSellCoeff;
-	protected static bool s_StoreMetaReceived = false;
-	
-	static void SetStoreMeta(string storeId, string storeName, string storeType, string currencyId, string currencyShortName, int currencyMode, bool canBuy, bool canSell, bool batchMode, float buyCoeff, float sellCoeff)
-	{
-		s_StoreMetaId = storeId;
-		s_StoreMetaName = storeName;
-		s_StoreMetaType = storeType;
-		s_StoreMetaCurrencyId = currencyId;
-		s_StoreMetaCurrencyShortName = currencyShortName;
-		s_StoreMetaCurrencyMode = currencyMode;
-		s_StoreMetaCanBuy = canBuy;
-		s_StoreMetaCanSell = canSell;
-		s_StoreMetaBatchMode = batchMode;
-		s_StoreMetaBuyCoeff = buyCoeff;
-		s_StoreMetaSellCoeff = sellCoeff;
-		s_StoreMetaReceived = true;
-		Print("[AskalNotification] 🏪 StoreMeta recebido: " + storeName + " currency=" + currencyId + " (" + currencyShortName + ") canBuy=" + canBuy + " canSell=" + canSell);
-	}
-	
-	static bool HasStoreMeta()
-	{
-		return s_StoreMetaReceived;
-	}
-	
-	static string GetStoreMetaCurrencyId()
-	{
-		return s_StoreMetaCurrencyId;
-	}
-	
-	static string GetStoreMetaCurrencyShortName()
-	{
-		return s_StoreMetaCurrencyShortName;
-	}
-	
-	static bool GetStoreMetaCanBuy()
-	{
-		return s_StoreMetaCanBuy;
-	}
-	
-	static bool GetStoreMetaCanSell()
-	{
-		return s_StoreMetaCanSell;
-	}
-	
-	static bool GetStoreMetaBatchMode()
-	{
-		return s_StoreMetaBatchMode;
-	}
-	
-	static void ClearStoreMeta()
-	{
-		s_StoreMetaId = "";
-		s_StoreMetaName = "";
-		s_StoreMetaType = "";
-		s_StoreMetaCurrencyId = "";
-		s_StoreMetaCurrencyShortName = "";
-		s_StoreMetaCurrencyMode = 0;
-		s_StoreMetaCanBuy = false;
-		s_StoreMetaCanSell = false;
-		s_StoreMetaBatchMode = false;
-		s_StoreMetaBuyCoeff = 1.0;
-		s_StoreMetaSellCoeff = 1.0;
-		s_StoreMetaReceived = false;
-	}
-	
-	// ========================================
-	// SISTEMA DE ERROS DE TRANSAÇÃO
-	// ========================================
-	
-	protected static ref array<string> s_PendingErrors;
-	
-	static void AddTransactionError(string errorMessage)
-	{
-		if (!s_PendingErrors)
-			s_PendingErrors = new array<string>();
-		
-		if (errorMessage && errorMessage != "")
-		{
-			s_PendingErrors.Insert(errorMessage);
-			Print("[AskalNotification] ❌ Erro de transação adicionado: " + errorMessage);
-		}
-	}
-	
-	static array<string> GetPendingErrors()
-	{
-		if (!s_PendingErrors)
-			s_PendingErrors = new array<string>();
-		return s_PendingErrors;
-	}
-	
-	static void ClearPendingErrors()
-	{
-		if (s_PendingErrors)
-			s_PendingErrors.Clear();
-	}
-	
-	static void RemoveError(int index)
-	{
-		if (s_PendingErrors && index >= 0 && index < s_PendingErrors.Count())
-		{
-			s_PendingErrors.Remove(index);
-		}
 	}
 }
 

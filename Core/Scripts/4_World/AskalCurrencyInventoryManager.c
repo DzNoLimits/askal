@@ -150,8 +150,7 @@ class AskalCurrencyInventoryManager
 				{
 					// Não há espaço: dropa no chão (Q6 - OPÇÃO C)
 					vector playerPos = player.GetPosition();
-					Object coinObj = GetGame().CreateObjectEx(coinClass, playerPos, ECE_PLACE_ON_SURFACE);
-					coin = EntityAI.Cast(coinObj);
+					coin = GetGame().CreateObjectEx(coinClass, playerPos, ECE_PLACE_ON_SURFACE);
 					if (coin)
 					{
 						droppedCoins.Insert(coin);

@@ -407,7 +407,7 @@ FrameWidgetClass market_root_frame {
            vexactsize 0
            {
             EditBoxWidgetClass search_input {
-             color 1 1 1 0.7843
+             color 1 1 1 0.3922
              size 0.94 0.78
              halign center_ref
              valign center_ref
@@ -416,7 +416,7 @@ FrameWidgetClass market_root_frame {
              hexactsize 0
              vexactsize 0
              style Editor
-             text "Procurar"
+             text "Fast Search"
              "limit visible" 0
              "exact text" 1
              font "gui/fonts/MetronBook-Italic"
@@ -701,60 +701,6 @@ FrameWidgetClass market_root_frame {
              content_halign center
              content_valign center
             }
-            PlayerPreviewWidgetClass player_preview_widget {
-             ignorepointer 1
-             position 0 0
-             size 1 1
-             halign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             priority 10
-            }
-           }
-          }
-          ButtonWidgetClass toggle_player_preview {
-           visible 0
-           disabled 0
-           clipchildren 1
-           inheritalpha 0
-           ignorepointer 0
-           keepsafezone 0
-           color 0.8824 0.8824 0.8824 0
-           position 0 0.01
-           size 26 26
-           halign right_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 1
-           vexactsize 1
-           priority 50
-           userID 2
-           style OldStyle
-           "no focus" 1
-           text "a"
-           text_offset 1 1
-           text_halign center
-           font "gui/fonts/Metron-BoldItalic48"
-           "text color" 1 1 1 1
-           switch normal
-           {
-            ImageWidgetClass player_preview_icon {
-             visible 1
-             ignorepointer 1
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-             priority 1
-             image0 "set:dayz_gui image:notification_friend"
-             mode additive
-             "src alpha" 1
-            }
            }
           }
          }
@@ -1009,8 +955,7 @@ FrameWidgetClass market_root_frame {
            clipchildren 0
            ignorepointer 1
            color 1 0 0 1
-           position 0 -6.00001
-           size 1 106
+           size 1 100
            halign center_ref
            valign bottom_ref
            hexactpos 1
@@ -1022,7 +967,6 @@ FrameWidgetClass market_root_frame {
             FrameWidgetClass buy_and_sell_button {
              visible 1
              ignorepointer 1
-             position 0 0
              size 1 1
              halign center_ref
              valign center_ref
@@ -1035,8 +979,8 @@ FrameWidgetClass market_root_frame {
                visible 1
                ignorepointer 0
                color 0 0.5216 0.1412 0.8275
-               position 0.02 -0.00242
-               size 0.47 0.91517
+               position 0.02 0.04
+               size 0.47 1
                valign center_ref
                hexactpos 0
                vexactpos 0
@@ -1151,8 +1095,8 @@ FrameWidgetClass market_root_frame {
                visible 1
                ignorepointer 0
                color 1 0.6118 0 0.7843
-               position 0.02 -0.00242
-               size 0.47 0.91517
+               position 0.02 0.04
+               size 0.47 1
                halign right_ref
                valign center_ref
                hexactpos 0

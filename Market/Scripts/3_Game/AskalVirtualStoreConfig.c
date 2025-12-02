@@ -70,36 +70,7 @@ class AskalVirtualStoreConfig
 				tempConfig.NormalizeAcceptedCurrency();
 				tempConfig.EnsureDefaults();
 				loadedConfig = tempConfig;
-				
-				// Resolve and validate AcceptedCurrency
-				string acceptedCurrency = tempConfig.GetPrimaryCurrency();
-				int currencyMode = -1;
-				AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
-				if (marketConfig && acceptedCurrency != "")
-				{
-					AskalCurrencyConfig currencyCfg = marketConfig.GetCurrencyOrNull(acceptedCurrency);
-					if (currencyCfg)
-					{
-						currencyMode = currencyCfg.Mode;
-					}
-					else
-					{
-						Print("[AskalVirtualStoreConfig] ⚠️ Currency " + acceptedCurrency + " not defined in MarketConfig, using default");
-						acceptedCurrency = marketConfig.GetDefaultCurrencyId();
-						if (acceptedCurrency != "")
-						{
-							AskalCurrencyConfig defaultCfg = marketConfig.GetCurrencyOrNull(acceptedCurrency);
-							if (defaultCfg)
-								currencyMode = defaultCfg.Mode;
-						}
-					}
-				}
-				
-				int setupItemsCount = 0;
-				if (tempConfig.SetupItems)
-					setupItemsCount = tempConfig.SetupItems.Count();
-				
-				Print("[AskalVirtualStoreConfig] ✅ Config loaded from: " + path + " | AcceptedCurrency: " + acceptedCurrency + " (mode=" + currencyMode + ") | SetupItems loaded: " + setupItemsCount);
+				Print("[AskalVirtualStoreConfig] ✅ Config carregada de: " + path);
 				break;
 			}
 		}

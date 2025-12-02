@@ -96,7 +96,7 @@ class AskalCoreDatabaseManager
 		
 		// Configurar caminho do database APENAS no servidor
 		// Cliente recebe dados via RPC, não precisa acessar filesystem
-		if (AskalCoreHelpers.IsServerSafe())
+		if (GetGame().IsServer())
 		{
 			// Configurar caminho do database se ainda não foi configurado
 			string dbPath = AskalDatabase.GetDatabasePath();
@@ -122,6 +122,11 @@ class AskalCoreDatabaseManager
 		Print("[ASKAL_CORE] Database marked as loaded");
 		Print("[ASKAL_CORE] ==========================================");
 		return true;
+	}
+	
+	bool IsLoaded()
+	{
+		return m_IsLoaded;
 	}
 	
 	// ========================================

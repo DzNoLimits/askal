@@ -124,13 +124,11 @@ class AskalDatabaseClientCache
 	private static ref AskalDatabaseClientCache s_Instance;
 	
 	protected ref map<string, ref AskalDatasetSyncData> m_CachedDatasets;
-	protected ref array<string> m_DatasetOrder; // Ordem de recebimento dos datasets
 	protected bool m_IsSynced = false;
 	
 	void AskalDatabaseClientCache()
 	{
 		m_CachedDatasets = new map<string, ref AskalDatasetSyncData>;
-		m_DatasetOrder = new array<string>();
 		Print("[AskalCache] Cache inicializado");
 	}
 	
@@ -147,27 +145,15 @@ class AskalDatabaseClientCache
 	void Clear()
 	{
 		m_CachedDatasets.Clear();
-		if (m_DatasetOrder)
-			m_DatasetOrder.Clear();
 		m_IsSynced = false;
 		Print("[AskalCache] Cache limpo");
 	}
 	
 	// Adicionar um dataset ao cache (usado durante sincronização)
-	// Preserva ordem de recebimento
 	void AddDataset(AskalDatasetSyncData dataset)
 	{
 		if (dataset)
 		{
-			if (!m_DatasetOrder)
-				m_DatasetOrder = new array<string>();
-			
-			// Adicionar à ordem se ainda não estiver
-			if (m_DatasetOrder.Find(dataset.DatasetID) == -1)
-			{
-				m_DatasetOrder.Insert(dataset.DatasetID);
-			}
-			
 			m_CachedDatasets.Set(dataset.DatasetID, dataset);
 			Print("[AskalCache] Dataset adicionado: " + dataset.DatasetID + " (Total: " + m_CachedDatasets.Count() + ")");
 		}
@@ -190,18 +176,10 @@ class AskalDatabaseClientCache
 		return m_IsSynced && m_CachedDatasets.Count() > 0;
 	}
 	
-	// Obter todos os datasets (map - para compatibilidade)
+	// Obter todos os datasets
 	map<string, ref AskalDatasetSyncData> GetDatasets()
 	{
 		return m_CachedDatasets;
-	}
-	
-	// Obter ordem dos datasets (na ordem de recebimento)
-	array<string> GetDatasetOrder()
-	{
-		if (!m_DatasetOrder)
-			m_DatasetOrder = new array<string>();
-		return m_DatasetOrder;
 	}
 	
 	// Obter dataset específico

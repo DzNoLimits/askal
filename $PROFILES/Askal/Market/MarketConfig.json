@@ -50,7 +50,7 @@
 		},
 		"VirtualChristmas_Money": {
 			"Mode": 2,
-			"ShortName": "VCT",
+			"ShortName": "SANTAS",
 			"Values": [],
 			"StartCurrency": 1000
 		}

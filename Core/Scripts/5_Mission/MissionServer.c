@@ -29,23 +29,21 @@ modded class MissionServer extends MissionBase
         int totalDatasets = AskalDatabase.GetAllDatasetIDs().Count();
         Print("[AskalCore] Total de datasets carregados: " + totalDatasets);
         
-        Print("[AskalCore] ========================================");
-        Print("[AskalCore] Core inicializado - Database pronto para uso");
-        Print("[AskalCore] Market deve inicializar seus próprios módulos");
-        Print("[AskalCore] ========================================");
+        // Inicializar módulos de compras e vendas (4_World)
+        AskalPurchaseModule.GetInstance();
+        AskalSellModule.GetInstance();
         
-        // [AskalDevTest] dev runner removed - production build
+        // Spawnar traders estáticos
+        Print("[AskalCore] ========================================");
+        Print("[AskalCore] SPAWNANDO TRADERS ESTÁTICOS");
+        Print("[AskalCore] ========================================");
+        AskalTraderSpawnService.SpawnAllTraders();
+        
+        Print("[AskalCore] ========================================");
     }
     
     // NOTA: Seguindo padrão TraderX - não enviamos dados automaticamente
     // O cliente solicita quando abre o menu via RequestDatasets RPC
     // Isso evita sobrecarga e permite controle melhor do timing
-    
-    // ITER-1: Flush pending saves on shutdown
-    override void OnMissionFinish()
-    {
-        AskalPlayerBalance.FlushAllPendingSaves();
-        super.OnMissionFinish();
-    }
 }
 
