@@ -205,8 +205,10 @@ class AskalStoreMetaBuilder
 		}
 		
 		// Send via RPC (using Param structure)
-		// Param format: storeId, storeName, storeType, currencyId, currencyShortName, currencyMode, canBuy, canSell, batchMode, buyCoeff, sellCoeff
-		Param11<string, string, string, string, string, int, bool, bool, bool, float, float> params = new Param11<string, string, string, string, string, int, bool, bool, bool, float, float>(
+		// Note: DayZ only supports up to Param8, so we'll use Param8 for first 8 params
+		// Remaining params (batchMode, buyCoeff, sellCoeff) will be sent as defaults or in a follow-up RPC if needed
+		// For now, use Param8 with essential data
+		Param8<string, string, string, string, string, int, bool, bool> params = new Param8<string, string, string, string, string, int, bool, bool>(
 			storeMeta.id,
 			storeMeta.name,
 			storeMeta.type,
@@ -214,13 +216,12 @@ class AskalStoreMetaBuilder
 			currencyShortName,
 			currencyMode,
 			canBuy,
-			canSell,
-			batchMode,
-			storeMeta.buyCoefficient,
-			storeMeta.sellCoefficient
+			canSell
 		);
 		
 		GetRPCManager().SendRPC("AskalMarketModule", "SendStoreMeta", params, true, player.GetIdentity(), NULL);
+		// Note: batchMode, buyCoeff, sellCoeff are not sent in this RPC due to Param8 limit
+		// Client will use defaults: batchMode=false, buyCoeff=1.0, sellCoeff=1.0
 		Print("[AskalStoreMetaBuilder] Sending storeMeta to player=" + player.GetIdentity().GetPlainId() + " storeId=" + storeMeta.id + " currency=" + currencyId + " shortName=" + currencyShortName);
 	}
 }

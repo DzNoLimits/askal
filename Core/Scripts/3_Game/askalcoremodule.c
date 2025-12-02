@@ -1,5 +1,11 @@
 // AskalCoreModule - integra com Community Framework
 // Sistema simplificado de sincronização
+
+// Forward declarations to fix Unknown type errors
+class PlayerBase;
+class AskalStoreMeta;
+class AskalStoreMetaBuilder;
+
 [CF_RegisterModule(AskalCoreModule)]
 class AskalCoreModule : CF_ModuleGame
 {

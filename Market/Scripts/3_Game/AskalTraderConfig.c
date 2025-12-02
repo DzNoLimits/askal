@@ -3,6 +3,9 @@
 // Lê e parseia arquivos Trader_Description.jsonc
 // ==========================================
 
+// Forward declarations to fix Unknown type errors
+class AskalJsonLoader;
+
 class AskalTraderConfig
 {
 	string Version; // Versão como string (ex: "1.0.0") - campo do JSON
@@ -188,10 +191,10 @@ class AskalTraderConfig
 		}
 		
 		// Normalizar AcceptedCurrency: converter string para map
+		AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
 		if (config.AcceptedCurrency != "")
 		{
 			// Validate AcceptedCurrency exists in MarketConfig and is not disabled
-			AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
 			if (marketConfig)
 			{
 				AskalCurrencyConfig currencyCfg = marketConfig.GetCurrencyOrNull(config.AcceptedCurrency);
@@ -211,11 +214,13 @@ class AskalTraderConfig
 		else
 		{
 			// Se AcceptedCurrency estiver vazio, usar padrão
-			AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
-			string defaultCurrency = marketConfig.GetDefaultCurrencyId();
-			config.AcceptedCurrency = defaultCurrency;
-			config.AcceptedCurrencyMap.Set(defaultCurrency, 1);
-			Print("[AskalTrader] Trader " + config.TraderName + " AcceptedCurrency: " + defaultCurrency + " (default)");
+			if (marketConfig)
+			{
+				string defaultCurrency = marketConfig.GetDefaultCurrencyId();
+				config.AcceptedCurrency = defaultCurrency;
+				config.AcceptedCurrencyMap.Set(defaultCurrency, 1);
+				Print("[AskalTrader] Trader " + config.TraderName + " AcceptedCurrency: " + defaultCurrency + " (default)");
+			}
 		}
 		
 		// Validar campos obrigatórios

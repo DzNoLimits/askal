@@ -4,6 +4,10 @@
 // DisplayName é obtido no cliente via ConfigGetText
 // ==========================================
 
+// Forward declarations to fix Unknown type errors
+class array;
+class AskalJsonLoader;
+
 class AskalDatabaseSync
 {
 	private static bool s_ClientSynced = false;

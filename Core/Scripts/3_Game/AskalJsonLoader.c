@@ -4,6 +4,9 @@
 // Permite carregar arquivos JSON maiores que 64KB
 // ==========================================
 
+// Forward declarations to fix Unknown type errors
+class JsonFileLoader;
+
 class AskalJsonLoader<Class T>
 {
     protected static ref JsonSerializer m_Serializer;
@@ -410,9 +413,9 @@ class AskalPlayerConfigLoader
             if (!FileExist(path))
                 continue;
             
-            // Parse JSON using JsonFileLoader (same method as AskalMarketConfig)
+            // Parse JSON using AskalJsonLoader (same method as AskalMarketConfig)
             AskalMarketConfigFile fileData = new AskalMarketConfigFile();
-            JsonFileLoader<AskalMarketConfigFile>.JsonLoadFile(path, fileData);
+            AskalJsonLoader<AskalMarketConfigFile>.LoadFromFile(path, fileData, false);
             
             if (!fileData)
             {
@@ -736,7 +739,6 @@ class AskalPlayerConfigLoader
             if (!playerData.Balance.Contains(migrateCurrencyId))
             {
                 needsMigration = true;
-                int migrateSeedValue = 0;
                 
                 // Only add currencies with Mode != 0 (respect Mode flag)
                 int migrateCurrencyMode = migrateCurrencyConfig.Mode;
