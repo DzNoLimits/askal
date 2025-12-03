@@ -204,7 +204,86 @@ class AskalTraderSpawnService
 			s_SpawnedTraders = new array<ref AskalTraderBase>();
 		s_SpawnedTraders.Insert(traderLogic);
 		
+		// Spawnar veículos nos pontos configurados (se houver)
+		SpawnTraderVehicles(config);
+		
 		Print("[AskalTrader] ✅ Trader estático configurado: " + config.TraderName);
+	}
+	
+	// Spawnar veículos nos pontos configurados do trader
+	static void SpawnTraderVehicles(AskalTraderConfig config)
+	{
+		if (!config || !config.VehicleSpawnPoints)
+			return;
+		
+		if (!GetGame().IsServer())
+			return;
+		
+		Print("[AskalTrader] 🚗 Verificando pontos de spawn de veículos para trader: " + config.TraderName);
+		
+		vector clearanceBox = AskalVehicleSpawn.GetDefaultClearanceBox();
+		int spawnedCount = 0;
+		
+		// Processar pontos terrestres
+		if (config.VehicleSpawnPoints.Land && config.VehicleSpawnPoints.Land.Count() > 0)
+		{
+			for (int landIdx = 0; landIdx < config.VehicleSpawnPoints.Land.Count(); landIdx++)
+			{
+				AskalVehicleSpawnPoint spawnPoint = config.VehicleSpawnPoints.Land.Get(landIdx);
+				if (!spawnPoint)
+					continue;
+				
+				vector pos = spawnPoint.GetPosition();
+				vector rot = spawnPoint.GetRotation();
+				
+				if (pos == vector.Zero)
+				{
+					Print("[AskalTrader] ⚠️ Forced spawn invalid for trader " + config.TraderName + " pos=INVALID reason=zero_position");
+					continue;
+				}
+				
+				// Verificar se área está livre antes de spawnar
+				if (!AskalVehicleSpawn.IsAreaClear(pos, clearanceBox))
+				{
+					Print("[AskalTrader] ⚠️ Forced spawn invalid for trader " + config.TraderName + " pos=" + pos + " reason=area_not_clear");
+					continue;
+				}
+				
+				// Nota: Não spawnamos veículos automaticamente nos pontos configurados
+				// Os pontos são apenas reservados para quando veículos forem comprados
+				// Log apenas para debug
+				Print("[AskalTrader] ✅ Ponto de spawn terrestre válido para trader " + config.TraderName + " pos=" + pos);
+			}
+		}
+		
+		// Processar pontos aquáticos
+		if (config.VehicleSpawnPoints.Water && config.VehicleSpawnPoints.Water.Count() > 0)
+		{
+			for (int waterIdx = 0; waterIdx < config.VehicleSpawnPoints.Water.Count(); waterIdx++)
+			{
+				AskalVehicleSpawnPoint waterSpawnPoint = config.VehicleSpawnPoints.Water.Get(waterIdx);
+				if (!waterSpawnPoint)
+					continue;
+				
+				vector waterPos = waterSpawnPoint.GetPosition();
+				vector waterRot = waterSpawnPoint.GetRotation();
+				
+				if (waterPos == vector.Zero)
+				{
+					Print("[AskalTrader] ⚠️ Forced spawn invalid for trader " + config.TraderName + " pos=INVALID reason=zero_position");
+					continue;
+				}
+				
+				// Verificar se área está livre antes de spawnar
+				if (!AskalVehicleSpawn.IsAreaClear(waterPos, clearanceBox))
+				{
+					Print("[AskalTrader] ⚠️ Forced spawn invalid for trader " + config.TraderName + " pos=" + waterPos + " reason=area_not_clear");
+					continue;
+				}
+				
+				Print("[AskalTrader] ✅ Ponto de spawn aquático válido para trader " + config.TraderName + " pos=" + waterPos);
+			}
+		}
 	}
 	
 	// Marcar entidade como trader (usando helper)

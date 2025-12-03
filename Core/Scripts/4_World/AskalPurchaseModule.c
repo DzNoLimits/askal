@@ -102,7 +102,7 @@ class AskalPurchaseModule
 		Print("[AskalPurchase]   Quantidade: " + itemQuantity + " | Tipo: " + quantityType + " | Conteúdo: " + contentType);
 		
 		Print("[AskalPurchase] [PROCESSAR] Chamando AskalPurchaseService.ProcessPurchaseWithQuantity...");
-		bool success = AskalPurchaseService.ProcessPurchaseWithQuantity(sender, steamId, itemClass, requestedPrice, currencyId, itemQuantity, quantityType, contentType);
+		bool success = AskalPurchaseService.ProcessPurchaseWithQuantity(sender, steamId, itemClass, requestedPrice, currencyId, itemQuantity, quantityType, contentType, traderName);
 		
 		Print("[AskalPurchase] [PROCESSAR] ProcessPurchaseWithQuantity retornou: " + success);
 		

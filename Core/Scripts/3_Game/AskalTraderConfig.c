@@ -3,6 +3,46 @@
 // Lê e parseia arquivos Trader_Description.jsonc
 // ==========================================
 
+// Estrutura para ponto de spawn de veículo
+class AskalVehicleSpawnPoint
+{
+	ref array<float> Position; // [x, y, z]
+	ref array<float> Rotation; // [yaw, pitch, roll]
+	
+	void AskalVehicleSpawnPoint()
+	{
+		Position = new array<float>();
+		Rotation = new array<float>();
+	}
+	
+	vector GetPosition()
+	{
+		if (!Position || Position.Count() != 3)
+			return vector.Zero;
+		return Vector(Position.Get(0), Position.Get(1), Position.Get(2));
+	}
+	
+	vector GetRotation()
+	{
+		if (!Rotation || Rotation.Count() != 3)
+			return vector.Zero;
+		return Vector(Rotation.Get(0), Rotation.Get(1), Rotation.Get(2));
+	}
+}
+
+// Estrutura para pontos de spawn de veículos
+class AskalVehicleSpawnPoints
+{
+	ref array<ref AskalVehicleSpawnPoint> Land; // Pontos para veículos terrestres
+	ref array<ref AskalVehicleSpawnPoint> Water; // Pontos para veículos aquáticos
+	
+	void AskalVehicleSpawnPoints()
+	{
+		Land = new array<ref AskalVehicleSpawnPoint>();
+		Water = new array<ref AskalVehicleSpawnPoint>();
+	}
+}
+
 class AskalTraderConfig
 {
 	string Version; // Versão como string (ex: "1.0.0") - campo do JSON
@@ -20,6 +60,7 @@ class AskalTraderConfig
 	float BuyCoefficient; // Coeficiente de compra
 	float SellCoefficient; // Coeficiente de venda
 	ref map<string, int> SetupItems; // Dataset/Category/Item : ItemMode
+	ref AskalVehicleSpawnPoints VehicleSpawnPoints; // Pontos de spawn de veículos
 	
 	[NonSerialized()]
 	string m_FileName;
@@ -37,6 +78,7 @@ class AskalTraderConfig
 		BuyCoefficient = 1.0;
 		SellCoefficient = 1.0;
 		SetupItems = new map<string, int>();
+		VehicleSpawnPoints = NULL; // Opcional
 	}
 	
 	// Obter attachments (suporta ambos os campos)

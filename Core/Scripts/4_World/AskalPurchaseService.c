@@ -101,7 +101,7 @@ class AskalPurchaseService
 }
 
 	// Processar compra COM quantidade e conteÃºdo customizados
-	static bool ProcessPurchaseWithQuantity(PlayerIdentity identity, string steamId, string itemClass, int price, string currencyId, float itemQuantity, int quantityType, int contentType)
+	static bool ProcessPurchaseWithQuantity(PlayerIdentity identity, string steamId, string itemClass, int price, string currencyId, float itemQuantity, int quantityType, int contentType, string traderName = "")
 	{
 		if (!identity)
 		{
@@ -158,38 +158,232 @@ class AskalPurchaseService
 		Print("[AskalPurchase] [DEBUG] Balance atual: " + currentBalance + " (" + balanceKey + ") | Preço necessário: " + price);
 		if (currentBalance < price)
 		{
-			Print("[AskalPurchase] âŒ Balance insuficiente: " + currentBalance + " < " + price);
+			Print("[AskalPurchase] ❌ Balance insuficiente: " + currentBalance + " < " + price);
 			return false;
 		}
 		
-		// Tentar criar item no inventÃ¡rio
-		EntityAI createdItem = player.GetInventory().CreateInInventory(itemClass);
-		if (!createdItem)
+		// Verificar se é veículo (veículos devem ser spawnados no mundo, não no inventário)
+		bool isVehicle = AskalVehicleSpawn.IsVehicleClass(itemClass);
+		EntityAI createdItem = NULL;
+		
+		if (isVehicle)
 		{
-			Print("[AskalPurchase] âŒ NÃ£o foi possÃ­vel criar item (sem espaÃ§o no inventÃ¡rio): " + itemClass);
-			return false;
+			// Processar spawn de veículo
+			Print("[AskalPurchase] 🚗 Detectado veículo: " + itemClass + " - usando sistema de spawn");
+			
+			// Remover balance ANTES de spawnar (atomicidade)
+			if (!AskalPlayerBalance.RemoveBalance(steamId, price, balanceKey))
+			{
+				Print("[AskalPurchase] ❌ Erro ao remover balance para veículo");
+				return false;
+			}
+			
+			// Tentar spawnar veículo
+			bool spawnSuccess = ProcessVehiclePurchase(player, itemClass, traderName, steamId);
+			
+			if (!spawnSuccess)
+			{
+				// Rollback: reembolsar balance
+				Print("[AskalPurchase] ❌ Falha ao spawnar veículo - reembolsando balance");
+				AskalPlayerBalance.AddBalance(steamId, price, balanceKey);
+				return false;
+			}
+			
+			// Sucesso - veículo spawnado e balance removido
+			int vehicleBalance = AskalPlayerBalance.GetBalance(steamId, balanceKey);
+			Print("[AskalPurchase] ✅ Veículo spawnado com sucesso!");
+			Print("[AskalPurchase]   Veículo: " + itemClass);
+			Print("[AskalPurchase]   Balance atualizado: " + vehicleBalance);
+			
+			// Notificar cliente
+			string itemDisplayName = GetItemDisplayName(itemClass);
+			AskalNotificationHelper.AddPurchaseNotification(itemClass, price, itemDisplayName);
+			
+			return true;
 		}
-
-		// Aplicar quantidade e conteÃºdo ANTES dos attachments
-		ApplyQuantityAndContent(createdItem, itemQuantity, quantityType, contentType);
-		
-		// Attachments padrÃ£o
-		AttachDefaultAttachments(createdItem, itemClass);
-		
-		// Remover balance
-		if (!AskalPlayerBalance.RemoveBalance(steamId, price, balanceKey))
+		else
 		{
-			Print("[AskalPurchase] âŒ Erro ao remover balance");
-			GetGame().ObjectDelete(createdItem);
+			// Item normal - criar no inventário
+			createdItem = player.GetInventory().CreateInInventory(itemClass);
+			if (!createdItem)
+			{
+				Print("[AskalPurchase] ❌ Não foi possível criar item (sem espaço no inventário): " + itemClass);
+				return false;
+			}
+			
+			// Aplicar quantidade e conteúdo ANTES dos attachments
+			ApplyQuantityAndContent(createdItem, itemQuantity, quantityType, contentType);
+			
+			// Attachments padrão
+			AttachDefaultAttachments(createdItem, itemClass);
+			
+			// Remover balance
+			if (!AskalPlayerBalance.RemoveBalance(steamId, price, balanceKey))
+			{
+				Print("[AskalPurchase] ❌ Erro ao remover balance");
+				GetGame().ObjectDelete(createdItem);
+				return false;
+			}
+			
+			// Sucesso - item criado e balance removido
+			int newBalance = AskalPlayerBalance.GetBalance(steamId, balanceKey);
+			Print("[AskalPurchase] ✅ Compra com quantidade customizada realizada!");
+			Print("[AskalPurchase]   Item: " + itemClass + " | Qty: " + itemQuantity + " | Content: " + contentType);
+			Print("[AskalPurchase]   Balance atualizado: " + newBalance);
+			
+			return true;
+		}
+	}
+	
+	// Processar compra de veículo (spawn no mundo)
+	static bool ProcessVehiclePurchase(PlayerBase player, string vehicleClass, string traderName = "", string steamId = "")
+	{
+		if (!player || !vehicleClass || vehicleClass == "")
+		{
+			Print("[AskalPurchase] ❌ Parâmetros inválidos para ProcessVehiclePurchase");
 			return false;
 		}
 		
-		int newBalance = AskalPlayerBalance.GetBalance(steamId, balanceKey);
-		Print("[AskalPurchase] âœ… Compra com quantidade customizada realizada!");
-		Print("[AskalPurchase]   Item: " + itemClass + " | Qty: " + itemQuantity + " | Content: " + contentType);
-		Print("[AskalPurchase]   Balance atualizado: " + newBalance);
+		if (!GetGame().IsServer())
+		{
+			Print("[AskalPurchase] ❌ ProcessVehiclePurchase só pode ser chamado no servidor");
+			return false;
+		}
 		
-		return true;
+		Print("[AskalPurchase] 🚗 Processando compra de veículo: " + vehicleClass);
+		
+		vector spawnPos = vector.Zero;
+		vector spawnRot = "0 0 0";
+		
+		// Verificar se trader tem pontos de spawn configurados
+		AskalTraderConfig traderConfig = NULL;
+		if (traderName && traderName != "")
+		{
+			traderConfig = AskalTraderConfig.LoadByTraderName(traderName);
+		}
+		
+		if (traderConfig && traderConfig.VehicleSpawnPoints)
+		{
+			// Trader tem pontos configurados - usar primeiro ponto válido
+			Print("[AskalPurchase] 🎯 Trader tem pontos de spawn configurados, tentando usar...");
+			
+			vector clearanceBox = AskalVehicleSpawn.GetDefaultClearanceBox();
+			bool foundValidPoint = false;
+			
+			// Tentar pontos terrestres primeiro
+			if (traderConfig.VehicleSpawnPoints.Land && traderConfig.VehicleSpawnPoints.Land.Count() > 0)
+			{
+				for (int landIdx = 0; landIdx < traderConfig.VehicleSpawnPoints.Land.Count(); landIdx++)
+				{
+					AskalVehicleSpawnPoint landSpawnPoint = traderConfig.VehicleSpawnPoints.Land.Get(landIdx);
+					if (!landSpawnPoint)
+						continue;
+					
+					vector landCandidatePos = landSpawnPoint.GetPosition();
+					vector landCandidateRot = landSpawnPoint.GetRotation();
+					
+					if (landCandidatePos == vector.Zero)
+						continue;
+					
+					if (AskalVehicleSpawn.IsAreaClear(landCandidatePos, clearanceBox))
+					{
+						spawnPos = landCandidatePos;
+						spawnRot = landCandidateRot;
+						if (spawnRot == vector.Zero)
+							spawnRot = "0 0 0";
+						foundValidPoint = true;
+						Print("[AskalPurchase] ✅ Ponto de spawn terrestre válido encontrado: " + spawnPos);
+						break;
+					}
+				}
+			}
+			
+			// Se não encontrou ponto terrestre, tentar pontos aquáticos
+			if (!foundValidPoint && traderConfig.VehicleSpawnPoints.Water && traderConfig.VehicleSpawnPoints.Water.Count() > 0)
+			{
+				for (int waterIdx = 0; waterIdx < traderConfig.VehicleSpawnPoints.Water.Count(); waterIdx++)
+				{
+					AskalVehicleSpawnPoint waterSpawnPoint = traderConfig.VehicleSpawnPoints.Water.Get(waterIdx);
+					if (!waterSpawnPoint)
+						continue;
+					
+					vector waterCandidatePos = waterSpawnPoint.GetPosition();
+					vector waterCandidateRot = waterSpawnPoint.GetRotation();
+					
+					if (waterCandidatePos == vector.Zero)
+						continue;
+					
+					if (AskalVehicleSpawn.IsAreaClear(waterCandidatePos, clearanceBox))
+					{
+						spawnPos = waterCandidatePos;
+						spawnRot = waterCandidateRot;
+						if (spawnRot == vector.Zero)
+							spawnRot = "0 0 0";
+						foundValidPoint = true;
+						Print("[AskalPurchase] ✅ Ponto de spawn aquático válido encontrado: " + spawnPos);
+						break;
+					}
+				}
+			}
+			
+			if (!foundValidPoint)
+			{
+				Print("[AskalPurchase] ⚠️ Nenhum ponto de spawn válido encontrado no trader, usando fallback");
+			}
+		}
+		
+		// Se não há pontos configurados ou nenhum ponto válido, buscar posição perto do player
+		if (spawnPos == vector.Zero)
+		{
+			Print("[AskalPurchase] 🔍 Buscando posição válida perto do player...");
+			vector playerPos = player.GetPosition();
+			spawnPos = AskalVehicleSpawn.FindValidSpawnPositionNearPosition(playerPos, AskalVehicleSpawn.GetDefaultRadius(), AskalVehicleSpawn.GetDefaultAttempts(), AskalVehicleSpawn.GetDefaultMaxInclination(), AskalVehicleSpawn.GetDefaultClearanceBox());
+			
+			// Calcular rotação baseada na direção do player
+			if (spawnPos != vector.Zero)
+			{
+				vector direction = spawnPos - playerPos;
+				direction[1] = 0; // Manter horizontal
+				direction.Normalize();
+				
+				// Converter direção para rotação (yaw)
+				// Atan2 retorna em radianos, converter para graus
+				float yawRad = Math.Atan2(-direction[0], direction[2]);
+				float yaw = yawRad * 57.2957795; // 180/PI aproximado
+				spawnRot = Vector(yaw, 0, 0);
+			}
+		}
+		
+		// Fallback: tentar usar pontos de outros traders
+		if (spawnPos == vector.Zero)
+		{
+			Print("[AskalPurchase] ⚠️ Nenhuma posição válida encontrada, tentando fallback...");
+			// TODO: Implementar fallback para pontos de outros traders ou ponto global configurável
+			Print("[AskalPurchase] ❌ Fallback não implementado - spawn de veículo falhou");
+			return false;
+		}
+		
+		// Spawnar veículo
+		string ownerId = steamId;
+		if (!ownerId || ownerId == "")
+		{
+			ownerId = player.GetIdentity().GetPlainId();
+			if (!ownerId || ownerId == "")
+				ownerId = player.GetIdentity().GetId();
+		}
+		
+		bool spawnSuccess = AskalVehicleSpawn.SpawnVehicleAtPosition(vehicleClass, spawnPos, spawnRot, ownerId);
+		
+		if (spawnSuccess)
+		{
+			Print("[AskalPurchase] ✅ Veículo spawnado com sucesso em " + spawnPos);
+		}
+		else
+		{
+			Print("[AskalPurchase] ❌ Falha ao spawnar veículo em " + spawnPos);
+		}
+		
+		return spawnSuccess;
 	}
 	
 	// Aplicar quantidade e conteÃºdo ao item (inspirado no COT)
