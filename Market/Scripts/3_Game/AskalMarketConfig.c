@@ -87,14 +87,8 @@ class AskalMarketConfig
 	protected void LoadConfig()
 	{
 		array<string> candidatePaths = {
-			"$profile:config/Askal/Market/MarketConfig.json",
-			"$profile:config\\Askal\\Market\\MarketConfig.json",
-			"$profile:Askal/Market/MarketConfig.json",
-			"$profile:Askal\\Market\\MarketConfig.json",
-			"$mission:Askal/Market/MarketConfig.json",
-			"$mission:Askal\\Market\\MarketConfig.json",
-			"Askal/Market/MarketConfig.json",
-			"Askal\\Market\\MarketConfig.json"
+
+			"$profile:Askal/Market/MarketConfig.json"
 		};
 		
 		Print("[AskalMarket] 🔍 Procurando MarketConfig.json em " + candidatePaths.Count() + " caminhos...");
@@ -110,6 +104,7 @@ class AskalMarketConfig
 		
 		Print("[AskalMarket] ⚠️ MarketConfig não encontrada em nenhum caminho. Aplicando valores padrão.");
 		LoadDefaults();
+		
 	}
 	
 	bool LoadFromPath(string path)

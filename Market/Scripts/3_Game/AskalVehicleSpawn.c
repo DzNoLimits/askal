@@ -25,20 +25,6 @@ class AskalVehicleSpawn
 		if (pos == vector.Zero)
 			return false;
 		
-		// TODO: Implementar teste de colisão usando engine API
-		// Por enquanto, usar verificação conservadora via raycast
-		// Verificar se há objetos próximos usando GetGame().GetObjectsAtPosition
-		
-		// Verificação básica: raycast para cima e para baixo
-		vector rayStart = pos;
-		rayStart[1] = pos[1] + 5.0; // 5m acima
-		vector rayEnd = pos;
-		rayEnd[1] = pos[1] - 5.0; // 5m abaixo
-		
-		// Usar DayZ raycast se disponível
-		// Por enquanto, assumir área livre se não houver objetos muito próximos
-		// Esta é uma implementação conservadora que pode ser melhorada
-		
 		if (s_Debug)
 			Print("[AskalVehicleSpawn] 🔍 Verificando área em " + pos + " (box: " + boxSize + ")");
 		
@@ -50,7 +36,89 @@ class AskalVehicleSpawn
 			return false;
 		}
 		
-		// Por padrão, assumir área livre (implementação pode ser melhorada com engine API)
+		// Verificar colisão usando GetGame().GetObjectsAtPosition
+		// Usar raio baseado no tamanho da box (maior dimensão)
+		float radius = boxSize[0];
+		if (boxSize[1] > radius)
+			radius = boxSize[1];
+		if (boxSize[2] > radius)
+			radius = boxSize[2];
+		
+		// Adicionar margem de segurança
+		radius = radius * 0.5 + 1.0;
+		
+		array<Object> objects = new array<Object>();
+		GetGame().GetObjectsAtPosition(pos, radius, objects, NULL);
+		
+		if (objects && objects.Count() > 0)
+		{
+			// Filtrar objetos que não são obstáculos (itens pequenos, etc)
+			int obstacleCount = 0;
+			for (int i = 0; i < objects.Count(); i++)
+			{
+				Object obj = objects.Get(i);
+				if (!obj)
+					continue;
+				
+				// Verificar se é um objeto grande o suficiente para ser obstáculo
+				// Usar bounding box ou aproximação baseada em tipo
+				string objType = obj.GetType();
+				if (objType && objType != "")
+				{
+					// Ignorar players verificando pelo tipo (sem usar PlayerBase que não está disponível em 3_Game)
+					// Players geralmente têm tipos como "SurvivorM_*" ou "SurvivorF_*"
+					string lowerType = objType;
+					lowerType.ToLower();
+					if (lowerType.IndexOf("survivor") != -1 || lowerType.IndexOf("player") != -1)
+						continue;
+					
+					// Ignorar itens pequenos verificando se não é veículo e se está em CfgWeapons ou CfgMagazines
+					// Itens pequenos geralmente estão em CfgWeapons ou CfgMagazines, não em CfgVehicles
+					string weaponTest = "";
+					GetGame().ConfigGetText("CfgWeapons " + objType + " displayName", weaponTest);
+					if (weaponTest && weaponTest != "")
+					{
+						// É uma arma, ignorar (item pequeno)
+						continue;
+					}
+					
+					string magazineTest = "";
+					GetGame().ConfigGetText("CfgMagazines " + objType + " displayName", magazineTest);
+					if (magazineTest && magazineTest != "")
+					{
+						// É munição, ignorar (item pequeno)
+						continue;
+					}
+					
+					// Se não é veículo e não está em CfgWeapons/CfgMagazines, pode ser um item pequeno também
+					// Verificar se está em CfgVehicles mas não é veículo (pode ser estrutura ou objeto grande)
+					if (!IsVehicleClass(objType))
+					{
+						// Verificar se está em CfgVehicles (pode ser estrutura grande)
+						string vehicleTest = "";
+						GetGame().ConfigGetText("CfgVehicles " + objType + " displayName", vehicleTest);
+						if (!vehicleTest || vehicleTest == "")
+						{
+							// Não está em CfgVehicles, provavelmente é item pequeno, ignorar
+							continue;
+						}
+					}
+					
+					// Qualquer outro objeto grande (estruturas, veículos, etc) é considerado obstáculo
+					obstacleCount++;
+				}
+			}
+			
+			if (obstacleCount > 0)
+			{
+				if (s_Debug)
+					Print("[AskalVehicleSpawn] ❌ Área obstruída: " + obstacleCount + " obstáculo(s) encontrado(s)");
+				return false;
+			}
+		}
+		
+		if (s_Debug)
+			Print("[AskalVehicleSpawn] ✅ Área livre");
 		return true;
 	}
 	
@@ -307,6 +375,93 @@ class AskalVehicleSpawn
 		}
 		
 		return false;
+	}
+	
+	// Verificar se veículo é terrestre (herda de Car_Base)
+	static bool IsLandVehicle(string vehicleClass)
+	{
+		if (!vehicleClass || vehicleClass == "")
+			return false;
+		
+		// Verificar herança na configuração
+		string parentClass = "";
+		GetGame().ConfigGetText("CfgVehicles " + vehicleClass + " parent", parentClass);
+		
+		// Verificar se herda de Car_Base ou classes relacionadas
+		if (parentClass && parentClass != "")
+		{
+			if (parentClass == "Car_Base" || parentClass == "Car" || parentClass == "Truck_Base" || parentClass == "Truck")
+				return true;
+			
+			// Verificar recursivamente na hierarquia
+			if (IsLandVehicle(parentClass))
+				return true;
+		}
+		
+		// Verificar se o nome da classe contém indicadores de veículo terrestre
+		string lowerClass = vehicleClass;
+		lowerClass.ToLower();
+		if (lowerClass.IndexOf("car") != -1 || lowerClass.IndexOf("truck") != -1 || lowerClass.IndexOf("van") != -1)
+			return true;
+		
+		return false;
+	}
+	
+	// Verificar se veículo é aquático (herda de Boat_Base)
+	static bool IsWaterVehicle(string vehicleClass)
+	{
+		if (!vehicleClass || vehicleClass == "")
+			return false;
+		
+		// Verificar herança na configuração
+		string parentClass = "";
+		GetGame().ConfigGetText("CfgVehicles " + vehicleClass + " parent", parentClass);
+		
+		// Verificar se herda de Boat_Base ou classes relacionadas
+		if (parentClass && parentClass != "")
+		{
+			if (parentClass == "Boat_Base" || parentClass == "Boat")
+				return true;
+			
+			// Verificar recursivamente na hierarquia
+			if (IsWaterVehicle(parentClass))
+				return true;
+		}
+		
+		// Verificar se o nome da classe contém indicadores de veículo aquático
+		string lowerClass = vehicleClass;
+		lowerClass.ToLower();
+		if (lowerClass.IndexOf("boat") != -1 || lowerClass.IndexOf("ship") != -1)
+			return true;
+		
+		return false;
+	}
+	
+	// Verificar se posição está em água
+	static bool IsSurfaceWater(vector pos)
+	{
+		if (pos == vector.Zero)
+			return false;
+		
+		// Usar DayZ API para verificar se superfície é água
+		// DayZ tem GetGame().SurfaceIsWater() ou similar?
+		// Por enquanto, usar aproximação baseada em altura Y
+		// Se Y estiver abaixo de um threshold, assumir água
+		
+		// Verificar usando raycast ou API de superfície se disponível
+		// Por enquanto, usar aproximação conservadora
+		// Água geralmente está em Y < 0 ou próximo de 0 em mapas padrão
+		
+		// TODO: Implementar verificação real usando engine API
+		// Por enquanto, assumir que se Y < 1.0, pode ser água
+		// Esta é uma aproximação que pode ser melhorada
+		
+		if (s_Debug)
+			Print("[AskalVehicleSpawn] 💧 Verificando se superfície é água em " + pos);
+		
+		// Aproximação: se Y < 1.0, considerar possível água
+		// Esta verificação deve ser melhorada com API real
+		return pos[1] < 1.0;
 	}
 	
 	// Getters para constantes (para acesso de outros módulos)

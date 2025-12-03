@@ -102,13 +102,24 @@ class AskalPurchaseModule
 		Print("[AskalPurchase]   Quantidade: " + itemQuantity + " | Tipo: " + quantityType + " | Conteúdo: " + contentType);
 		
 		Print("[AskalPurchase] [PROCESSAR] Chamando AskalPurchaseService.ProcessPurchaseWithQuantity...");
-		bool success = AskalPurchaseService.ProcessPurchaseWithQuantity(sender, steamId, itemClass, requestedPrice, currencyId, itemQuantity, quantityType, contentType, traderName);
+		ref array<string> purchaseErrorMessage = new array<string>();
+		bool success = AskalPurchaseService.ProcessPurchaseWithQuantity(sender, steamId, itemClass, requestedPrice, currencyId, itemQuantity, quantityType, contentType, traderName, purchaseErrorMessage);
 		
 		Print("[AskalPurchase] [PROCESSAR] ProcessPurchaseWithQuantity retornou: " + success);
 		
 		string resultMessage = "Compra realizada com sucesso";
 		if (!success)
-			resultMessage = "Falha ao processar compra (verifique logs do servidor)";
+		{
+			// Usar mensagem de erro customizada se disponível
+			if (purchaseErrorMessage && purchaseErrorMessage.Count() > 0)
+			{
+				resultMessage = purchaseErrorMessage.Get(0);
+			}
+			else
+			{
+				resultMessage = "Falha ao processar compra (verifique logs do servidor)";
+			}
+		}
 		
 		string statusText = "ERRO";
 		if (success)
@@ -116,7 +127,7 @@ class AskalPurchaseModule
 		Print("[AskalPurchase] [RESULTADO] " + statusText + " - " + resultMessage);
 		
 		Print("[AskalPurchase] [PROCESSAR] Enviando resposta ao cliente...");
-		SendPurchaseResponse(sender, success, itemClass, requestedPrice);
+		SendPurchaseResponse(sender, success, itemClass, requestedPrice, resultMessage);
 		Print("[AskalPurchase] [PROCESSAR] Resposta enviada");
 	}
 	
@@ -195,7 +206,7 @@ class AskalPurchaseModule
 	}
 	
 	// Enviar resposta de compra para o cliente
-	void SendPurchaseResponse(PlayerIdentity identity, bool success, string itemClass = "", int price = 0)
+	void SendPurchaseResponse(PlayerIdentity identity, bool success, string itemClass = "", int price = 0, string customMessage = "")
 	{
 		if (!identity)
 			return;
@@ -204,6 +215,12 @@ class AskalPurchaseModule
 		if (success)
 		{
 			message = "Compra realizada com sucesso";
+		}
+		
+		// Se mensagem customizada fornecida, usar ela
+		if (customMessage && customMessage != "")
+		{
+			message = customMessage;
 		}
 		
 		Param4<bool, string, string, int> params = new Param4<bool, string, string, int>(success, message, itemClass, price);
