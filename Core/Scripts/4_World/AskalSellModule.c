@@ -60,8 +60,24 @@ class AskalSellModule
 				steamId = sender.GetId();
 		}
 		
-		if (!currencyId || currencyId == "")
-			currencyId = "Askal_Coin";
+		// Resolve accepted currency for trader or virtual store
+		AskalCurrencyConfig resolvedCurrencyCfg = NULL;
+		string resolvedCurrencyId = "";
+		if (!AskalMarketConfig.ResolveAcceptedCurrency(traderName, currencyId, resolvedCurrencyId, resolvedCurrencyCfg))
+		{
+			// Fallback to default
+			AskalMarketConfig marketConfig = AskalMarketConfig.GetInstance();
+			if (marketConfig)
+				resolvedCurrencyId = marketConfig.GetDefaultCurrencyId();
+			if (!resolvedCurrencyId || resolvedCurrencyId == "")
+				resolvedCurrencyId = "Askal_Money";
+			Print("[AskalSell] ⚠️ Using default currency: " + resolvedCurrencyId);
+		}
+		else
+		{
+			Print("[AskalSell] 💰 Resolved currency: " + resolvedCurrencyId + " (trader: " + traderName + ")");
+		}
+		currencyId = resolvedCurrencyId;
 		
 		// VALIDAÇÃO: Verificar se item pode ser vendido neste trader
 		if (traderName && traderName != "" && traderName != "Trader_Default")

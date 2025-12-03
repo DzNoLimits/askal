@@ -97,8 +97,10 @@ class AskalMarketConfig
 			"Askal\\Market\\MarketConfig.json"
 		};
 		
+		Print("[AskalMarket] 🔍 Procurando MarketConfig.json em " + candidatePaths.Count() + " caminhos...");
 		foreach (string path : candidatePaths)
 		{
+			Print("[AskalMarket] 🔍 Tentando: " + path);
 			if (LoadFromPath(path))
 			{
 				Print("[AskalMarket] ✅ MarketConfig carregada de " + path);
@@ -106,22 +108,37 @@ class AskalMarketConfig
 			}
 		}
 		
-		Print("[AskalMarket] ⚠️ MarketConfig não encontrada. Aplicando valores padrão.");
+		Print("[AskalMarket] ⚠️ MarketConfig não encontrada em nenhum caminho. Aplicando valores padrão.");
 		LoadDefaults();
 	}
 	
 	bool LoadFromPath(string path)
 	{
 		if (!FileExist(path))
+		{
+			Print("[AskalMarket] ⚠️ Arquivo não existe: " + path);
 			return false;
+		}
 		
+		Print("[AskalMarket] 🔍 Tentando carregar MarketConfig de: " + path);
 		AskalMarketConfigFile fileData = new AskalMarketConfigFile();
 		JsonFileLoader<AskalMarketConfigFile>.JsonLoadFile(path, fileData);
 		
 		// Valida se carregou algo válido
 		if (!fileData)
+		{
+			Print("[AskalMarket] ⚠️ fileData é NULL após JsonLoadFile: " + path);
 			return false;
+		}
 		
+		// Valida se tem Currencies
+		if (!fileData.Currencies || fileData.Currencies.Count() == 0)
+		{
+			Print("[AskalMarket] ⚠️ fileData.Currencies está vazio ou NULL: " + path);
+			return false;
+		}
+		
+		Print("[AskalMarket] ✅ fileData carregado com " + fileData.Currencies.Count() + " currencies de: " + path);
 		ApplyFileData(fileData);
 		return true;
 	}
@@ -298,8 +315,50 @@ class AskalMarketConfig
 			return false;
 		}
 		
-		// Priority 1: Check trader AcceptedCurrency
-		if (traderName && traderName != "")
+		// Priority 1: Check virtual store AcceptedCurrency (if provided)
+		// Virtual Store is independent of physical traders - it's a global system
+		// When virtualStoreCurrency is provided, it indicates Virtual Store transaction
+		if (virtualStoreCurrency && virtualStoreCurrency != "")
+		{
+			currencyId = virtualStoreCurrency;
+			Print("[AskalMarket] 💰 Resolved currency for virtual store: " + currencyId);
+			
+			// Validate Virtual Store currency exists and is enabled
+			currencyCfg = config.GetCurrencyConfig(currencyId);
+			if (!currencyCfg)
+			{
+				Print("[AskalMarket] ❌ Virtual Store currency not found in MarketConfig: " + currencyId);
+				Print("[AskalMarket] 💰 Falling back to MarketConfig DefaultCurrencyId");
+				// Virtual Store fallback: use MarketConfig DefaultCurrencyId (NOT trader currency)
+				currencyId = config.GetDefaultCurrencyId();
+				currencyCfg = config.GetCurrencyConfig(currencyId);
+				if (!currencyCfg)
+				{
+					Print("[AskalMarket] ❌ DefaultCurrencyId also not found: " + currencyId);
+					return false;
+				}
+			}
+			
+			if (currencyCfg.Mode == 0)
+			{
+				Print("[AskalMarket] ❌ Virtual Store currency is disabled (Mode=0): " + currencyId);
+				Print("[AskalMarket] 💰 Falling back to MarketConfig DefaultCurrencyId");
+				// Virtual Store fallback: use MarketConfig DefaultCurrencyId (NOT trader currency)
+				currencyId = config.GetDefaultCurrencyId();
+				currencyCfg = config.GetCurrencyConfig(currencyId);
+				if (!currencyCfg || currencyCfg.Mode == 0)
+				{
+					Print("[AskalMarket] ❌ DefaultCurrencyId also invalid: " + currencyId);
+					return false;
+				}
+			}
+			
+			return true;
+		}
+		
+		// Priority 2: Check trader AcceptedCurrency (only if virtual store not provided)
+		// Physical traders are location-based NPCs
+		if (traderName && traderName != "" && traderName != "Trader_Default")
 		{
 			AskalTraderConfig traderConfig = AskalTraderConfig.LoadByTraderName(traderName);
 			if (traderConfig && traderConfig.AcceptedCurrency != "")
@@ -309,14 +368,7 @@ class AskalMarketConfig
 			}
 		}
 		
-		// Priority 2: Check virtual store AcceptedCurrency
-		if ((!currencyId || currencyId == "") && virtualStoreCurrency && virtualStoreCurrency != "")
-		{
-			currencyId = virtualStoreCurrency;
-			Print("[AskalMarket] 💰 Resolved currency for virtual store: " + currencyId);
-		}
-		
-		// Priority 3: Fallback to DefaultCurrencyId
+		// Priority 3: Fallback to DefaultCurrencyId (for traders or when nothing specified)
 		if (!currencyId || currencyId == "")
 		{
 			currencyId = config.GetDefaultCurrencyId();
@@ -343,5 +395,51 @@ class AskalMarketConfig
 		}
 		
 		return false;
+	}
+	
+	// Aplicar configuração recebida do servidor via RPC
+	static void ApplyConfigFromServer(string defaultCurrencyId, array<string> currencyIds, array<int> currencyModes, array<string> currencyShortNames, array<int> currencyStartCurrencies)
+	{
+		AskalMarketConfig config = GetInstance();
+		if (!config)
+		{
+			Print("[AskalMarket] ❌ MarketConfig instance não encontrada ao aplicar dados do servidor");
+			return;
+		}
+		
+		// Limpar currencies existentes
+		config.Currencies.Clear();
+		
+		// Aplicar DefaultCurrencyId
+		if (defaultCurrencyId && defaultCurrencyId != "")
+			config.DefaultCurrencyId = defaultCurrencyId;
+		else
+			config.DefaultCurrencyId = "Askal_Money";
+		
+		// Aplicar currencies
+		if (currencyIds && currencyModes && currencyShortNames && currencyStartCurrencies)
+		{
+			int count = currencyIds.Count();
+			if (count == currencyModes.Count() && count == currencyShortNames.Count() && count == currencyStartCurrencies.Count())
+			{
+				for (int i = 0; i < count; i++)
+				{
+					string currencyId = currencyIds.Get(i);
+					if (!currencyId || currencyId == "")
+						continue;
+					
+					AskalCurrencyConfig currencyCfg = new AskalCurrencyConfig();
+					currencyCfg.Mode = currencyModes.Get(i);
+					currencyCfg.ShortName = currencyShortNames.Get(i);
+					currencyCfg.StartCurrency = currencyStartCurrencies.Get(i);
+					currencyCfg.WalletId = currencyId;
+					currencyCfg.Values = new array<ref AskalCurrencyValueConfig>(); // Empty for virtual currencies
+					
+					config.Currencies.Insert(currencyId, currencyCfg);
+				}
+			}
+		}
+		
+		Print("[AskalMarket] ✅ MarketConfig aplicado do servidor: " + config.Currencies.Count() + " currencies, DefaultCurrencyId: " + config.DefaultCurrencyId);
 	}
 }

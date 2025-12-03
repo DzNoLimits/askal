@@ -63,7 +63,17 @@ class AskalPurchaseModule
 		// Resolve accepted currency (trader -> virtual store -> default)
 		AskalCurrencyConfig resolvedCurrencyCfg = NULL;
 		string resolvedCurrencyId = "";
-		if (!AskalMarketConfig.ResolveAcceptedCurrency(traderName, "", resolvedCurrencyId, resolvedCurrencyCfg))
+		
+		// If no trader specified, get Virtual Store currency
+		string virtualStoreCurrency = "";
+		if (!traderName || traderName == "" || traderName == "Trader_Default")
+		{
+			AskalVirtualStoreConfig virtualStoreConfig = AskalVirtualStoreSettings.GetConfig();
+			if (virtualStoreConfig)
+				virtualStoreCurrency = virtualStoreConfig.GetPrimaryCurrency();
+		}
+		
+		if (!AskalMarketConfig.ResolveAcceptedCurrency(traderName, virtualStoreCurrency, resolvedCurrencyId, resolvedCurrencyCfg))
 		{
 			Print("[AskalPurchase] [ERRO] Falha ao resolver currency para trader: " + traderName);
 			SendPurchaseResponse(sender, false, itemClass, 0);

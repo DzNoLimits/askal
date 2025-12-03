@@ -17,6 +17,11 @@ modded class MissionGameplay extends MissionBase
 			GetRPCManager().SendRPC("AskalCoreModule", "RequestDatasets", NULL, true, NULL, NULL);
 			m_SyncRequested = true;
 			Print("[AskalMarket] ✅ RPC RequestDatasets enviado");
+			
+			// Solicitar MarketConfig do servidor
+			Print("[AskalMarket] 📤 Solicitando MarketConfig do servidor...");
+			GetRPCManager().SendRPC("AskalCoreModule", "RequestMarketConfig", NULL, true, NULL, NULL);
+			Print("[AskalMarket] ✅ RPC RequestMarketConfig enviado");
 		}
 		
 		Print("[AskalMarket] ========================================");

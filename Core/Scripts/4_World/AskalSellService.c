@@ -215,7 +215,17 @@ class AskalSellService
 		}
 		else if (transactionMode == 2)
 		{
-			paymentSuccess = AskalPlayerBalance.AddBalance(steamId, totalPrice, currencyId);
+			// Resolve balance key from currencyId (always uses currencyID, not Value.Name)
+			string balanceKey = AskalPlayerBalance.ResolveBalanceKey(currencyId);
+			if (!balanceKey || balanceKey == "")
+			{
+				Print("[AskalSell] [ERRO] Failed to resolve balance key for currency: " + currencyId);
+				outPrice = 0;
+				return false;
+			}
+			
+			Print("[AskalSell] [PAGAMENTO] Resolved balance key: " + balanceKey + " (currencyId: " + currencyId + ")");
+			paymentSuccess = AskalPlayerBalance.AddBalance(steamId, totalPrice, balanceKey);
 		}
 		else
 		{

@@ -49,6 +49,8 @@ class AskalCoreModule : CF_ModuleGame
 		AddLegacyRPC("SendDatasetsComplete", SingleplayerExecutionType.Client);
 		AddLegacyRPC("RequestVirtualStoreConfig", SingleplayerExecutionType.Server);
 		AddLegacyRPC("VirtualStoreConfigResponse", SingleplayerExecutionType.Client);
+		AddLegacyRPC("RequestMarketConfig", SingleplayerExecutionType.Server);
+		AddLegacyRPC("MarketConfigResponse", SingleplayerExecutionType.Client);
 		
 		// RPCs de compra/venda (handler será registrado em 4_World para ter acesso a PlayerBase)
 	AddLegacyRPC("PurchaseItemResponse", SingleplayerExecutionType.Client);
@@ -221,6 +223,81 @@ class AskalCoreModule : CF_ModuleGame
 		array<int> setupValues = data.param5;
 		
 		AskalVirtualStoreSettings.ApplyConfigFromServer(currencyId, buyCoeff, sellCoeff, setupKeys, setupValues);
+	}
+	
+	// RPC Handler: Cliente solicita MarketConfig
+	void RequestMarketConfig(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
+	{
+		if (type != CallType.Server)
+			return;
+		
+		if (!sender)
+		{
+			Print("[AskalCore] ❌ RequestMarketConfig sem sender");
+			return;
+		}
+		
+		AskalMarketConfig config = AskalMarketConfig.GetInstance();
+		if (!config)
+		{
+			Print("[AskalCore] ❌ MarketConfig não encontrado no servidor");
+			return;
+		}
+		
+		// Preparar dados para envio
+		string defaultCurrencyId = config.GetDefaultCurrencyId();
+		if (!defaultCurrencyId || defaultCurrencyId == "")
+			defaultCurrencyId = "Askal_Money";
+		
+		// Serializar currencies
+		ref array<string> currencyIds = new array<string>();
+		ref array<int> currencyModes = new array<int>();
+		ref array<string> currencyShortNames = new array<string>();
+		ref array<int> currencyStartCurrencies = new array<int>();
+		
+		if (config.Currencies)
+		{
+			for (int i = 0; i < config.Currencies.Count(); i++)
+			{
+				string currencyId = config.Currencies.GetKey(i);
+				AskalCurrencyConfig currencyCfg = config.Currencies.GetElement(i);
+				if (currencyCfg)
+				{
+					currencyIds.Insert(currencyId);
+					currencyModes.Insert(currencyCfg.Mode);
+					currencyShortNames.Insert(currencyCfg.ShortName);
+					currencyStartCurrencies.Insert(currencyCfg.StartCurrency);
+				}
+			}
+		}
+		
+		Param5<string, ref array<string>, ref array<int>, ref array<string>, ref array<int>> data = new Param5<string, ref array<string>, ref array<int>, ref array<string>, ref array<int>>(
+			defaultCurrencyId, currencyIds, currencyModes, currencyShortNames, currencyStartCurrencies);
+		GetRPCManager().SendRPC("AskalCoreModule", "MarketConfigResponse", data, true, sender, NULL);
+		Print("[AskalCore] ✅ MarketConfig enviado ao cliente: " + currencyIds.Count() + " currencies");
+	}
+	
+	// RPC Handler: Cliente recebe MarketConfig
+	void MarketConfigResponse(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
+	{
+		if (type != CallType.Client)
+			return;
+		
+		Param5<string, ref array<string>, ref array<int>, ref array<string>, ref array<int>> data;
+		if (!ctx.Read(data))
+		{
+			Print("[AskalCore] ❌ Erro ao ler MarketConfigResponse");
+			return;
+		}
+		
+		string defaultCurrencyId = data.param1;
+		array<string> currencyIds = data.param2;
+		array<int> currencyModes = data.param3;
+		array<string> currencyShortNames = data.param4;
+		array<int> currencyStartCurrencies = data.param5;
+		
+		AskalMarketConfig.ApplyConfigFromServer(defaultCurrencyId, currencyIds, currencyModes, currencyShortNames, currencyStartCurrencies);
+		Print("[AskalCore] ✅ MarketConfig aplicado no cliente: " + currencyIds.Count() + " currencies");
 	}
 	
 	override void OnMissionStart(Class sender, CF_EventArgs args)

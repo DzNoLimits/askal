@@ -131,6 +131,7 @@ class AskalPlayerBalance
 		array<string> addedCurrencies = new array<string>();
 		
 		// For each currency in MarketConfig, ensure it exists in player Balance
+		// Always use currencyId as the balance key (not Value.Name)
 		for (int currencyIdx = 0; currencyIdx < s_MarketConfig.Currencies.Count(); currencyIdx++)
 		{
 			string currencyId = s_MarketConfig.Currencies.GetKey(currencyIdx);
@@ -138,15 +139,9 @@ class AskalPlayerBalance
 			if (!currencyCfg)
 				continue;
 			
-			// For virtual currencies (Mode=2), use currencyId directly
-			// For physical currencies (Mode=1), use the first Value.Name if available
+			// Always use currencyId as balance key (not Value.Name)
+			// Value.Name is only for physical item representation, balance uses currencyID
 			string balanceKey = currencyId;
-			if (currencyCfg.Mode == 1 && currencyCfg.Values && currencyCfg.Values.Count() > 0)
-			{
-				AskalCurrencyValueConfig firstValue = currencyCfg.Values.Get(0);
-				if (firstValue && firstValue.Name != "")
-					balanceKey = firstValue.Name;
-			}
 			
 			// Only add if it doesn't exist (preserve existing balance)
 			if (!playerData.Balance.Contains(balanceKey))
@@ -192,15 +187,9 @@ class AskalPlayerBalance
 
 				int startAmount = currencyConfig.StartCurrency;
 				
-				// For virtual currencies (Mode=2), use currencyId directly
-				// For physical currencies (Mode=1), use the first Value.Name if available
+				// Always use currencyId as balance key (not Value.Name)
+				// Value.Name is only for physical item representation, balance uses currencyID
 				string balanceKey = currencyId;
-				if (currencyConfig.Mode == 1 && currencyConfig.Values && currencyConfig.Values.Count() > 0)
-				{
-					AskalCurrencyValueConfig firstValue = currencyConfig.Values.Get(0);
-					if (firstValue && firstValue.Name != "")
-						balanceKey = firstValue.Name;
-				}
 
 				playerData.Balance.Set(balanceKey, startAmount);
 				Print("[AskalBalance] 💰 StartCurrency aplicado: " + balanceKey + " = " + startAmount);
@@ -306,34 +295,15 @@ class AskalPlayerBalance
 	}
 	
 	// Resolve balance key from currencyId
-	// For virtual currencies (Mode=2), returns currencyId
-	// For physical currencies (Mode=1), returns first Value.Name
+	// Always returns currencyId (balance always uses currencyID, not Value.Name)
+	// Value.Name is only for physical item representation in inventory
 	static string ResolveBalanceKey(string currencyId)
 	{
 		if (!currencyId || currencyId == "")
 			return "";
 		
-		EnsureMarketConfigLoaded();
-		if (!s_MarketConfig)
-			return currencyId; // Fallback
-		
-		AskalCurrencyConfig currencyCfg = s_MarketConfig.GetCurrencyConfig(currencyId);
-		if (!currencyCfg)
-			return currencyId; // Fallback
-		
-		// For virtual currencies, use currencyId directly
-		if (currencyCfg.Mode == 2)
-			return currencyId;
-		
-		// For physical currencies, use first Value.Name
-		if (currencyCfg.Mode == 1 && currencyCfg.Values && currencyCfg.Values.Count() > 0)
-		{
-			AskalCurrencyValueConfig firstValue = currencyCfg.Values.Get(0);
-			if (firstValue && firstValue.Name != "")
-				return firstValue.Name;
-		}
-		
-		return currencyId; // Fallback
+		// Balance always uses currencyID directly
+		return currencyId;
 	}
 	
 	// Limpar cache (útil para reload)

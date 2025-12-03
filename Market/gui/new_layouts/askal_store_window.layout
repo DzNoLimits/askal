@@ -965,7 +965,8 @@ FrameWidgetClass market_root_frame {
            priority 50
            {
             FrameWidgetClass buy_and_sell_button {
-             visible 1
+             visible 0
+             disabled 1
              ignorepointer 1
              size 1 1
              halign center_ref
@@ -976,7 +977,8 @@ FrameWidgetClass market_root_frame {
              vexactsize 0
              {
               ButtonWidgetClass buy_button {
-               visible 1
+               visible 0
+               disabled 1
                ignorepointer 0
                color 0 0.5216 0.1412 0.8275
                position 0.02 0.04
@@ -1092,7 +1094,8 @@ FrameWidgetClass market_root_frame {
                }
               }
               ButtonWidgetClass sell_button {
-               visible 1
+               visible 0
+               disabled 1
                ignorepointer 0
                color 1 0.6118 0 0.7843
                position 0.02 0.04

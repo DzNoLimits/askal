@@ -330,7 +330,7 @@ class AskalDatabaseSync
 		Print("[AskalSync] 📤 Header enviado: " + dsID + " (" + catCount + " categorias)");
 	}
 	
-	// Envia categoria OTIMIZADA (divide automaticamente em batches de 5-7 itens)
+	// Envia categoria OTIMIZADA (divide automaticamente em batches, reduzindo tamanho se necessário)
 	static bool SendCategoryOptimized(PlayerIdentity identity, string dsID, AskalCategorySyncData syncCat)
 	{
 		if (!identity || !syncCat || !syncCat.Items) return false;
@@ -350,33 +350,63 @@ class AskalDatabaseSync
 			itemClassNames.Insert(syncCat.Items.GetKey(nameIdx));
 		}
 		
-		// Dividir em batches de 3 itens (número muito seguro para evitar corrupção de string)
-		int itemsPerBatch = 3;
-		int totalBatches = (totalItems + itemsPerBatch - 1) / itemsPerBatch;
+		// Tentar enviar em batches, reduzindo automaticamente o tamanho se necessário
 		int sentBatches = 0;
+		int currentIdx = 0;
+		int batchNumber = 0;
 		
-		for (int batchIdx = 0; batchIdx < totalBatches; batchIdx++)
+		while (currentIdx < totalItems)
 		{
-			int startIdx = batchIdx * itemsPerBatch;
-			int endIdx = startIdx + itemsPerBatch;
-			if (endIdx > totalItems) endIdx = totalItems;
+			bool sent = false;
+			int itemsToTry = 3; // Começar tentando com 3 itens
 			
-			// Criar batch com subconjunto de itens
-			array<string> batchItems = new array<string>();
-			for (int copyIdx = startIdx; copyIdx < endIdx; copyIdx++)
+			// Tentar enviar com diferentes tamanhos de batch até conseguir
+			while (itemsToTry > 0 && !sent && currentIdx < totalItems)
 			{
-				batchItems.Insert(itemClassNames.Get(copyIdx));
-			}
-			
-			if (SendCategoryBatch(identity, dsID, syncCat, batchItems, batchIdx, totalBatches))
-			{
-				sentBatches++;
+				// Criar batch com subconjunto de itens
+				array<string> batchItems = new array<string>();
+				int endIdx = currentIdx + itemsToTry;
+				if (endIdx > totalItems) endIdx = totalItems;
+				
+				for (int copyIdx = currentIdx; copyIdx < endIdx; copyIdx++)
+				{
+					batchItems.Insert(itemClassNames.Get(copyIdx));
+				}
+				
+				// Tentar enviar o batch
+				sent = SendCategoryBatch(identity, dsID, syncCat, batchItems, batchNumber, -1); // -1 = total desconhecido
+				
+				if (sent)
+				{
+					sentBatches++;
+					currentIdx += batchItems.Count();
+					batchNumber++;
+				}
+				else
+				{
+					// Batch muito grande, tentar com menos itens
+					itemsToTry--;
+					if (itemsToTry == 0)
+					{
+						// Mesmo com 1 item falhou - pular e continuar
+						Print("[AskalSync] ❌ Falha ao enviar item individual: " + itemClassNames.Get(currentIdx) + " da categoria " + syncCat.CategoryID);
+						currentIdx++;
+					}
+				}
 			}
 		}
 		
-		if (totalBatches > 1)
+		if (sentBatches == 0)
 		{
-			Print("[AskalSync] ✅ Categoria dividida: " + syncCat.CategoryID + " (" + sentBatches + " batches, " + totalItems + " items)");
+			Print("[AskalSync] ❌ Nenhum batch foi enviado com sucesso para a categoria: " + syncCat.CategoryID + " (items: " + totalItems + ")");
+		}
+		else if (sentBatches > 1)
+		{
+			Print("[AskalSync] ✅ Categoria dividida: " + syncCat.CategoryID + " (" + sentBatches + " batches enviados, " + totalItems + " items)");
+		}
+		else
+		{
+			Print("[AskalSync] ✅ Categoria enviada: " + syncCat.CategoryID + " (" + totalItems + " items)");
 		}
 		
 		return sentBatches > 0;
@@ -447,7 +477,7 @@ class AskalDatabaseSync
 		
 		if (!jsonData || jsonData == "")
 		{
-			Print("[AskalSync] ❌ Erro ao serializar batch");
+			Print("[AskalSync] ❌ Erro ao serializar batch da categoria " + syncCat.CategoryID + " (batch " + (batchIdx + 1) + "/" + totalBatches + ")");
 			return false;
 		}
 		
@@ -455,7 +485,7 @@ class AskalDatabaseSync
 		int sizeBytes = jsonData.Length();
 		if (sizeBytes > 1000)
 		{
-			Print("[AskalSync] [AVISO] Batch muito grande: " + sizeBytes + " bytes (limite: 1000)");
+			Print("[AskalSync] [AVISO] Batch muito grande: " + sizeBytes + " bytes (limite: 1000) - Categoria: " + syncCat.CategoryID + " (batch " + (batchIdx + 1) + "/" + totalBatches + ", " + itemClassNames.Count() + " items)");
 			// Tentar reduzir ainda mais o batch
 			return false;
 		}
