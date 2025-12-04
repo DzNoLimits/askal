@@ -287,24 +287,25 @@ class AskalVehicleSpawn
 	}
 	
 	// Spawnar veículo em posição específica
-	static bool SpawnVehicleAtPosition(string vehicleClass, vector pos, vector rotation, string ownerId = "")
+	// Retorna o veículo criado (ou NULL se falhou)
+	static Object SpawnVehicleAtPosition(string vehicleClass, vector pos, vector rotation, string ownerId = "")
 	{
 		if (!vehicleClass || vehicleClass == "")
 		{
 			Print("[AskalVehicleSpawn] ❌ Classe de veículo inválida");
-			return false;
+			return NULL;
 		}
 		
 		if (pos == vector.Zero)
 		{
 			Print("[AskalVehicleSpawn] ❌ Posição inválida");
-			return false;
+			return NULL;
 		}
 		
 		if (!GetGame().IsServer())
 		{
 			Print("[AskalVehicleSpawn] ❌ Spawn só pode ser feito no servidor");
-			return false;
+			return NULL;
 		}
 		
 		Print("[AskalVehicleSpawn] 🚗 Spawnando veículo: " + vehicleClass + " em " + pos + " (rotation: " + rotation + ")");
@@ -315,7 +316,7 @@ class AskalVehicleSpawn
 		if (!vehicle)
 		{
 			Print("[AskalVehicleSpawn] ❌ Falha ao criar veículo: " + vehicleClass);
-			return false;
+			return NULL;
 		}
 		
 		// Aplicar rotação
@@ -330,7 +331,7 @@ class AskalVehicleSpawn
 			Print("[AskalVehicleSpawn] ❌ Veículo spawnado mas não estável");
 			if (vehicle)
 				GetGame().ObjectDelete(vehicle);
-			return false;
+			return NULL;
 		}
 		
 		// Log de sucesso
@@ -342,7 +343,7 @@ class AskalVehicleSpawn
 		if (ownerId && ownerId != "")
 			Print("[AskalVehicleSpawn]   Owner: " + ownerId);
 		
-		return true;
+		return vehicle;
 	}
 	
 	// Verificar se uma classe é um veículo
@@ -355,25 +356,112 @@ class AskalVehicleSpawn
 		string testDisplayName = "";
 		GetGame().ConfigGetText("CfgVehicles " + className + " displayName", testDisplayName);
 		
-		if (testDisplayName && testDisplayName != "")
-		{
-			// Verificar se herda de Car, Truck, Boat, etc.
-			// Por padrão, se está em CfgVehicles e não é ItemBase, provavelmente é veículo
-			// Verificação adicional: checar se não está em CfgWeapons ou CfgMagazines
-			string weaponTest = "";
-			GetGame().ConfigGetText("CfgWeapons " + className + " displayName", weaponTest);
-			if (weaponTest && weaponTest != "")
-				return false; // É arma, não veículo
-			
-			string magazineTest = "";
-			GetGame().ConfigGetText("CfgMagazines " + className + " displayName", magazineTest);
-			if (magazineTest && magazineTest != "")
-				return false; // É munição, não veículo
-			
-			// Se está em CfgVehicles e não é arma/munição, assumir que é veículo
+		if (!testDisplayName || testDisplayName == "")
+			return false; // Não está em CfgVehicles
+		
+		// Verificar se não é arma ou munição
+		string weaponTest = "";
+		GetGame().ConfigGetText("CfgWeapons " + className + " displayName", weaponTest);
+		if (weaponTest && weaponTest != "")
+			return false; // É arma, não veículo
+		
+		string magazineTest = "";
+		GetGame().ConfigGetText("CfgMagazines " + className + " displayName", magazineTest);
+		if (magazineTest && magazineTest != "")
+			return false; // É munição, não veículo
+		
+		// Verificar por padrões no nome da classe PRIMEIRO (mais rápido)
+		string lowerClassName = className;
+		lowerClassName.ToLower();
+		
+		// Padrões comuns de veículos do DayZ (com underscore)
+		if (lowerClassName.IndexOf("car_") == 0)
 			return true;
+		if (lowerClassName.IndexOf("truck_") == 0)
+			return true;
+		if (lowerClassName.IndexOf("boat_") == 0)
+			return true;
+		if (lowerClassName.IndexOf("bicycle_") == 0)
+			return true;
+		if (lowerClassName.IndexOf("offroad_") == 0)
+			return true;
+		if (lowerClassName.IndexOf("sedan_") == 0)
+			return true;
+		if (lowerClassName.IndexOf("hatchback_") == 0)
+			return true;
+		
+		// Padrões sem underscore (ex: offroadhatchback, sedan_02, etc)
+		if (lowerClassName.IndexOf("offroad") == 0)
+			return true;
+		if (lowerClassName.IndexOf("sedan") == 0)
+			return true;
+		if (lowerClassName.IndexOf("hatchback") == 0)
+			return true;
+		if (lowerClassName.IndexOf("truck") == 0)
+			return true;
+		if (lowerClassName.IndexOf("boat") == 0)
+			return true;
+		if (lowerClassName.IndexOf("bicycle") == 0)
+			return true;
+		if (lowerClassName.IndexOf("car") == 0)
+			return true;
+		
+		// Padrões no meio ou fim do nome
+		if (lowerClassName.IndexOf("_car") != -1)
+			return true;
+		if (lowerClassName.IndexOf("_truck") != -1)
+			return true;
+		if (lowerClassName.IndexOf("_boat") != -1)
+			return true;
+		
+		// Verificar se herda de classes de veículos conhecidas
+		// Verificar hierarquia de herança recursivamente
+		string currentClass = className;
+		int maxDepth = 20; // Limite de profundidade para evitar loops infinitos
+		int depth = 0;
+		
+		while (currentClass && currentClass != "" && depth < maxDepth)
+		{
+			// Verificar se é uma classe de veículo conhecida
+			string lowerClass = currentClass;
+			lowerClass.ToLower();
+			
+			// Verificar classes base de veículos (uma por vez para compatibilidade)
+			if (lowerClass == "car_base")
+				return true;
+			if (lowerClass == "car")
+				return true;
+			if (lowerClass == "truck_base")
+				return true;
+			if (lowerClass == "truck")
+				return true;
+			if (lowerClass == "boat_base")
+				return true;
+			if (lowerClass == "boat")
+				return true;
+			if (lowerClass == "bicyclebase")
+				return true;
+			if (lowerClass == "bicycle")
+				return true;
+			
+			// Verificar se herda de ItemBase (se sim, é um item, não veículo)
+			if (lowerClass == "itembase")
+				return false;
+			if (lowerClass == "item_base")
+				return false;
+			
+			// Obter classe pai
+			string parentClass = "";
+			GetGame().ConfigGetText("CfgVehicles " + currentClass + " parent", parentClass);
+			
+			if (!parentClass || parentClass == "" || parentClass == currentClass)
+				break; // Sem pai ou loop detectado
+			
+			currentClass = parentClass;
+			depth++;
 		}
 		
+		// Se chegou aqui, não encontrou evidências de ser veículo, assumir que não é
 		return false;
 	}
 	

@@ -275,6 +275,11 @@ class AskalPurchaseService
 		
 		Print("[AskalPurchase] 🚗 Processando compra de veículo: " + vehicleClass);
 		
+		// Verificar tipo de veículo ANTES de qualquer processamento (usado em múltiplos blocos)
+		bool isLandVehicle = AskalVehicleSpawn.IsLandVehicle(vehicleClass);
+		bool isWaterVehicle = AskalVehicleSpawn.IsWaterVehicle(vehicleClass);
+		Print("[AskalPurchase] 🚗 Tipo de veículo: " + vehicleClass + " | Terrestre: " + isLandVehicle + " | Aquático: " + isWaterVehicle);
+		
 		// Verificar se é Virtual Store (traderName vazio ou "Trader_Default")
 		bool isVirtualStore = (!traderName || traderName == "" || traderName == "Trader_Default");
 		
@@ -290,15 +295,16 @@ class AskalPurchaseService
 		
 		if (traderConfig && traderConfig.VehicleSpawnPoints)
 		{
-			// Trader tem pontos configurados - usar primeiro ponto válido
+			// Trader tem pontos configurados - usar primeiro ponto válido baseado no tipo de veículo
 			Print("[AskalPurchase] 🎯 Trader tem pontos de spawn configurados, tentando usar...");
 			
 			vector traderClearanceBox = AskalVehicleSpawn.GetDefaultClearanceBox();
 			bool foundValidPoint = false;
 			
-			// Tentar pontos terrestres primeiro
-			if (traderConfig.VehicleSpawnPoints.Land && traderConfig.VehicleSpawnPoints.Land.Count() > 0)
+			// Se for veículo terrestre, usar APENAS pontos Land
+			if (isLandVehicle && traderConfig.VehicleSpawnPoints.Land && traderConfig.VehicleSpawnPoints.Land.Count() > 0)
 			{
+				Print("[AskalPurchase] 🏔️ Veículo terrestre detectado - buscando pontos Land...");
 				for (int landIdx = 0; landIdx < traderConfig.VehicleSpawnPoints.Land.Count(); landIdx++)
 				{
 					AskalVehicleSpawnPoint landSpawnPoint = traderConfig.VehicleSpawnPoints.Land.Get(landIdx);
@@ -321,12 +327,16 @@ class AskalPurchaseService
 						Print("[AskalPurchase] ✅ Ponto de spawn terrestre válido encontrado: " + spawnPos);
 						break;
 					}
+					else
+					{
+						Print("[AskalPurchase] ⚠️ Ponto terrestre " + landIdx + " ocupado: " + landCandidatePos);
+					}
 				}
 			}
-			
-			// Se não encontrou ponto terrestre, tentar pontos aquáticos
-			if (!foundValidPoint && traderConfig.VehicleSpawnPoints.Water && traderConfig.VehicleSpawnPoints.Water.Count() > 0)
+			// Se for veículo aquático, usar APENAS pontos Water
+			else if (isWaterVehicle && traderConfig.VehicleSpawnPoints.Water && traderConfig.VehicleSpawnPoints.Water.Count() > 0)
 			{
+				Print("[AskalPurchase] 🌊 Veículo aquático detectado - buscando pontos Water...");
 				for (int waterIdx = 0; waterIdx < traderConfig.VehicleSpawnPoints.Water.Count(); waterIdx++)
 				{
 					AskalVehicleSpawnPoint waterSpawnPoint = traderConfig.VehicleSpawnPoints.Water.Get(waterIdx);
@@ -349,12 +359,76 @@ class AskalPurchaseService
 						Print("[AskalPurchase] ✅ Ponto de spawn aquático válido encontrado: " + spawnPos);
 						break;
 					}
+					else
+					{
+						Print("[AskalPurchase] ⚠️ Ponto aquático " + waterIdx + " ocupado: " + waterCandidatePos);
+					}
+				}
+			}
+			// Se tipo não identificado, tentar ambos (fallback)
+			else if (!isLandVehicle && !isWaterVehicle)
+			{
+				Print("[AskalPurchase] ⚠️ Tipo de veículo não identificado, tentando pontos Land primeiro...");
+				// Tentar pontos terrestres primeiro
+				if (traderConfig.VehicleSpawnPoints.Land && traderConfig.VehicleSpawnPoints.Land.Count() > 0)
+				{
+					for (int fallbackLandIdx = 0; fallbackLandIdx < traderConfig.VehicleSpawnPoints.Land.Count(); fallbackLandIdx++)
+					{
+						AskalVehicleSpawnPoint fallbackLandSpawnPoint = traderConfig.VehicleSpawnPoints.Land.Get(fallbackLandIdx);
+						if (!fallbackLandSpawnPoint)
+							continue;
+						
+						vector fallbackLandCandidatePos = fallbackLandSpawnPoint.GetPosition();
+						vector fallbackLandCandidateRot = fallbackLandSpawnPoint.GetRotation();
+						
+						if (fallbackLandCandidatePos == vector.Zero)
+							continue;
+						
+						if (AskalVehicleSpawn.IsAreaClear(fallbackLandCandidatePos, traderClearanceBox))
+						{
+							spawnPos = fallbackLandCandidatePos;
+							spawnRot = fallbackLandCandidateRot;
+							if (spawnRot == vector.Zero)
+								spawnRot = "0 0 0";
+							foundValidPoint = true;
+							Print("[AskalPurchase] ✅ Ponto de spawn terrestre válido encontrado (fallback): " + spawnPos);
+							break;
+						}
+					}
+				}
+				
+				// Se não encontrou ponto terrestre, tentar pontos aquáticos
+				if (!foundValidPoint && traderConfig.VehicleSpawnPoints.Water && traderConfig.VehicleSpawnPoints.Water.Count() > 0)
+				{
+					for (int fallbackWaterIdx = 0; fallbackWaterIdx < traderConfig.VehicleSpawnPoints.Water.Count(); fallbackWaterIdx++)
+					{
+						AskalVehicleSpawnPoint fallbackWaterSpawnPoint = traderConfig.VehicleSpawnPoints.Water.Get(fallbackWaterIdx);
+						if (!fallbackWaterSpawnPoint)
+							continue;
+						
+						vector fallbackWaterCandidatePos = fallbackWaterSpawnPoint.GetPosition();
+						vector fallbackWaterCandidateRot = fallbackWaterSpawnPoint.GetRotation();
+						
+						if (fallbackWaterCandidatePos == vector.Zero)
+							continue;
+						
+						if (AskalVehicleSpawn.IsAreaClear(fallbackWaterCandidatePos, traderClearanceBox))
+						{
+							spawnPos = fallbackWaterCandidatePos;
+							spawnRot = fallbackWaterCandidateRot;
+							if (spawnRot == vector.Zero)
+								spawnRot = "0 0 0";
+							foundValidPoint = true;
+							Print("[AskalPurchase] ✅ Ponto de spawn aquático válido encontrado (fallback): " + spawnPos);
+							break;
+						}
+					}
 				}
 			}
 			
 			if (!foundValidPoint)
 			{
-				Print("[AskalPurchase] ⚠️ Nenhum ponto de spawn válido encontrado no trader, usando fallback");
+				Print("[AskalPurchase] ⚠️ Nenhum ponto de spawn válido encontrado no trader para o tipo de veículo, usando fallback");
 			}
 		}
 		
@@ -398,8 +472,6 @@ class AskalPurchaseService
 			
 			// Verificar tipo de superfície e compatibilidade com veículo
 			bool isWater = AskalVehicleSpawn.IsSurfaceWater(spawnPos);
-			bool isLandVehicle = AskalVehicleSpawn.IsLandVehicle(vehicleClass);
-			bool isWaterVehicle = AskalVehicleSpawn.IsWaterVehicle(vehicleClass);
 			
 			if (isLandVehicle && isWater)
 			{
@@ -487,11 +559,25 @@ class AskalPurchaseService
 				ownerId = player.GetIdentity().GetId();
 		}
 		
-		bool spawnSuccess = AskalVehicleSpawn.SpawnVehicleAtPosition(vehicleClass, spawnPos, spawnRot, ownerId);
+		Object spawnedVehicle = AskalVehicleSpawn.SpawnVehicleAtPosition(vehicleClass, spawnPos, spawnRot, ownerId);
 		
-		if (spawnSuccess)
+		if (spawnedVehicle)
 		{
 			Print("[AskalPurchase] ✅ Veículo spawnado com sucesso em " + spawnPos);
+			
+			// Aplicar attachments padrão ao veículo
+			EntityAI vehicleEntity = EntityAI.Cast(spawnedVehicle);
+			if (vehicleEntity)
+			{
+				Print("[AskalPurchase] 🔧 Aplicando attachments ao veículo...");
+				AttachDefaultAttachments(vehicleEntity, vehicleClass);
+				Print("[AskalPurchase] ✅ Attachments aplicados ao veículo");
+			}
+			else
+			{
+				Print("[AskalPurchase] ⚠️ Veículo spawnado mas não é EntityAI - não é possível aplicar attachments");
+			}
+			
 			return true;
 		}
 		else
