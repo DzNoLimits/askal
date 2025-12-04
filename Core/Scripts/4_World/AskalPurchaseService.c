@@ -103,7 +103,7 @@ class AskalPurchaseService
 	// Processar compra COM quantidade e conteúdo customizados
 	// Retorna true se sucesso, false se erro
 	// Se errorMessage for fornecido, será preenchido com mensagem de erro
-	static bool ProcessPurchaseWithQuantity(PlayerIdentity identity, string steamId, string itemClass, int price, string currencyId, float itemQuantity, int quantityType, int contentType, string traderName = "", ref array<string> errorMessage = NULL)
+	static bool ProcessPurchaseWithQuantity(PlayerIdentity identity, string steamId, string itemClass, int price, string currencyId, float itemQuantity, int quantityType, int contentType, string traderName = "", array<string> errorMessage = NULL)
 	{
 		if (!identity)
 		{
@@ -249,7 +249,7 @@ class AskalPurchaseService
 	// Processar compra de veículo (spawn no mundo)
 	// Retorna true se sucesso, false se erro
 	// Se errorMessage for fornecido, será preenchido com mensagem de erro
-	static bool ProcessVehiclePurchase(PlayerBase player, string vehicleClass, string traderName = "", string steamId = "", ref array<string> errorMessage = NULL)
+	static bool ProcessVehiclePurchase(PlayerBase player, string vehicleClass, string traderName = "", string steamId = "", array<string> errorMessage = NULL)
 	{
 		if (!player || !vehicleClass || vehicleClass == "")
 		{

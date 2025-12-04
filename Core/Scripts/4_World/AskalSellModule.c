@@ -268,7 +268,7 @@ class AskalSellModule
 	}
 	
 	// Enviar resposta de health para o cliente
-	void SendInventoryHealthResponse(PlayerIdentity identity, ref map<string, float> healthMap)
+	void SendInventoryHealthResponse(PlayerIdentity identity, map<string, float> healthMap)
 	{
 		if (!identity || !healthMap)
 			return;

@@ -1084,9 +1084,33 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		string normalizedCategoryID = NormalizeCategoryID(categoryID);
 		
 		// PRIORIDADE 1: Verificar categoria específica (CAT_*)
+		// IMPORTANTE: Verificar também com busca case-insensitive para garantir que encontra
 		if (setupItems.Contains(normalizedCategoryID))
 		{
-			return setupItems.Get(normalizedCategoryID);
+			int catModeExact = setupItems.Get(normalizedCategoryID);
+			Print("[AskalStore] 🔍 GetCategoryMode: Categoria encontrada (exato) - " + normalizedCategoryID + " = " + catModeExact);
+			return catModeExact;
+		}
+		
+		// Busca case-insensitive para garantir que encontra a categoria
+		for (int keyIdx = 0; keyIdx < setupItems.Count(); keyIdx++)
+		{
+			string key = setupItems.GetKey(keyIdx);
+			if (!key || key == "")
+				continue;
+			
+			// Verificar se é uma categoria (CAT_*)
+			if (key.IndexOf("CAT_") == 0)
+			{
+				// Normalizar ambas as chaves para comparação
+				string normalizedKey = NormalizeCategoryID(key);
+				if (normalizedKey == normalizedCategoryID)
+				{
+					int catModeCaseInsensitive = setupItems.Get(key);
+					Print("[AskalStore] 🔍 GetCategoryMode: Categoria encontrada (case-insensitive) - " + key + " = " + catModeCaseInsensitive);
+					return catModeCaseInsensitive;
+				}
+			}
 		}
 		
 		// PRIORIDADE 2: Verificar dataset (DS_*)
@@ -1156,12 +1180,49 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		string normalizedDatasetID = NormalizeDatasetID(datasetID);
 		string normalizedCategoryID = NormalizeCategoryID(categoryID);
 		
-		// PRIORIDADE 1: Verificar item específico (className exato)
+		// Normalizar className para busca case-insensitive
+		string normalizedClassName = NormalizeClassName(itemClassName);
+		
+		// PRIORIDADE 1: Verificar item específico (busca case-insensitive)
+		// Declarar variável uma única vez
+		int foundItemMode;
+		
+		// Primeiro tentar com className original (caso esteja exato no map)
 		if (setupItems.Contains(itemClassName))
 		{
-			int itemMode = setupItems.Get(itemClassName);
-			Print("[AskalStore] 🔍 GetItemMode: Item específico encontrado - " + itemClassName + " = " + itemMode);
-			return itemMode;
+			foundItemMode = setupItems.Get(itemClassName);
+			Print("[AskalStore] 🔍 GetItemMode: Item específico encontrado (exato) - " + itemClassName + " = " + foundItemMode);
+			return foundItemMode;
+		}
+		
+		// Tentar com className normalizado
+		if (setupItems.Contains(normalizedClassName))
+		{
+			foundItemMode = setupItems.Get(normalizedClassName);
+			Print("[AskalStore] 🔍 GetItemMode: Item específico encontrado (normalizado) - " + normalizedClassName + " = " + foundItemMode);
+			return foundItemMode;
+		}
+		
+		// Se não encontrou, tentar busca case-insensitive no map
+		// (verificar todas as chaves que não são CAT_*, DS_* ou "ALL")
+		for (int keyIdx = 0; keyIdx < setupItems.Count(); keyIdx++)
+		{
+			string key = setupItems.GetKey(keyIdx);
+			if (!key || key == "")
+				continue;
+			
+			// Pular chaves de categoria, dataset e "ALL"
+			if (key.IndexOf("CAT_") == 0 || key.IndexOf("DS_") == 0 || key == "ALL")
+				continue;
+			
+			// Comparar case-insensitive
+			string normalizedKey = NormalizeClassName(key);
+			if (normalizedKey == normalizedClassName)
+			{
+				foundItemMode = setupItems.Get(key);
+				Print("[AskalStore] 🔍 GetItemMode: Item específico encontrado (case-insensitive) - " + key + " = " + foundItemMode);
+				return foundItemMode;
+			}
 		}
 		
 		// PRIORIDADE 2: Verificar categoria (CAT_*)
@@ -1173,11 +1234,30 @@ protected string m_LastVirtualStoreConfigSignature = "";
 		bool datasetConfigured = (datasetMode >= 0);
 		
 		int categoryMode = GetCategoryMode(normalizedDatasetID, normalizedCategoryID);
-		if (categoryMode >= 0)
+		Print("[AskalStore] 🔍 GetItemMode: categoryMode=" + categoryMode + " | categoryExplicitlyConfigured=" + categoryExplicitlyConfigured + " | datasetConfigured=" + datasetConfigured + " | normalizedCategoryID=" + normalizedCategoryID + " | itemClassName=" + itemClassName);
+		
+		// IMPORTANTE: Se categoryMode é 0 (Disabled), SEMPRE retornar 0, independente de como foi encontrado
+		// Isso garante que categorias desabilitadas sempre bloqueiam os itens
+		if (categoryMode == 0)
+		{
+			Print("[AskalStore] 🔍 GetItemMode: Categoria com modo 0 (Disabled) encontrada - " + normalizedCategoryID + " = 0 (retornando)");
+			return 0;
+		}
+		
+		// IMPORTANTE: categoryMode pode ser 0 (Disabled), que também é >= 0
+		// Se a categoria está explicitamente configurada (CAT_*), SEMPRE usar o modo da categoria, mesmo se for 0
+		if (categoryExplicitlyConfigured)
+		{
+			Print("[AskalStore] 🔍 GetItemMode: Categoria explicitamente configurada - " + normalizedCategoryID + " = " + categoryMode + " (retornando)");
+			return categoryMode; // Retorna 0 se disabled, ou outro valor se configurado
+		}
+		
+		// Se categoryMode != -1 e não está explicitamente configurada, verificar se veio do dataset
+		if (categoryMode != -1)
 		{
 			// Se a categoria está disponível apenas por itens individuais (não explicitamente configurada E não por dataset),
 			// não usar o modo da categoria para este item (ele não está configurado individualmente)
-			if (!categoryExplicitlyConfigured && !datasetConfigured)
+			if (!datasetConfigured)
 			{
 				// Categoria está disponível apenas por itens individuais
 				// Verificar se este item específico está configurado (já verificamos acima, mas vamos garantir)
@@ -1186,8 +1266,9 @@ protected string m_LastVirtualStoreConfigSignature = "";
 				return -1;
 			}
 			
-			// Se a categoria está disponível por causa do dataset OU explicitamente configurada, usar o modo
-			Print("[AskalStore] 🔍 GetItemMode: Categoria encontrada - " + normalizedCategoryID + " = " + categoryMode);
+			// Se a categoria está disponível por causa do dataset, usar o modo
+			// Isso inclui modo 0 (Disabled)
+			Print("[AskalStore] 🔍 GetItemMode: Categoria encontrada via dataset - " + normalizedCategoryID + " = " + categoryMode);
 			return categoryMode;
 		}
 		
@@ -2176,6 +2257,8 @@ protected string m_LastVirtualStoreConfigSignature = "";
 					continue;
 				
 				string className = invItem.GetType();
+				
+				// Verificar se o item existe no database (negociável)
 				if (!IsItemSellableByTrader(className))
 				{
 					Print("[AskalStore] ⚠️ Item do inventário não é negociável: " + className);
@@ -3765,9 +3848,22 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		RenderAttachmentsFromInventory(info.Item);
 		
 		// IMPORTANTE: Atualizar botões baseado no modo do item do trader
+		// Resolver dataset e categoria primeiro para garantir resolução correta
+		string datasetId = "";
+		string categoryId = "";
+		ResolveDatasetAndCategoryForClass(info.ClassName, datasetId, categoryId);
 		int itemMode = ResolveItemModeForClass(info.ClassName, -1);
+		
+		// Se não encontrou dataset/categoria, tentar resolver novamente com GetItemMode
+		if (datasetId != "" && categoryId != "")
+		{
+			int resolvedMode = GetItemMode(datasetId, categoryId, info.ClassName);
+			if (resolvedMode != -1)
+				itemMode = resolvedMode;
+		}
+		
 		UpdateActionButtons(itemMode);
-		Print("[AskalStore] 🔘 Botões atualizados para item do inventário: " + info.ClassName + " (modo: " + itemMode + ")");
+		Print("[AskalStore] 🔘 Botões atualizados para item do inventário: " + info.ClassName + " (modo: " + itemMode + " | DS: " + datasetId + " | CAT: " + categoryId + ")");
 		
 		UpdateTransactionSummary();
 	}
@@ -5744,9 +5840,22 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		// itemMode: -1=Disabled, 0=See Only, 1=Buy Only, 2=Sell Only, 3=Buy+Sell
 		m_CurrentItemMode = itemMode;
 		
-		bool canBuy = (itemMode == 1 || itemMode == 3);
-		bool canSell = (itemMode == 2 || itemMode == 3);
+		// FORÇAR ocultação se modo é 0 ou -1 (Disabled/Not Found)
+		// NUNCA mostrar botões para itens desabilitados
+		if (itemMode <= 0)
+		{
+			if (m_BuyButton)
+				m_BuyButton.Show(false);
+			if (m_SellButton)
+				m_SellButton.Show(false);
+			m_CurrentCanBuy = false;
+			m_CurrentCanSell = false;
+			m_CurrentActionLayout = 0;
+			Print("[AskalStore] 🔘 Botões OCULTOS | Mode: " + itemMode + " (Disabled/Not Found)");
+			return;
+		}
 		
+		// Determinar se o player tem o item (para venda)
 		bool playerHasItem = false;
 		if (m_BatchSellEnabled)
 			playerHasItem = true;
@@ -5755,36 +5864,52 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		else if (m_CurrentSelectedClassName && m_CurrentSelectedClassName != "")
 			playerHasItem = IsItemInInventory(m_CurrentSelectedClassName);
 		
-		if (canSell && !playerHasItem)
-			canSell = false;
-		if (itemMode <= 0)
+		// Determinar permissões baseado no modo do item
+		// Modo 1 (Buy Only): apenas compra permitida - NUNCA venda
+		// Modo 2 (Sell Only): apenas venda permitida (se player tem o item) - NUNCA compra
+		// Modo 3 (Buy + Sell): ambas permitidas (venda só se player tem o item)
+		bool canBuy = false;
+		bool canSell = false;
+		
+		// Modo 1 (Buy Only): apenas compra
+		if (itemMode == 1)
 		{
-			canBuy = false;
-			if (itemMode <= 0)
-				canSell = false;
+			canBuy = true;
+			canSell = false; // FORÇAR false para modo 1
+		}
+		// Modo 2 (Sell Only): apenas venda (se tem o item)
+		else if (itemMode == 2)
+		{
+			canBuy = false; // FORÇAR false para modo 2
+			canSell = playerHasItem;
+		}
+		// Modo 3 (Buy + Sell): ambas (venda só se tem o item)
+		else if (itemMode == 3)
+		{
+			canBuy = true;
+			canSell = playerHasItem;
 		}
 		
 		m_CurrentCanBuy = canBuy;
 		m_CurrentCanSell = canSell;
 		
-		// Mostrar apenas um botão por vez: compra OU venda
-		// Modo de venda só é ativado pelo modo de venda em lote (m_BatchSellEnabled)
+		// Determinar visibilidade dos botões baseado no contexto
+		// Em modo de venda em lote: mostrar apenas botão de venda (se permitido)
+		// Em modo normal: mostrar apenas botão de compra (se permitido)
 		bool showBuy = canBuy && !m_BatchSellEnabled;
-		bool showSell = canSell && m_BatchSellEnabled; // Só mostrar venda se estiver em modo de venda em lote
+		bool showSell = canSell && m_BatchSellEnabled;
 		
+		// FORÇAR ocultação se não pode fazer a ação
+		if (!canBuy)
+			showBuy = false;
+		if (!canSell)
+			showSell = false;
+		
+		// Aplicar visibilidade aos botões - SEMPRE ocultar se não deve mostrar
 		if (m_BuyButton)
 			m_BuyButton.Show(showBuy);
 		if (m_SellButton)
 			m_SellButton.Show(showSell);
-		
-		// Se nenhum botão deve aparecer, esconder ambos
-		if (!showBuy && !showSell)
-		{
-			if (m_BuyButton)
-				m_BuyButton.Show(false);
-			if (m_SellButton)
-				m_SellButton.Show(false);
-		}
 		
 		// Layout simplificado: 1=Buy, 2=Sell, 0=None
 		int resolvedLayout = 0;
@@ -5794,7 +5919,7 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			resolvedLayout = 2;
 		m_CurrentActionLayout = resolvedLayout;
 		
-		Print("[AskalStore] 🔘 Botões atualizados | Mode: " + itemMode + " | Buy: " + canBuy + " | Sell: " + canSell + " | HasItem: " + playerHasItem);
+		Print("[AskalStore] 🔘 Botões atualizados | Mode: " + itemMode + " | Buy: " + canBuy + " (" + showBuy + ") | Sell: " + canSell + " (" + showSell + ") | HasItem: " + playerHasItem + " | BatchSell: " + m_BatchSellEnabled);
 	}
 	
 	protected void UpdateActionButtonsForBatch(bool isBuyBatch)
@@ -5959,6 +6084,15 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		string categoryId = "";
 		
 		// PRIORIDADE 1: Usar SetupItems do trader atual (se houver)
+		string setupItemsStatus = "NULL";
+		int setupItemsCount = 0;
+		if (m_TraderSetupItems != NULL)
+		{
+			setupItemsStatus = "NOT NULL";
+			setupItemsCount = m_TraderSetupItems.Count();
+		}
+		Print("[AskalStore] 🔍 ResolveItemModeForClass: className=" + className + " | itemIndex=" + itemIndex + " | m_TraderSetupItems=" + setupItemsStatus + " | Count=" + setupItemsCount);
+		
 		if (m_TraderSetupItems && m_TraderSetupItems.Count() > 0)
 		{
 			// Tentar obter dataset e categoria do item
@@ -5974,14 +6108,28 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			if (datasetId == "" || categoryId == "")
 				ResolveDatasetAndCategoryForClass(className, datasetId, categoryId);
 			
+			Print("[AskalStore] 🔍 ResolveItemModeForClass: className=" + className + " | datasetId=" + datasetId + " | categoryId=" + categoryId);
+			
 			// Usar GetItemMode() que respeita a hierarquia correta
 			int traderMode = GetItemMode(datasetId, categoryId, className);
-			if (traderMode >= 0) // Se encontrou configuração (incluindo modo 0)
+			Print("[AskalStore] 🔍 ResolveItemModeForClass: GetItemMode retornou " + traderMode + " para " + className);
+			
+			// IMPORTANTE: traderMode pode ser 0 (Disabled), que também é >= 0
+			// Se encontrou configuração (incluindo modo 0), retornar
+			if (traderMode >= 0)
+			{
+				Print("[AskalStore] 🔍 ResolveItemModeForClass: Retornando modo " + traderMode + " para " + className);
 				return traderMode;
+			}
 			
 			// Se não encontrou no trader, retornar -1 (disabled) para itens não configurados
 			// Mas se "ALL" está definido, já foi considerado em GetItemMode()
+			Print("[AskalStore] 🔍 ResolveItemModeForClass: GetItemMode retornou -1, retornando -1 para " + className);
 			return -1;
+		}
+		else
+		{
+			Print("[AskalStore] 🔍 ResolveItemModeForClass: m_TraderSetupItems está vazio ou NULL, usando fallback para " + className);
 		}
 		
 		// FALLBACK: Sistema antigo de VirtualStore (se não há trader configurado)

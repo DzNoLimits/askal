@@ -75,7 +75,7 @@ class AskalNotificationHelper
 	
 	protected static ref array<ref Param2<string, float>> s_InventoryHealth;
 	
-	static void SetInventoryHealth(ref array<ref Param2<string, float>> healthArray)
+	static void SetInventoryHealth(array<ref Param2<string, float>> healthArray)
 	{
 		if (!s_InventoryHealth)
 			s_InventoryHealth = new array<ref Param2<string, float>>();
@@ -116,7 +116,7 @@ class AskalNotificationHelper
 	protected static string s_PendingTraderMenu;
 	protected static ref map<string, int> s_PendingTraderSetupItems;
 	
-	static void RequestOpenTraderMenu(string traderName, ref map<string, int> setupItems = NULL)
+	static void RequestOpenTraderMenu(string traderName, map<string, int> setupItems = NULL)
 	{
 		s_PendingTraderMenu = traderName;
 		if (setupItems)

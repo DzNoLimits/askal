@@ -32,7 +32,8 @@ class AskalTraderValidationHelper
 	}
 	
 	// Obter modo de um dataset
-	static int GetDatasetMode(ref map<string, int> setupItems, string datasetID)
+	// Wrapper para compatibilidade - usa ResolveModeForItem internamente
+	static int GetDatasetMode(map<string, int> setupItems, string datasetID)
 	{
 		if (!setupItems || setupItems.Count() == 0)
 			return 3; // Sem filtros, tudo disponível
@@ -64,7 +65,8 @@ class AskalTraderValidationHelper
 	}
 	
 	// Obter modo de uma categoria
-	static int GetCategoryMode(ref map<string, int> setupItems, string datasetID, string categoryID)
+	// Wrapper para compatibilidade - usa ResolveModeForItem internamente
+	static int GetCategoryMode(map<string, int> setupItems, string datasetID, string categoryID)
 	{
 		if (!setupItems || setupItems.Count() == 0)
 			return 3; // Sem filtros, tudo disponível
@@ -95,44 +97,111 @@ class AskalTraderValidationHelper
 		return -1;
 	}
 	
-	// Obter modo de um item (respeitando hierarquia: Item > Category > Dataset > ALL)
-	static int GetItemMode(ref map<string, int> setupItems, string datasetID, string categoryID, string itemClassName)
+	// ResolveModeForItem: precedência Item > Category > Dataset > ALL
+	// Função centralizada e reutilizável para resolução de modo
+	static int ResolveModeForItem(string itemClassname, string categoryId, string datasetId, int defaultAllMode, map<string, int> traderSetupItems, map<string, int> traderSetupCategories = NULL, map<string, int> traderSetupDatasets = NULL)
 	{
-		if (!setupItems || setupItems.Count() == 0)
-			return 3; // Sem filtros, tudo disponível
+		// Se não há configurações, retornar default
+		bool hasSetupItems = (traderSetupItems && traderSetupItems.Count() > 0);
+		bool hasSetupCategories = (traderSetupCategories && traderSetupCategories.Count() > 0);
+		bool hasSetupDatasets = (traderSetupDatasets && traderSetupDatasets.Count() > 0);
+		
+		if (!hasSetupItems && !hasSetupCategories && !hasSetupDatasets)
+		{
+			return defaultAllMode;
+		}
 		
 		// Normalizar IDs
-		string normalizedDatasetID = NormalizeDatasetID(datasetID);
-		string normalizedCategoryID = NormalizeCategoryID(categoryID);
+		string normalizedDatasetID = NormalizeDatasetID(datasetId);
+		string normalizedCategoryID = NormalizeCategoryID(categoryId);
 		
-		// PRIORIDADE 1: Verificar item específico (className exato)
-		if (setupItems.Contains(itemClassName))
+		// PRIORIDADE 1: item-level (verificar em SetupItems)
+		// Primeiro tentar busca exata (case-sensitive)
+		if (traderSetupItems && traderSetupItems.Contains(itemClassname))
 		{
-			return setupItems.Get(itemClassName);
+			int itemMode = traderSetupItems.Get(itemClassname);
+			Print("[AskalTraderValidation] ✅ PRIORIDADE 1 (ITEM): Item '" + itemClassname + "' encontrado em SetupItems (exato) com modo: " + itemMode);
+			return itemMode;
 		}
 		
-		// PRIORIDADE 2: Verificar categoria (CAT_*)
-		int categoryMode = GetCategoryMode(setupItems, normalizedDatasetID, normalizedCategoryID);
-		if (categoryMode >= 0)
+		// Se não encontrou, tentar busca case-insensitive
+		if (traderSetupItems && traderSetupItems.Count() > 0)
 		{
-			return categoryMode;
+			string itemLower = itemClassname;
+			itemLower.ToLower();
+			for (int checkIdx = 0; checkIdx < traderSetupItems.Count(); checkIdx++)
+			{
+				string key = traderSetupItems.GetKey(checkIdx);
+				// Pular se a chave começa com CAT_, DS_ ou é "ALL" (não são itens)
+				if (key.IndexOf("CAT_") == 0 || key.IndexOf("DS_") == 0 || key == "ALL")
+					continue;
+				
+				string keyLower = key;
+				keyLower.ToLower();
+				if (keyLower == itemLower)
+				{
+					int foundItemMode = traderSetupItems.Get(key);
+					Print("[AskalTraderValidation] ✅ PRIORIDADE 1 (ITEM): Item '" + itemClassname + "' encontrado em SetupItems como '" + key + "' (case-insensitive) com modo: " + foundItemMode);
+					return foundItemMode;
+				}
+			}
 		}
 		
-		// PRIORIDADE 3: Verificar dataset (DS_*)
-		int datasetMode = GetDatasetMode(setupItems, normalizedDatasetID);
-		if (datasetMode >= 0)
+		// PRIORIDADE 2: category-level
+		if (categoryId != "" && normalizedCategoryID != "")
 		{
-			return datasetMode;
+			// Tentar SetupCategories primeiro (se existir)
+			if (traderSetupCategories && traderSetupCategories.Contains(normalizedCategoryID))
+			{
+				int catMode = traderSetupCategories.Get(normalizedCategoryID);
+				Print("[AskalTraderValidation] ✅ PRIORIDADE 2 (CATEGORY): Categoria '" + normalizedCategoryID + "' encontrada em SetupCategories com modo: " + catMode);
+				return catMode;
+			}
+			// Fallback para SetupItems (compatibilidade)
+			if (traderSetupItems && traderSetupItems.Contains(normalizedCategoryID))
+			{
+				int catModeFromItems = traderSetupItems.Get(normalizedCategoryID);
+				Print("[AskalTraderValidation] ✅ PRIORIDADE 2 (CATEGORY): Categoria '" + normalizedCategoryID + "' encontrada em SetupItems com modo: " + catModeFromItems);
+				return catModeFromItems;
+			}
 		}
 		
-		// PRIORIDADE 4: Verificar "ALL"
-		if (setupItems.Contains("ALL"))
+		// PRIORIDADE 3: dataset-level
+		if (datasetId != "" && normalizedDatasetID != "")
 		{
-			return setupItems.Get("ALL");
+			// Tentar SetupDatasets primeiro (se existir)
+			if (traderSetupDatasets && traderSetupDatasets.Contains(normalizedDatasetID))
+			{
+				int dsMode = traderSetupDatasets.Get(normalizedDatasetID);
+				Print("[AskalTraderValidation] ✅ PRIORIDADE 3 (DATASET): Dataset '" + normalizedDatasetID + "' encontrado em SetupDatasets com modo: " + dsMode);
+				return dsMode;
+			}
+			// Fallback para SetupItems (compatibilidade)
+			if (traderSetupItems && traderSetupItems.Contains(normalizedDatasetID))
+			{
+				int dsModeFromItems = traderSetupItems.Get(normalizedDatasetID);
+				Print("[AskalTraderValidation] ✅ PRIORIDADE 3 (DATASET): Dataset '" + normalizedDatasetID + "' encontrado em SetupItems com modo: " + dsModeFromItems);
+				return dsModeFromItems;
+			}
+		}
+		
+		// PRIORIDADE 4: ALL fallback
+		if (traderSetupItems && traderSetupItems.Contains("ALL"))
+		{
+			int allMode = traderSetupItems.Get("ALL");
+			Print("[AskalTraderValidation] ✅ PRIORIDADE 4 (ALL): 'ALL' encontrado em SetupItems com modo: " + allMode);
+			return allMode;
 		}
 		
 		// Sem configuração encontrada
 		return -1;
+	}
+	
+	// Obter modo de um item (respeitando hierarquia: Item > Category > Dataset > ALL)
+	// Wrapper para compatibilidade - usa ResolveModeForItem internamente
+	static int GetItemMode(map<string, int> setupItems, string datasetID, string categoryID, string itemClassName)
+	{
+		return ResolveModeForItem(itemClassName, categoryID, datasetID, 3, setupItems, NULL, NULL);
 	}
 	
 	// Resolver dataset e categoria de um item (busca no database)

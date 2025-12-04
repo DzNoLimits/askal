@@ -148,10 +148,11 @@ class AskalCurrencyInventoryManager
 				EntityAI coin = player.GetInventory().CreateInInventory(coinClass);
 				if (!coin)
 				{
-					// Não há espaço: dropa no chão (Q6 - OPÇÃO C)
-					vector playerPos = player.GetPosition();
-					coin = GetGame().CreateObjectEx(coinClass, playerPos, ECE_PLACE_ON_SURFACE);
-					if (coin)
+				// Não há espaço: dropa no chão (Q6 - OPÇÃO C)
+				vector playerPos = player.GetPosition();
+				Object createdObj = GetGame().CreateObjectEx(coinClass, playerPos, ECE_PLACE_ON_SURFACE);
+				coin = EntityAI.Cast(createdObj);
+				if (coin)
 					{
 						droppedCoins.Insert(coin);
 					}

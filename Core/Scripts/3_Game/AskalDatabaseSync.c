@@ -412,6 +412,87 @@ class AskalDatabaseSync
 		return sentBatches > 0;
 	}
 	
+	// Constante para limite de batch (static para acesso em métodos estáticos)
+	static const int MAX_BATCH_BYTES = 1000;
+	//static const int MAX_BATCH_BYTES = 1024;
+	
+	// Estimar tamanho aproximado de um item no batch (em bytes)
+	static int EstimateItemSize(string className, AskalItemSyncData itemData)
+	{
+		if (!itemData) return 50; // Tamanho mínimo estimado
+		
+		int size = className.Length(); // className
+		size += 20; // price, sellPercent (números)
+		
+		// Variantes
+		if (itemData.Variants && itemData.Variants.Count() > 0)
+		{
+			for (int varIdx = 0; varIdx < itemData.Variants.Count(); varIdx++)
+			{
+				size += itemData.Variants.Get(varIdx).Length() + 1; // +1 para vírgula
+			}
+		}
+		
+		// Attachments
+		if (itemData.Attachments && itemData.Attachments.Count() > 0)
+		{
+			for (int attIdx = 0; attIdx < itemData.Attachments.Count(); attIdx++)
+			{
+				size += itemData.Attachments.Get(attIdx).Length() + 1; // +1 para vírgula
+			}
+		}
+		
+		// Overhead JSON (chaves, estrutura)
+		size += 100;
+		
+		return size;
+	}
+	
+	// Enviar item individual como payload reduzido (apenas classname e price)
+	static bool SendSingleItemAsReduced(PlayerIdentity identity, string dsID, AskalCategorySyncData syncCat, string className, AskalItemSyncData itemData, int batchIdx)
+	{
+		if (!identity || !syncCat || !itemData) return false;
+		
+		// Criar payload mínimo: apenas classname e price
+		AskalCategoryBatchData batchData = new AskalCategoryBatchData();
+		batchData.DatasetID = dsID;
+		batchData.CategoryID = syncCat.CategoryID;
+		batchData.DisplayName = syncCat.DisplayName;
+		batchData.BasePrice = syncCat.BasePrice;
+		batchData.CategorySellPercent = syncCat.SellPercent;
+		batchData.BatchIndex = batchIdx;
+		batchData.TotalBatches = -1;
+		batchData.ItemClassNames = new array<string>();
+		batchData.ItemPrices = new array<int>();
+		batchData.ItemVariants = new array<string>();
+		batchData.ItemAttachments = new array<string>();
+		batchData.ItemSellPercents = new array<int>();
+		
+		// Apenas classname e price (sem variants/attachments)
+		batchData.ItemClassNames.Insert(className);
+		batchData.ItemPrices.Insert(itemData.BasePrice);
+		batchData.ItemSellPercents.Insert(itemData.SellPercent);
+		batchData.ItemVariants.Insert(""); // Vazio
+		batchData.ItemAttachments.Insert(""); // Vazio
+		
+		string jsonData = AskalJsonLoader<AskalCategoryBatchData>.ObjectToString(batchData);
+		if (!jsonData || jsonData == "")
+			return false;
+		
+		int sizeBytes = jsonData.Length();
+		if (sizeBytes > MAX_BATCH_BYTES)
+		{
+			Print("[AskalSync] ⚠️ WARN: Item muito grande mesmo reduzido: " + className + " (" + sizeBytes + " bytes)");
+			return false;
+		}
+		
+		Param1<string> params = new Param1<string>(jsonData);
+		GetRPCManager().SendRPC("AskalCoreModule", "SendCategoryBatch", params, true, identity, NULL);
+		
+		Print("[AskalSync] ⚠️ WARN: Sent reduced payload for " + className + " (" + sizeBytes + " bytes)");
+		return true;
+	}
+	
 	// Envia um batch de itens de uma categoria (formato compacto: apenas ClassName + Price)
 	static bool SendCategoryBatch(PlayerIdentity identity, string dsID, AskalCategorySyncData syncCat, array<string> itemClassNames, int batchIdx, int totalBatches)
 	{
@@ -432,7 +513,12 @@ class AskalDatabaseSync
 		batchData.ItemAttachments = new array<string>();
 		batchData.ItemSellPercents = new array<int>();
 
-		// Processar itens do batch
+		// Estimar tamanho total antes de processar
+		int estimatedSize = 200; // Overhead base (estrutura JSON)
+		array<string> validClassNames = new array<string>();
+		array<AskalItemSyncData> validItemData = new array<AskalItemSyncData>();
+
+		// Processar itens do batch e estimar tamanho
 		if (itemClassNames && itemClassNames.Count() > 0)
 		{
 			for (int processIdx = 0; processIdx < itemClassNames.Count(); processIdx++)
@@ -442,34 +528,68 @@ class AskalDatabaseSync
 				
 				if (itemData)
 				{
-					batchData.ItemClassNames.Insert(className);
-					batchData.ItemPrices.Insert(itemData.BasePrice);
-					batchData.ItemSellPercents.Insert(itemData.SellPercent);
+					int itemSize = EstimateItemSize(className, itemData);
 					
-					// Variantes como string concatenada (compacto)
-					string variantsStr = "";
-					if (itemData.Variants && itemData.Variants.Count() > 0)
+					// Se item individual é muito grande, enviar separadamente como reduzido
+					if (itemSize > MAX_BATCH_BYTES)
 					{
-						for (int varIdx = 0; varIdx < itemData.Variants.Count(); varIdx++)
-						{
-							if (varIdx > 0) variantsStr += ",";
-							variantsStr += itemData.Variants.Get(varIdx);
-						}
+						Print("[AskalSync] ⚠️ Item muito grande detectado: " + className + " (estimado: " + itemSize + " bytes) - enviando como payload reduzido");
+						SendSingleItemAsReduced(identity, dsID, syncCat, className, itemData, batchIdx);
+						continue; // Pular este item do batch normal
 					}
-					batchData.ItemVariants.Insert(variantsStr);
-
-					string attachmentsStr = "";
-					if (itemData.Attachments && itemData.Attachments.Count() > 0)
+					
+					// Verificar se adicionar este item ultrapassa o limite
+					if (estimatedSize + itemSize > MAX_BATCH_BYTES)
 					{
-						for (int attIdx = 0; attIdx < itemData.Attachments.Count(); attIdx++)
-						{
-							if (attIdx > 0) attachmentsStr += ",";
-							attachmentsStr += itemData.Attachments.Get(attIdx);
-						}
+						// Não adicionar este item - será processado no próximo batch
+						break;
 					}
-					batchData.ItemAttachments.Insert(attachmentsStr);
+					
+					validClassNames.Insert(className);
+					validItemData.Insert(itemData);
+					estimatedSize += itemSize;
 				}
 			}
+		}
+		
+		// Processar apenas os itens válidos (que cabem no batch)
+		for (int validIdx = 0; validIdx < validClassNames.Count(); validIdx++)
+		{
+			string validClassName = validClassNames.Get(validIdx);
+			AskalItemSyncData validItem = validItemData.Get(validIdx);
+			
+			batchData.ItemClassNames.Insert(validClassName);
+			batchData.ItemPrices.Insert(validItem.BasePrice);
+			batchData.ItemSellPercents.Insert(validItem.SellPercent);
+			
+			// Variantes como string concatenada (compacto)
+			string variantsStr = "";
+			if (validItem.Variants && validItem.Variants.Count() > 0)
+			{
+				for (int varIdx = 0; varIdx < validItem.Variants.Count(); varIdx++)
+				{
+					if (varIdx > 0) variantsStr += ",";
+					variantsStr += validItem.Variants.Get(varIdx);
+				}
+			}
+			batchData.ItemVariants.Insert(variantsStr);
+
+			string attachmentsStr = "";
+			if (validItem.Attachments && validItem.Attachments.Count() > 0)
+			{
+				for (int attIdx = 0; attIdx < validItem.Attachments.Count(); attIdx++)
+				{
+					if (attIdx > 0) attachmentsStr += ",";
+					attachmentsStr += validItem.Attachments.Get(attIdx);
+				}
+			}
+			batchData.ItemAttachments.Insert(attachmentsStr);
+		}
+		
+		// Se não há itens válidos, retornar sucesso (itens grandes foram enviados separadamente)
+		if (batchData.ItemClassNames.Count() == 0)
+		{
+			return true;
 		}
 		
 		// Serializar
@@ -481,12 +601,11 @@ class AskalDatabaseSync
 			return false;
 		}
 		
-		// Verificar tamanho (deve ser < 1KB para segurança máxima)
+		// Verificar tamanho final (deve ser < 1KB para segurança máxima)
 		int sizeBytes = jsonData.Length();
-		if (sizeBytes > 1000)
+		if (sizeBytes > MAX_BATCH_BYTES)
 		{
-			Print("[AskalSync] [AVISO] Batch muito grande: " + sizeBytes + " bytes (limite: 1000) - Categoria: " + syncCat.CategoryID + " (batch " + (batchIdx + 1) + "/" + totalBatches + ", " + itemClassNames.Count() + " items)");
-			// Tentar reduzir ainda mais o batch
+			Print("[AskalSync] [AVISO] Batch muito grande após serialização: " + sizeBytes + " bytes (limite: " + MAX_BATCH_BYTES + ") - Categoria: " + syncCat.CategoryID + " (batch " + (batchIdx + 1) + "/" + totalBatches + ", " + batchData.ItemClassNames.Count() + " items)");
 			return false;
 		}
 		
