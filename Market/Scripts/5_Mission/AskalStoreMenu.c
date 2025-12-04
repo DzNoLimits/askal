@@ -5629,6 +5629,23 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			
 			// Obter SetupItems do helper
 			m_TraderSetupItems = AskalNotificationHelper.GetPendingTraderSetupItems();
+			if (m_TraderSetupItems)
+			{
+				Print("[AskalStore] 📦 SetupItems obtido do helper: " + m_TraderSetupItems.Count() + " entradas");
+				// Log das primeiras 5 entradas para debug
+				int logCount = 0;
+				for (int i = 0; i < m_TraderSetupItems.Count() && logCount < 5; i++)
+				{
+					string key = m_TraderSetupItems.GetKey(i);
+					int value = m_TraderSetupItems.GetElement(i);
+					Print("[AskalStore] 📦 SetupItems[" + i + "]: " + key + " = " + value);
+					logCount++;
+				}
+			}
+			else
+			{
+				Print("[AskalStore] ⚠️ SetupItems é NULL do helper!");
+			}
 			
 			// Resolve currency for trader
 			AskalCurrencyConfig resolvedCurrencyCfg = NULL;
