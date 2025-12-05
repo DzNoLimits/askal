@@ -5059,8 +5059,21 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			displayName = itemClass;
 		
 		m_SelectedItemUnitPrice = price;
-		int totalPrice = price * m_TransactionQuantity;
-		Print("[AskalStore] 💰 Tentando comprar: " + itemClass + " | Quantidade: " + m_TransactionQuantity + " | Total: " + totalPrice + " " + currencyId);
+		
+		// Calcular preço total: usar CalculateAdjustedPrice se há slider ativo, senão usar m_TransactionQuantity
+		int totalPrice;
+		if (m_SliderQuantityType != AskalItemQuantityType.NONE)
+		{
+			// Para itens com slider, usar CalculateAdjustedPrice que já considera o valor do slider
+			totalPrice = CalculateAdjustedPrice(price, itemClass);
+		}
+		else
+		{
+			// Para itens NONE, usar quantidade de itens separados
+			totalPrice = price * m_TransactionQuantity;
+		}
+		
+		Print("[AskalStore] 💰 Tentando comprar: " + itemClass + " | QtyType: " + m_SliderQuantityType + " | Total: " + totalPrice + " " + currencyId);
 		
 		if (GetGame().IsClient())
 		{
@@ -5096,17 +5109,35 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 				{
 					case AskalItemQuantityType.MAGAZINE:
 					{
-						itemQuantity = m_CurrentAmmoCount;
+						// Garantir que temos um valor válido (usar máximo se 0 ou negativo)
+						if (m_CurrentAmmoCount > 0)
+							itemQuantity = m_CurrentAmmoCount;
+						else if (m_SliderMaxValue > 0)
+							itemQuantity = m_SliderMaxValue;
+						else
+							itemQuantity = 1.0; // Fallback
 						break;
 					}
 					case AskalItemQuantityType.STACKABLE:
 					{
-						itemQuantity = m_CurrentAmmoCount;
+						// Garantir que temos um valor válido (usar máximo se 0 ou negativo)
+						if (m_CurrentAmmoCount > 0)
+							itemQuantity = m_CurrentAmmoCount;
+						else if (m_SliderMaxValue > 0)
+							itemQuantity = m_SliderMaxValue;
+						else
+							itemQuantity = 1.0; // Fallback
 						break;
 					}
 					case AskalItemQuantityType.QUANTIFIABLE:
 					{
-						itemQuantity = m_CurrentQuantityPercent;
+						// Garantir que temos um valor válido (usar máximo se 0 ou negativo)
+						if (m_CurrentQuantityPercent > 0)
+							itemQuantity = m_CurrentQuantityPercent;
+						else if (m_SliderMaxValue > 0)
+							itemQuantity = m_SliderMaxValue;
+						else
+							itemQuantity = 100.0; // Fallback para 100%
 						itemContent = m_CurrentSelectedContent.ToInt();
 						break;
 					}
@@ -5117,6 +5148,23 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 				// Para itens NONE, usar m_TransactionQuantity (número de itens separados)
 				itemQuantity = m_TransactionQuantity;
 			}
+			
+			// Se ainda não temos um valor válido e há slider, ler diretamente do slider
+			if (itemQuantity <= 0 && m_SliderQuantityType != AskalItemQuantityType.NONE && m_TransactionQuantitySlider)
+			{
+				float sliderValue = m_TransactionQuantitySlider.GetCurrent();
+				if (sliderValue > 0)
+				{
+					Print("[AskalStore] ⚠️ Usando valor direto do slider: " + sliderValue);
+					if (m_SliderQuantityType == AskalItemQuantityType.QUANTIFIABLE)
+						itemQuantity = sliderValue;
+					else
+						itemQuantity = Math.Round(sliderValue);
+				}
+			}
+			
+			// Log para debug
+			Print("[AskalStore] 🔍 Debug compra | Qty: " + itemQuantity + " | QtyType: " + m_SliderQuantityType + " | CurrentAmmo: " + m_CurrentAmmoCount + " | CurrentPercent: " + m_CurrentQuantityPercent + " | MaxValue: " + m_SliderMaxValue);
 			
 			string traderName = m_CurrentTraderName;
 			if (!traderName || traderName == "")
