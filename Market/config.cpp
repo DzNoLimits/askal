@@ -22,6 +22,7 @@ class CfgMods
 		version = "1.0.0";
 		extra = 0;
 		type = "mod";
+		inputs = "Askal/Market/Scripts/Data/Inputs.xml";
 		dependencies[] = {"Game","World","Mission"};
 		class defs
 		{

@@ -50,59 +50,83 @@ modded class MissionGameplay extends MissionBase
 		Print("[AskalMarket] ========================================");
 	}
 	
-	override void OnKeyPress(int key)
+	override void OnUpdate(float timeslice)
 	{
-		super.OnKeyPress(key);
+		super.OnUpdate(timeslice);
 		
-		// Tecla O - Toggle menu da loja
-		if (key == KeyCode.KC_O)
+		if (!GetGame().IsClient())
+			return;
+		
+		// Verificar input customizado para abrir/fechar menu
+		UAInput input = GetUApi().GetInputByName("UAAskalMarketToggle");
+		if (input && input.LocalPress())
 		{
-			Print("[AskalMarket] ========================================");
-			Print("[AskalMarket] Tecla O pressionada");
-		
+			// Verificar se há outros menus abertos (inventário, pause, map, etc)
+			UIScriptedMenu currentMenu = GetGame().GetUIManager().GetMenu();
+			if (currentMenu && currentMenu != m_ToolsMenu)
+			{
+				// Outro menu está aberto, não abrir o market
+				return;
+			}
+			
+			// Verificar se o player está em uma ação que impede abrir o menu
+			// (ex: inventário aberto, menu de pause, etc)
+			// A verificação de GetMenu() acima já cobre a maioria dos casos
+			
 			// Verificar sincronização
-			if (GetGame().IsMultiplayer() && GetGame().IsClient())
+			if (GetGame().IsMultiplayer())
 			{
 				bool isSynced = AskalDatabaseSync.IsClientSynced();
-				int datasetCount = AskalDatabaseClientCache.GetInstance().GetDatasets().Count();
-				
-				Print("[AskalMarket] Estado:");
-				
-				string syncStatus = "NÃO";
-				if (isSynced)
-				{
-					syncStatus = "SIM";
-		}
-		
-				Print("[AskalMarket]   Sincronizado: " + syncStatus);
-				Print("[AskalMarket]   Datasets: " + datasetCount);
-				
 				if (!isSynced)
-		{
-					Print("[AskalMarket] ⚠️ Database ainda não sincronizado");
+				{
+					PlayerBase player = PlayerBase.Cast(GetGame().GetPlayer());
+					if (player)
+					{
+						player.MessageStatus("Aguardando sincronização do servidor...");
+					}
 					
-			PlayerBase player = PlayerBase.Cast(GetGame().GetPlayer());
-			if (player)
-			{
-				player.MessageStatus("Aguardando sincronização do servidor...");
-			}
-					
-					// Tentar solicitar novamente
 					if (!m_SyncRequested)
 					{
-						Print("[AskalMarket] 📤 Re-solicitando sincronização...");
 						GetRPCManager().SendRPC("AskalCoreModule", "RequestDatasets", NULL, true, NULL, NULL);
 						m_SyncRequested = true;
 					}
-					
-					Print("[AskalMarket] ========================================");
-			return;
-		}
+					return;
+				}
 			}
-		
-			// Abrir/fechar menu
+			
+			// Toggle menu
 			ToggleToolsMenu();
-			Print("[AskalMarket] ========================================");
+		}
+		
+		// Verificar se há solicitação de abertura de menu do trader pendente
+		string pendingTraderMenu = AskalNotificationHelper.GetPendingTraderMenu();
+		if (pendingTraderMenu && pendingTraderMenu != "")
+		{
+			Print("[AskalMarket] 🏪 Trader pendente detectado: " + pendingTraderMenu);
+			
+			// Se o menu já existe, apenas chamar OpenTraderMenu
+			if (m_ToolsMenu)
+			{
+				Print("[AskalMarket] ✅ Menu já existe, chamando OpenTraderMenu()");
+				m_ToolsMenu.OpenTraderMenu(pendingTraderMenu);
+			}
+			else
+			{
+				Print("[AskalMarket] 📦 Criando novo menu para trader: " + pendingTraderMenu);
+				m_ToolsMenu = new AskalStoreMenu();
+				if (m_ToolsMenu)
+				{
+					GetGame().GetUIManager().ShowScriptedMenu(m_ToolsMenu, NULL);
+					Print("[AskalMarket] ✅ Menu do trader criado e exibido");
+				}
+				else
+				{
+					Print("[AskalMarket] ❌ Falha ao criar AskalStoreMenu");
+				}
+			}
+			
+			// Limpar o trader pendente
+			AskalNotificationHelper.ClearPendingTraderMenu();
 		}
 	}
 	
@@ -132,45 +156,6 @@ modded class MissionGameplay extends MissionBase
 	}
 	}
 
-	override void OnUpdate(float timeslice)
-	{
-		super.OnUpdate(timeslice);
-		
-		// Verificar se há solicitação de abertura de menu do trader pendente
-		// Isso permite que o menu seja criado quando o RPC é recebido
-		if (GetGame().IsClient())
-		{
-			string pendingTraderMenu = AskalNotificationHelper.GetPendingTraderMenu();
-			if (pendingTraderMenu && pendingTraderMenu != "")
-			{
-				Print("[AskalMarket] 🏪 Trader pendente detectado: " + pendingTraderMenu);
-				
-				// Se o menu já existe, apenas chamar OpenTraderMenu
-				if (m_ToolsMenu)
-				{
-					Print("[AskalMarket] ✅ Menu já existe, chamando OpenTraderMenu()");
-					m_ToolsMenu.OpenTraderMenu(pendingTraderMenu);
-				}
-				else
-				{
-					Print("[AskalMarket] 📦 Criando novo menu para trader: " + pendingTraderMenu);
-					m_ToolsMenu = new AskalStoreMenu();
-					if (m_ToolsMenu)
-					{
-						GetGame().GetUIManager().ShowScriptedMenu(m_ToolsMenu, NULL);
-						Print("[AskalMarket] ✅ Menu do trader criado e exibido");
-					}
-					else
-					{
-						Print("[AskalMarket] ❌ Falha ao criar AskalStoreMenu");
-					}
-				}
-				
-				// Limpar o trader pendente
-				AskalNotificationHelper.ClearPendingTraderMenu();
-			}
-		}
-	}
 
 	override void OnMissionFinish()
 	{

@@ -142,16 +142,18 @@ class AskalPurchaseService
 			return false;
 		}
 
+		// Calcular preço autoritativo (sempre unitário, pois o cliente envia múltiplas requisições para múltiplos itens)
 		int authoritativePrice = ComputeItemTotalPrice(itemClass);
 		Print("[AskalPurchase] [DEBUG] Preço calculado para " + itemClass + ": " + authoritativePrice);
 		if (authoritativePrice <= 0)
 		{
-			Print("[AskalPurchase] âŒ PreÃ§o autoritativo invÃ¡lido para " + itemClass + ": " + authoritativePrice);
+			Print("[AskalPurchase] ❌ Preço autoritativo inválido para " + itemClass + ": " + authoritativePrice);
 			return false;
 		}
+		
 		if (price != authoritativePrice)
 		{
-			Print("[AskalPurchase] âš ï¸ Ajustando preÃ§o informado pelo cliente. Recebido: " + price + " | Autoritativo: " + authoritativePrice);
+			Print("[AskalPurchase] ⚠️ Ajustando preço informado pelo cliente. Recebido: " + price + " | Autoritativo: " + authoritativePrice);
 			price = authoritativePrice;
 		}
 
@@ -166,7 +168,6 @@ class AskalPurchaseService
 		
 		// Verificar se é veículo (veículos devem ser spawnados no mundo, não no inventário)
 		bool isVehicle = AskalVehicleSpawn.IsVehicleClass(itemClass);
-		EntityAI createdItem = NULL;
 		
 		if (isVehicle)
 		{
@@ -207,15 +208,15 @@ class AskalPurchaseService
 			Print("[AskalPurchase]   Balance atualizado: " + vehicleBalance);
 			
 			// Notificar cliente
-			string itemDisplayName = GetItemDisplayName(itemClass);
-			AskalNotificationHelper.AddPurchaseNotification(itemClass, price, itemDisplayName);
+			string vehicleDisplayName = GetItemDisplayName(itemClass);
+			AskalNotificationHelper.AddPurchaseNotification(itemClass, price, vehicleDisplayName);
 			
 			return true;
 		}
 		else
 		{
-			// Item normal - criar no inventário
-			createdItem = player.GetInventory().CreateInInventory(itemClass);
+			// Item normal - criar no inventário (sempre um item por requisição)
+			EntityAI createdItem = player.GetInventory().CreateInInventory(itemClass);
 			if (!createdItem)
 			{
 				Print("[AskalPurchase] ❌ Não foi possível criar item (sem espaço no inventário): " + itemClass);
@@ -231,16 +232,23 @@ class AskalPurchaseService
 			// Remover balance
 			if (!AskalPlayerBalance.RemoveBalance(steamId, price, balanceKey))
 			{
-				Print("[AskalPurchase] ❌ Erro ao remover balance");
+				Print("[AskalPurchase] ❌ Erro ao remover balance - removendo item criado...");
+				// Rollback: deletar item criado
 				GetGame().ObjectDelete(createdItem);
 				return false;
 			}
 			
 			// Sucesso - item criado e balance removido
 			int newBalance = AskalPlayerBalance.GetBalance(steamId, balanceKey);
-			Print("[AskalPurchase] ✅ Compra com quantidade customizada realizada!");
-			Print("[AskalPurchase]   Item: " + itemClass + " | Qty: " + itemQuantity + " | Content: " + contentType);
+			Print("[AskalPurchase] ✅ Compra realizada com sucesso!");
+			Print("[AskalPurchase]   Item: " + itemClass + " | Qty: " + itemQuantity + " | QtyType: " + quantityType + " | Content: " + contentType);
 			Print("[AskalPurchase]   Balance atualizado: " + newBalance);
+			
+			// Obter display name do item para notificação
+			string itemDisplayName = GetItemDisplayName(itemClass);
+			
+			// Notificar cliente (cada compra gera sua própria notificação)
+			AskalNotificationHelper.AddPurchaseNotification(itemClass, price, itemDisplayName);
 			
 			return true;
 		}

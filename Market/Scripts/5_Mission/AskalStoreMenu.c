@@ -127,6 +127,7 @@ class AskalStoreMenu extends UIScriptedMenu
 	// Search / Filters
 	protected EditBoxWidget m_SearchInput;
 	protected ButtonWidget m_SearchButton;
+	protected string m_SearchFilterText = "";
 	
 	// Hover Text
 	protected Widget m_HoverPanel;
@@ -1314,6 +1315,161 @@ protected string m_LastVirtualStoreConfigSignature = "";
 	// CARREGAMENTO DO CACHE DO CLIENTE
 	// ========================================
 	
+	// Buscar itens em todos os datasets quando há pesquisa
+	void SearchAllDatasets()
+	{
+		Print("[AskalStore] ========================================");
+		Print("[AskalStore] SearchAllDatasets() - Buscando em todos os datasets");
+		
+		if (!m_SearchFilterText || m_SearchFilterText == "")
+		{
+			Print("[AskalStore] ⚠️ Texto de pesquisa vazio");
+			return;
+		}
+		
+		// Limpar itens anteriores
+		ClearItemCards();
+		m_Items.Clear();
+		if (m_ItemDatasetIds)
+			m_ItemDatasetIds.Clear();
+		if (m_ItemCategoryIds)
+			m_ItemCategoryIds.Clear();
+		
+		// Ler do cache
+		AskalDatabaseClientCache cache = AskalDatabaseClientCache.GetInstance();
+		map<string, ref AskalDatasetSyncData> datasets = cache.GetDatasets();
+		
+		if (!datasets || datasets.Count() == 0)
+		{
+			Print("[AskalStore] ❌ Nenhum dataset no cache!");
+			return;
+		}
+		
+		ref map<string, bool> processedClasses = new map<string, bool>();
+		ref map<string, bool> variantClassLookup = new map<string, bool>();
+		int totalFound = 0;
+		
+		// Iterar por todos os datasets
+		for (int dsIdx = 0; dsIdx < datasets.Count(); dsIdx++)
+		{
+			string datasetID = datasets.GetKey(dsIdx);
+			AskalDatasetSyncData dataset = datasets.GetElement(dsIdx);
+			
+			if (!dataset || !dataset.Categories)
+				continue;
+			
+			// Iterar por todas as categorias do dataset
+			for (int catIdx = 0; catIdx < dataset.Categories.Count(); catIdx++)
+			{
+				string categoryID = dataset.Categories.GetKey(catIdx);
+				AskalCategorySyncData category = dataset.Categories.GetElement(catIdx);
+				
+				if (!category || !category.Items)
+					continue;
+				
+				// Iterar por todos os itens da categoria
+				for (int itemIdx = 0; itemIdx < category.Items.Count(); itemIdx++)
+				{
+					string itemClassName = category.Items.GetKey(itemIdx);
+					AskalItemSyncData itemData = category.Items.GetElement(itemIdx);
+					
+					if (!itemData)
+						continue;
+					
+					// Verificar se o item corresponde à pesquisa
+					string displayName = itemData.DisplayName;
+					if (displayName == "")
+						displayName = itemClassName;
+					
+					if (!ItemMatchesSearchFilter(displayName, itemClassName))
+						continue;
+					
+					// Item encontrado! Adicionar à lista
+					if (!processedClasses.Contains(itemClassName))
+					{
+						processedClasses.Set(itemClassName, true);
+						
+						AskalItemData newItem = new AskalItemData();
+						newItem.SetClassName(itemClassName);
+						newItem.SetDisplayName(displayName);
+						newItem.SetBasePrice(itemData.BasePrice);
+						newItem.SetPrice(itemData.BasePrice);
+						if (itemData.Variants)
+						{
+							array<string> variants = newItem.GetVariants();
+							if (variants)
+							{
+								for (int varIdx = 0; varIdx < itemData.Variants.Count(); varIdx++)
+								{
+									string variant = itemData.Variants.Get(varIdx);
+									if (variant && variant != "")
+										variants.Insert(variant);
+								}
+							}
+						}
+						if (itemData.Attachments)
+							newItem.SetDefaultAttachments(itemData.Attachments);
+						
+						m_Items.Insert(newItem);
+						if (m_ItemDatasetIds)
+							m_ItemDatasetIds.Insert(datasetID);
+						if (m_ItemCategoryIds)
+							m_ItemCategoryIds.Insert(categoryID);
+						
+						totalFound++;
+					}
+					
+					// Processar variantes
+					if (itemData.Variants && itemData.Variants.Count() > 0)
+					{
+						foreach (string variantClass : itemData.Variants)
+						{
+							if (variantClass && variantClass != "" && !variantClassLookup.Contains(variantClass))
+							{
+								variantClassLookup.Set(variantClass, true);
+								
+								string variantDisplay = ResolveItemDisplayName(variantClass, "");
+								if (variantDisplay == "")
+									variantDisplay = variantClass;
+								
+								if (ItemMatchesSearchFilter(variantDisplay, variantClass))
+								{
+									if (!processedClasses.Contains(variantClass))
+									{
+										processedClasses.Set(variantClass, true);
+										
+										AskalItemData variantItem = new AskalItemData();
+										variantItem.SetClassName(variantClass);
+										variantItem.SetDisplayName(variantDisplay);
+										variantItem.SetBasePrice(itemData.BasePrice);
+										variantItem.SetPrice(itemData.BasePrice);
+										
+										m_Items.Insert(variantItem);
+										if (m_ItemDatasetIds)
+											m_ItemDatasetIds.Insert(datasetID);
+										if (m_ItemCategoryIds)
+											m_ItemCategoryIds.Insert(categoryID);
+										
+										totalFound++;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		Print("[AskalStore] ✅ Pesquisa concluída: " + totalFound + " itens encontrados");
+		Print("[AskalStore] ========================================");
+		
+		// Atualizar breadcrumb para mostrar pesquisa
+		UpdateBreadcrumb("Pesquisa", "'" + m_SearchFilterText + "'");
+		
+		// Renderizar itens encontrados
+		RenderItems();
+	}
+	
 	void LoadDatasetsFromCore()
 	{
 		Print("[AskalStore] ========================================");
@@ -2058,6 +2214,23 @@ protected string m_LastVirtualStoreConfigSignature = "";
 			categoryButton.SetColor(ARGB(255, 100, 100, 100));
 	}
 	
+	// Verifica se um item corresponde ao filtro de pesquisa
+	bool ItemMatchesSearchFilter(string displayName, string className)
+	{
+		if (!m_SearchFilterText || m_SearchFilterText == "")
+			return true;
+		
+		string searchLower = m_SearchFilterText;
+		string displayLower = displayName;
+		string classLower = className;
+		
+		displayLower.ToLower();
+		classLower.ToLower();
+		
+		// Verifica se o texto de pesquisa está contido no nome de exibição ou no classname
+		return displayLower.Contains(searchLower) || classLower.Contains(searchLower);
+	}
+	
 	void RenderItems()
 	{
 		Print("[AskalStore] RenderItems() - Total: " + m_Items.Count());
@@ -2090,6 +2263,17 @@ protected string m_LastVirtualStoreConfigSignature = "";
 				continue;
 			}
 			
+			// FILTRO: Pesquisa
+			string displayName = itemData.GetDisplayName();
+			if (displayName == "")
+				displayName = itemData.GetClassName();
+			
+			if (!ItemMatchesSearchFilter(displayName, itemData.GetClassName()))
+			{
+				Print("[AskalStore] 🔍 Filtro de pesquisa: " + itemData.GetClassName() + " não corresponde a '" + m_SearchFilterText + "', pulando...");
+				continue;
+			}
+			
 			// Criar card do item
 			Widget itemCard = GetGame().GetWorkspace().CreateWidgets("askal/market/gui/new_layouts/askal_store_item_card.layout", m_ItensCardWrap);
 			
@@ -2098,13 +2282,10 @@ protected string m_LastVirtualStoreConfigSignature = "";
 			
 			// Configurar nome
 			TextWidget nameWidget = MultilineTextWidget.Cast(itemCard.FindAnyWidget("item_card_name_text"));
-				if (nameWidget)
-				{
-				string displayName = itemData.GetDisplayName();
-					if (displayName == "")
-					displayName = itemData.GetClassName();
-					nameWidget.SetText(displayName);
-				}
+			if (nameWidget)
+			{
+				nameWidget.SetText(displayName);
+			}
 				
 				// Configurar preço
 			TextWidget priceWidget = TextWidget.Cast(itemCard.FindAnyWidget("item_card_price_text"));
@@ -2276,6 +2457,13 @@ protected string m_LastVirtualStoreConfigSignature = "";
 				info.DisplayName = ResolveItemDisplayName(className, fallbackDisplay);
 				if (!info.DisplayName || info.DisplayName == "")
 					info.DisplayName = className;
+				
+				// FILTRO: Pesquisa
+				if (!ItemMatchesSearchFilter(info.DisplayName, className))
+				{
+					Print("[AskalStore] 🔍 Filtro de pesquisa (inventário): " + className + " não corresponde a '" + m_SearchFilterText + "', pulando...");
+					continue;
+				}
 				
 				// Obter health do servidor (via RPC) ou usar 100% como fallback
 				info.HealthPercent = GetItemHealth(className);
@@ -4281,6 +4469,30 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			return true;
 		}
 		
+		// Campo de pesquisa
+		if (w == m_SearchInput)
+		{
+			m_SearchFilterText = m_SearchInput.GetText();
+			m_SearchFilterText = m_SearchFilterText.Trim();
+			m_SearchFilterText.ToLower();
+			Print("[AskalStore] 🔍 Filtro de pesquisa atualizado: '" + m_SearchFilterText + "'");
+			
+			// Se há texto de pesquisa, buscar em todos os datasets
+			if (m_SearchFilterText != "")
+			{
+				SearchAllDatasets();
+			}
+			else
+			{
+				// Sem pesquisa, voltar à categoria atual
+				if (m_CurrentCategoryIndex >= 0 && m_CurrentCategoryIndex < m_Categories.Count())
+					LoadCategory(m_CurrentCategoryIndex);
+				else if (m_CurrentDatasetIndex >= 0 && m_CurrentDatasetIndex < m_Datasets.Count())
+					LoadDataset(m_CurrentDatasetIndex);
+			}
+			return true;
+		}
+		
 		return super.OnChange(w, x, y, finished);
 	}
 	
@@ -4875,8 +5087,11 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			float itemQuantity = -1;
 			int itemContent = 0;
 			
+			// Se há slider ativo, usar valores do slider (prioridade sobre m_TransactionQuantity)
+			// m_TransactionQuantity só se aplica a itens NONE (múltiplos itens separados)
 			if (m_SliderQuantityType != AskalItemQuantityType.NONE)
 			{
+				// Usar valores do slider para itens com quantidade customizada
 				switch (m_SliderQuantityType)
 				{
 					case AskalItemQuantityType.MAGAZINE:
@@ -4897,14 +5112,35 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 					}
 				}
 			}
+			else if (m_TransactionQuantity > 0)
+			{
+				// Para itens NONE, usar m_TransactionQuantity (número de itens separados)
+				itemQuantity = m_TransactionQuantity;
+			}
 			
 			string traderName = m_CurrentTraderName;
 			if (!traderName || traderName == "")
 				traderName = "";
 			
-			Param8<string, string, int, string, float, int, int, string> params = new Param8<string, string, int, string, float, int, int, string>(steamId, itemClass, totalPrice, currencyId, itemQuantity, m_SliderQuantityType, itemContent, traderName);
-			GetRPCManager().SendRPC("AskalPurchaseModule", "PurchaseItemRequest", params, true, identity, NULL);
-			Print("[AskalStore] 📤 RPC de compra enviado | Qty: " + m_TransactionQuantity + " | QtyType: " + m_SliderQuantityType + " | Content: " + itemContent + " | Trader: " + traderName);
+			// Para itens sem quantidade customizada (NONE) com m_TransactionQuantity > 1,
+			// enviar múltiplas requisições RPC (uma por item) para gerar notificações separadas
+			if (m_SliderQuantityType == AskalItemQuantityType.NONE && m_TransactionQuantity > 1)
+			{
+				// Enviar uma requisição por item (cada uma gerará sua própria notificação)
+				for (int purchaseIdx = 0; purchaseIdx < m_TransactionQuantity; purchaseIdx++)
+				{
+					Param8<string, string, int, string, float, int, int, string> batchParams = new Param8<string, string, int, string, float, int, int, string>(steamId, itemClass, price, currencyId, 1.0, AskalItemQuantityType.NONE, 0, traderName);
+					GetRPCManager().SendRPC("AskalPurchaseModule", "PurchaseItemRequest", batchParams, true, identity, NULL);
+				}
+				Print("[AskalStore] 📤 " + m_TransactionQuantity + " RPCs de compra enviados (um por item) | Item: " + itemClass + " | Trader: " + traderName);
+			}
+			else
+			{
+				// Para itens com quantidade customizada ou quantidade = 1, enviar uma única requisição
+				Param8<string, string, int, string, float, int, int, string> params = new Param8<string, string, int, string, float, int, int, string>(steamId, itemClass, totalPrice, currencyId, itemQuantity, m_SliderQuantityType, itemContent, traderName);
+				GetRPCManager().SendRPC("AskalPurchaseModule", "PurchaseItemRequest", params, true, identity, NULL);
+				Print("[AskalStore] 📤 RPC de compra enviado | Qty: " + m_TransactionQuantity + " | QtyType: " + m_SliderQuantityType + " | Content: " + itemContent + " | Trader: " + traderName);
+			}
 		}
 		
 		StartButtonCooldown(actionButton);
@@ -5627,18 +5863,31 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			// Armazenar nome do trader
 			m_CurrentTraderName = traderName;
 			
-			// Obter SetupItems do helper
-			m_TraderSetupItems = AskalNotificationHelper.GetPendingTraderSetupItems();
-			if (m_TraderSetupItems)
+			// Obter SetupItems do helper e fazer uma CÓPIA (não referência)
+			// Isso evita que ClearPendingTraderMenu() limpe nossos dados
+			map<string, int> helperSetupItems = AskalNotificationHelper.GetPendingTraderSetupItems();
+			if (!m_TraderSetupItems)
+				m_TraderSetupItems = new map<string, int>();
+			else
+				m_TraderSetupItems.Clear();
+			
+			if (helperSetupItems)
 			{
-				Print("[AskalStore] 📦 SetupItems obtido do helper: " + m_TraderSetupItems.Count() + " entradas");
+				// Copiar todas as entradas do helper para nosso map
+				for (int copyIdx = 0; copyIdx < helperSetupItems.Count(); copyIdx++)
+				{
+					string key = helperSetupItems.GetKey(copyIdx);
+					int value = helperSetupItems.GetElement(copyIdx);
+					m_TraderSetupItems.Set(key, value);
+				}
+				Print("[AskalStore] 📦 SetupItems copiado do helper: " + m_TraderSetupItems.Count() + " entradas");
 				// Log das primeiras 5 entradas para debug
 				int logCount = 0;
-				for (int i = 0; i < m_TraderSetupItems.Count() && logCount < 5; i++)
+				for (int logIdx = 0; logIdx < m_TraderSetupItems.Count() && logCount < 5; logIdx++)
 				{
-					string key = m_TraderSetupItems.GetKey(i);
-					int value = m_TraderSetupItems.GetElement(i);
-					Print("[AskalStore] 📦 SetupItems[" + i + "]: " + key + " = " + value);
+					string logKey = m_TraderSetupItems.GetKey(logIdx);
+					int logValue = m_TraderSetupItems.GetElement(logIdx);
+					Print("[AskalStore] 📦 SetupItems[" + logIdx + "]: " + logKey + " = " + logValue);
 					logCount++;
 				}
 			}
@@ -5671,6 +5920,11 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 				m_HeaderTitleText.SetText(traderName);
 				Print("[AskalStore] ✅ Título atualizado: " + traderName);
 			}
+			
+			// Limpar filtro de pesquisa
+			m_SearchFilterText = "";
+			if (m_SearchInput)
+				m_SearchInput.SetText("");
 			
 			// Recarregar datasets com filtros do trader
 			LoadDatasetsFromCore();
@@ -5715,8 +5969,25 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 			// Armazenar nome do trader
 			m_CurrentTraderName = pendingTraderMenu;
 			
-			// Obter SetupItems do helper
-			m_TraderSetupItems = AskalNotificationHelper.GetPendingTraderSetupItems();
+			// Obter SetupItems do helper e fazer uma CÓPIA (não referência)
+			// Isso evita que ClearPendingTraderMenu() limpe nossos dados
+			map<string, int> helperSetupItems = AskalNotificationHelper.GetPendingTraderSetupItems();
+			if (!m_TraderSetupItems)
+				m_TraderSetupItems = new map<string, int>();
+			else
+				m_TraderSetupItems.Clear();
+			
+			if (helperSetupItems)
+			{
+				// Copiar todas as entradas do helper para nosso map
+				for (int i = 0; i < helperSetupItems.Count(); i++)
+				{
+					string key = helperSetupItems.GetKey(i);
+					int value = helperSetupItems.GetElement(i);
+					m_TraderSetupItems.Set(key, value);
+				}
+				Print("[AskalStore] 📦 SetupItems copiado do helper (OnShow): " + m_TraderSetupItems.Count() + " entradas");
+			}
 			
 			// Atualizar título do menu
 			if (m_HeaderTitleText)
@@ -5788,6 +6059,11 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		
 		ClearItems();
 		ClearAllNotifications();
+		
+		// Limpar filtro de pesquisa
+		m_SearchFilterText = "";
+		if (m_SearchInput)
+			m_SearchInput.SetText("");
 		
 		// Limpar modo trader para permitir que Virtual Store funcione corretamente na próxima abertura
 		m_CurrentTraderName = "";
@@ -7029,6 +7305,26 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 	{
 		if (super.OnKeyDown(w, x, y, key))
 			return true;
+		
+		// ESC para fechar o menu
+		if (key == KeyCode.KC_ESCAPE)
+		{
+			Close();
+			return true;
+		}
+		
+		// Se o campo de pesquisa está focado, não processar outros atalhos (exceto ESC)
+		// Verificar se o campo de pesquisa está visível e pode estar focado
+		if (m_SearchInput && m_SearchInput.IsVisible())
+		{
+			// Quando há texto sendo digitado, assumir que pesquisa está ativa
+			// Outros atalhos não funcionam quando pesquisa está ativa (exceto ESC)
+			// ESC já foi tratado acima, então outros atalhos retornam false
+			if (m_SearchFilterText != "" && key != KeyCode.KC_ESCAPE)
+			{
+				return false;
+			}
+		}
 		
 		if (key == KeyCode.KC_C)
 		{
