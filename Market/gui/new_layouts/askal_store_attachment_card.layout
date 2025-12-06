@@ -30,7 +30,7 @@ FrameWidgetClass attachment_card_root {
      vexactpos 0
      hexactsize 0
      vexactsize 0
-     image0 "set:dayz_gui image:icon_out_of_reach"
+     image0 "set:dayz_gui image:cursor"
      mode additive
      "src alpha" 1
      nocache 1

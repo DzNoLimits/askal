@@ -31,8 +31,8 @@ class ActionOpenAskalTraderMenu: ActionInteractBase
 		AskalTraderBase trader = NULL;
 		string traderName = "";
 		
-		// Verificar se é AskalTraderVendingMachine (tipo do objeto é suficiente)
-		AskalTraderVendingMachine traderVending = AskalTraderVendingMachine.Cast(targetObj);
+		// Verificar se é ASK_TraderVendingMachine (tipo do objeto é suficiente)
+		ASK_TraderVendingMachine traderVending = ASK_TraderVendingMachine.Cast(targetObj);
 		if (traderVending)
 		{
 			// No cliente, tentar obter nome do trader se disponível
@@ -51,6 +51,22 @@ class ActionOpenAskalTraderMenu: ActionInteractBase
 				m_Text = "Abrir Loja";
 			}
 			return true;
+		}
+		
+		// Verificar se é trader humano (ASK_TraderHumanBase)
+		ASK_TraderHumanBase traderHuman = ASK_TraderHumanBase.Cast(targetObj);
+		if (traderHuman)
+		{
+			trader = traderHuman.GetTraderLogic();
+			if (trader)
+			{
+				traderName = trader.GetTraderName();
+				if (traderName != "")
+					m_Text = "Abrir Loja - " + traderName;
+				else
+					m_Text = "Abrir Loja";
+				return true;
+			}
 		}
 		
 		// Verificar se é trader genérico (usando método do spawn service)
@@ -88,8 +104,8 @@ class ActionOpenAskalTraderMenu: ActionInteractBase
 			return;
 		}
 		
-		// Verificar se é AskalTraderVendingMachine
-		AskalTraderVendingMachine traderVending = AskalTraderVendingMachine.Cast(targetObj);
+		// Verificar se é ASK_TraderVendingMachine
+		ASK_TraderVendingMachine traderVending = ASK_TraderVendingMachine.Cast(targetObj);
 		AskalTraderBase trader = NULL;
 		
 		if (traderVending)
@@ -98,8 +114,18 @@ class ActionOpenAskalTraderMenu: ActionInteractBase
 		}
 		else
 		{
-			// Método genérico para compatibilidade
-			trader = AskalTraderSpawnService.GetTraderFromEntity(EntityAI.Cast(targetObj));
+			// Verificar se é trader humano (ASK_TraderHumanBase)
+			ASK_TraderHumanBase traderHuman = ASK_TraderHumanBase.Cast(targetObj);
+			if (traderHuman)
+			{
+				trader = traderHuman.GetTraderLogic();
+			}
+			
+			// Se não encontrou, usar método genérico para compatibilidade
+			if (!trader)
+			{
+				trader = AskalTraderSpawnService.GetTraderFromEntity(EntityAI.Cast(targetObj));
+			}
 		}
 		
 		if (!trader)

@@ -7,7 +7,7 @@
 class AskalPlayerData
 {
 	string FirstLogin;
-	ref map<string, int> Balance; // Ex: {"Askal_Coin": 1234567}
+	ref map<string, int> Balance; // Ex: {"ASK_Coin": 1234567}
 	int CreditCard;
 	int PremiumStatusExpireInHours;
 	ref map<string, int> Permissions;
@@ -223,7 +223,7 @@ class AskalPlayerBalance
 	}
 	
 	// Obter balance de uma moeda específica
-	static int GetBalance(string steamId, string currency = "Askal_Coin")
+	static int GetBalance(string steamId, string currency = "ASK_Coin")
 	{
 		AskalPlayerData playerData = LoadPlayerData(steamId);
 		if (!playerData || !playerData.Balance)
@@ -236,7 +236,7 @@ class AskalPlayerBalance
 	}
 	
 	// Adicionar balance
-	static bool AddBalance(string steamId, int amount, string currency = "Askal_Coin")
+	static bool AddBalance(string steamId, int amount, string currency = "ASK_Coin")
 	{
 		if (amount <= 0)
 			return false;
@@ -259,7 +259,7 @@ class AskalPlayerBalance
 	}
 	
 	// Remover balance (para compras)
-	static bool RemoveBalance(string steamId, int amount, string currency = "Askal_Coin")
+	static bool RemoveBalance(string steamId, int amount, string currency = "ASK_Coin")
 	{
 		if (amount <= 0)
 			return false;
@@ -288,7 +288,7 @@ class AskalPlayerBalance
 	}
 	
 	// Verificar se tem balance suficiente
-	static bool HasEnoughBalance(string steamId, int amount, string currency = "Askal_Coin")
+	static bool HasEnoughBalance(string steamId, int amount, string currency = "ASK_Coin")
 	{
 		int balance = GetBalance(steamId, currency);
 		return balance >= amount;

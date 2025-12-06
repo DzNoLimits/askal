@@ -1,9 +1,9 @@
-class AskalTraderVendingMachine extends House
+class ASK_TraderVendingMachine extends House
 {
 	protected ref AskalTraderBase m_TraderLogic;
 	protected string m_ConfigFileName;
 	
-	void AskalTraderVendingMachine()
+	void ASK_TraderVendingMachine()
 	{
 		// Inicialização será feita via SetupTraderStatic do spawn service
 		m_TraderLogic = NULL;
@@ -14,12 +14,12 @@ class AskalTraderVendingMachine extends House
 	{
 		super.SetActions();
 		
-		Print("[AskalTraderVendingMachine] SetActions() chamado");
+		Print("[ASK_TraderVendingMachine] SetActions() chamado");
 		
 		// Registrar ação de abrir menu do trader
 		AddAction(ActionOpenAskalTraderMenu);
 		
-		Print("[AskalTraderVendingMachine] Ação ActionOpenAskalTraderMenu adicionada");
+		Print("[ASK_TraderVendingMachine] Ação ActionOpenAskalTraderMenu adicionada");
 	}
 	
 	// Definir arquivo de configuração (chamado pelo spawn service)
@@ -38,7 +38,7 @@ class AskalTraderVendingMachine extends House
 		AskalTraderConfig config = AskalTraderConfig.Load(fileName);
 		if (!config)
 		{
-			Print("[AskalTraderVendingMachine] ❌ Falha ao carregar config: " + fileName);
+			Print("[ASK_TraderVendingMachine] ❌ Falha ao carregar config: " + fileName);
 			return;
 		}
 		
@@ -53,7 +53,7 @@ class AskalTraderVendingMachine extends House
 		// Adicionar à lista de traders spawnados
 		AskalTraderSpawnService.AddTraderToList(m_TraderLogic);
 		
-		Print("[AskalTraderVendingMachine] ✅ Trader estático configurado: " + config.TraderName);
+		Print("[ASK_TraderVendingMachine] ✅ Trader estático configurado: " + config.TraderName);
 	}
 	
 	// Obter lógica do trader

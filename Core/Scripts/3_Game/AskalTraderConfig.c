@@ -1,6 +1,6 @@
 // ==========================================
 // AskalTraderConfig - Configuração de Trader
-// Lê e parseia arquivos Trader_Description.jsonc
+// Lê e parseia arquivos Trader_Description.json
 // ==========================================
 
 // Estrutura para ponto de spawn de veículo
@@ -108,7 +108,7 @@ class AskalTraderConfig
 			return NULL;
 		}
 		
-		// Listar todos os arquivos .json e .jsonc
+		// Listar todos os arquivos .json
 		string fileName = "";
 		FileAttr fileAttr = 0;
 		string searchPattern = tradersPath + "*";
@@ -124,14 +124,10 @@ class AskalTraderConfig
 		{
 			if (fileName && fileName != "" && fileName != "." && fileName != "..")
 			{
-				// Verificar se é .json ou .jsonc
-				if (fileName.IndexOf(".json") != -1 || fileName.IndexOf(".jsonc") != -1)
+				// Verificar se é .json
+				if (fileName.IndexOf(".json") != -1)
 				{
-					string nameWithoutExt = "";
-					if (fileName.IndexOf(".jsonc") != -1)
-						nameWithoutExt = fileName.Substring(0, fileName.IndexOf(".jsonc"));
-					else if (fileName.IndexOf(".json") != -1)
-						nameWithoutExt = fileName.Substring(0, fileName.IndexOf(".json"));
+					string nameWithoutExt = fileName.Substring(0, fileName.IndexOf(".json"));
 					
 					if (nameWithoutExt != "")
 					{
@@ -165,18 +161,12 @@ class AskalTraderConfig
 		}
 		
 		// Remover extensão se presente
-		if (fileName.IndexOf(".jsonc") != -1)
-			fileName = fileName.Substring(0, fileName.IndexOf(".jsonc"));
 		if (fileName.IndexOf(".json") != -1)
 			fileName = fileName.Substring(0, fileName.IndexOf(".json"));
 		
-		// Caminho do arquivo - tentar .json primeiro, depois .jsonc
+		// Caminho do arquivo
 		string tradersPath = AskalTraderConfig.GetTradersPath();
 		string configPath = tradersPath + fileName + ".json";
-		if (!FileExist(configPath))
-		{
-			configPath = tradersPath + fileName + ".jsonc";
-		}
 		
 		AskalTraderConfig config = new AskalTraderConfig();
 		if (!AskalJsonLoader<AskalTraderConfig>.LoadFromFile(configPath, config, true))
@@ -288,7 +278,7 @@ class AskalTraderConfig
 		if (!TraderObject || TraderObject == "")
 			return false;
 		
-		// Aceitar qualquer objeto estático (StaticObj_, AskalTraderVendingMachine, etc.)
+		// Aceitar qualquer objeto estático (StaticObj_, ASK_TraderVendingMachine, etc.)
 		if (TraderObject.IndexOf("StaticObj_") == 0)
 			return true;
 		

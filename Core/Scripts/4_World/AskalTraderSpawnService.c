@@ -32,7 +32,7 @@ class AskalTraderSpawnService
 		string tradersPath = AskalTraderConfig.GetTradersPath();
 		Print("[AskalTrader] Caminho dos traders: " + tradersPath);
 		
-		// Listar arquivos Trader_*.jsonc
+		// Listar arquivos Trader_*.json
 		array<string> traderFiles = new array<string>();
 		FindTraderFiles(tradersPath, traderFiles);
 		
@@ -62,7 +62,7 @@ class AskalTraderSpawnService
 		if (!FileExist(path))
 		{
 			Print("[AskalTrader] ⚠️ Pasta de traders não existe: " + path);
-			Print("[AskalTrader] 💡 Crie a pasta manualmente e adicione arquivos Trader_*.json ou Trader_*.jsonc");
+			Print("[AskalTrader] 💡 Crie a pasta manualmente e adicione arquivos Trader_*.json");
 			return;
 		}
 		
@@ -80,17 +80,13 @@ class AskalTraderSpawnService
 		
 		while (true)
 		{
-			// Aceitar qualquer arquivo .json ou .jsonc (não precisa começar com "Trader_")
+			// Aceitar qualquer arquivo .json (não precisa começar com "Trader_")
 			if (fileName && fileName != "" && fileName != "." && fileName != "..")
 			{
 				string nameWithoutExt = "";
 				
-				// Verificar se é .jsonc primeiro (mais específico), depois .json
-				if (fileName.IndexOf(".jsonc") != -1)
-				{
-					nameWithoutExt = fileName.Substring(0, fileName.IndexOf(".jsonc"));
-				}
-				else if (fileName.IndexOf(".json") != -1)
+				// Verificar se é .json
+				if (fileName.IndexOf(".json") != -1)
 				{
 					nameWithoutExt = fileName.Substring(0, fileName.IndexOf(".json"));
 				}
@@ -167,11 +163,20 @@ class AskalTraderSpawnService
 		if (!obj)
 			return;
 		
-		// Tentar cast para AskalTraderVendingMachine primeiro
-		AskalTraderVendingMachine traderVending = AskalTraderVendingMachine.Cast(obj);
+		// Tentar cast para ASK_TraderVendingMachine primeiro
+		ASK_TraderVendingMachine traderVending = ASK_TraderVendingMachine.Cast(obj);
 		if (traderVending)
 		{
 			traderVending.LoadTraderConfig(configFileName);
+			return;
+		}
+		
+		// Verificar se é trader humano (ASK_TraderHumanBase)
+		ASK_TraderHumanBase traderHuman = ASK_TraderHumanBase.Cast(obj);
+		if (traderHuman)
+		{
+			// Chamar LoadTraderConfig diretamente (todas as classes de traders humanos têm esse método)
+			traderHuman.LoadTraderConfig(configFileName);
 			return;
 		}
 		
@@ -179,7 +184,7 @@ class AskalTraderSpawnService
 		BuildingBase traderBuilding = BuildingBase.Cast(obj);
 		if (!traderBuilding)
 		{
-			Print("[AskalTrader] ❌ Objeto não é BuildingBase: " + obj.GetType());
+			Print("[AskalTrader] ❌ Objeto não é BuildingBase nem SurvivorBase trader: " + obj.GetType());
 			return;
 		}
 		

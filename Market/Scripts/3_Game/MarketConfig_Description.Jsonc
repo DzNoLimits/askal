@@ -14,14 +14,14 @@
 			"ShortName": "AKC", //Short name of the currency - Used to identify the currency in the market (HUD)
 			"Values": [ //Values of the currency (If this kinda of money have more than one value, like coins and bills)
 				{
-					"Askal_Coin": 1,
-					"Askal_Coin_2": 2,
-					"Askal_Coin_5": 5,
-					"Askal_Coin_10": 10,
-					"Askal_Coin_25": 25,
-					"Askal_Coin_50": 50,
-					"Askal_Coin_100": 100,
-					"Askal_Coin_200": 200
+					"ASK_Coin": 1,
+					"ASK_Coin_2": 2,
+					"ASK_Coin_5": 5,
+					"ASK_Coin_10": 10,
+					"ASK_Coin_25": 25,
+					"ASK_Coin_50": 50,
+					"ASK_Coin_100": 100,
+					"ASK_Coin_200": 200
 				}
 			],
 			"StartCurrency": 10000 //Quantidade dada ao player iniciante

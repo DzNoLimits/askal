@@ -5,7 +5,7 @@
 class AskalSetupConfig
 {
     string Version;
-    ref map<string, int> CurrencyMode;  // Ex: {"Askal_Coin": 2}
+    ref map<string, int> CurrencyMode;  // Ex: {"ASK_Coin": 2}
     ref map<string, int> SetupItems;    // Ex: {"DS_Firearms": 3, "CAT_Pistols": 2, "AKM": 0}
     
     void AskalSetupConfig()

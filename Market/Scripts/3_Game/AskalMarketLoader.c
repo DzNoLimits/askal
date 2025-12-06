@@ -51,8 +51,6 @@ class AskalMarketLoader
         }
         
         // Remover extensão
-        if (fileName.IndexOf(".jsonc") != -1)
-            fileName = fileName.Substring(0, fileName.IndexOf(".jsonc"));
         if (fileName.IndexOf(".json") != -1)
             fileName = fileName.Substring(0, fileName.IndexOf(".json"));
         
@@ -123,12 +121,7 @@ class AskalMarketLoader
         FileAttr fileAttr;
         FindFileHandle handle = FindFile(searchPath + "Trader_*.json", fileName, fileAttr, 0);
         if (!handle)
-        {
-            // Tentar também .jsonc
-            handle = FindFile(searchPath + "Trader_*.jsonc", fileName, fileAttr, 0);
-            if (!handle)
-                return;
-        }
+            return;
 
         bool keep = true;
         while (keep)

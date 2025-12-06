@@ -1567,23 +1567,83 @@ protected string m_LastVirtualStoreConfigSignature = "";
 			
 			if (setupItems && setupItems.Count() > 0)
 			{
-				// Verificar se há itens individuais deste dataset
+				// Verificar se há categorias (CAT_*) deste dataset configuradas
 				for (int checkIdx = 0; checkIdx < setupItems.Count(); checkIdx++)
 				{
 					string checkKey = setupItems.GetKey(checkIdx);
 					if (!checkKey || checkKey == "" || checkKey == "ALL")
 						continue;
-					if (checkKey.IndexOf("DS_") == 0 || checkKey.IndexOf("CAT_") == 0)
-						continue;
 					
-					string checkDatasetId = "";
-					string checkCategoryId = "";
-					ResolveDatasetAndCategoryForClass(checkKey, checkDatasetId, checkCategoryId);
-					
-					if (checkDatasetId == datasetID)
+					// Verificar se é uma categoria (CAT_*)
+					if (checkKey.IndexOf("CAT_") == 0)
 					{
-						isAutoEnabled = true;
-						break;
+						// Normalizar a categoria
+						string normalizedCategory = NormalizeCategoryID(checkKey);
+						
+						// Verificar se esta categoria pertence a este dataset
+						// Reutilizar a variável cache já declarada no início da função
+						AskalDatasetSyncData datasetData = cache.GetDataset(datasetID);
+						if (datasetData && datasetData.Categories)
+						{
+							// Tentar verificar com a chave original primeiro
+							if (datasetData.Categories.Contains(checkKey))
+							{
+								isAutoEnabled = true;
+								Print("[AskalStore] ✅ Dataset habilitado automaticamente devido a categoria configurada: " + datasetID + " (via " + checkKey + ")");
+								break;
+							}
+							
+							// Se não encontrou, tentar com a categoria normalizada
+							if (datasetData.Categories.Contains(normalizedCategory))
+							{
+								isAutoEnabled = true;
+								Print("[AskalStore] ✅ Dataset habilitado automaticamente devido a categoria configurada: " + datasetID + " (via " + normalizedCategory + ")");
+								break;
+							}
+							
+							// Se ainda não encontrou, verificar todas as categorias do dataset (case-insensitive)
+							for (int catIdx = 0; catIdx < datasetData.Categories.Count(); catIdx++)
+							{
+								string cacheCategoryID = datasetData.Categories.GetKey(catIdx);
+								if (!cacheCategoryID || cacheCategoryID == "")
+									continue;
+								
+								// Normalizar ambas para comparação
+								string normalizedCacheCategory = NormalizeCategoryID(cacheCategoryID);
+								if (normalizedCacheCategory == normalizedCategory)
+								{
+									isAutoEnabled = true;
+									Print("[AskalStore] ✅ Dataset habilitado automaticamente devido a categoria configurada: " + datasetID + " (via " + checkKey + " -> " + cacheCategoryID + ")");
+									break;
+								}
+							}
+							
+							if (isAutoEnabled)
+								break;
+						}
+					}
+				}
+				
+				// Se ainda não foi habilitado, verificar se há itens individuais deste dataset
+				if (!isAutoEnabled)
+				{
+					for (int itemCheckIdx = 0; itemCheckIdx < setupItems.Count(); itemCheckIdx++)
+					{
+						string itemCheckKey = setupItems.GetKey(itemCheckIdx);
+						if (!itemCheckKey || itemCheckKey == "" || itemCheckKey == "ALL")
+							continue;
+						if (itemCheckKey.IndexOf("DS_") == 0 || itemCheckKey.IndexOf("CAT_") == 0)
+							continue;
+						
+						string checkDatasetId = "";
+						string checkCategoryId = "";
+						ResolveDatasetAndCategoryForClass(itemCheckKey, checkDatasetId, checkCategoryId);
+						
+						if (checkDatasetId == datasetID)
+						{
+							isAutoEnabled = true;
+							break;
+						}
 					}
 				}
 			}
@@ -5028,7 +5088,7 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		AskalDatabaseClientCache cache = AskalDatabaseClientCache.GetInstance();
 		string currencyId = m_ActiveCurrencyId;
 		if (!currencyId || currencyId == "")
-			currencyId = "Askal_Coin";
+			currencyId = "ASK_Coin";
 		
 		if (m_SelectedVariantClass != "")
 		{
@@ -5231,7 +5291,7 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		
 		string currencyId = m_ActiveCurrencyId;
 		if (!currencyId || currencyId == "")
-			currencyId = "Askal_Coin";
+			currencyId = "ASK_Coin";
 		
 		ref array<ref AskalPurchaseRequestData> requests = new array<ref AskalPurchaseRequestData>();
 		for (int idx = 0; idx < m_BatchBuySelectedIndexes.Count(); idx++)
@@ -5452,7 +5512,7 @@ protected string BuildPriceBreakdown(AskalItemData itemData)
 		
 		string currencyId = m_ActiveCurrencyId;
 		if (!currencyId || currencyId == "")
-			currencyId = "Askal_Coin";
+			currencyId = "ASK_Coin";
 		
 		int transactionMode = 1;
 		string traderName = m_CurrentTraderName;

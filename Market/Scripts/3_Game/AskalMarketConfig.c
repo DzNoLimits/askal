@@ -231,7 +231,7 @@ class AskalMarketConfig
 		defaultCurrency.StartCurrency = 0;
 		
 		AskalCurrencyValueConfig defaultValue = new AskalCurrencyValueConfig();
-		defaultValue.Name = "Askal_Coin";
+		defaultValue.Name = "ASK_Coin";
 		defaultValue.Value = 1;
 		defaultCurrency.Values.Insert(defaultValue);
 		
